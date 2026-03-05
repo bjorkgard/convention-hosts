@@ -12,6 +12,7 @@ A modern, full-stack Laravel React starter kit with authentication, type-safe ro
 
 ## ✨ Key Features
 
+### Starter Kit Features
 - 🔐 **Complete Authentication** - Login, registration, password reset, email verification
 - 🛡️ **Two-Factor Authentication** - TOTP-based 2FA with recovery codes
 - 🎨 **Modern UI** - Tailwind CSS 4 with Radix UI components
@@ -21,6 +22,17 @@ A modern, full-stack Laravel React starter kit with authentication, type-safe ro
 - 📱 **Responsive Design** - Mobile-first approach
 - 🧪 **Testing Ready** - Pest PHP for elegant testing
 - 🎯 **Code Quality** - ESLint, Prettier, Laravel Pint pre-configured
+
+### Convention Management System (In Development)
+- 📅 **Event Management** - Multi-day convention organization with date validation
+- 🏢 **Venue Hierarchy** - Convention → Floor → Section structure
+- 📊 **Real-time Occupancy** - Live section capacity tracking with color-coded indicators
+- 📝 **Attendance Reporting** - Morning/afternoon period tracking with locking
+- 👥 **Role-Based Access** - Four-tier permission system (Owner, ConventionUser, FloorUser, SectionUser)
+- ✉️ **User Invitations** - Secure email invitations with account activation
+- 📤 **Data Export** - Multi-format export (.xlsx, .docx, Markdown)
+- 🔍 **Section Search** - Find available sections with accessibility filters
+- 📱 **PWA Support** - Progressive Web App for native-like mobile experience
 
 ## 🚀 Quick Start
 
@@ -49,6 +61,7 @@ Visit `http://localhost:8000` to see your application.
 - [Architecture Overview](docs/ARCHITECTURE.md) - Project structure and patterns
 - [Authentication](docs/AUTHENTICATION.md) - Auth system documentation
 - [Type-Safe Routing](docs/ROUTING.md) - Wayfinder usage guide
+- [Convention Management](docs/CONVENTIONS.md) - Convention system documentation (in development)
 
 ### Advanced
 - [Testing Guide](docs/TESTING.md) - Writing and running tests

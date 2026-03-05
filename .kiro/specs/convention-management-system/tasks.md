@@ -6,20 +6,20 @@ This implementation plan breaks down the Convention Management System into discr
 
 ## Tasks
 
-- [ ] 1. Database foundation and migrations
-  - [ ] 1.1 Create conventions table migration
+- [x] 1. Database foundation and migrations
+  - [x] 1.1 Create conventions table migration
     - Create migration with all fields: name, city, country, address, start_date, end_date, other_info
     - Add indexes for location (city, country) and dates
     - Add check constraint for end_date >= start_date
     - _Requirements: 1.1, 1.2, 23.1_
 
-  - [ ] 1.2 Create floors table migration
+  - [x] 1.2 Create floors table migration
     - Create migration with convention_id foreign key and name field
     - Add ON DELETE CASCADE for convention_id
     - Add index on convention_id
     - _Requirements: 6.1, 6.2, 23.1_
 
-  - [ ] 1.3 Create sections table migration
+  - [x] 1.3 Create sections table migration
     - Create migration with floor_id, name, number_of_seats, occupancy, available_seats
     - Add elder_friendly, handicap_friendly boolean fields
     - Add information text field
@@ -28,13 +28,13 @@ This implementation plan breaks down the Convention Management System into discr
     - Add indexes on floor_id, occupancy, and accessibility fields
     - _Requirements: 6.3, 6.4, 6.5, 6.6, 6.7, 23.1_
 
-  - [ ] 1.4 Create users table migration (extend existing)
+  - [x] 1.4 Create users table migration (extend existing)
     - Verify existing users table has first_name, last_name, email, password
     - Add mobile, email_confirmed fields if not present
     - Add unique index on email
     - _Requirements: 4.1, 4.4, 23.1_
 
-  - [ ] 1.5 Create pivot tables migrations
+  - [x] 1.5 Create pivot tables migrations
     - Create convention_user pivot table with unique constraint
     - Create convention_user_roles pivot table with role enum and unique constraint
     - Create floor_user pivot table with unique constraint
@@ -42,13 +42,13 @@ This implementation plan breaks down the Convention Management System into discr
     - Add appropriate indexes on all pivot tables
     - _Requirements: 5.2, 23.2_
 
-  - [ ] 1.6 Create attendance_periods table migration
+  - [x] 1.6 Create attendance_periods table migration
     - Create migration with convention_id, date, period (enum: morning/afternoon), locked
     - Add unique constraint on (convention_id, date, period)
     - Add indexes on convention_id and (date, period)
     - _Requirements: 10.1, 10.2, 23.1_
 
-  - [ ] 1.7 Create attendance_reports table migration
+  - [x] 1.7 Create attendance_reports table migration
     - Create migration with attendance_period_id, section_id, attendance, reported_by, reported_at
     - Add foreign keys with ON DELETE CASCADE
     - Add unique constraint on (attendance_period_id, section_id)
