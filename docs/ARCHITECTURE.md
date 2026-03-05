@@ -128,6 +128,24 @@ Benefits:
 - Reusable across controllers
 - Easier to test
 
+#### Controller Pattern
+
+Controllers handle HTTP requests and delegate to Actions for business logic:
+
+```php
+// app/Http/Controllers/ConventionController.php
+class ConventionController extends Controller
+{
+    public function store(StoreConventionRequest $request, CreateConventionAction $action)
+    {
+        $convention = $action->execute($request->validated(), $request->user());
+        return redirect()->route('conventions.show', $convention);
+    }
+}
+```
+
+Controllers use dependency injection for Actions and Form Requests, keeping methods thin and focused on HTTP concerns.
+
 #### Form Request Validation
 
 Validation logic is encapsulated in Form Request classes:

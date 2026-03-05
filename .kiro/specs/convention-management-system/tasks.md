@@ -360,8 +360,8 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 15.6, 15.7_
 
 
-- [ ] 7. Controllers and routes
-  - [ ] 7.1 Create ConventionController
+- [x] 7. Controllers and routes
+  - [x] 7.1 Create ConventionController
     - Implement index() - list user's conventions
     - Implement create() - show creation form
     - Implement store() - create convention with validation
@@ -372,7 +372,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Apply middleware: auth, EnsureConventionAccess, EnsureOwnerRole (where needed)
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 12.4, 20.1, 20.2_
 
-  - [ ] 7.2 Create FloorController
+  - [x] 7.2 Create FloorController
     - Implement index() - list floors (role-scoped)
     - Implement store() - create floor
     - Implement update() - update floor name
@@ -380,7 +380,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Apply middleware: auth, EnsureConventionAccess, ScopeByRole
     - _Requirements: 6.1, 6.2, 13.1, 13.2_
 
-  - [ ] 7.3 Create SectionController
+  - [x] 7.3 Create SectionController
     - Implement index() - list sections in floor
     - Implement show() - display section detail with occupancy controls
     - Implement store() - create section
@@ -391,7 +391,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Apply middleware: auth, EnsureConventionAccess, ScopeByRole
     - _Requirements: 6.3, 6.4, 6.5, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7_
 
-  - [ ] 7.4 Create UserController
+  - [x] 7.4 Create UserController
     - Implement index() - list users (role-scoped)
     - Implement store() - create/invite user
     - Implement update() - update user details
@@ -401,18 +401,18 @@ This implementation plan breaks down the Convention Management System into discr
     - Apply throttle middleware to resendInvitation (3 per 60 minutes)
     - _Requirements: 3.8, 3.9, 4.1, 4.2, 4.3, 4.4, 17.1, 17.2_
 
-  - [ ] 7.5 Write property test for invitation resend rate limiting
+  - [x] 7.5 Write property test for invitation resend rate limiting
     - **Property 11: Invitation Resend Rate Limiting**
     - **Validates: Requirements 3.9**
 
-  - [ ] 7.6 Create AttendanceController
+  - [x] 7.6 Create AttendanceController
     - Implement start() - start attendance report period
     - Implement stop() - lock attendance period
     - Implement report() - submit section attendance
     - Apply middleware: auth, EnsureConventionAccess
     - _Requirements: 10.5, 10.6, 10.7, 10.8, 11.1, 11.2, 11.3_
 
-  - [ ] 7.7 Create SearchController
+  - [x] 7.7 Create SearchController
     - Implement index() - search available sections with filters
     - Filter by floor (optional)
     - Filter by elder_friendly (optional)
@@ -422,22 +422,22 @@ This implementation plan breaks down the Convention Management System into discr
     - Apply middleware: auth (no role-based filtering)
     - _Requirements: 16.1, 16.2, 16.3, 16.4, 16.5, 16.8_
 
-  - [ ] 7.8 Write property test for search occupancy filter
+  - [x] 7.8 Write property test for search occupancy filter
     - **Property 42: Search Occupancy Filter**
     - **Property 43: Search Result Ordering**
     - **Validates: Requirements 16.4, 16.5**
 
-  - [ ] 7.9 Create Auth/InvitationController
+  - [x] 7.9 Create Auth/InvitationController
     - Implement show() - display password creation form
     - Implement store() - set password and confirm email
     - Apply signed middleware to show route
     - _Requirements: 3.3, 3.4_
 
-  - [ ] 7.10 Write property test for password confirmation
+  - [x] 7.10 Write property test for password confirmation
     - **Property 8: Password Confirmation Sets Email Verified**
     - **Validates: Requirements 3.4**
 
-  - [ ] 7.11 Define web routes
+  - [x] 7.11 Define web routes
     - Add convention routes with appropriate middleware
     - Add floor routes with appropriate middleware
     - Add section routes with appropriate middleware
@@ -448,7 +448,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Apply throttle middleware to login (5 per minute)
     - _Requirements: 2.6, 3.9, 21.6, 21.7_
 
-  - [ ] 7.12 Write property test for login rate limiting
+  - [x] 7.12 Write property test for login rate limiting
     - **Property 6: Login Rate Limiting**
     - **Validates: Requirements 2.4, 2.6**
 

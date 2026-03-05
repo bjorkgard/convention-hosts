@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- implement ConventionController with full CRUD, role-scoped data loading, and export (2026-03-05)
+  - index/create/store for convention listing and creation
+  - show with role-scoped floors, sections, attendance periods, and users
+  - update/destroy with policy-based authorization
+  - export with format selection and auto-delete after download
 - implement middleware and policies for role-based access control (, |Nathanael Björkgård|||2026-03-05)
 
 
@@ -16,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- implement EnsureConventionAccess middleware for role-based access control (2026-03-05)
+  - Verifies authenticated users have at least one role for requested convention
+  - Gracefully skips when no convention parameter in route
+  - Returns 403 Forbidden with clear error message for unauthorized access
+  - Uses Eloquent relationships for efficient access verification
 - implement ConventionExport with multi-sheet Excel architecture (2026-03-05)
   - Four-sheet workbook structure: Convention, Floors & Sections, Attendance History, Users
   - Eager loading optimization to prevent N+1 queries during export

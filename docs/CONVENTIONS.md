@@ -639,26 +639,143 @@ public function store(StoreConventionRequest $request)
 
 The overlap detection is covered by property-based tests in Task 3.2 of the implementation plan.
 
+## Middleware and Authorization
+
+### EnsureConventionAccess Middleware
+
+The `EnsureConventionAccess` middleware enforces convention-level access control by verifying that authenticated users have at least one role for the requested convention.
+
+**Location:** `app/Http/Middleware/EnsureConventionAccess.php`
+
+**Purpose:** Prevents unauthorized access to convention resources by checking if the user has any role (Owner, ConventionUser, FloorUser, or SectionUser) for the requested convention.
+
+**How It Works:**
+
+1. Extracts the authenticated user from the request
+2. Retrieves the convention from the route parameter
+3. Checks if the user's conventions collection contains the requested convention
+4. Aborts with 403 if user has no access
+5. Allows request to proceed if user has any role for the convention
+
+**Implementation:**
+
+```php
+public function handle(Request $request, Closure $next): Response
+{
+    $user = $request->user();
+    $convention = $request->route('convention');
+
+    // Skip if no convention in route
+    if (! $convention instanceof Convention) {
+        return $next($request);
+    }
+
+    // Check if user has any role for this convention
+    if (! $user->conventions->contains($convention)) {
+        abort(403, 'No access to this convention');
+    }
+
+    return $next($request);
+}
+```
+
+**Usage in Routes:**
+
+```php
+Route::middleware(['auth', EnsureConventionAccess::class])->group(function () {
+    Route::get('/conventions/{convention}', [ConventionController::class, 'show']);
+    Route::get('/conventions/{convention}/floors', [FloorController::class, 'index']);
+    Route::get('/conventions/{convention}/sections', [SectionController::class, 'index']);
+});
+```
+
+**Key Features:**
+
+- **Graceful Skipping:** If no convention parameter exists in the route, the middleware passes through without checks
+- **Relationship-Based:** Uses Eloquent relationships to verify access, leveraging the `convention_user` pivot table
+- **Role-Agnostic:** Checks for any role without distinguishing between Owner, ConventionUser, FloorUser, or SectionUser
+- **Clear Error Response:** Returns 403 Forbidden with descriptive message "No access to this convention" when access is denied
+
+**Additional Authorization Layers:**
+
+After the middleware confirms basic convention access, additional authorization is enforced through:
+
+- **ScopeByRole Middleware:** Filters query results based on user's role scope (FloorUser sees only assigned floors, SectionUser sees only assigned sections)
+- **EnsureOwnerRole Middleware:** Restricts certain actions (delete, export) to Owner role only
+- **Policies:** Fine-grained permissions for Convention, Floor, Section, and User entities
+- **Signed URLs:** Time-limited invitation links with cryptographic signatures
+
+**Related:**
+- See Task 6.1 in `tasks.md` for implementation details
+- See Requirement 5.2 in `requirements.md` for role-based access specification
+- See [Architecture Overview](ARCHITECTURE.md) for complete middleware documentation
+
+## Controllers
+
+### ConventionController
+
+The `ConventionController` handles all convention CRUD operations, role-scoped data loading, and data export.
+
+**Location:** `app/Http/Controllers/ConventionController.php`
+
+**Endpoints:**
+
+| Method | Action | Description | Authorization |
+|--------|--------|-------------|---------------|
+| `index()` | GET | List user's conventions (ordered by start_date desc) | Authenticated |
+| `create()` | GET | Show convention creation form | Authenticated |
+| `store()` | POST | Create convention via `CreateConventionAction` | Authenticated |
+| `show()` | GET | Display convention with role-scoped floors, sections, attendance, users | Convention access |
+| `update()` | PUT | Update convention details | Convention access |
+| `destroy()` | DELETE | Delete convention | Owner only (policy) |
+| `export()` | GET | Export convention data in specified format | Owner only (policy) |
+
+**Role-Scoped Data Loading (show method):**
+
+The `show()` method dynamically scopes data based on the user's role, using scoped IDs injected by the `ScopeByRole` middleware:
+
+- **Owner / ConventionUser**: Sees all floors, sections, users, and attendance data
+- **FloorUser**: Sees only assigned floors and their sections
+- **SectionUser**: Sees only floors containing assigned sections, filtered to those sections
+
+**Props returned to frontend:**
+
+```php
+[
+    'convention' => $convention,
+    'floors' => $floors,              // Role-scoped with sections
+    'attendancePeriods' => $periods,  // With reports, sections, reporters
+    'users' => $users,                // With roles for this convention
+    'userRoles' => $userRoles,        // Current user's roles
+]
+```
+
+**Export:**
+
+The `export()` method delegates to `ExportConventionAction` and returns a downloadable file that is automatically deleted after sending.
+
 ## Implementation Status
 
-The Convention Management System is currently under development. See `.kiro/specs/convention-management-system/` for:
+The Convention Management System is currently under development.
 
-- `requirements.md` - Complete requirements specification
-- `design.md` - Technical design document
-- `tasks.md` - Implementation task list
+### Completed
 
-### Completed Tasks
-
-- ✓ Task 1.1-1.7: All database migrations
-- ✓ Task 2.1: Convention model with relationships and role management
-- ✓ Task 3.1: StoreConventionRequest with overlap detection
-- ✓ Task 4.1: CreateConventionAction with role assignment
-- ✓ Task 5.1: Export dependencies installed (maatwebsite/excel, phpoffice/phpword)
-- ✓ Task 5.2: ConventionExport class with multi-sheet architecture
+- Database migrations (conventions, floors, sections, users, pivots, attendance)
+- Eloquent models with relationships and role management
+- Form request validation (conventions, floors, sections, users, attendance, search, passwords)
+- Business logic actions (CreateConvention, InviteUser, UpdateOccupancy, ExportConvention, AttendanceReportService)
+- Export system (Excel, Word, Markdown)
+- Middleware and authorization (EnsureConventionAccess, EnsureOwnerRole, ScopeByRole, policies)
+- Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation)
+- Property-based tests for core business rules
 
 ### In Progress
 
-See `tasks.md` for the complete implementation plan and current progress.
+- Email system (Mailgun integration, invitation and confirmation mailables)
+- Scheduled tasks (daily occupancy reset)
+- Frontend TypeScript types, hooks, UI components, and Inertia pages
+- Navigation and layout updates
+- PWA support
 
 ## Development Setup
 
