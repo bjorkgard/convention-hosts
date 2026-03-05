@@ -56,6 +56,16 @@ tests/
 │   ├── Auth/            # Authentication tests
 │   ├── Settings/        # Settings tests
 │   └── ...
+├── Property/            # Property-based tests (correctness properties)
+│   ├── AttendancePropertiesTest.php
+│   ├── ConventionPropertiesTest.php
+│   ├── EmailUpdateConfirmationTest.php
+│   ├── FloorUserPermissionsTest.php
+│   ├── InvitationEmailDeliveryTest.php
+│   ├── OccupancyPropertiesTest.php
+│   ├── RoleBasedDataScopingTest.php
+│   ├── SectionUserRestrictionsTest.php
+│   └── UserPropertiesTest.php
 ├── Unit/                # Unit tests (isolated logic)
 ├── Pest.php             # Pest configuration
 └── TestCase.php         # Base test case
@@ -569,6 +579,74 @@ test('registration dispatches event', function () {
     Event::assertDispatched(UserRegistered::class);
 });
 ```
+
+## Property-Based Tests
+
+Property-based tests validate formal correctness properties of the system. Each test runs multiple iterations with varied inputs to ensure invariants hold across a wide range of scenarios.
+
+### Running Property Tests
+
+```bash
+# Run all property tests
+php artisan test tests/Property
+
+# Run a specific property test
+php artisan test tests/Property/InvitationEmailDeliveryTest.php
+
+# Run by group
+php artisan test --group=property
+```
+
+### Test Coverage
+
+| Test File | Properties Validated | Requirements |
+|-----------|---------------------|--------------|
+| `ConventionPropertiesTest` | Date overlap detection, creator role assignment | 1.3, 1.4 |
+| `UserPropertiesTest` | Email domain restriction, user deduplication | 4.2, 4.3 |
+| `OccupancyPropertiesTest` | Available seats calculation, color coding | 7.7, 9.x |
+| `AttendancePropertiesTest` | Max reports per day, update restrictions | 10.6, 11.5, 11.6 |
+| `InvitationEmailDeliveryTest` | Invitation email delivery via signed URL | 3.1, 3.2 |
+| `EmailUpdateConfirmationTest` | Email update triggers confirmation | 3.5 |
+| `RoleBasedDataScopingTest` | Role-based query scoping | 5.5, 5.6, 5.7 |
+| `FloorUserPermissionsTest` | FloorUser permission enforcement | 13.1, 13.2, 13.3 |
+| `SectionUserRestrictionsTest` | SectionUser edit and scope restrictions | 14.2, 14.3 |
+
+### Writing Property Tests
+
+Property tests use iteration loops with randomized data to verify invariants:
+
+```php
+it('sends exactly one invitation email for any valid user data', function () {
+    for ($i = 0; $i < 50; $i++) {
+        Mail::fake();
+
+        $convention = Convention::factory()->create();
+        $userData = [
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'email' => 'test-'.$i.'@example.com',
+            'mobile' => fake()->phoneNumber(),
+            'roles' => [fake()->randomElement(['ConventionUser', 'Owner'])],
+        ];
+
+        $user = (new InviteUserAction)->execute($userData, $convention);
+
+        // Assert the property holds for every iteration
+        Mail::assertSentCount(1);
+        Mail::assertSent(UserInvitation::class, fn ($mail) => $mail->hasTo($userData['email']));
+
+        // Cleanup
+        $convention->delete();
+        $user->delete();
+    }
+})->group('property', 'email');
+```
+
+Key patterns:
+- Use `->group('property')` to tag all property tests
+- Run multiple iterations (typically 50) with randomized inputs
+- Assert invariants hold on every iteration
+- Clean up state between iterations
 
 ## Best Practices
 

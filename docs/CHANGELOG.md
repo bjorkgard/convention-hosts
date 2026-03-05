@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add property test for invitation email delivery (2026-03-05)
+  - Validates signed URL generation and Mailgun delivery for user invitations
+  - 50-iteration randomized test covering Requirements 3.1, 3.2
+  - Asserts exactly one email sent per invitation with correct recipient and signed URL
 - implement ConventionController with full CRUD, role-scoped data loading, and export (2026-03-05)
   - index/create/store for convention listing and creation
   - show with role-scoped floors, sections, attendance periods, and users
