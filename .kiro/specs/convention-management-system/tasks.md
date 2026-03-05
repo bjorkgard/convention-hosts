@@ -571,8 +571,8 @@ This implementation plan breaks down the Convention Management System into discr
     - **Validates: Requirements 10.7, 10.8**
 
 
-- [ ] 12. UI components
-  - [ ] 12.1 Create ConventionCard component
+- [x] 12. UI components
+  - [x] 12.1 Create ConventionCard component
     - Accept convention prop (name, dates, location)
     - Display formatted date range
     - Display city and country
@@ -580,7 +580,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Use Wayfinder type-safe routing
     - _Requirements: 18.1_
 
-  - [ ] 12.2 Create FloorRow component
+  - [x] 12.2 Create FloorRow component
     - Accept floor, sections, userRole props
     - Display floor name
     - Show expandable sections list
@@ -588,41 +588,41 @@ This implementation plan breaks down the Convention Management System into discr
     - Show edit/delete actions based on role
     - _Requirements: 12.6, 12.7, 13.1, 13.2_
 
-  - [ ] 12.3 Create SectionCard component
+  - [x] 12.3 Create SectionCard component
     - Accept section prop (name, occupancy, available_seats, accessibility)
     - Display color-coded occupancy icon
     - Display accessibility badges (elder_friendly, handicap_friendly)
     - Make clickable to navigate to section detail
     - _Requirements: 7.1, 9.6, 9.7, 16.7_
 
-  - [ ] 12.4 Create OccupancyDropdown component
+  - [x] 12.4 Create OccupancyDropdown component
     - Accept currentOccupancy and onUpdate props
     - Display dropdown with options: 0%, 10%, 25%, 50%, 75%, 100%
     - Auto-save on selection
     - _Requirements: 7.2, 7.3_
 
-  - [ ] 12.5 Write property test for occupancy dropdown auto-save
+  - [x] 12.5 Write property test for occupancy dropdown auto-save
     - **Property 25: Occupancy Dropdown Auto-Save**
     - **Validates: Requirements 7.3**
 
-  - [ ] 12.6 Create FullButton component
+  - [x] 12.6 Create FullButton component
     - Accept section and onUpdate props
     - Display prominent "FULL" button
     - Set occupancy to 100% on click
     - _Requirements: 7.4, 7.5_
 
-  - [ ] 12.7 Write property test for full button
+  - [x] 12.7 Write property test for full button
     - **Property 26: Full Button Sets 100% Occupancy**
     - **Validates: Requirements 7.5**
 
-  - [ ] 12.8 Create AvailableSeatsInput component
+  - [x] 12.8 Create AvailableSeatsInput component
     - Accept section and onUpdate props
     - Display numeric input field
     - Display "Send" button
     - Calculate occupancy from available seats on submit
     - _Requirements: 7.6, 7.7_
 
-  - [ ] 12.9 Create AttendanceReportBanner component
+  - [x] 12.9 Create AttendanceReportBanner component
     - Accept activePeriod, totalAttendance, reportedCount, totalCount props
     - Display "X of Y sections reported" counter
     - Display total attendance
@@ -630,7 +630,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Show confirmation warning if not all sections reported
     - _Requirements: 10.7, 10.8, 11.1, 11.2_
 
-  - [ ] 12.10 Create UserRow component
+  - [x] 12.10 Create UserRow component
     - Accept user prop (name, email, roles, email_confirmed)
     - Display email confirmation icon (green checkmark or warning)
     - Display role badges
@@ -638,23 +638,23 @@ This implementation plan breaks down the Convention Management System into discr
     - Display edit/delete actions
     - _Requirements: 3.6, 3.7, 3.8_
 
-  - [ ] 12.11 Write property test for email confirmation display
+  - [x] 12.11 Write property test for email confirmation display
     - **Property 10: Email Confirmation Status Display**
     - **Validates: Requirements 3.6, 3.7**
 
-  - [ ] 12.12 Create ExportDropdown component
+  - [x] 12.12 Create ExportDropdown component
     - Accept convention and onExport props
     - Display format dropdown: .xlsx, .docx, Markdown
     - Trigger download on selection
     - Only visible to Owner role
     - _Requirements: 20.1, 20.2_
 
-  - [ ] 12.13 Create RoleBadge component
+  - [x] 12.13 Create RoleBadge component
     - Accept role prop (Owner, ConventionUser, FloorUser, SectionUser)
     - Display color-coded badge
     - _Requirements: 5.1_
 
-  - [ ] 12.14 Create OccupancyIndicator component
+  - [x] 12.14 Create OccupancyIndicator component
     - Accept occupancy prop (0-100)
     - Return color class and icon
     - Use useOccupancyColor hook
