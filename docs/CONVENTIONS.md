@@ -308,6 +308,83 @@ Real-time section occupancy with visual color coding:
 - Complete attendance history
 - User list with roles
 
+**Implementation:**
+
+The export system uses a multi-sheet architecture for Excel exports via the `ConventionExport` class.
+
+**Location:** `app/Exports/ConventionExport.php`
+
+**Architecture:**
+
+```php
+class ConventionExport implements WithMultipleSheets
+{
+    public function __construct(protected Convention $convention)
+    {
+        // Eager load all related data for efficient export
+        $this->convention->load([
+            'floors.sections',
+            'users',
+            'attendancePeriods.reports.section.floor',
+            'attendancePeriods.reports.reportedBy',
+        ]);
+    }
+
+    public function sheets(): array
+    {
+        return [
+            new ConventionSheet($this->convention),
+            new FloorsAndSectionsSheet($this->convention),
+            new AttendanceHistorySheet($this->convention),
+            new UsersSheet($this->convention),
+        ];
+    }
+}
+```
+
+**Excel Export Structure:**
+
+The Excel export generates a workbook with four sheets:
+
+1. **ConventionSheet** - Convention details (name, location, dates, additional info)
+2. **FloorsAndSectionsSheet** - Complete venue hierarchy with capacity and occupancy data
+3. **AttendanceHistorySheet** - All attendance periods and reports with timestamps
+4. **UsersSheet** - User list with roles and contact information
+
+**Performance Optimization:**
+
+The constructor eagerly loads all related data using Eloquent's `load()` method to prevent N+1 query issues during export generation. This ensures efficient data retrieval even for large conventions with many floors, sections, and attendance records.
+
+**Usage Example:**
+
+```php
+use App\Exports\ConventionExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+// In ConventionController
+public function export(Convention $convention, string $format)
+{
+    $this->authorize('export', $convention);
+    
+    return match($format) {
+        'xlsx' => Excel::download(
+            new ConventionExport($convention),
+            "convention-{$convention->id}.xlsx"
+        ),
+        'docx' => (new ConventionWordExport($convention))->download(),
+        'md' => (new ConventionMarkdownExport($convention))->download(),
+    };
+}
+```
+
+**Related Classes:**
+- `ConventionSheet` - Convention details sheet
+- `FloorsAndSectionsSheet` - Venue structure sheet
+- `AttendanceHistorySheet` - Attendance data sheet
+- `UsersSheet` - User information sheet
+- `ConventionWordExport` - Word document export
+- `ConventionMarkdownExport` - Markdown export
+
 ### Section Search
 
 **Filters:**
@@ -576,6 +653,8 @@ The Convention Management System is currently under development. See `.kiro/spec
 - ✓ Task 2.1: Convention model with relationships and role management
 - ✓ Task 3.1: StoreConventionRequest with overlap detection
 - ✓ Task 4.1: CreateConventionAction with role assignment
+- ✓ Task 5.1: Export dependencies installed (maatwebsite/excel, phpoffice/phpword)
+- ✓ Task 5.2: ConventionExport class with multi-sheet architecture
 
 ### In Progress
 

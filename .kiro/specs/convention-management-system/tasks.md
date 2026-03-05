@@ -269,35 +269,35 @@ This implementation plan breaks down the Convention Management System into discr
     - **Validates: Requirements 11.5, 11.6**
 
 
-- [ ] 5. Export system implementation
-  - [ ] 5.1 Install export dependencies
+- [x] 5. Export system implementation
+  - [x] 5.1 Install export dependencies
     - Add maatwebsite/excel package via composer
     - Add phpoffice/phpword package via composer
     - _Requirements: 20.4, 20.5_
 
-  - [ ] 5.2 Create ConventionExcelExport class
+  - [x] 5.2 Create ConventionExcelExport class
     - Implement FromCollection, WithHeadings, WithMultipleSheets interfaces
     - Create sheets: Convention, Floors & Sections, Attendance History, Users
     - Serialize all convention data into Excel format
     - _Requirements: 20.3, 20.4, 25.1_
 
-  - [ ] 5.3 Create ConventionWordExport class
+  - [x] 5.3 Create ConventionWordExport class
     - Use phpoffice/phpword to generate .docx
     - Include convention details, floors, sections, attendance, users
     - Format with titles, tables, and proper structure
     - _Requirements: 20.3, 20.5, 25.2_
 
-  - [ ] 5.4 Create ConventionMarkdownExport class
+  - [x] 5.4 Create ConventionMarkdownExport class
     - Generate Markdown with valid syntax
     - Include convention details, floors, sections, attendance, users
     - Use tables for structured data
     - _Requirements: 20.3, 20.6, 25.3_
 
-  - [ ] 5.5 Write property test for export data completeness
+  - [x] 5.5 Write property test for export data completeness
     - **Property 48: Export Data Completeness**
     - **Validates: Requirements 20.3**
 
-  - [ ] 5.6 Write property test for export format serialization
+  - [x] 5.6 Write property test for export format serialization
     - **Property 53: Export Format Serialization**
     - **Validates: Requirements 25.1, 25.2, 25.3**
 

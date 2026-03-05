@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- implement ConventionExport with multi-sheet Excel architecture (2026-03-05)
+  - Four-sheet workbook structure: Convention, Floors & Sections, Attendance History, Users
+  - Eager loading optimization to prevent N+1 queries during export
+  - Implements WithMultipleSheets interface from maatwebsite/excel
+  - Comprehensive data export including all relationships and attendance records
 - implement CreateConventionAction with automatic role assignment (2026-03-05)
   - Creates conventions with creator assigned as Owner and ConventionUser
   - Transaction-safe operation with automatic rollback on failure
