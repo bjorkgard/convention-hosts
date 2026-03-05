@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- implement daily occupancy reset command and scheduling (, |Nathanael Björkgård|||2026-03-05)
+- add TypeScript interfaces for convention data models (, |Nathanael Björkgård|||2026-03-05)
+
+
+## [Unreleased] - 2026-03-05
+
+### Added
+
 - add property test for invitation email delivery (2026-03-05)
   - Validates signed URL generation and Mailgun delivery for user invitations
   - 50-iteration randomized test covering Requirements 3.1, 3.2
