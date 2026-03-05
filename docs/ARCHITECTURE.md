@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document provides a comprehensive overview of the Laravel React Starter Kit architecture, design patterns, and conventions.
+This document provides a comprehensive overview of the Convention Management System architecture, design patterns, and conventions.
 
 ## Technology Stack
 

@@ -2,9 +2,9 @@
 
 ## General
 
-### What is this starter kit?
+### What is the Convention Management System?
 
-A modern full-stack Laravel React application with authentication, type-safe routing, and a beautiful UI built with Tailwind CSS.
+A comprehensive Laravel React application for managing multi-day conventions with real-time occupancy tracking, attendance reporting, role-based access control, and mobile-first PWA support.
 
 ### Who is this for?
 
@@ -12,7 +12,7 @@ Developers who want to quickly start building Laravel React applications with be
 
 ### Is this production-ready?
 
-Yes! The starter kit includes production-ready features like authentication, security measures, and deployment guides.
+Yes! The system includes production-ready features like authentication, role-based access control, security measures, and deployment guides.
 
 ## Installation
 
@@ -104,7 +104,7 @@ Yes, install Laravel Socialite and configure providers.
 
 ### Can I use Vue instead of React?
 
-The starter kit is built for React. For Vue, consider using Laravel Breeze with Inertia Vue.
+The system is built specifically for React. The architecture and components are tightly integrated with React 19 and TypeScript.
 
 ### How do I add a new UI component?
 
@@ -158,7 +158,7 @@ Pest is built on PHPUnit, so you can use both syntaxes.
 
 ### How do I write frontend tests?
 
-The starter kit focuses on backend tests. For frontend, consider adding Vitest or Jest.
+The system focuses on backend tests with Pest PHP. For frontend testing, consider adding Vitest or Jest.
 
 ## Deployment
 
@@ -339,6 +339,6 @@ MIT License - free to use for personal and commercial projects.
 
 Yes! The MIT license allows commercial use.
 
-### Do I need to credit the starter kit?
+### Do I need to credit this project?
 
 Not required, but appreciated!

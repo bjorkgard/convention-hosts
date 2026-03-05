@@ -4,7 +4,7 @@ This guide covers testing your Laravel React application using Pest PHP.
 
 ## Overview
 
-The starter kit uses Pest PHP, an elegant testing framework built on top of PHPUnit. Pest provides:
+The Convention Management System uses Pest PHP, an elegant testing framework built on top of PHPUnit. Pest provides:
 
 - Expressive syntax
 - Better readability

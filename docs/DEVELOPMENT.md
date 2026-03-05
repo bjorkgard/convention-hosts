@@ -1,6 +1,6 @@
 # Development Guide
 
-This guide covers the development workflow, commands, and best practices for working with the Laravel React Starter Kit.
+This guide covers the development workflow, commands, and best practices for working with the Convention Management System.
 
 ## Development Workflow
 

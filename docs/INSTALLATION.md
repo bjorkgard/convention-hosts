@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide will walk you through setting up the Laravel React Starter Kit on your local machine.
+This guide will walk you through setting up the Convention Management System on your local machine.
 
 ## Prerequisites
 

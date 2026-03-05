@@ -1,6 +1,6 @@
 # Convention Management System
 
-The Convention Management System is a comprehensive feature built on top of the Laravel React Starter Kit. It enables convention organizers to manage multi-day events with real-time occupancy tracking, attendance reporting, and role-based access control.
+The Convention Management System is a comprehensive application that enables convention organizers to manage multi-day events with real-time occupancy tracking, attendance reporting, and role-based access control.
 
 ## Overview
 

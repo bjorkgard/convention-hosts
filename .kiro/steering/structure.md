@@ -3,21 +3,32 @@
 ## Backend (Laravel)
 
 ### Application Code (`app/`)
-- `Actions/` - Business logic actions (e.g., Fortify user creation, password reset)
+- `Actions/` - Business logic actions (e.g., Fortify user creation, password reset, convention management)
 - `Concerns/` - Reusable traits (validation rules for password, profile)
 - `Http/Controllers/` - HTTP controllers organized by feature (Settings/)
 - `Http/Middleware/` - Custom middleware (appearance handling, Inertia requests)
 - `Http/Requests/` - Form request validation classes organized by feature
-- `Models/` - Eloquent models (User)
+- `Models/` - Eloquent models:
+  - `User.php` - User model with convention relationships
+  - `Convention.php` - Convention model with floors and attendance periods
+  - `Floor.php` - Floor model with sections
+  - `Section.php` - Section model with occupancy tracking
+  - `AttendancePeriod.php` - Time-bound attendance reporting periods
+  - `AttendanceReport.php` - Section attendance data
 - `Providers/` - Service providers (AppServiceProvider, FortifyServiceProvider)
 
 ### Configuration (`config/`)
 Standard Laravel configuration files including `fortify.php` for authentication settings.
 
 ### Database (`database/`)
-- `factories/` - Model factories for testing
-- `migrations/` - Database schema migrations
+- `factories/` - Model factories for testing (User, Convention, Floor, Section)
+- `migrations/` - Database schema migrations:
+  - Convention management tables (conventions, floors, sections)
+  - User pivot tables (convention_user, floor_user, section_user)
+  - Role management (convention_user_roles)
+  - Attendance tracking (attendance_periods, attendance_reports)
 - `seeders/` - Database seeders
+- `database.sqlite` - SQLite database file (development)
 
 ### Routes
 - `routes/web.php` - Main web routes
@@ -52,8 +63,13 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `utils.ts` - Common utilities (cn for class merging)
   
 - `pages/` - Inertia.js page components
-  - `auth/` - Authentication pages (login, register, etc.)
+  - `auth/` - Authentication pages (login, register, invitation, etc.)
   - `settings/` - Settings pages (profile, password, 2FA)
+  - `conventions/` - Convention management pages (list, create, show)
+  - `floors/` - Floor management pages
+  - `sections/` - Section management pages (detail, occupancy tracking)
+  - `users/` - User management pages
+  - `search/` - Section search with accessibility filters
   - `dashboard.tsx` - Main dashboard
   - `welcome.tsx` - Landing page
   
@@ -63,6 +79,9 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `auth.ts` - Authentication types
   - `navigation.ts` - Navigation types
   - `ui.ts` - UI component types
+  - `convention.ts` - Convention, Floor, Section types
+  - `user.ts` - User and Role types
+  - `attendance.ts` - Attendance tracking types
   - `global.d.ts` - Global type declarations
   
 - `wayfinder/` - Wayfinder configuration

@@ -1,4 +1,4 @@
-# Laravel React Starter Kit
+# Convention Management System
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.2%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
@@ -8,41 +8,48 @@
 [![Inertia.js](https://img.shields.io/badge/Inertia.js-2.0-9553E9?logo=inertia&logoColor=white)](https://inertiajs.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A modern, full-stack Laravel React starter kit with authentication, type-safe routing, and a beautiful UI. Built with best practices and developer experience in mind.
+A comprehensive convention management system built with Laravel and React. Manage multi-day events with real-time occupancy tracking, attendance reporting, and role-based access control.
 
 ## ✨ Key Features
 
-### Starter Kit Features
-- 🔐 **Complete Authentication** - Login, registration, password reset, email verification
+### Convention Management
+- 📅 **Event Management** - Multi-day convention organization with date validation and conflict detection
+- 🏢 **Venue Hierarchy** - Convention → Floor → Section structure for organized venue management
+- 📊 **Real-time Occupancy** - Live section capacity tracking with color-coded indicators (0-100%)
+- 📝 **Attendance Reporting** - Morning/afternoon period tracking with locking for historical data integrity
+- 📤 **Data Export** - Multi-format export (.xlsx, .docx, Markdown) for comprehensive reporting
+
+### User Management & Security
+- 👥 **Role-Based Access** - Four-tier permission system (Owner, ConventionUser, FloorUser, SectionUser)
+- ✉️ **User Invitations** - Secure email invitations with account activation via signed URLs
+- 🔐 **Complete Authentication** - Login with "remember me", password reset, email verification
 - 🛡️ **Two-Factor Authentication** - TOTP-based 2FA with recovery codes
-- 🎨 **Modern UI** - Tailwind CSS 4 with Radix UI components
 - 🔒 **Type-Safe Routing** - Laravel Wayfinder for end-to-end type safety
-- ⚡ **SPA Experience** - Inertia.js bridges Laravel and React seamlessly
+
+### Search & Accessibility
+- 🔍 **Section Search** - Find available sections with accessibility filters (elder-friendly, handicap-friendly)
+- 📱 **PWA Support** - Progressive Web App for native-like mobile experience
 - 🌓 **Theme Support** - Built-in light/dark mode
-- 📱 **Responsive Design** - Mobile-first approach
+- 📱 **Mobile-First Design** - Optimized for on-site convention management
+
+### Developer Experience
+- ⚡ **SPA Experience** - Inertia.js bridges Laravel and React seamlessly
+- 🎨 **Modern UI** - Tailwind CSS 4 with Radix UI components
 - 🧪 **Testing Ready** - Pest PHP for elegant testing
 - 🎯 **Code Quality** - ESLint, Prettier, Laravel Pint pre-configured
-
-### Convention Management System (In Development)
-- 📅 **Event Management** - Multi-day convention organization with date validation
-- 🏢 **Venue Hierarchy** - Convention → Floor → Section structure
-- 📊 **Real-time Occupancy** - Live section capacity tracking with color-coded indicators
-- 📝 **Attendance Reporting** - Morning/afternoon period tracking with locking
-- 👥 **Role-Based Access** - Four-tier permission system (Owner, ConventionUser, FloorUser, SectionUser)
-- ✉️ **User Invitations** - Secure email invitations with account activation
-- 📤 **Data Export** - Multi-format export (.xlsx, .docx, Markdown)
-- 🔍 **Section Search** - Find available sections with accessibility filters
-- 📱 **PWA Support** - Progressive Web App for native-like mobile experience
 
 ## 🚀 Quick Start
 
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd laravel-react-starter-kit
+cd convention-management-system
 
 # Install dependencies and set up the project
 composer setup
+
+# Configure email (required for user invitations)
+# Add MAILGUN_DOMAIN and MAILGUN_SECRET to .env
 
 # Start development servers
 composer dev

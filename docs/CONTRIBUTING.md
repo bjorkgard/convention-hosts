@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for considering contributing to the Laravel React Starter Kit! This guide will help you get started.
+Thank you for considering contributing to the Convention Management System! This guide will help you get started.
 
 ## Code of Conduct
 

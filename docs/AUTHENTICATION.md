@@ -4,7 +4,7 @@ This guide covers the authentication system built with Laravel Fortify and Inert
 
 ## Overview
 
-The starter kit includes a complete authentication system with:
+The Convention Management System includes a complete authentication system with:
 
 - User registration
 - Login/logout
