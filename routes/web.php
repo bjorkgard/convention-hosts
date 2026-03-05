@@ -24,6 +24,13 @@ Route::get('invitation/{user}/{convention}', [InvitationController::class, 'show
 Route::post('invitation/{user}/{convention}', [InvitationController::class, 'store'])
     ->name('invitation.store');
 
+// Email confirmation route (signed URL, no auth required)
+Route::get('email/confirm/{user}', function (\App\Models\User $user) {
+    $user->update(['email_confirmed' => true]);
+
+    return redirect()->route('home')->with('status', 'Email confirmed successfully.');
+})->name('email.confirm')->middleware('signed');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 

@@ -65,7 +65,7 @@ it('enforces rate limiting per email+IP across multiple random iterations', func
         for ($i = 1; $i <= 7; $i++) {
             $response = post(route('login.store'), [
                 'email' => $user->email,
-                'password' => 'wrong-password-' . fake()->word(),
+                'password' => 'wrong-password-'.fake()->word(),
             ]);
 
             $status = $response->getStatusCode();
