@@ -95,6 +95,8 @@ class ConventionController extends Controller
 
         // Get current user's roles for this convention
         $userRoles = $user->rolesForConvention($convention);
+        $userFloorIds = $user->floors()->pluck('floors.id')->toArray();
+        $userSectionIds = $user->sections()->pluck('sections.id')->toArray();
 
         return Inertia::render('conventions/show', [
             'convention' => $convention,
@@ -102,6 +104,8 @@ class ConventionController extends Controller
             'attendancePeriods' => $attendancePeriods,
             'users' => $users,
             'userRoles' => $userRoles,
+            'userFloorIds' => $userFloorIds,
+            'userSectionIds' => $userSectionIds,
         ]);
     }
 

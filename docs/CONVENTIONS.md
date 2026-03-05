@@ -768,6 +768,59 @@ The frontend data models are defined in `resources/js/types/convention.ts` and m
 
 All interfaces include optional relationship fields (e.g., `floors?: Floor[]` on Convention) for when data is eagerly loaded via Inertia props. The `User` type is imported from `@/types/auth`.
 
+## Frontend Hooks
+
+### useConventionRole
+
+Reads the current user's roles and scope from Inertia shared page props.
+
+**Location:** `resources/js/hooks/use-convention-role.ts`
+
+**Expected Page Props:**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `userRoles` | `Role[]` | Roles for the current convention |
+| `userFloorIds` | `number[]` | Floor IDs the user is assigned to |
+| `userSectionIds` | `number[]` | Section IDs the user is assigned to |
+
+These props are provided by the `ConventionController.show()` method.
+
+**Return Value:**
+
+```typescript
+interface UseConventionRoleReturn {
+    isOwner: boolean;
+    isConventionUser: boolean;
+    isFloorUser: boolean;
+    isSectionUser: boolean;
+    hasFloorAccess: (floorId: number) => boolean;
+    hasSectionAccess: (sectionId: number) => boolean;
+}
+```
+
+**Usage:**
+
+```tsx
+import { useConventionRole } from '@/hooks/use-convention-role';
+
+function FloorList({ floors }) {
+    const { isOwner, isConventionUser, hasFloorAccess } = useConventionRole();
+
+    return floors
+        .filter((floor) => hasFloorAccess(floor.id))
+        .map((floor) => (
+            <FloorRow
+                key={floor.id}
+                floor={floor}
+                canEdit={isOwner || isConventionUser}
+            />
+        ));
+}
+```
+
+Owner and ConventionUser roles automatically have access to all floors and sections. FloorUser and SectionUser access is determined by the scoped ID sets.
+
 ## Implementation Status
 
 The Convention Management System is currently under development.
@@ -787,12 +840,13 @@ The Convention Management System is currently under development.
 ### In Progress
 
 - Email system (Mailgun integration, invitation and confirmation mailables)
-- Frontend custom React hooks, UI components, and Inertia pages
+- Frontend UI components and Inertia pages
 - Navigation and layout updates
 - PWA support
 
 ### Recently Added
 
+- **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and scope data from Inertia page props, exposing `isOwner`, `isConventionUser`, `isFloorUser`, `isSectionUser` booleans and `hasFloorAccess(floorId)` / `hasSectionAccess(sectionId)` helpers
 - **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes
 
 ## Development Setup

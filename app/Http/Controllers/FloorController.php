@@ -36,11 +36,15 @@ class FloorController extends Controller
         $floors = $query->get();
 
         $userRoles = $request->user()->rolesForConvention($convention);
+        $userFloorIds = $request->user()->floors()->pluck('floors.id')->toArray();
+        $userSectionIds = $request->user()->sections()->pluck('sections.id')->toArray();
 
         return Inertia::render('floors/index', [
             'convention' => $convention,
             'floors' => $floors,
             'userRoles' => $userRoles,
+            'userFloorIds' => $userFloorIds,
+            'userSectionIds' => $userSectionIds,
         ]);
     }
 

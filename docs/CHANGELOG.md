@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add useConventionRole React hook for frontend role-based access control (2026-03-05)
+  - Reads userRoles, userFloorIds, userSectionIds from Inertia page props
+  - Exposes isOwner, isConventionUser, isFloorUser, isSectionUser booleans
+  - Provides hasFloorAccess() and hasSectionAccess() scope helpers
+  - Memoized via useMemo for render performance
 - implement daily occupancy reset command and scheduling (, |Nathanael Björkgård|||2026-03-05)
 - add TypeScript interfaces for convention data models (, |Nathanael Björkgård|||2026-03-05)
 

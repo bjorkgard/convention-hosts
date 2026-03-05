@@ -537,8 +537,8 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 24.2, 24.4_
 
 
-- [ ] 11. Custom React hooks
-  - [ ] 11.1 Create useConventionRole hook
+- [x] 11. Custom React hooks
+  - [x] 11.1 Create useConventionRole hook
     - Accept convention as parameter
     - Return isOwner, isConventionUser, isFloorUser, isSectionUser booleans
     - Return hasFloorAccess(floorId) function
@@ -546,17 +546,17 @@ This implementation plan breaks down the Convention Management System into discr
     - Use auth user from Inertia shared props
     - _Requirements: 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
 
-  - [ ] 11.2 Create useOccupancyColor hook
+  - [x] 11.2 Create useOccupancyColor hook
     - Accept occupancy percentage as parameter
     - Return Tailwind color class based on percentage
     - 0-25%: green, 26-50%: dark-green, 51-75%: yellow, 76-90%: orange, 91-100%: red
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
 
-  - [ ] 11.3 Write property test for occupancy color coding
+  - [x] 11.3 Write property test for occupancy color coding
     - **Property 29: Occupancy Color Coding**
     - **Validates: Requirements 9.1, 9.2, 9.3, 9.4, 9.5**
 
-  - [ ] 11.3 Create useAttendanceReport hook
+  - [x] 11.3 Create useAttendanceReport hook
     - Accept convention as parameter
     - Return activePeriod (current active period or null)
     - Return canStart boolean (max 2 per day check)
@@ -565,7 +565,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Return totalCount (total sections in convention)
     - _Requirements: 10.6, 10.7, 10.8_
 
-  - [ ] 11.4 Write property test for attendance calculations
+  - [x] 11.4 Write property test for attendance calculations
     - **Property 33: Attendance Total Calculation**
     - **Property 34: Reported Sections Counter**
     - **Validates: Requirements 10.7, 10.8**
