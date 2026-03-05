@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-05
 
+### Other
+
+- docs(steering): add comprehensive convention management system documentation (, |Nathanael Björkgård|||2026-03-05)
+
+
+## [Unreleased] - 2026-03-05
+
 ### Added
 
 - add Convention model with relationships and role management methods (2026-03-05)
