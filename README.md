@@ -68,7 +68,7 @@ Visit `http://localhost:8000` to see your application.
 - [Architecture Overview](docs/ARCHITECTURE.md) - Project structure and patterns
 - [Authentication](docs/AUTHENTICATION.md) - Auth system documentation
 - [Type-Safe Routing](docs/ROUTING.md) - Wayfinder usage guide
-- [Convention Management](docs/CONVENTIONS.md) - Convention system documentation (in development)
+- [Convention Management](docs/CONVENTIONS.md) - Convention system documentation
 
 ### Advanced
 - [Testing Guide](docs/TESTING.md) - Writing and running tests
@@ -78,70 +78,6 @@ Visit `http://localhost:8000` to see your application.
 ### Reference
 - [Changelog](docs/CHANGELOG.md) - Version history
 
-## 🛠️ Tech Stack
-
-### Backend
-- **PHP 8.2+** - Modern PHP features
-- **Laravel 12** - Latest Laravel framework
-- **Laravel Fortify** - Authentication scaffolding
-- **Laravel Wayfinder** - Type-safe routing
-- **Inertia.js** - Server-side routing with SPA experience
-- **SQLite** - Lightweight database (development)
-- **Pest PHP** - Elegant testing framework
-
-### Frontend
-- **React 19** - Latest React with compiler
-- **TypeScript** - Type safety throughout
-- **Vite** - Lightning-fast build tool
-- **Tailwind CSS 4** - Utility-first styling
-- **Radix UI** - Accessible component primitives
-- **Lucide React** - Beautiful icon library
-
-## 📋 Requirements
-
-- PHP 8.2 or higher
-- Composer 2.x
-- Node.js 18+ and npm
-- SQLite (or MySQL/PostgreSQL for production)
-
-## 🎯 Common Commands
-
-```bash
-# Development
-composer dev              # Start all dev services
-composer dev:ssr          # Start with SSR support
-npm run dev               # Vite dev server only
-
-# Testing
-composer test             # Run PHP tests
-
-# Code Quality
-composer lint             # Fix PHP code style
-npm run lint              # Fix JS/TS issues
-npm run format            # Format code with Prettier
-npm run types:check       # TypeScript type checking
-
-# Building
-npm run build             # Build for production
-npm run build:ssr         # Build with SSR
-
-# CI
-composer ci:check         # Run all checks
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
 ## 📄 License
 
-This project is open-sourced software licensed under the [MIT license](LICENSE).
-
-## 🙏 Acknowledgments
-
-Built with these amazing tools:
-- [Laravel](https://laravel.com)
-- [React](https://react.dev)
-- [Inertia.js](https://inertiajs.com)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Radix UI](https://www.radix-ui.com)
+This project is open-sourced software licensed under the [MIT license](LICENSE)
