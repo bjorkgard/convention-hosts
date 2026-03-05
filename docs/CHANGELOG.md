@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add convention management UI components and tests (, |Nathanael Björkgård|||2026-03-05)
+
+### Other
+
+- docs(structure): update project structure documentation with implemented features (, |Nathanael Björkgård|||2026-03-05)
+
+
+## [Unreleased] - 2026-03-05
+
+### Added
+
 - add useConventionRole React hook for frontend role-based access control (2026-03-05)
   - Reads userRoles, userFloorIds, userSectionIds from Inertia page props
   - Exposes isOwner, isConventionUser, isFloorUser, isSectionUser booleans
