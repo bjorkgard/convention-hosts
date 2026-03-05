@@ -15,7 +15,7 @@ return new class extends Migration
             // Split name into first_name and last_name
             $table->string('first_name')->after('id')->nullable();
             $table->string('last_name')->after('first_name')->nullable();
-            
+
             // Add mobile and email_confirmed fields
             $table->string('mobile')->after('email')->nullable();
             $table->boolean('email_confirmed')->default(false)->after('email_verified_at');
@@ -56,7 +56,7 @@ return new class extends Migration
             DB::table('users')
                 ->where('id', $user->id)
                 ->update([
-                    'name' => trim($user->first_name . ' ' . $user->last_name),
+                    'name' => trim($user->first_name.' '.$user->last_name),
                 ]);
         });
 

@@ -321,6 +321,90 @@ Real-time section occupancy with visual color coding:
 - Paginated for mobile
 - No role-based filtering (available to all)
 
+## Eloquent Models
+
+### Convention Model
+
+The `Convention` model represents a convention event with all its relationships and role-checking capabilities.
+
+**Location:** `app/Models/Convention.php`
+
+**Fillable Attributes:**
+- `name` - Convention name
+- `city` - City location
+- `country` - Country location
+- `address` - Optional full address
+- `start_date` - Convention start date (cast to Carbon date)
+- `end_date` - Convention end date (cast to Carbon date)
+- `other_info` - Optional additional information
+
+**Relationships:**
+
+```php
+// One-to-many relationships
+$convention->floors()              // HasMany Floor
+$convention->attendancePeriods()   // HasMany AttendancePeriod
+
+// Many-to-many relationships
+$convention->users()               // BelongsToMany User (via convention_user)
+```
+
+**Role Management Methods:**
+
+```php
+// Get all roles for a specific user
+$roles = $convention->userRoles($user);
+// Returns: Collection of role strings ['Owner', 'ConventionUser']
+
+// Check if user has a specific role
+$isOwner = $convention->hasRole($user, 'Owner');
+// Returns: bool
+
+// Check if user has any of the specified roles
+$hasAccess = $convention->hasAnyRole($user, ['Owner', 'ConventionUser']);
+// Returns: bool
+```
+
+**Usage Examples:**
+
+```php
+// Create a convention
+$convention = Convention::create([
+    'name' => 'Annual Tech Conference 2026',
+    'city' => 'San Francisco',
+    'country' => 'USA',
+    'address' => '123 Convention Center Dr',
+    'start_date' => '2026-06-15',
+    'end_date' => '2026-06-17',
+    'other_info' => 'Main auditorium available',
+]);
+
+// Attach user with roles
+$convention->users()->attach($user->id);
+
+// Check permissions
+if ($convention->hasRole($user, 'Owner')) {
+    // Allow deletion
+}
+
+if ($convention->hasAnyRole($user, ['Owner', 'ConventionUser'])) {
+    // Allow full access
+}
+
+// Get user's roles
+$userRoles = $convention->userRoles($user);
+// ['Owner', 'ConventionUser']
+```
+
+**Date Casting:**
+
+The model automatically casts `start_date` and `end_date` to Carbon instances, enabling date manipulation:
+
+```php
+$convention->start_date->format('F j, Y');  // "June 15, 2026"
+$convention->end_date->diffInDays($convention->start_date);  // 2
+```
+
 ## Implementation Status
 
 The Convention Management System is currently under development. See `.kiro/specs/convention-management-system/` for:
@@ -331,7 +415,8 @@ The Convention Management System is currently under development. See `.kiro/spec
 
 ### Completed Tasks
 
-- ✓ Task 1.1: Conventions table migration
+- ✓ Task 1.1-1.7: All database migrations
+- ✓ Task 2.1: Convention model with relationships and role management
 
 ### In Progress
 

@@ -56,8 +56,8 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 10.4, 23.1_
 
 
-- [ ] 2. Eloquent models and relationships
-  - [ ] 2.1 Create Convention model with relationships
+- [x] 2. Eloquent models and relationships
+  - [x] 2.1 Create Convention model with relationships
     - Define fillable fields and casts
     - Add floors() hasMany relationship
     - Add users() belongsToMany relationship via convention_user
@@ -66,18 +66,18 @@ This implementation plan breaks down the Convention Management System into discr
     - Add helper methods: hasRole(), hasAnyRole()
     - _Requirements: 5.2, 5.3_
 
-  - [ ] 2.2 Write property test for Convention model
+  - [x] 2.2 Write property test for Convention model
     - **Property 4: Convention Creator Role Assignment**
     - **Validates: Requirements 1.4**
 
-  - [ ] 2.3 Create Floor model with relationships
+  - [x] 2.3 Create Floor model with relationships
     - Define fillable fields
     - Add convention() belongsTo relationship
     - Add sections() hasMany relationship
     - Add users() belongsToMany relationship via floor_user
     - _Requirements: 6.1, 6.2_
 
-  - [ ] 2.4 Create Section model with relationships
+  - [x] 2.4 Create Section model with relationships
     - Define fillable fields and casts
     - Add floor() belongsTo relationship
     - Add users() belongsToMany relationship via section_user
@@ -85,11 +85,11 @@ This implementation plan breaks down the Convention Management System into discr
     - Add attendanceReports() hasMany relationship
     - _Requirements: 6.3, 6.4, 6.5, 6.6, 6.7_
 
-  - [ ] 2.5 Write property test for Section model
+  - [x] 2.5 Write property test for Section model
     - **Property 23: Section Default Values**
     - **Validates: Requirements 6.6**
 
-  - [ ] 2.6 Extend User model with convention relationships
+  - [x] 2.6 Extend User model with convention relationships
     - Add conventions() belongsToMany relationship via convention_user
     - Add floors() belongsToMany relationship via floor_user
     - Add sections() belongsToMany relationship via section_user
@@ -97,7 +97,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Add hasRole(), hasAnyRole() helper methods
     - _Requirements: 5.2, 5.3_
 
-  - [ ] 2.7 Create AttendancePeriod model with relationships
+  - [x] 2.7 Create AttendancePeriod model with relationships
     - Define fillable fields and casts
     - Add convention() belongsTo relationship
     - Add reports() hasMany AttendanceReport relationship
@@ -106,7 +106,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Add reportedSectionsCount() method
     - _Requirements: 10.1, 10.2, 10.4_
 
-  - [ ] 2.8 Create AttendanceReport model with relationships
+  - [x] 2.8 Create AttendanceReport model with relationships
     - Define fillable fields and casts
     - Add period() belongsTo AttendancePeriod relationship
     - Add section() belongsTo relationship

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add Convention model with relationships and role management methods (2026-03-05)
 - add database migrations and documentation for convention management system (, |Nathanael Björkgård|||2026-03-05)
 
 ### Other
