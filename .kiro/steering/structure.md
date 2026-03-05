@@ -3,11 +3,13 @@
 ## Backend (Laravel)
 
 ### Application Code (`app/`)
-- `Actions/` - Business logic actions (e.g., Fortify user creation, password reset, convention management)
+- `Actions/` - Business logic actions (CreateConventionAction, ExportConventionAction, InviteUserAction, UpdateOccupancyAction, Fortify/)
 - `Concerns/` - Reusable traits (validation rules for password, profile)
-- `Http/Controllers/` - HTTP controllers organized by feature (Settings/)
-- `Http/Middleware/` - Custom middleware (appearance handling, Inertia requests)
-- `Http/Requests/` - Form request validation classes organized by feature
+- `Console/Commands/` - Artisan commands (ResetDailyOccupancy)
+- `Exports/` - Data export classes (ConventionExport, ConventionWordExport, ConventionMarkdownExport, sheets for attendance/floors/users)
+- `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/)
+- `Http/Middleware/` - Custom middleware (EnsureConventionAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, ScopeByRole)
+- `Http/Requests/` - Form request validation classes organized by feature (Settings/, plus convention/floor/section/user/occupancy/attendance/search requests)
 - `Models/` - Eloquent models:
   - `User.php` - User model with convention relationships
   - `Convention.php` - Convention model with floors and attendance periods
@@ -21,7 +23,7 @@
 Standard Laravel configuration files including `fortify.php` for authentication settings.
 
 ### Database (`database/`)
-- `factories/` - Model factories for testing (User, Convention, Floor, Section)
+- `factories/` - Model factories for testing (User, Convention, Floor, Section, AttendancePeriod, AttendanceReport)
 - `migrations/` - Database schema migrations:
   - Convention management tables (conventions, floors, sections)
   - User pivot tables (convention_user, floor_user, section_user)
@@ -45,12 +47,20 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   
 - `components/` - React components
   - `ui/` - Reusable UI components (shadcn/ui style, DO NOT EDIT)
-  - Feature-specific components (app-shell, nav-main, etc.)
+  - `conventions/` - Convention feature components (attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-indicator, role-badge, section-card, user-row)
+  - General components (app-shell, app-sidebar, nav-main, breadcrumbs, heading, input-error, etc.)
   
 - `hooks/` - Custom React hooks
   - `use-appearance.tsx` - Theme/appearance management
-  - `use-two-factor-auth.ts` - 2FA state management
+  - `use-attendance-report.ts` - Attendance report state management
+  - `use-clipboard.ts` - Clipboard copy utility
+  - `use-convention-role.ts` - Convention role checks
+  - `use-current-url.ts` - Current URL tracking
+  - `use-initials.tsx` - User initials generation
+  - `use-mobile-navigation.ts` - Mobile navigation state
   - `use-mobile.tsx` - Mobile detection
+  - `use-occupancy-color.ts` - Occupancy color mapping
+  - `use-two-factor-auth.ts` - 2FA state management
   
 - `layouts/` - Page layout components
   - `app/` - Authenticated app layout configuration
@@ -63,26 +73,23 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `utils.ts` - Common utilities (cn for class merging)
   
 - `pages/` - Inertia.js page components
-  - `auth/` - Authentication pages (login, register, invitation, etc.)
-  - `settings/` - Settings pages (profile, password, 2FA)
-  - `conventions/` - Convention management pages (list, create, show)
-  - `floors/` - Floor management pages
-  - `sections/` - Section management pages (detail, occupancy tracking)
-  - `users/` - User management pages
-  - `search/` - Section search with accessibility filters
+  - `auth/` - Authentication pages (login, register, confirm-password, forgot-password, reset-password, two-factor-challenge, verify-email)
+  - `settings/` - Settings pages (profile, password, two-factor, appearance)
   - `dashboard.tsx` - Main dashboard
   - `welcome.tsx` - Landing page
+  - Note: Convention/floor/section/user/search pages are planned but not yet implemented as page components. Convention features are currently handled via controller-rendered views and convention-specific components.
   
 - `routes/` - **Auto-generated** Wayfinder route definitions (DO NOT EDIT)
   
 - `types/` - TypeScript type definitions
+  - `index.ts` - Barrel export with shared PageProps, Flash, Errors types
   - `auth.ts` - Authentication types
+  - `convention.ts` - Convention, Floor, Section, Attendance types
   - `navigation.ts` - Navigation types
   - `ui.ts` - UI component types
-  - `convention.ts` - Convention, Floor, Section types
   - `user.ts` - User and Role types
-  - `attendance.ts` - Attendance tracking types
   - `global.d.ts` - Global type declarations
+  - `vite-env.d.ts` - Vite client type references
   
 - `wayfinder/` - Wayfinder configuration
 
