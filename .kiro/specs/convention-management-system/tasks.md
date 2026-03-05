@@ -114,47 +114,47 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 10.4_
 
 
-- [ ] 3. Form request validation classes
-  - [ ] 3.1 Create StoreConventionRequest
+- [x] 3. Form request validation classes
+  - [x] 3.1 Create StoreConventionRequest
     - Validate required fields: name, city, country, start_date, end_date
     - Validate optional fields: address, other_info
     - Add custom validation for date overlap detection
     - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ] 3.2 Write property test for convention overlap detection
+  - [x] 3.2 Write property test for convention overlap detection
     - **Property 3: Convention Date Overlap Detection**
     - **Validates: Requirements 1.3**
 
-  - [ ] 3.3 Create UpdateConventionRequest
+  - [x] 3.3 Create UpdateConventionRequest
     - Same validation as StoreConventionRequest
     - Exclude current convention from overlap check
     - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ] 3.4 Create StoreFloorRequest
+  - [x] 3.4 Create StoreFloorRequest
     - Validate required field: name
     - _Requirements: 6.1_
 
-  - [ ] 3.5 Write property test for floor creation validation
+  - [x] 3.5 Write property test for floor creation validation
     - **Property 19: Floor Creation Validation**
     - **Validates: Requirements 6.1**
 
-  - [ ] 3.6 Create StoreSectionRequest
+  - [x] 3.6 Create StoreSectionRequest
     - Validate required fields: name, number_of_seats
     - Validate optional fields: elder_friendly, handicap_friendly, information
     - Validate number_of_seats is positive integer
     - _Requirements: 6.3, 6.4, 6.5_
 
-  - [ ] 3.7 Write property test for section creation validation
+  - [x] 3.7 Write property test for section creation validation
     - **Property 21: Section Creation Validation**
     - **Validates: Requirements 6.3**
 
-  - [ ] 3.8 Create UpdateOccupancyRequest
+  - [x] 3.8 Create UpdateOccupancyRequest
     - Validate occupancy enum: 0, 10, 25, 50, 75, 100 (optional)
     - Validate available_seats integer >= 0 (optional)
     - Require at least one of occupancy or available_seats
     - _Requirements: 7.3, 7.6_
 
-  - [ ] 3.9 Create StoreUserRequest
+  - [x] 3.9 Create StoreUserRequest
     - Validate required fields: first_name, last_name, email, mobile
     - Validate email uniqueness
     - Add custom rule to reject emails containing "jwpub.org"
@@ -163,30 +163,30 @@ This implementation plan breaks down the Convention Management System into discr
     - Validate section_ids array if SectionUser role present
     - _Requirements: 4.1, 4.2, 4.4, 5.1_
 
-  - [ ] 3.10 Write property test for email domain restriction
+  - [x] 3.10 Write property test for email domain restriction
     - **Property 13: Email Domain Restriction**
     - **Validates: Requirements 4.2**
 
-  - [ ] 3.11 Create UpdateUserRequest
+  - [x] 3.11 Create UpdateUserRequest
     - Same validation as StoreUserRequest
     - Exclude current user from email uniqueness check
     - _Requirements: 4.1, 4.2, 4.4_
 
-  - [ ] 3.12 Create ReportAttendanceRequest
+  - [x] 3.12 Create ReportAttendanceRequest
     - Validate attendance integer >= 0
     - Validate period_id exists in attendance_periods
     - _Requirements: 10.4_
 
-  - [ ] 3.13 Create SetPasswordRequest
+  - [x] 3.13 Create SetPasswordRequest
     - Validate password: min 8 chars, lowercase, uppercase, number, symbol
     - Validate password_confirmation matches
     - _Requirements: 21.4_
 
-  - [ ] 3.14 Write property test for password validation
+  - [x] 3.14 Write property test for password validation
     - **Property 50: Password Validation Criteria**
     - **Validates: Requirements 21.4**
 
-  - [ ] 3.15 Create SearchRequest
+  - [x] 3.15 Create SearchRequest
     - Validate optional floor_id exists
     - Validate optional elder_friendly boolean
     - Validate optional handicap_friendly boolean

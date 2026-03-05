@@ -29,7 +29,8 @@ The Convention Management System includes a complete authentication system with:
 // resources/js/pages/auth/register.tsx
 export default function Register() {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
         password_confirmation: '',
@@ -44,6 +45,8 @@ export default function Register() {
 }
 ```
 
+**Note:** The `mobile` field is not required during registration. It is only required when users are invited to conventions by convention managers.
+
 **Backend Action:**
 ```php
 // app/Actions/Fortify/CreateNewUser.php
@@ -52,19 +55,23 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
         ])->validate();
 
         return User::create([
-            'name' => $input['name'],
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
     }
 }
 ```
+
+**Note:** The `mobile` field is stored in the database but is not collected during self-registration. It is only required when convention managers invite users to conventions.
 
 ### Login
 
@@ -382,7 +389,8 @@ export default function ConfirmPassword() {
 // resources/js/pages/settings/profile.tsx
 export default function Profile({ user }) {
     const { data, setData, put, processing, errors } = useForm({
-        name: user.name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         email: user.email,
     });
 
@@ -405,6 +413,32 @@ class ProfileController extends Controller
         $request->user()->update($request->validated());
 
         return back();
+    }
+}
+```
+
+**Profile Validation Rules:**
+```php
+// app/Concerns/ProfileValidationRules.php
+trait ProfileValidationRules
+{
+    protected function profileRules(?int $userId = null): array
+    {
+        return [
+            'first_name' => $this->firstNameRules(),
+            'last_name' => $this->lastNameRules(),
+            'email' => $this->emailRules($userId),
+        ];
+    }
+
+    protected function firstNameRules(): array
+    {
+        return ['required', 'string', 'max:255'];
+    }
+
+    protected function lastNameRules(): array
+    {
+        return ['required', 'string', 'max:255'];
     }
 }
 ```
@@ -533,7 +567,8 @@ Fortify::redirects('register', '/dashboard');
 // Test registration
 test('user can register', function () {
     $response = $this->post('/register', [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',

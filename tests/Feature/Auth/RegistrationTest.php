@@ -8,12 +8,22 @@ test('registration screen can be rendered', function () {
 
 test('new users can register', function () {
     $response = $this->post(route('register.store'), [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => 'Password123!',
+        'password_confirmation' => 'Password123!',
     ]);
 
+    $response->assertSessionHasNoErrors();
+    
+    // Check if user was created
+    $this->assertDatabaseHas('users', [
+        'email' => 'test@example.com',
+        'first_name' => 'Test',
+        'last_name' => 'User',
+    ]);
+    
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
 });

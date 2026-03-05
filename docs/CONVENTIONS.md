@@ -405,6 +405,103 @@ $convention->start_date->format('F j, Y');  // "June 15, 2026"
 $convention->end_date->diffInDays($convention->start_date);  // 2
 ```
 
+## Form Request Validation
+
+### StoreConventionRequest
+
+The `StoreConventionRequest` class handles validation for creating new conventions with comprehensive date overlap detection.
+
+**Location:** `app/Http/Requests/StoreConventionRequest.php`
+
+**Validation Rules:**
+
+```php
+[
+    'name' => ['required', 'string', 'max:255'],
+    'city' => ['required', 'string', 'max:255'],
+    'country' => ['required', 'string', 'max:255'],
+    'address' => ['nullable', 'string'],
+    'start_date' => ['required', 'date', 'after_or_equal:today'],
+    'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+    'other_info' => ['nullable', 'string'],
+]
+```
+
+**Key Features:**
+
+1. **Required Fields:** name, city, country, start_date, end_date
+2. **Optional Fields:** address, other_info
+3. **Date Validation:**
+   - `start_date` must be today or in the future
+   - `end_date` must be on or after `start_date`
+4. **Overlap Detection:** Custom validation prevents creating conventions that overlap with existing ones in the same location
+
+**Overlap Detection Logic:**
+
+The request includes a custom validator that checks for overlapping conventions in the same city and country:
+
+```php
+private function hasOverlappingConvention(): bool
+{
+    return Convention::where('city', $this->city)
+        ->where('country', $this->country)
+        ->where(function ($query) {
+            $query->whereBetween('start_date', [$this->start_date, $this->end_date])
+                ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
+                ->orWhere(function ($q) {
+                    $q->where('start_date', '<=', $this->start_date)
+                      ->where('end_date', '>=', $this->end_date);
+                });
+        })
+        ->exists();
+}
+```
+
+**Overlap Scenarios Detected:**
+
+1. **New convention starts during existing convention:**
+   - Existing: June 1-5
+   - New: June 3-7 ❌ (overlaps)
+
+2. **New convention ends during existing convention:**
+   - Existing: June 5-10
+   - New: June 1-7 ❌ (overlaps)
+
+3. **New convention completely contains existing convention:**
+   - Existing: June 5-7
+   - New: June 1-10 ❌ (overlaps)
+
+4. **New convention is completely contained by existing convention:**
+   - Existing: June 1-10
+   - New: June 5-7 ❌ (overlaps)
+
+**Error Message:**
+
+When overlap is detected, the validation error is added to the `start_date` field:
+
+```
+"A convention already exists in this location during these dates."
+```
+
+**Usage Example:**
+
+```php
+// In ConventionController
+public function store(StoreConventionRequest $request)
+{
+    // Validation automatically runs
+    // If validation passes, create convention
+    $convention = Convention::create($request->validated());
+    
+    // Attach creator as Owner and ConventionUser
+    // ...
+}
+```
+
+**Testing:**
+
+The overlap detection is covered by property-based tests in Task 3.2 of the implementation plan.
+
 ## Implementation Status
 
 The Convention Management System is currently under development. See `.kiro/specs/convention-management-system/` for:
@@ -417,10 +514,34 @@ The Convention Management System is currently under development. See `.kiro/spec
 
 - ✓ Task 1.1-1.7: All database migrations
 - ✓ Task 2.1: Convention model with relationships and role management
+- ✓ Task 3.1: StoreConventionRequest with overlap detection
 
 ### In Progress
 
 See `tasks.md` for the complete implementation plan and current progress.
+
+## Development Setup
+
+### Database Seeding
+
+The application includes a default test user for development:
+
+```php
+// database/seeders/DatabaseSeeder.php
+User::factory()->create([
+    'first_name' => 'Test',
+    'last_name' => 'User',
+    'email' => 'test@example.com',
+]);
+```
+
+After running migrations, seed the database:
+
+```bash
+php artisan db:seed
+```
+
+This creates a test user account that can be used for development and testing. The user's password can be set via the invitation flow or manually in the database.
 
 ## Related Documentation
 

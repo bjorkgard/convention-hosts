@@ -197,13 +197,16 @@ Convention
 - Constraint: end_date >= start_date
 
 ### User Creation
-- Required: first_name, last_name, email, mobile
+- Required for convention invitations: first_name, last_name, email, mobile
+- Required for self-registration: first_name, last_name, email, password
 - Email must be globally unique
 - Email cannot contain "jwpub.org"
 - If email exists, connect existing user instead of creating duplicate
-- Roles array required (at least one role)
+- Roles array required (at least one role) for convention invitations
 - floor_ids required if FloorUser role assigned
 - section_ids required if SectionUser role assigned
+
+**Note:** The `mobile` field is required when convention managers invite users to conventions, but is not collected during self-registration.
 
 ### Password Requirements
 - Minimum 8 characters

@@ -118,24 +118,35 @@ use App\Models\User;
 
 test('user can register', function () {
     $response = $this->post('/register', [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'mobile' => '+1234567890',
+        'password' => 'Password123!',
+        'password_confirmation' => 'Password123!',
     ]);
 
-    $response->assertRedirect('/dashboard');
-    $this->assertAuthenticated();
+    $response->assertSessionHasNoErrors();
     
-    expect(User::where('email', 'test@example.com')->exists())->toBeTrue();
+    // Verify user was created in database
+    $this->assertDatabaseHas('users', [
+        'email' => 'test@example.com',
+        'first_name' => 'Test',
+        'last_name' => 'User',
+    ]);
+    
+    $this->assertAuthenticated();
+    $response->assertRedirect('/dashboard');
 });
 
 test('registration requires valid email', function () {
     $response = $this->post('/register', [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'invalid-email',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'mobile' => '+1234567890',
+        'password' => 'Password123!',
+        'password_confirmation' => 'Password123!',
     ]);
 
     $response->assertSessionHasErrors('email');
@@ -143,10 +154,12 @@ test('registration requires valid email', function () {
 
 test('registration requires password confirmation', function () {
     $response = $this->post('/register', [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'different',
+        'mobile' => '+1234567890',
+        'password' => 'Password123!',
+        'password_confirmation' => 'DifferentPass123!',
     ]);
 
     $response->assertSessionHasErrors('password');
@@ -599,8 +612,11 @@ test('user can update profile', function () {
 // ✅ Good - Tests one behavior
 test('registration requires email', function () {
     $this->post('/register', [
-        'name' => 'Test',
-        'password' => 'password',
+        'first_name' => 'Test',
+        'last_name' => 'User',
+        'mobile' => '+1234567890',
+        'password' => 'Password123!',
+        'password_confirmation' => 'Password123!',
     ])->assertSessionHasErrors('email');
 });
 
