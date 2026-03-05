@@ -754,6 +754,20 @@ The `show()` method dynamically scopes data based on the user's role, using scop
 
 The `export()` method delegates to `ExportConventionAction` and returns a downloadable file that is automatically deleted after sending.
 
+## TypeScript Interfaces
+
+The frontend data models are defined in `resources/js/types/convention.ts` and mirror the Eloquent models:
+
+| Interface | Description | Key Fields |
+|-----------|-------------|------------|
+| `Convention` | Convention event | name, city, country, start_date, end_date |
+| `Floor` | Venue level | convention_id, name |
+| `Section` | Seating area | floor_id, number_of_seats, occupancy, available_seats, elder_friendly, handicap_friendly |
+| `AttendancePeriod` | Reporting period | convention_id, date, period (`'morning'` \| `'afternoon'`), locked |
+| `AttendanceReport` | Section attendance | attendance_period_id, section_id, attendance, reported_by |
+
+All interfaces include optional relationship fields (e.g., `floors?: Floor[]` on Convention) for when data is eagerly loaded via Inertia props. The `User` type is imported from `@/types/auth`.
+
 ## Implementation Status
 
 The Convention Management System is currently under development.
@@ -773,9 +787,13 @@ The Convention Management System is currently under development.
 ### In Progress
 
 - Email system (Mailgun integration, invitation and confirmation mailables)
-- Frontend TypeScript types, hooks, UI components, and Inertia pages
+- Frontend custom React hooks, UI components, and Inertia pages
 - Navigation and layout updates
 - PWA support
+
+### Recently Added
+
+- **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes
 
 ## Development Setup
 
