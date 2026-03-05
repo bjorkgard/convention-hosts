@@ -194,7 +194,7 @@ CREATE TABLE attendance_reports (
 
 ## Role-Based Access Control
 
-The system implements a four-tier hierarchical role system:
+The system implements a four-tier hierarchical role system with middleware-enforced access control.
 
 ### Role Hierarchy
 

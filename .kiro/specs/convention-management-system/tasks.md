@@ -302,58 +302,58 @@ This implementation plan breaks down the Convention Management System into discr
     - **Validates: Requirements 25.1, 25.2, 25.3**
 
 
-- [ ] 6. Middleware and authorization
-  - [ ] 6.1 Create EnsureConventionAccess middleware
+- [x] 6. Middleware and authorization
+  - [x] 6.1 Create EnsureConventionAccess middleware
     - Verify user has any role for the convention
     - Abort with 403 if no access
     - _Requirements: 5.2_
 
-  - [ ] 6.2 Create EnsureOwnerRole middleware
+  - [x] 6.2 Create EnsureOwnerRole middleware
     - Verify user has Owner role for the convention
     - Abort with 403 if not owner
     - _Requirements: 5.4, 12.4_
 
-  - [ ] 6.3 Create ScopeByRole middleware
+  - [x] 6.3 Create ScopeByRole middleware
     - Filter query results based on user's role scope
     - Add scoped_floor_ids for FloorUser
     - Add scoped_section_ids for SectionUser
     - Pass through for Owner and ConventionUser
     - _Requirements: 5.5, 5.6, 5.7, 12.1, 12.2, 12.3_
 
-  - [ ] 6.4 Write property test for role-based data scoping
+  - [x] 6.4 Write property test for role-based data scoping
     - **Property 18: Role-Based Data Scoping**
     - **Validates: Requirements 5.5, 5.6, 5.7, 12.1, 12.2, 12.3**
 
-  - [ ] 6.5 Create ConventionPolicy
+  - [x] 6.5 Create ConventionPolicy
     - Implement view() method (user has any role)
     - Implement update() method (Owner or ConventionUser)
     - Implement delete() method (Owner only)
     - Implement export() method (Owner only)
     - _Requirements: 5.4, 5.5, 12.4, 20.1_
 
-  - [ ] 6.6 Create FloorPolicy
+  - [x] 6.6 Create FloorPolicy
     - Implement view() method (role-based scoping)
     - Implement update() method (Owner, ConventionUser, or assigned FloorUser)
     - Implement delete() method (Owner or ConventionUser only)
     - _Requirements: 13.1, 13.2_
 
-  - [ ] 6.7 Write property test for FloorUser permissions
+  - [x] 6.7 Write property test for FloorUser permissions
     - **Property 37: Role-Based Permission Enforcement**
     - **Property 38: FloorUser Section Management**
     - **Validates: Requirements 13.1, 13.2, 13.3**
 
-  - [ ] 6.8 Create SectionPolicy
+  - [x] 6.8 Create SectionPolicy
     - Implement view() method (role-based scoping)
     - Implement update() method (Owner, ConventionUser, assigned FloorUser, or assigned SectionUser)
     - Implement delete() method (Owner, ConventionUser, or assigned FloorUser)
     - _Requirements: 14.1, 14.2_
 
-  - [ ] 6.9 Write property test for SectionUser restrictions
+  - [x] 6.9 Write property test for SectionUser restrictions
     - **Property 39: SectionUser Edit Restrictions**
     - **Property 40: SectionUser User Management Scope**
     - **Validates: Requirements 14.2, 14.3**
 
-  - [ ] 6.10 Create UserPolicy
+  - [x] 6.10 Create UserPolicy
     - Implement view() method (role-based scoping)
     - Implement update() method (based on scope)
     - Implement delete() method (based on scope)

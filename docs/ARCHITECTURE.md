@@ -281,6 +281,45 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 ```
 
+### Custom Middleware
+
+#### EnsureConventionAccess
+
+Verifies that the authenticated user has access to a convention before allowing the request to proceed:
+
+```php
+// app/Http/Middleware/EnsureConventionAccess.php
+class EnsureConventionAccess
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $user = $request->user();
+        $convention = $request->route('convention');
+
+        // Skip if no convention in route
+        if (! $convention instanceof Convention) {
+            return $next($request);
+        }
+
+        // Check if user has any role for this convention
+        if (! $user->conventions->contains($convention)) {
+            abort(403, 'No access to this convention');
+        }
+
+        return $next($request);
+    }
+}
+```
+
+**Usage:**
+```php
+Route::middleware(['auth', EnsureConventionAccess::class])->group(function () {
+    Route::get('/conventions/{convention}', [ConventionController::class, 'show']);
+});
+```
+
+This middleware ensures that users can only access conventions they are associated with through the role-based access control system.
+
 ## State Management
 
 ### Server State (Inertia)
