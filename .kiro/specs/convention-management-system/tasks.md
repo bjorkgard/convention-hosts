@@ -494,19 +494,19 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 3.5_
 
 
-- [ ] 9. Scheduled tasks
-  - [ ] 9.1 Create daily occupancy reset command
+- [x] 9. Scheduled tasks
+  - [x] 9.1 Create daily occupancy reset command
     - Create artisan command: ResetDailyOccupancy
     - Reset occupancy to 0 for all sections
     - Reset available_seats to 0 for all sections
     - Clear last_occupancy_updated_by and last_occupancy_updated_at
     - _Requirements: 8.1, 8.2, 8.3_
 
-  - [ ] 9.2 Write property test for daily occupancy reset
+  - [x] 9.2 Write property test for daily occupancy reset
     - **Property 28: Daily Occupancy Reset**
     - **Validates: Requirements 8.2, 8.3**
 
-  - [ ] 9.3 Schedule daily reset in Kernel
+  - [x] 9.3 Schedule daily reset in Kernel
     - Add schedule in app/Console/Kernel.php
     - Run daily at 6:00 AM
     - _Requirements: 8.1_

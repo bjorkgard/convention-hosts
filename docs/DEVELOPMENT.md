@@ -414,6 +414,21 @@ APP_DEBUG=false
 
 See [Deployment Guide](DEPLOYMENT.md) for production setup.
 
+## Scheduled Tasks
+
+The application includes scheduled tasks that run automatically via Laravel's scheduler:
+
+```bash
+# Daily occupancy reset (runs automatically at 6:00 AM)
+php artisan app:reset-daily-occupancy
+```
+
+This resets all section occupancy to 0%, clears available seats, and removes update metadata. To run the scheduler locally during development:
+
+```bash
+php artisan schedule:work
+```
+
 ## Useful Artisan Commands
 
 ```bash

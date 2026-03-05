@@ -767,12 +767,12 @@ The Convention Management System is currently under development.
 - Export system (Excel, Word, Markdown)
 - Middleware and authorization (EnsureConventionAccess, EnsureOwnerRole, ScopeByRole, policies)
 - Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation)
+- Scheduled tasks (daily occupancy reset via `app:reset-daily-occupancy` command)
 - Property-based tests for core business rules
 
 ### In Progress
 
 - Email system (Mailgun integration, invitation and confirmation mailables)
-- Scheduled tasks (daily occupancy reset)
 - Frontend TypeScript types, hooks, UI components, and Inertia pages
 - Navigation and layout updates
 - PWA support
