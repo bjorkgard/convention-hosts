@@ -98,10 +98,11 @@ Edit the `.env` file to configure your application:
 
 ```env
 # Application
-APP_NAME="Your App Name"
+APP_NAME="Convention Hosts"
 APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://localhost:8000
+APP_TIMEZONE="Europe/Stockholm"
 
 # Database (SQLite by default)
 DB_CONNECTION=sqlite
@@ -111,6 +112,14 @@ MAIL_MAILER=log
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
+
+### Application Configuration
+
+The application is configured with the following defaults:
+
+- **Application Name**: "Convention Hosts" - Used in emails, notifications, and UI elements
+- **Timezone**: "Europe/Stockholm" - All timestamps are stored in UTC but displayed in this timezone
+- **Environment**: Local development mode with debug enabled
 
 ### Database Configuration
 

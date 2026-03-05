@@ -69,11 +69,12 @@ Required extensions:
 
 ```env
 # Application
-APP_NAME="Your App Name"
+APP_NAME="Convention Hosts"
 APP_ENV=production
 APP_KEY=base64:your-generated-key
 APP_DEBUG=false
 APP_URL=https://yourdomain.com
+APP_TIMEZONE="Europe/Stockholm"
 
 # Database
 DB_CONNECTION=mysql
