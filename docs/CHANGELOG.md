@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-05
 
+### Added
+
+- add comprehensive skill documentation for Laravel and React development (, |Nathanael Björkgård|||2026-03-05)
+
+
+## [Unreleased] - 2026-03-05
+
 ### Other
 
 - add changelog update hook for pre-push automation (Nathanael Björkgård, 2026-03-05)
