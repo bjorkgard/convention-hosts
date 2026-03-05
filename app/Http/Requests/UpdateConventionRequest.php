@@ -39,7 +39,8 @@ class UpdateConventionRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            if ($this->hasOverlappingConvention()) {
+            // Only check for overlapping conventions if all required location/date fields are present
+            if ($this->city && $this->country && $this->start_date && $this->end_date && $this->hasOverlappingConvention()) {
                 $validator->errors()->add(
                     'start_date',
                     'A convention already exists in this location during these dates.'

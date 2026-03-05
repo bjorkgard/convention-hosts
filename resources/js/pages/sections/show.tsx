@@ -1,0 +1,195 @@
+import { Head, Link, router } from '@inertiajs/react';
+import { Accessibility, ArrowLeft, Clock, Heart, Send, Users } from 'lucide-react';
+import { useState } from 'react';
+
+import { report } from '@/actions/App/Http/Controllers/AttendanceController';
+import { show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
+import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
+import { setFull, updateOccupancy } from '@/actions/App/Http/Controllers/SectionController';
+import AvailableSeatsInput from '@/components/conventions/available-seats-input';
+import FullButton from '@/components/conventions/full-button';
+import OccupancyDropdown from '@/components/conventions/occupancy-dropdown';
+import OccupancyIndicator from '@/components/conventions/occupancy-indicator';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import AppLayout from '@/layouts/app-layout';
+import type { AttendancePeriod, Convention, Floor, Section } from '@/types/convention';
+import type { BreadcrumbItem } from '@/types/navigation';
+
+interface SectionsShowProps {
+    section: Section;
+    floor: Floor;
+    convention: Convention;
+    userRoles: string[];
+    activePeriod: AttendancePeriod | null;
+}
+
+export default function SectionsShow({ section, floor, convention, activePeriod }: SectionsShowProps) {
+    const [attendanceValue, setAttendanceValue] = useState('');
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Conventions', href: '/conventions' },
+        { title: convention.name, href: conventionShow.url(convention.id) },
+        { title: 'Floors', href: floorsIndex.url(convention.id) },
+        { title: floor.name, href: floorsIndex.url(convention.id) },
+        { title: section.name, href: '#' },
+    ];
+
+    function handleOccupancyUpdate(occupancy: number) {
+        router.patch(updateOccupancy.url(section.id), { occupancy }, { preserveScroll: true });
+    }
+
+    function handleSetFull() {
+        router.post(setFull.url(section.id), {}, { preserveScroll: true });
+    }
+
+    function handleAvailableSeatsUpdate(availableSeats: number) {
+        router.patch(updateOccupancy.url(section.id), { available_seats: availableSeats }, { preserveScroll: true });
+    }
+
+    function handleAttendanceSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        if (!activePeriod) return;
+
+        const attendance = Number(attendanceValue);
+        if (isNaN(attendance) || attendance < 0) return;
+
+        router.post(
+            report.url({ section: section.id, attendancePeriod: activePeriod.id }),
+            { attendance },
+            { preserveScroll: true, onSuccess: () => setAttendanceValue('') },
+        );
+    }
+
+    function formatLastUpdate(): string | null {
+        if (!section.last_occupancy_updated_at) return null;
+
+        const date = new Date(section.last_occupancy_updated_at);
+        return date.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
+
+    const lastUpdateTime = formatLastUpdate();
+    const lastUpdatedByName = section.last_updated_by
+        ? `${section.last_updated_by.first_name} ${section.last_updated_by.last_name}`
+        : null;
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={`${section.name} — ${convention.name}`} />
+            <div className="flex h-full flex-1 flex-col gap-4 p-4">
+                {/* Header */}
+                <div className="flex items-start gap-2">
+                    <Button variant="ghost" size="icon" asChild className="mt-0.5 shrink-0">
+                        <Link href={conventionShow.url(convention.id)}>
+                            <ArrowLeft />
+                        </Link>
+                    </Button>
+                    <div className="flex flex-col gap-1">
+                        <h1 className="text-2xl font-semibold tracking-tight">{section.name}</h1>
+                        <p className="text-muted-foreground text-sm">
+                            {floor.name} · {convention.name}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Section info card */}
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg">Section Details</CardTitle>
+                            <OccupancyIndicator occupancy={section.occupancy} showLabel size="md" />
+                        </div>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-4">
+                        {/* Seats & accessibility */}
+                        <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center gap-1.5 text-sm">
+                                <Users className="text-muted-foreground size-4" />
+                                <span className="font-medium">{section.number_of_seats}</span>
+                                <span className="text-muted-foreground">seats</span>
+                            </div>
+
+                            {section.elder_friendly && (
+                                <Badge variant="secondary" className="gap-1">
+                                    <Heart className="size-3" />
+                                    Elder-friendly
+                                </Badge>
+                            )}
+                            {section.handicap_friendly && (
+                                <Badge variant="secondary" className="gap-1">
+                                    <Accessibility className="size-3" />
+                                    Handicap-friendly
+                                </Badge>
+                            )}
+                        </div>
+
+                        {section.information && (
+                            <p className="text-muted-foreground text-sm">{section.information}</p>
+                        )}
+
+                        <Separator />
+
+                        {/* Occupancy controls */}
+                        <div className="flex flex-col gap-4">
+                            <OccupancyDropdown currentOccupancy={section.occupancy} onUpdate={handleOccupancyUpdate} />
+                            <FullButton section={section} onUpdate={handleSetFull} />
+                            <AvailableSeatsInput section={section} onUpdate={handleAvailableSeatsUpdate} />
+                        </div>
+                    </CardContent>
+
+                    {/* Last update footer */}
+                    {(lastUpdatedByName || lastUpdateTime) && (
+                        <CardFooter className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                            <Clock className="size-3.5 shrink-0" />
+                            <span>
+                                Last updated
+                                {lastUpdatedByName && <> by {lastUpdatedByName}</>}
+                                {lastUpdateTime && <> at {lastUpdateTime}</>}
+                            </span>
+                        </CardFooter>
+                    )}
+                </Card>
+
+                {/* Attendance reporting section */}
+                {activePeriod && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-lg">Attendance Report</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAttendanceSubmit} className="space-y-2">
+                                <Label htmlFor="attendance-input">
+                                    Attendance ({activePeriod.period})
+                                </Label>
+                                <div className="flex items-center gap-2">
+                                    <Input
+                                        id="attendance-input"
+                                        type="number"
+                                        min={0}
+                                        placeholder="Enter attendance count"
+                                        value={attendanceValue}
+                                        onChange={(e) => setAttendanceValue(e.target.value)}
+                                        className="flex-1"
+                                    />
+                                    <Button type="submit" className="cursor-pointer gap-1.5">
+                                        <Send className="size-4" />
+                                        Send
+                                    </Button>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+        </AppLayout>
+    );
+}

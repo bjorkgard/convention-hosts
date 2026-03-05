@@ -661,15 +661,15 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7_
 
 
-- [ ] 13. Inertia page components
-  - [ ] 13.1 Create conventions/index page
+- [x] 13. Inertia page components
+  - [x] 13.1 Create conventions/index page
     - List user's conventions
     - Display ConventionCard for each convention
     - Add "Create Convention" button
     - Use app-layout
     - _Requirements: 18.1_
 
-  - [ ] 13.2 Create conventions/create page
+  - [x] 13.2 Create conventions/create page
     - Display convention creation form
     - Include all required fields: name, city, country, start_date, end_date
     - Include optional fields: address, other_info
@@ -677,12 +677,12 @@ This implementation plan breaks down the Convention Management System into discr
     - Use app-layout
     - _Requirements: 1.1, 1.2, 24.2, 24.3_
 
-  - [ ] 13.3 Write property test for form validation errors
+  - [x] 13.3 Write property test for form validation errors
     - **Property 51: Validation Error Display**
     - **Property 52: Form Input Preservation**
     - **Validates: Requirements 24.2, 24.4**
 
-  - [ ] 13.4 Create conventions/show page
+  - [x] 13.4 Create conventions/show page
     - Display convention details
     - Display floors datatable with expandable sections
     - Display export dropdown (Owner only)
@@ -692,14 +692,14 @@ This implementation plan breaks down the Convention Management System into discr
     - Use app-layout
     - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7_
 
-  - [ ] 13.5 Create floors/index page
+  - [x] 13.5 Create floors/index page
     - List floors for convention (role-scoped)
     - Display add floor button (ConventionUser only)
     - Display occupancy color coding
     - Use app-layout
     - _Requirements: 13.1, 13.2, 15.2, 15.3_
 
-  - [ ] 13.6 Create sections/show page
+  - [x] 13.6 Create sections/show page
     - Display section details
     - Display OccupancyDropdown component
     - Display FullButton component
@@ -709,14 +709,14 @@ This implementation plan breaks down the Convention Management System into discr
     - Use app-layout
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.9_
 
-  - [ ] 13.7 Create users/index page
+  - [x] 13.7 Create users/index page
     - List users (role-scoped)
     - Display UserRow for each user
     - Display add user button
     - Use app-layout
     - _Requirements: 3.6, 3.7, 3.8, 15.6, 15.7_
 
-  - [ ] 13.8 Create search/index page
+  - [x] 13.8 Create search/index page
     - Display floor filter dropdown
     - Display elder_friendly checkbox
     - Display handicap_friendly checkbox
@@ -728,12 +728,12 @@ This implementation plan breaks down the Convention Management System into discr
     - Use app-layout
     - _Requirements: 16.1, 16.2, 16.3, 16.4, 16.5, 16.6, 16.7_
 
-  - [ ] 13.9 Write property test for search accessibility
+  - [x] 13.9 Write property test for search accessibility
     - **Property 41: Search Accessibility**
     - **Property 44: Search Role-Agnostic Results**
     - **Validates: Requirements 16.1, 16.8**
 
-  - [ ] 13.10 Create auth/invitation page
+  - [x] 13.10 Create auth/invitation page
     - Display password creation form
     - Display password strength indicator
     - Validate password criteria
@@ -741,11 +741,11 @@ This implementation plan breaks down the Convention Management System into discr
     - Use auth-layout
     - _Requirements: 3.3, 21.4, 24.2_
 
-  - [ ] 13.11 Update login page (extend existing)
+  - [x] 13.11 Update login page (extend existing)
     - Add "Remember me" checkbox
     - _Requirements: 2.2, 2.3_
 
-  - [ ] 13.12 Write property test for remember me session
+  - [x] 13.12 Write property test for remember me session
     - **Property 5: Remember Me Session Duration**
     - **Validates: Requirements 2.3**
 

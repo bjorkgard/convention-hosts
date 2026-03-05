@@ -77,7 +77,8 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `settings/` - Settings pages (profile, password, two-factor, appearance)
   - `dashboard.tsx` - Main dashboard
   - `welcome.tsx` - Landing page
-  - Note: Convention/floor/section/user/search pages are planned but not yet implemented as page components. Convention features are currently handled via controller-rendered views and convention-specific components.
+  - `conventions/index.tsx` - Convention listing with grid layout and empty state
+  - Note: Remaining convention pages (create, show) and floor/section/user/search pages are planned but not yet implemented as page components.
   
 - `routes/` - **Auto-generated** Wayfinder route definitions (DO NOT EDIT)
   

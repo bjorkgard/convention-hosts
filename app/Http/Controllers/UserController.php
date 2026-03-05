@@ -45,21 +45,46 @@ class UserController extends Controller
             $users = $users->filter(fn (User $user) => $userIdsOnSections->contains($user->id));
         }
 
-        // Load roles for each user
+        // Load roles and assignments for each user
         $users = $users->values()->map(function (User $user) use ($convention) {
             $user->roles = DB::table('convention_user_roles')
                 ->where('convention_id', $convention->id)
                 ->where('user_id', $user->id)
                 ->pluck('role');
 
+            $conventionFloorIds = $convention->floors()->pluck('id');
+
+            $user->floor_ids = DB::table('floor_user')
+                ->where('user_id', $user->id)
+                ->whereIn('floor_id', $conventionFloorIds)
+                ->pluck('floor_id')
+                ->values()
+                ->toArray();
+
+            $conventionSectionIds = $convention->floors()
+                ->with('sections')
+                ->get()
+                ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
+
+            $user->section_ids = DB::table('section_user')
+                ->where('user_id', $user->id)
+                ->whereIn('section_id', $conventionSectionIds)
+                ->pluck('section_id')
+                ->values()
+                ->toArray();
+
             return $user;
         });
 
         $userRoles = $request->user()->rolesForConvention($convention);
 
+        // Load floors with sections for the add/edit user form
+        $floors = $convention->floors()->with('sections')->get();
+
         return Inertia::render('users/index', [
             'convention' => $convention,
             'users' => $users,
+            'floors' => $floors,
             'userRoles' => $userRoles,
         ]);
     }

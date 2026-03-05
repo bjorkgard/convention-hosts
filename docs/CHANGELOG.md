@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add conventions index page component (2026-03-05)
+  - Inertia page listing user's conventions with ConventionCard grid
+  - Empty state with prompt to create first convention
+  - "Create Convention" button using Wayfinder type-safe routing
+  - Responsive grid layout (1/2/3 columns)
 - add convention management UI components and tests (, |Nathanael Björkgård|||2026-03-05)
 
 ### Other
