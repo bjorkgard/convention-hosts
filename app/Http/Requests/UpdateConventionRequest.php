@@ -55,7 +55,7 @@ class UpdateConventionRequest extends FormRequest
     private function hasOverlappingConvention(): bool
     {
         $conventionId = $this->route('convention')?->id ?? $this->route('convention');
-        
+
         return Convention::where('city', $this->city)
             ->where('country', $this->country)
             ->where('id', '!=', $conventionId)
@@ -64,7 +64,7 @@ class UpdateConventionRequest extends FormRequest
                     ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
                     ->orWhere(function ($q) {
                         $q->where('start_date', '<=', $this->start_date)
-                          ->where('end_date', '>=', $this->end_date);
+                            ->where('end_date', '>=', $this->end_date);
                     });
             })
             ->exists();

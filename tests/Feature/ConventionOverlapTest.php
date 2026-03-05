@@ -6,16 +6,16 @@ use Illuminate\Support\Facades\Validator;
 
 /**
  * Property 3: Convention Date Overlap Detection
- * 
+ *
  * For any two conventions in the same city and country, if their date ranges overlap
  * (start_date to end_date), the system should reject the creation of the second
  * convention with a validation error.
- * 
+ *
  * **Validates: Requirements 1.3**
  */
 it('validates convention date overlap detection', function () {
     $user = User::factory()->create();
-    
+
     // Run property test with multiple random scenarios
     for ($i = 0; $i < 100; $i++) {
         // Create first convention with random dates in the future
@@ -24,14 +24,14 @@ it('validates convention date overlap detection', function () {
         $baseDate = now()->addDays(rand(10, 60)); // Start at least 10 days in the future
         $startDate1 = clone $baseDate;
         $endDate1 = (clone $startDate1)->addDays(rand(3, 10));
-        
+
         $convention1 = Convention::factory()->create([
             'city' => $city,
             'country' => $country,
             'start_date' => $startDate1,
             'end_date' => $endDate1,
         ]);
-        
+
         // Test overlapping scenarios
         $overlapScenarios = [
             // Scenario 1: Second convention starts during first convention
@@ -71,7 +71,7 @@ it('validates convention date overlap detection', function () {
                 'should_fail' => false,
             ],
         ];
-        
+
         foreach ($overlapScenarios as $scenario) {
             $data = [
                 'name' => fake()->sentence(3),
@@ -80,19 +80,19 @@ it('validates convention date overlap detection', function () {
                 'start_date' => $scenario['start_date']->format('Y-m-d'),
                 'end_date' => $scenario['end_date']->format('Y-m-d'),
             ];
-            
+
             // Create a validator with the rules
-            $validator = Validator::make($data, (new \App\Http\Requests\StoreConventionRequest())->rules());
-            
+            $validator = Validator::make($data, (new \App\Http\Requests\StoreConventionRequest)->rules());
+
             // Manually trigger the withValidator logic
-            $request = new \App\Http\Requests\StoreConventionRequest();
+            $request = new \App\Http\Requests\StoreConventionRequest;
             $request->merge($data);
             $request->setContainer(app());
             $request->withValidator($validator);
-            
+
             // Trigger validation by calling fails() or passes()
             $validationFailed = $validator->fails();
-            
+
             if ($scenario['should_fail']) {
                 expect($validationFailed)
                     ->toBeTrue("Expected validation to fail for overlapping dates: {$scenario['start_date']->format('Y-m-d')} to {$scenario['end_date']->format('Y-m-d')}");
@@ -103,7 +103,7 @@ it('validates convention date overlap detection', function () {
                     ->toBeFalse("Expected validation to pass for non-overlapping dates: {$scenario['start_date']->format('Y-m-d')} to {$scenario['end_date']->format('Y-m-d')}");
             }
         }
-        
+
         // Clean up for next iteration
         $convention1->delete();
     }
@@ -111,10 +111,10 @@ it('validates convention date overlap detection', function () {
 
 it('allows conventions in different cities to have overlapping dates', function () {
     $user = User::factory()->create();
-    
+
     $startDate = now()->addDays(5);
     $endDate = now()->addDays(10);
-    
+
     // Create first convention in City A
     Convention::factory()->create([
         'city' => 'City A',
@@ -122,7 +122,7 @@ it('allows conventions in different cities to have overlapping dates', function 
         'start_date' => $startDate,
         'end_date' => $endDate,
     ]);
-    
+
     // Create second convention in City B with same dates - should succeed
     $validator = Validator::make([
         'name' => fake()->sentence(3),
@@ -130,9 +130,9 @@ it('allows conventions in different cities to have overlapping dates', function 
         'country' => 'Country X',
         'start_date' => $startDate->format('Y-m-d'),
         'end_date' => $endDate->format('Y-m-d'),
-    ], (new \App\Http\Requests\StoreConventionRequest())->rules());
-    
-    $request = new \App\Http\Requests\StoreConventionRequest();
+    ], (new \App\Http\Requests\StoreConventionRequest)->rules());
+
+    $request = new \App\Http\Requests\StoreConventionRequest;
     $request->merge([
         'city' => 'City B',
         'country' => 'Country X',
@@ -140,16 +140,16 @@ it('allows conventions in different cities to have overlapping dates', function 
         'end_date' => $endDate->format('Y-m-d'),
     ]);
     $request->withValidator($validator);
-    
+
     expect($validator->fails())->toBeFalse('Expected validation to pass for different cities');
 });
 
 it('allows conventions in different countries to have overlapping dates', function () {
     $user = User::factory()->create();
-    
+
     $startDate = now()->addDays(5);
     $endDate = now()->addDays(10);
-    
+
     // Create first convention in Country X
     Convention::factory()->create([
         'city' => 'City A',
@@ -157,7 +157,7 @@ it('allows conventions in different countries to have overlapping dates', functi
         'start_date' => $startDate,
         'end_date' => $endDate,
     ]);
-    
+
     // Create second convention in Country Y with same dates - should succeed
     $validator = Validator::make([
         'name' => fake()->sentence(3),
@@ -165,9 +165,9 @@ it('allows conventions in different countries to have overlapping dates', functi
         'country' => 'Country Y',
         'start_date' => $startDate->format('Y-m-d'),
         'end_date' => $endDate->format('Y-m-d'),
-    ], (new \App\Http\Requests\StoreConventionRequest())->rules());
-    
-    $request = new \App\Http\Requests\StoreConventionRequest();
+    ], (new \App\Http\Requests\StoreConventionRequest)->rules());
+
+    $request = new \App\Http\Requests\StoreConventionRequest;
     $request->merge([
         'city' => 'City A',
         'country' => 'Country Y',
@@ -175,6 +175,6 @@ it('allows conventions in different countries to have overlapping dates', functi
         'end_date' => $endDate->format('Y-m-d'),
     ]);
     $request->withValidator($validator);
-    
+
     expect($validator->fails())->toBeFalse('Expected validation to pass for different countries');
 });

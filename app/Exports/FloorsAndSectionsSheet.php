@@ -3,16 +3,14 @@
 namespace App\Exports;
 
 use App\Models\Convention;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use Illuminate\Support\Collection;
 
 class FloorsAndSectionsSheet implements FromCollection, WithHeadings, WithTitle
 {
-    public function __construct(protected Convention $convention)
-    {
-    }
+    public function __construct(protected Convention $convention) {}
 
     public function collection(): Collection
     {

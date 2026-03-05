@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\URL;
  */
 it('connects existing user instead of creating duplicate when email exists', function () {
     Mail::fake();
-    
+
     // Mock the URL generation to avoid route not found error
     URL::shouldReceive('temporarySignedRoute')
         ->andReturn('https://example.com/invitation/test');
@@ -81,4 +81,3 @@ it('connects existing user instead of creating duplicate when email exists', fun
         $existingUser->delete();
     }
 })->group('property', 'user');
-

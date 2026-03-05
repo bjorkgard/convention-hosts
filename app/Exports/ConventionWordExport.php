@@ -4,8 +4,6 @@ namespace App\Exports;
 
 use App\Models\Convention;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\SimpleType\Jc;
-use PhpOffice\PhpWord\Style\Font;
 
 class ConventionWordExport
 {
@@ -22,7 +20,7 @@ class ConventionWordExport
 
     public function generate(): string
     {
-        $phpWord = new PhpWord();
+        $phpWord = new PhpWord;
         $section = $phpWord->addSection();
 
         // Title
@@ -46,12 +44,12 @@ class ConventionWordExport
 
         // Save to file
         $filename = storage_path("app/private/exports/{$this->convention->id}.docx");
-        
+
         // Ensure exports directory exists
         if (! is_dir(storage_path('app/private/exports'))) {
             mkdir(storage_path('app/private/exports'), 0755, true);
         }
-        
+
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($filename);
 
@@ -61,16 +59,16 @@ class ConventionWordExport
     protected function addConventionDetails($section): void
     {
         $section->addTitle('Convention Details', 2);
-        
+
         $section->addText("Location: {$this->convention->city}, {$this->convention->country}");
         $section->addText("Dates: {$this->convention->start_date->format('Y-m-d')} to {$this->convention->end_date->format('Y-m-d')}");
-        
+
         if ($this->convention->address) {
             $section->addText("Address: {$this->convention->address}");
         }
-        
+
         if ($this->convention->other_info) {
-            $section->addText("Additional Information:");
+            $section->addText('Additional Information:');
             $section->addText($this->convention->other_info);
         }
     }
@@ -81,6 +79,7 @@ class ConventionWordExport
 
         if ($this->convention->floors->isEmpty()) {
             $section->addText('No floors available.');
+
             return;
         }
 
@@ -89,6 +88,7 @@ class ConventionWordExport
 
             if ($floor->sections->isEmpty()) {
                 $section->addText('No sections in this floor.');
+
                 continue;
             }
 
@@ -129,6 +129,7 @@ class ConventionWordExport
 
         if ($this->convention->attendancePeriods->isEmpty()) {
             $section->addText('No attendance history available.');
+
             return;
         }
 
@@ -172,6 +173,7 @@ class ConventionWordExport
 
         if ($this->convention->users->isEmpty()) {
             $section->addText('No users assigned to this convention.');
+
             return;
         }
 
@@ -193,7 +195,7 @@ class ConventionWordExport
         // Data rows
         foreach ($this->convention->users as $user) {
             $roles = $user->rolesForConvention($this->convention)->pluck('role')->join(', ');
-            
+
             $table->addRow();
             $table->addCell(2500)->addText($user->first_name.' '.$user->last_name);
             $table->addCell(2500)->addText($user->email);

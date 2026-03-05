@@ -9,7 +9,7 @@ class ConventionPolicy
 {
     /**
      * Determine whether the user can view the convention.
-     * 
+     *
      * User must have any role for the convention.
      */
     public function view(User $user, Convention $convention): bool
@@ -19,7 +19,7 @@ class ConventionPolicy
 
     /**
      * Determine whether the user can update the convention.
-     * 
+     *
      * User must have Owner or ConventionUser role.
      */
     public function update(User $user, Convention $convention): bool
@@ -29,7 +29,7 @@ class ConventionPolicy
 
     /**
      * Determine whether the user can delete the convention.
-     * 
+     *
      * User must have Owner role.
      */
     public function delete(User $user, Convention $convention): bool
@@ -39,7 +39,7 @@ class ConventionPolicy
 
     /**
      * Determine whether the user can export the convention data.
-     * 
+     *
      * User must have Owner role.
      */
     public function export(User $user, Convention $convention): bool
@@ -47,4 +47,3 @@ class ConventionPolicy
         return $user->hasRole($convention, 'Owner');
     }
 }
-

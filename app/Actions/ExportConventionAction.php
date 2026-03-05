@@ -37,14 +37,14 @@ class ExportConventionAction
     protected function exportToExcel(Convention $convention): string
     {
         $filename = "exports/{$convention->id}.xlsx";
-        
+
         // Generate Excel file using maatwebsite/excel
         \Maatwebsite\Excel\Facades\Excel::store(
             new \App\Exports\ConventionExport($convention),
             $filename,
             'local'
         );
-        
+
         // Return the actual path where the file is stored
         return storage_path("app/private/{$filename}");
     }
@@ -55,6 +55,7 @@ class ExportConventionAction
     protected function exportToWord(Convention $convention): string
     {
         $exporter = new \App\Exports\ConventionWordExport($convention);
+
         return $exporter->generate();
     }
 
@@ -64,6 +65,7 @@ class ExportConventionAction
     protected function exportToMarkdown(Convention $convention): string
     {
         $exporter = new \App\Exports\ConventionMarkdownExport($convention);
+
         return $exporter->generate();
     }
 }

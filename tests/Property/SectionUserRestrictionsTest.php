@@ -11,10 +11,10 @@ uses(RefreshDatabase::class);
 
 /**
  * Property 39: SectionUser Edit Restrictions
- * 
+ *
  * For any SectionUser, they should only be able to edit sections they are assigned to,
  * and should not be able to add or delete sections.
- * 
+ *
  * Validates: Requirements 14.2
  */
 it('validates SectionUser can only edit assigned sections', function () {
@@ -24,20 +24,20 @@ it('validates SectionUser can only edit assigned sections', function () {
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(2, 4);
         $allSections = collect();
-        
+
         for ($f = 0; $f < $floorCount; $f++) {
             $floor = Floor::factory()->create([
                 'convention_id' => $convention->id,
             ]);
-            
+
             $sectionCount = fake()->numberBetween(3, 5);
             $sections = Section::factory()->count($sectionCount)->create([
                 'floor_id' => $floor->id,
             ]);
-            
+
             $allSections = $allSections->merge($sections);
         }
-        
+
         // Create SectionUser and assign random subset of sections
         $sectionUser = User::factory()->create();
         $convention->users()->attach($sectionUser);
@@ -46,39 +46,39 @@ it('validates SectionUser can only edit assigned sections', function () {
             'user_id' => $sectionUser->id,
             'role' => 'SectionUser',
         ]);
-        
+
         // Assign random sections (at least 1, at most all-2)
         $totalSections = $allSections->count();
         $assignedSectionCount = fake()->numberBetween(1, max(1, $totalSections - 2));
         $assignedSections = $allSections->random($assignedSectionCount);
         $unassignedSections = $allSections->diff($assignedSections);
-        
+
         foreach ($assignedSections as $section) {
             \DB::table('section_user')->insert([
                 'section_id' => $section->id,
                 'user_id' => $sectionUser->id,
             ]);
         }
-        
-        $policy = new SectionPolicy();
-        
+
+        $policy = new SectionPolicy;
+
         // SectionUser should be able to view and update assigned sections
         foreach ($assignedSections as $section) {
             expect($policy->view($sectionUser, $section))->toBeTrue();
             expect($policy->update($sectionUser, $section))->toBeTrue();
         }
-        
+
         // SectionUser should NOT be able to view or update unassigned sections
         foreach ($unassignedSections as $section) {
             expect($policy->view($sectionUser, $section))->toBeFalse();
             expect($policy->update($sectionUser, $section))->toBeFalse();
         }
-        
+
         // SectionUser should NOT be able to delete any sections (assigned or not)
         foreach ($allSections as $section) {
             expect($policy->delete($sectionUser, $section))->toBeFalse();
         }
-        
+
         // Clean up for next iteration
         \DB::table('section_user')->truncate();
         \DB::table('convention_user_roles')->truncate();
@@ -92,10 +92,10 @@ it('validates SectionUser can only edit assigned sections', function () {
 
 /**
  * Property 40: SectionUser User Management Scope
- * 
- * For any SectionUser, they should only be able to add, edit, and delete users 
+ *
+ * For any SectionUser, they should only be able to add, edit, and delete users
  * who are connected to their assigned sections.
- * 
+ *
  * Validates: Requirements 14.3
  */
 it('validates SectionUser can only manage users connected to assigned sections', function () {
@@ -105,20 +105,20 @@ it('validates SectionUser can only manage users connected to assigned sections',
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(2, 3);
         $allSections = collect();
-        
+
         for ($f = 0; $f < $floorCount; $f++) {
             $floor = Floor::factory()->create([
                 'convention_id' => $convention->id,
             ]);
-            
+
             $sectionCount = fake()->numberBetween(3, 4);
             $sections = Section::factory()->count($sectionCount)->create([
                 'floor_id' => $floor->id,
             ]);
-            
+
             $allSections = $allSections->merge($sections);
         }
-        
+
         // Create SectionUser and assign random subset of sections
         $sectionUser = User::factory()->create();
         $convention->users()->attach($sectionUser);
@@ -127,23 +127,23 @@ it('validates SectionUser can only manage users connected to assigned sections',
             'user_id' => $sectionUser->id,
             'role' => 'SectionUser',
         ]);
-        
+
         $totalSections = $allSections->count();
         $assignedSectionCount = fake()->numberBetween(1, max(1, $totalSections - 1));
         $assignedSections = $allSections->random($assignedSectionCount);
         $unassignedSections = $allSections->diff($assignedSections);
-        
+
         foreach ($assignedSections as $section) {
             \DB::table('section_user')->insert([
                 'section_id' => $section->id,
                 'user_id' => $sectionUser->id,
             ]);
         }
-        
+
         // Create other users and assign them to various sections
         $usersOnAssignedSections = collect();
         $usersOnUnassignedSections = collect();
-        
+
         // Create users for assigned sections
         foreach ($assignedSections->take(min(2, $assignedSectionCount)) as $section) {
             $otherUser = User::factory()->create();
@@ -159,7 +159,7 @@ it('validates SectionUser can only manage users connected to assigned sections',
             ]);
             $usersOnAssignedSections->push($otherUser);
         }
-        
+
         // Create users for unassigned sections (if any)
         if ($unassignedSections->count() > 0) {
             foreach ($unassignedSections->take(min(2, $unassignedSections->count())) as $section) {
@@ -177,7 +177,7 @@ it('validates SectionUser can only manage users connected to assigned sections',
                 $usersOnUnassignedSections->push($otherUser);
             }
         }
-        
+
         // Verify SectionUser can see users on their assigned sections
         $assignedSectionIds = $assignedSections->pluck('id')->toArray();
         $visibleUserIds = \DB::table('section_user')
@@ -185,17 +185,17 @@ it('validates SectionUser can only manage users connected to assigned sections',
             ->pluck('user_id')
             ->unique()
             ->toArray();
-        
+
         // Users on assigned sections should be visible
         foreach ($usersOnAssignedSections as $user) {
             expect(in_array($user->id, $visibleUserIds))->toBeTrue();
         }
-        
+
         // Users on unassigned sections should NOT be visible
         foreach ($usersOnUnassignedSections as $user) {
             expect(in_array($user->id, $visibleUserIds))->toBeFalse();
         }
-        
+
         // Clean up for next iteration
         \DB::table('section_user')->truncate();
         \DB::table('convention_user_roles')->truncate();

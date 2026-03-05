@@ -37,20 +37,20 @@ class ScopeByRole
         // FloorUser sees only assigned floors
         if ($user->hasRole($convention, 'FloorUser')) {
             $floorIds = $user->floors()
-                ->whereHas('convention', fn($query) => $query->where('id', $convention->id))
+                ->whereHas('convention', fn ($query) => $query->where('id', $convention->id))
                 ->pluck('floors.id')
                 ->toArray();
-            
+
             $request->merge(['scoped_floor_ids' => $floorIds]);
         }
 
         // SectionUser sees only assigned sections
         if ($user->hasRole($convention, 'SectionUser')) {
             $sectionIds = $user->sections()
-                ->whereHas('floor.convention', fn($query) => $query->where('id', $convention->id))
+                ->whereHas('floor.convention', fn ($query) => $query->where('id', $convention->id))
                 ->pluck('sections.id')
                 ->toArray();
-            
+
             $request->merge(['scoped_section_ids' => $sectionIds]);
         }
 

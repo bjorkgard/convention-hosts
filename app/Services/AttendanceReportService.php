@@ -18,19 +18,19 @@ class AttendanceReportService
     public function startReport(Convention $convention): AttendancePeriod
     {
         $today = now()->toDateString();
-        
+
         // Check if max 2 reports per day limit is reached
         $reportsToday = AttendancePeriod::where('convention_id', $convention->id)
             ->whereDate('date', $today)
             ->count();
-        
+
         if ($reportsToday >= 2) {
             throw new \Exception('Maximum of 2 attendance reports per day has been reached.');
         }
-        
+
         // Determine current period (morning/afternoon based on time)
         $currentPeriod = $this->getCurrentPeriod();
-        
+
         // Create or retrieve attendance period
         $attendancePeriod = AttendancePeriod::firstOrCreate(
             [
@@ -42,7 +42,7 @@ class AttendanceReportService
                 'locked' => false,
             ]
         );
-        
+
         return $attendancePeriod;
     }
 
@@ -70,30 +70,30 @@ class AttendanceReportService
         if ($period->locked) {
             throw new \Exception('This attendance period is locked and cannot be updated.');
         }
-        
+
         // Validate user has permission for section
         // This will be enforced by policies in the controller layer
         // For now, we'll allow the operation
-        
+
         // Check if report already exists
         $existingReport = AttendanceReport::where('attendance_period_id', $period->id)
             ->where('section_id', $section->id)
             ->first();
-        
+
         if ($existingReport) {
             // Enforce update restriction: only original reporter can update
             if ($existingReport->reported_by !== $user->id) {
                 throw new \Exception('Only the original reporter can update this section\'s attendance.');
             }
-            
+
             // Update existing report
             $existingReport->attendance = $attendance;
             $existingReport->reported_at = now();
             $existingReport->save();
-            
+
             return $existingReport;
         }
-        
+
         // Create new attendance report
         $report = AttendanceReport::create([
             'attendance_period_id' => $period->id,
@@ -102,7 +102,7 @@ class AttendanceReportService
             'reported_by' => $user->id,
             'reported_at' => now(),
         ]);
-        
+
         return $report;
     }
 
@@ -112,6 +112,7 @@ class AttendanceReportService
     protected function getCurrentPeriod(): string
     {
         $hour = now()->hour;
+
         return $hour < 12 ? 'morning' : 'afternoon';
     }
 }

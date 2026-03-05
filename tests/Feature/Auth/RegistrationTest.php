@@ -16,14 +16,14 @@ test('new users can register', function () {
     ]);
 
     $response->assertSessionHasNoErrors();
-    
+
     // Check if user was created
     $this->assertDatabaseHas('users', [
         'email' => 'test@example.com',
         'first_name' => 'Test',
         'last_name' => 'User',
     ]);
-    
+
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
 });
