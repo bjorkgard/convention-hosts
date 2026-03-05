@@ -1,0 +1,139 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: 'patch'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          # Get the latest tag, or use 0.0.0 if no tags exist
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "Latest tag: $LATEST_TAG"
+
+      - name: Calculate new version
+        id: calculate_version
+        run: |
+          LATEST_TAG="${{ steps.get_latest_tag.outputs.latest_tag }}"
+          VERSION_BUMP="${{ github.event.inputs.version_bump }}"
+          
+          # Remove 'v' prefix if present
+          VERSION=${LATEST_TAG#v}
+          
+          # Split version into components
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          
+          # Increment based on bump type
+          case $VERSION_BUMP in
+            major)
+              MAJOR=$((MAJOR + 1))
+              MINOR=0
+              PATCH=0
+              ;;
+            minor)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            patch)
+              PATCH=$((PATCH + 1))
+              ;;
+          esac
+          
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Update CHANGELOG.md
+        run: |
+          NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
+          RELEASE_DATE=$(date +"%Y-%m-%d")
+          
+          # Replace [Unreleased] with the new version
+          sed -i "s/## \[Unreleased\] - [0-9-]*/## [$NEW_VERSION] - $RELEASE_DATE/" docs/CHANGELOG.md
+          
+          # Add new Unreleased section at the top
+          sed -i "/^## \[$NEW_VERSION\]/i ## [Unreleased]\n" docs/CHANGELOG.md
+          
+          echo "Updated CHANGELOG.md with version $NEW_VERSION"
+
+      - name: Commit version bump
+        run: |
+          NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
+          
+          git add docs/CHANGELOG.md
+          git commit -m "chore(release): bump version to $NEW_VERSION [skip ci]" || echo "No changes to commit"
+          git push origin main
+
+      - name: Create and push tag
+        run: |
+          NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
+          
+          git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION"
+          git push origin "$NEW_VERSION"
+
+      - name: Extract release notes
+        id: extract_notes
+        run: |
+          NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
+          
+          # Extract the section for this version from CHANGELOG.md
+          RELEASE_NOTES=$(awk "/^## \[$NEW_VERSION\]/,/^## \[/" docs/CHANGELOG.md | sed '1d;$d' | sed '/^$/d')
+          
+          # If no release notes found, use a default message
+          if [ -z "$RELEASE_NOTES" ]; then
+            RELEASE_NOTES="Release $NEW_VERSION"
+          fi
+          
+          # Save to file for multiline output
+          echo "$RELEASE_NOTES" > release_notes.txt
+          echo "Release notes extracted"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.calculate_version.outputs.new_version }}
+          name: Release ${{ steps.calculate_version.outputs.new_version }}
+          body_path: release_notes.txt
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
+          echo "### 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** $NEW_VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "**Type:** ${{ github.event.inputs.version_bump }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The release has been created and is now available on GitHub." >> $GITHUB_STEP_SUMMARY
