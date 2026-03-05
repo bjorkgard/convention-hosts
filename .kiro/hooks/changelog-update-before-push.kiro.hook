@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "name": "Update Changelog Before Push",
+  "description": "Updates CHANGELOG.md with recent git history, commits it, and prepares for push",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Generate or update the CHANGELOG.md file in the docs/ folder based on recent git commit history. Use 'git log' to get recent commits since the last changelog entry. Format the changelog with dates, commit messages, and authors. After updating CHANGELOG.md, stage it with 'git add docs/CHANGELOG.md' and commit it with the message 'docs(changelog): auto-update from git history [skip ci]'. Then inform the user they can now run 'git push' to push all changes including the changelog."
+  },
+  "workspaceFolderName": "Convention-Hosts",
+  "shortName": "changelog-update-before-push"
+}
