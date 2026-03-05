@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- implement middleware and policies for role-based access control (, |Nathanael Björkgård|||2026-03-05)
+
+
+## [Unreleased] - 2026-03-05
+
+### Added
+
 - implement ConventionExport with multi-sheet Excel architecture (2026-03-05)
   - Four-sheet workbook structure: Convention, Floors & Sections, Attendance History, Users
   - Eager loading optimization to prevent N+1 queries during export
