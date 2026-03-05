@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- implement CreateConventionAction with automatic role assignment (2026-03-05)
+  - Creates conventions with creator assigned as Owner and ConventionUser
+  - Transaction-safe operation with automatic rollback on failure
+  - Lazy attendance period creation for optimized setup
 - implement validation classes and update user model (, |Nathanael Björkgård|||2026-03-05)
 
 

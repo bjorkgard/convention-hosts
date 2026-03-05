@@ -193,8 +193,8 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 16.2, 16.3_
 
 
-- [ ] 4. Business logic actions and services
-  - [ ] 4.1 Create CreateConventionAction
+- [x] 4. Business logic actions and services
+  - [x] 4.1 Create CreateConventionAction
     - Accept validated data and creator user
     - Create convention record
     - Attach creator as Owner and ConventionUser roles
@@ -202,7 +202,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Return created convention
     - _Requirements: 1.4, 1.5, 10.3_
 
-  - [ ] 4.2 Create InviteUserAction
+  - [x] 4.2 Create InviteUserAction
     - Accept validated data and convention
     - Check if user exists by email
     - If exists, attach to convention; if not, create new user
@@ -214,11 +214,11 @@ This implementation plan breaks down the Convention Management System into discr
     - Return user
     - _Requirements: 3.1, 3.2, 4.3_
 
-  - [ ] 4.3 Write property test for user deduplication
+  - [x] 4.3 Write property test for user deduplication
     - **Property 14: User Deduplication by Email**
     - **Validates: Requirements 4.3**
 
-  - [ ] 4.4 Create UpdateOccupancyAction
+  - [x] 4.4 Create UpdateOccupancyAction
     - Accept section, data (occupancy or available_seats), and user
     - Calculate occupancy percentage if available_seats provided
     - Calculate available_seats if occupancy percentage provided
@@ -227,18 +227,18 @@ This implementation plan breaks down the Convention Management System into discr
     - Return updated section
     - _Requirements: 7.3, 7.5, 7.7, 7.8_
 
-  - [ ] 4.5 Write property test for occupancy calculation
+  - [x] 4.5 Write property test for occupancy calculation
     - **Property 27: Available Seats Occupancy Calculation**
     - **Validates: Requirements 7.7**
 
-  - [ ] 4.6 Create ExportConventionAction
+  - [x] 4.6 Create ExportConventionAction
     - Accept convention and format (.xlsx, .docx, .md)
     - Load all related data (floors, sections, users, attendance)
     - Delegate to format-specific exporter
     - Return file path for download
     - _Requirements: 20.1, 20.2, 20.3_
 
-  - [ ] 4.7 Create AttendanceReportService
+  - [x] 4.7 Create AttendanceReportService
     - Implement startReport() method
     - Determine current period (morning/afternoon based on time)
     - Validate max 2 reports per day
@@ -246,17 +246,17 @@ This implementation plan breaks down the Convention Management System into discr
     - Return active period
     - _Requirements: 10.5, 10.6_
 
-  - [ ] 4.8 Write property test for max reports per day
+  - [x] 4.8 Write property test for max reports per day
     - **Property 32: Maximum Two Reports Per Day**
     - **Validates: Requirements 10.6**
 
-  - [ ] 4.9 Implement AttendanceReportService stopReport() method
+  - [x] 4.9 Implement AttendanceReportService stopReport() method
     - Accept attendance period
     - Set locked = true
     - Prevent further updates
     - _Requirements: 11.1, 11.3_
 
-  - [ ] 4.10 Implement AttendanceReportService reportAttendance() method
+  - [x] 4.10 Implement AttendanceReportService reportAttendance() method
     - Accept section, period, attendance value, and user
     - Validate user has permission for section
     - Create or update attendance report
@@ -264,7 +264,7 @@ This implementation plan breaks down the Convention Management System into discr
     - Enforce update restrictions (only original reporter can update)
     - _Requirements: 10.4, 11.5_
 
-  - [ ] 4.11 Write property test for attendance update restrictions
+  - [x] 4.11 Write property test for attendance update restrictions
     - **Property 36: Section User Attendance Update Restriction**
     - **Validates: Requirements 11.5, 11.6**
 

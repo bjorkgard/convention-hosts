@@ -405,6 +405,66 @@ $convention->start_date->format('F j, Y');  // "June 15, 2026"
 $convention->end_date->diffInDays($convention->start_date);  // 2
 ```
 
+## Business Logic Actions
+
+### CreateConventionAction
+
+The `CreateConventionAction` class encapsulates the business logic for creating a new convention with proper role assignment.
+
+**Location:** `app/Actions/CreateConventionAction.php`
+
+**Method Signature:**
+
+```php
+public function execute(array $data, User $creator): Convention
+```
+
+**Parameters:**
+- `$data` - Validated convention data (name, city, country, dates, etc.)
+- `$creator` - The user creating the convention
+
+**Returns:** The newly created `Convention` instance with all relationships loaded
+
+**Functionality:**
+
+The action performs the following operations within a database transaction:
+
+1. **Creates the convention** using the provided data
+2. **Attaches the creator** to the convention via the `convention_user` pivot table
+3. **Assigns roles** to the creator:
+   - `Owner` role (full administrative privileges)
+   - `ConventionUser` role (convention-wide access)
+4. **Returns the fresh convention** instance with all relationships loaded
+
+**Transaction Safety:**
+
+All operations are wrapped in a database transaction to ensure data consistency. If any step fails, all changes are rolled back.
+
+**Usage Example:**
+
+```php
+use App\Actions\CreateConventionAction;
+
+// In ConventionController
+public function store(StoreConventionRequest $request, CreateConventionAction $action)
+{
+    $convention = $action->execute(
+        $request->validated(),
+        $request->user()
+    );
+    
+    return redirect()->route('conventions.show', $convention);
+}
+```
+
+**Note on Attendance Periods:**
+
+As per the design document, attendance periods are created lazily on first access rather than during convention creation. This optimizes initial convention setup and allows for flexible period management.
+
+**Related:**
+- See Task 4.1 in `tasks.md` for implementation details
+- See Requirement 1.4 in `requirements.md` for role assignment specification
+
 ## Form Request Validation
 
 ### StoreConventionRequest
@@ -515,6 +575,7 @@ The Convention Management System is currently under development. See `.kiro/spec
 - ✓ Task 1.1-1.7: All database migrations
 - ✓ Task 2.1: Convention model with relationships and role management
 - ✓ Task 3.1: StoreConventionRequest with overlap detection
+- ✓ Task 4.1: CreateConventionAction with role assignment
 
 ### In Progress
 
