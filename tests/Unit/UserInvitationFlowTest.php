@@ -2,9 +2,6 @@
 
 use App\Actions\InviteUserAction;
 use App\Mail\UserInvitation;
-use App\Models\Convention;
-use App\Models\Floor;
-use App\Models\Section;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -88,7 +85,7 @@ it('generates a signed invitation URL', function () {
         'roles' => ['ConventionUser'],
     ], $convention);
 
-    Mail::assertSent(UserInvitation::class, function ($mail) use ($user, $convention) {
+    Mail::assertSent(UserInvitation::class, function ($mail) use ($user) {
         // The mailable was sent, which means a signed URL was generated
         return $mail->hasTo($user->email);
     });

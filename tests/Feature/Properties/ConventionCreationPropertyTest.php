@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 
 use function Pest\Laravel\actingAs;
 
@@ -14,7 +13,6 @@ use function Pest\Laravel\actingAs;
  *
  * **Validates: Requirements 1.1**
  */
-
 beforeEach(function () {
     $this->user = User::factory()->create();
 });
@@ -28,7 +26,7 @@ function validConventionData(): array
     $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 
     return [
-        'name' => fake()->company() . ' Convention',
+        'name' => fake()->company().' Convention',
         'city' => fake()->city(),
         'country' => fake()->country(),
         'start_date' => $startDate->format('Y-m-d'),
@@ -111,7 +109,6 @@ it('rejects convention creation when mandatory fields are null', function () {
  *
  * **Validates: Requirements 1.2**
  */
-
 it('creates convention successfully with all optional fields provided', function () {
     actingAs($this->user);
 
@@ -120,7 +117,7 @@ it('creates convention successfully with all optional fields provided', function
         $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 
         $data = [
-            'name' => fake()->company() . ' Convention',
+            'name' => fake()->company().' Convention',
             'city' => fake()->unique()->city(),
             'country' => fake()->unique()->country(),
             'start_date' => $startDate->format('Y-m-d'),
@@ -151,7 +148,7 @@ it('creates convention successfully without any optional fields', function () {
         $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 
         $data = [
-            'name' => fake()->company() . ' Convention',
+            'name' => fake()->company().' Convention',
             'city' => fake()->unique()->city(),
             'country' => fake()->unique()->country(),
             'start_date' => $startDate->format('Y-m-d'),
@@ -187,7 +184,7 @@ it('creates convention with random combinations of optional fields', function ()
             $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 
             $data = [
-                'name' => fake()->company() . ' Convention',
+                'name' => fake()->company().' Convention',
                 'city' => fake()->unique()->city(),
                 'country' => fake()->unique()->country(),
                 'start_date' => $startDate->format('Y-m-d'),

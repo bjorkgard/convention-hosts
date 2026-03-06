@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Section;
 use Tests\Helpers\ConventionTestHelper;
 
 it('filters sections with occupancy below 90 percent', function () {

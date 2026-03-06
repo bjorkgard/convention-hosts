@@ -17,7 +17,6 @@ use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
  *
  * **Validates: Requirements 21.3**
  */
-
 it('enforces CSRF protection on every state-changing route', function () {
     $routes = app('router')->getRoutes();
     $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
@@ -59,7 +58,7 @@ it('enforces CSRF protection on every state-changing route', function () {
 
     // Property: Every state-changing route must use the web middleware group
     expect($failedRoutes)->toBeEmpty(
-        'All state-changing routes must have web middleware (CSRF protection). Unprotected: ' . implode(', ', $failedRoutes)
+        'All state-changing routes must have web middleware (CSRF protection). Unprotected: '.implode(', ', $failedRoutes)
     );
 })->group('property', 'security');
 

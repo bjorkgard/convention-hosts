@@ -16,7 +16,6 @@ use Tests\Helpers\ConventionTestHelper;
  *
  * **Validates: Requirements 6.2**
  */
-
 it('associates each floor with exactly one convention via convention_id', function () {
     for ($iteration = 0; $iteration < 10; $iteration++) {
         $conventionCount = fake()->numberBetween(1, 3);
@@ -138,7 +137,6 @@ it('cascades floor deletion when convention is deleted', function () {
  *
  * **Validates: Requirements 6.4, 6.5**
  */
-
 it('creates sections with all combinations of optional fields', function () {
     $convention = Convention::factory()->create();
     $floor = Floor::factory()->create(['convention_id' => $convention->id]);
@@ -158,7 +156,7 @@ it('creates sections with all combinations of optional fields', function () {
         for ($iteration = 0; $iteration < 3; $iteration++) {
             $attrs = [
                 'floor_id' => $floor->id,
-                'name' => fake()->word() . " Section {$idx}-{$iteration}",
+                'name' => fake()->word()." Section {$idx}-{$iteration}",
                 'number_of_seats' => fake()->numberBetween(50, 500),
                 'occupancy' => 0,
                 'available_seats' => 0,
@@ -184,10 +182,10 @@ it('creates sections with all combinations of optional fields', function () {
             $section->refresh();
 
             expect($section->elder_friendly)->toBe($combo['elder_friendly'],
-                "Combo {$idx}, iteration {$iteration}: elder_friendly should be " . ($combo['elder_friendly'] ? 'true' : 'false')
+                "Combo {$idx}, iteration {$iteration}: elder_friendly should be ".($combo['elder_friendly'] ? 'true' : 'false')
             );
             expect($section->handicap_friendly)->toBe($combo['handicap_friendly'],
-                "Combo {$idx}, iteration {$iteration}: handicap_friendly should be " . ($combo['handicap_friendly'] ? 'true' : 'false')
+                "Combo {$idx}, iteration {$iteration}: handicap_friendly should be ".($combo['handicap_friendly'] ? 'true' : 'false')
             );
 
             if ($combo['information']) {
@@ -210,7 +208,7 @@ it('defaults boolean optional fields to false and information to null', function
     for ($iteration = 0; $iteration < 10; $iteration++) {
         $section = Section::create([
             'floor_id' => $floor->id,
-            'name' => fake()->word() . " Section {$iteration}",
+            'name' => fake()->word()." Section {$iteration}",
             'number_of_seats' => fake()->numberBetween(50, 500),
             'occupancy' => 0,
             'available_seats' => 0,
@@ -241,7 +239,7 @@ it('stores random optional field values correctly', function () {
 
         $section = Section::create([
             'floor_id' => $floor->id,
-            'name' => fake()->word() . " Section {$iteration}",
+            'name' => fake()->word()." Section {$iteration}",
             'number_of_seats' => fake()->numberBetween(50, 500),
             'occupancy' => 0,
             'available_seats' => 0,

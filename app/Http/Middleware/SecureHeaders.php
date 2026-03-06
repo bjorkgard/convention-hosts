@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Vite;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecureHeaders
@@ -32,9 +33,11 @@ class SecureHeaders
      */
     private function buildCsp(): string
     {
+        $nonce = Vite::cspNonce();
+
         $directives = [
             'default-src' => ["'self'"],
-            'script-src' => ["'self'"],
+            'script-src' => ["'self'", "'nonce-{$nonce}'"],
             'style-src' => ["'self'", "'unsafe-inline'"],
             'img-src' => ["'self'", 'data:'],
             'font-src' => ["'self'"],

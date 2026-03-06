@@ -4,10 +4,7 @@ use App\Actions\ExportConventionAction;
 use App\Models\AttendancePeriod;
 use App\Models\AttendanceReport;
 use App\Models\Convention;
-use App\Models\Floor;
-use App\Models\Section;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Tests\Helpers\ConventionTestHelper;
 
 /**
@@ -20,7 +17,6 @@ use Tests\Helpers\ConventionTestHelper;
  *
  * **Validates: Requirements 25.5**
  */
-
 it('validates export data includes all required entities for random convention structures', function () {
     $action = new ExportConventionAction;
 
@@ -117,7 +113,6 @@ it('validates export data includes all required entities for random convention s
         $convention->delete();
     }
 })->group('property', 'export-validation');
-
 
 it('handles edge case of empty convention with no floors', function () {
     $action = new ExportConventionAction;

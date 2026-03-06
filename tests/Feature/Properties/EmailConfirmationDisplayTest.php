@@ -122,7 +122,7 @@ it('accurately reflects email_confirmed status for mixed confirmed and unconfirm
             );
 
             expect((bool) $found['email_confirmed'])->toBe($expected['expected'],
-                "User {$expected['id']} (iteration {$idx}): email_confirmed should be " . ($expected['expected'] ? 'true' : 'false')
+                "User {$expected['id']} (iteration {$idx}): email_confirmed should be ".($expected['expected'] ? 'true' : 'false')
             );
         }
     });

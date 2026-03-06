@@ -14,7 +14,6 @@ use Tests\Helpers\ConventionTestHelper;
  *
  * **Validates: Requirements 5.3**
  */
-
 $allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
 
 it('allows a user to hold multiple roles simultaneously within a convention', function () use ($allRoles) {
@@ -95,7 +94,6 @@ it('stores all role combinations correctly in the database', function () use ($a
     }
 })->group('property', 'roles');
 
-
 it('does not report roles that were not assigned', function () use ($allRoles) {
     for ($iteration = 0; $iteration < 10; $iteration++) {
         $shuffled = collect($allRoles)->shuffle();
@@ -130,7 +128,6 @@ it('does not report roles that were not assigned', function () use ($allRoles) {
  *
  * **Validates: Requirements 5.4**
  */
-
 it('grants Owner all ConventionUser capabilities via ConventionPolicy', function () {
     $structure = ConventionTestHelper::createConventionWithStructure([
         'with_owner' => false,
@@ -144,7 +141,7 @@ it('grants Owner all ConventionUser capabilities via ConventionPolicy', function
 
         $conventionUser = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
 
-        $policy = new \App\Policies\ConventionPolicy();
+        $policy = new \App\Policies\ConventionPolicy;
 
         // ConventionUser capabilities - Owner should have all of these
         expect($policy->update($owner, $convention))->toBeTrue(
@@ -193,8 +190,8 @@ it('grants Owner all ConventionUser capabilities on floors and sections', functi
         $conventionUser = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
         $conventionUser->load('floors', 'sections', 'conventions');
 
-        $floorPolicy = new \App\Policies\FloorPolicy();
-        $sectionPolicy = new \App\Policies\SectionPolicy();
+        $floorPolicy = new \App\Policies\FloorPolicy;
+        $sectionPolicy = new \App\Policies\SectionPolicy;
 
         // Owner should be able to do everything ConventionUser can on floors
         foreach ($floors as $floor) {
@@ -257,7 +254,7 @@ it('grants Owner user management capabilities that ConventionUser also has', fun
         ]);
         $targetUser->load('floors', 'sections', 'conventions');
 
-        $userPolicy = new \App\Policies\UserPolicy();
+        $userPolicy = new \App\Policies\UserPolicy;
 
         // Owner should be able to view, update, delete users
         expect($userPolicy->view($owner, $targetUser, $convention))->toBeTrue(

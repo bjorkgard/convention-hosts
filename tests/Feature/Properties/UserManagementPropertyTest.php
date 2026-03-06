@@ -55,7 +55,6 @@ function deleteUserFromConvention(User $user, Convention $convention): void
  *
  * **Validates: Requirements 4.1**
  */
-
 it('rejects duplicate emails at the database level', function () {
     for ($i = 0; $i < 10; $i++) {
         $email = fake()->unique()->safeEmail();
@@ -109,7 +108,6 @@ it('rejects duplicate emails via StoreUserRequest validation', function () {
  *
  * **Validates: Requirements 4.4**
  */
-
 it('requires first_name, last_name, email, and mobile for user creation', function () {
     $structure = ConventionTestHelper::createConventionWithStructure();
     $convention = $structure['convention'];
@@ -169,7 +167,6 @@ it('accepts valid user data with all required fields present', function () {
     }
 })->group('property', 'user-management');
 
-
 /**
  * Property 45: User Deletion Cascade
  *
@@ -183,7 +180,6 @@ it('accepts valid user data with all required fields present', function () {
  *
  * **Validates: Requirements 17.1**
  */
-
 it('removes all role and pivot records when user is deleted from a convention', function () {
     $allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
 
@@ -383,7 +379,6 @@ it('cleans up floor and section assignments for users with multiple roles', func
  *
  * **Validates: Requirements 17.2**
  */
-
 it('deletes user record when disconnected from their last convention', function () {
     for ($i = 0; $i < 10; $i++) {
         $structure = ConventionTestHelper::createConventionWithStructure();

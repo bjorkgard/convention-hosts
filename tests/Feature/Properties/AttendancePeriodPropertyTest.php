@@ -3,7 +3,6 @@
 use App\Models\AttendancePeriod;
 use App\Models\AttendanceReport;
 use App\Models\Convention;
-use App\Models\Section;
 use App\Models\User;
 use App\Services\AttendanceReportService;
 use Illuminate\Support\Carbon;
@@ -18,7 +17,6 @@ use Tests\Helpers\ConventionTestHelper;
  *
  * **Validates: Requirements 10.1, 10.2**
  */
-
 it('allows exactly two periods (morning and afternoon) per convention day', function () {
     for ($i = 0; $i < 10; $i++) {
         $daysSpan = fake()->numberBetween(1, 7);
@@ -135,7 +133,6 @@ it('allows same period type on different dates for the same convention', functio
     }
 })->group('property', 'attendance');
 
-
 /**
  * Property 31: Attendance Report Data Storage
  *
@@ -144,7 +141,6 @@ it('allows same period type on different dates for the same convention', functio
  *
  * **Validates: Requirements 10.4**
  */
-
 it('stores attendance value, reported_by, and reported_at correctly for each report', function () {
     $structure = ConventionTestHelper::createConventionWithStructure([
         'floors' => 1,
@@ -255,7 +251,6 @@ it('enforces unique constraint on attendance_period_id and section_id', function
  *
  * **Validates: Requirements 11.3**
  */
-
 it('sets locked to true when stopReport is called', function () {
     $convention = Convention::factory()->create();
     $service = new AttendanceReportService;

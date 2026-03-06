@@ -122,7 +122,8 @@ test('user creation trims and strips HTML from text fields', function () {
 // ── Unit tests for the SanitizesInput trait directly ──
 
 test('sanitizeString trims whitespace and strips all HTML tags', function () {
-    $request = new class extends FormRequest {
+    $request = new class extends FormRequest
+    {
         use SanitizesInput;
     };
 
@@ -135,7 +136,8 @@ test('sanitizeString trims whitespace and strips all HTML tags', function () {
 });
 
 test('sanitizeRichText preserves allowed tags and strips dangerous ones', function () {
-    $request = new class extends FormRequest {
+    $request = new class extends FormRequest
+    {
         use SanitizesInput;
     };
 
@@ -163,7 +165,8 @@ test('sanitizeRichText preserves allowed tags and strips dangerous ones', functi
 });
 
 test('sanitizeRichText strips event handler attributes', function () {
-    $request = new class extends FormRequest {
+    $request = new class extends FormRequest
+    {
         use SanitizesInput;
     };
 
@@ -177,7 +180,8 @@ test('sanitizeRichText strips event handler attributes', function () {
 });
 
 test('sanitizeRichText strips javascript protocol from href', function () {
-    $request = new class extends FormRequest {
+    $request = new class extends FormRequest
+    {
         use SanitizesInput;
     };
 
@@ -188,7 +192,8 @@ test('sanitizeRichText strips javascript protocol from href', function () {
 });
 
 test('sanitization skips password fields', function () {
-    $request = new class extends FormRequest {
+    $request = new class extends FormRequest
+    {
         use SanitizesInput;
     };
 
@@ -201,7 +206,8 @@ test('sanitization skips password fields', function () {
 
 test('sanitization skips non-string values', function () {
     // Verify the trait only processes strings by checking the logic
-    $request = new class extends FormRequest {
+    $request = new class extends FormRequest
+    {
         use SanitizesInput;
     };
 
@@ -228,14 +234,14 @@ test('sanitization skips non-string values', function () {
 });
 
 test('StoreConventionRequest has other_info as rich text field', function () {
-    $request = new \App\Http\Requests\StoreConventionRequest();
+    $request = new \App\Http\Requests\StoreConventionRequest;
     $richTextFields = (new ReflectionMethod($request, 'richTextFields'))->invoke($request);
 
     expect($richTextFields)->toContain('other_info');
 });
 
 test('StoreSectionRequest has information as rich text field', function () {
-    $request = new \App\Http\Requests\StoreSectionRequest();
+    $request = new \App\Http\Requests\StoreSectionRequest;
     $richTextFields = (new ReflectionMethod($request, 'richTextFields'))->invoke($request);
 
     expect($richTextFields)->toContain('information');

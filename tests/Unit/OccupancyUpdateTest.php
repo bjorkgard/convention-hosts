@@ -1,8 +1,6 @@
 <?php
 
 use App\Actions\UpdateOccupancyAction;
-use App\Models\Section;
-use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Tests\Helpers\ConventionTestHelper;
 

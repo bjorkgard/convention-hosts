@@ -2,7 +2,6 @@
 
 namespace Tests\Helpers;
 
-use App\Models\AttendancePeriod;
 use App\Models\Convention;
 use App\Models\Floor;
 use App\Models\Section;

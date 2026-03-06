@@ -3,7 +3,6 @@
 use App\Actions\ExportConventionAction;
 use App\Models\AttendancePeriod;
 use App\Models\AttendanceReport;
-use App\Models\User;
 use Tests\Helpers\ConventionTestHelper;
 
 beforeEach(function () {

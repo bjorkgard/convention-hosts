@@ -23,7 +23,6 @@ use function Pest\Laravel\get;
  *
  * **Validates: Requirements 18.3**
  */
-
 beforeEach(function () {
     $this->convention = Convention::factory()->create();
     $this->floor = Floor::factory()->create(['convention_id' => $this->convention->id]);
@@ -191,7 +190,7 @@ it('scopes navigation visibility correctly across all roles in randomized scenar
             expect($userRoles)->toContain($role);
             expect(expectedNavItems($userRoles))->toBe(
                 $config['expectedNav'],
-                "Iteration {$iteration}: {$role} should see " . implode(', ', $config['expectedNav'])
+                "Iteration {$iteration}: {$role} should see ".implode(', ', $config['expectedNav'])
             );
         }
     }

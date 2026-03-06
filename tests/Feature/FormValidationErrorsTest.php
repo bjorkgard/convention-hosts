@@ -95,7 +95,7 @@ it('preserves user input in session when convention creation validation fails', 
             $oldValue = session()->getOldInput($key);
             expect($oldValue)->toBe(
                 $value,
-                "Expected old input for '{$key}' to be preserved, got: " . var_export($oldValue, true)
+                "Expected old input for '{$key}' to be preserved, got: ".var_export($oldValue, true)
             );
         }
     }

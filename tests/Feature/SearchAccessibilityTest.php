@@ -21,7 +21,6 @@ use function Pest\Laravel\get;
  *
  * **Validates: Requirements 16.1, 16.8**
  */
-
 beforeEach(function () {
     $this->convention = Convention::factory()->create();
 

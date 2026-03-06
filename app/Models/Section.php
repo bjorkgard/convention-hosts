@@ -87,5 +87,4 @@ class Section extends Model
     {
         return $query->where('occupancy', '<', 90);
     }
-
 }

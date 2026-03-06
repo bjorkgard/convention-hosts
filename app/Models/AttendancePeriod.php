@@ -91,5 +91,4 @@ class AttendancePeriod extends Model
     {
         return $query->whereDate('date', now()->toDateString());
     }
-
 }

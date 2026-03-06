@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\AttendancePeriod;
 use App\Models\Convention;
 use App\Models\Floor;
 use App\Models\Section;
@@ -250,7 +249,7 @@ describe('Input validation', function () {
         $this->actingAs($this->owner)
             ->get(route('search.index', [
                 'convention' => $this->convention,
-                'floor_id' => "1 OR 1=1; DROP TABLE sections; --",
+                'floor_id' => '1 OR 1=1; DROP TABLE sections; --',
             ]));
 
         // Sections table should still exist

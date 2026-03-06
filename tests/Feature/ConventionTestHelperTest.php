@@ -1,8 +1,6 @@
 <?php
 
 use App\Models\Convention;
-use App\Models\Floor;
-use App\Models\Section;
 use App\Models\User;
 use Tests\Helpers\ConventionTestHelper;
 

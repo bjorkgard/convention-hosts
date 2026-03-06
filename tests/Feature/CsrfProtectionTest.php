@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\Convention;
-use App\Models\Floor;
-use App\Models\Section;
 use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 
@@ -63,9 +60,9 @@ it('protects all application state-changing routes with web middleware', functio
     $stateChangingRoutes = collect($routes->getRoutes())->filter(function ($route) {
         $methods = $route->methods();
 
-        return !empty(array_intersect($methods, ['POST', 'PUT', 'PATCH', 'DELETE']))
-            && !in_array('GET', $methods)
-            && !in_array('HEAD', $methods);
+        return ! empty(array_intersect($methods, ['POST', 'PUT', 'PATCH', 'DELETE']))
+            && ! in_array('GET', $methods)
+            && ! in_array('HEAD', $methods);
     });
 
     expect($stateChangingRoutes->count())->toBeGreaterThan(0);
@@ -74,8 +71,8 @@ it('protects all application state-changing routes with web middleware', functio
     $appRoutes = $stateChangingRoutes->filter(function ($route) {
         $uri = $route->uri();
 
-        return !str_starts_with($uri, '_')
-            && !str_starts_with($uri, 'storage/');
+        return ! str_starts_with($uri, '_')
+            && ! str_starts_with($uri, 'storage/');
     });
 
     $appRoutes->each(function ($route) {

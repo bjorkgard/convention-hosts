@@ -1154,7 +1154,7 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7_
 
 
-- [ ] 23. Final checkpoint - Ensure all tests pass
+- [x] 23. Final checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
