@@ -838,6 +838,11 @@ export default function Welcome() {
                                             <Input id="email" name="email" type="email" required placeholder="Email address" autoComplete="email" />
                                             <InputError message={errors.email} />
                                         </div>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="mobile">Mobile *</Label>
+                                            <Input id="mobile" name="mobile" type="tel" required placeholder="Mobile number" autoComplete="tel" />
+                                            <InputError message={errors.mobile} />
+                                        </div>
                                     </fieldset>
 
                                     <fieldset className="space-y-4">

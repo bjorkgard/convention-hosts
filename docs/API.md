@@ -114,6 +114,7 @@ Allows unauthenticated users to create a convention without registering first. T
 | first_name | string | required, max:255 |
 | last_name | string | required, max:255 |
 | email | string | required, email, max:255 |
+| mobile | string | required, max:50 |
 | name | string | required, max:255 |
 | city | string | required, max:255 |
 | country | string | required, max:255 |

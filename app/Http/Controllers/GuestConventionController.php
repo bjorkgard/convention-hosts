@@ -27,6 +27,7 @@ class GuestConventionController extends Controller
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
                 'email' => $validated['email'],
+                'mobile' => $validated['mobile'],
                 'password' => Hash::make(Str::random(32)),
                 'email_confirmed' => false,
             ]);

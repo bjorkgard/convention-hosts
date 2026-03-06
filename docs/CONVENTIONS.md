@@ -248,7 +248,7 @@ Unauthenticated users can create a convention directly from the landing page wit
 **Route:** `POST /conventions/guest` (middleware: `guest`)
 
 **Flow:**
-1. Guest submits convention details along with their name and email
+1. Guest submits convention details along with their name, email, and mobile number
 2. System checks if the email already exists
 3. If the email exists, the existing user account is used
 4. If the email is new, a user account is created with a random password and `email_confirmed` set to false
@@ -256,7 +256,7 @@ Unauthenticated users can create a convention directly from the landing page wit
 6. User is automatically logged in
 7. Redirected to the new convention's detail page
 
-**Validation:** Uses `StoreGuestConventionRequest` which validates both user fields (first_name, last_name, email) and convention fields (name, city, country, start_date, end_date, address, other_info). Includes the same date overlap detection as authenticated convention creation.
+**Validation:** Uses `StoreGuestConventionRequest` which validates user fields (first_name, last_name, email, mobile) and convention fields (name, city, country, start_date, end_date, address, other_info). Includes the same date overlap detection as authenticated convention creation.
 
 **Controller:** `GuestConventionController@store`
 
