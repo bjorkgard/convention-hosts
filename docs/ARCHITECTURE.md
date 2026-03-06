@@ -503,6 +503,85 @@ See [Deployment Guide](DEPLOYMENT.md) for detailed deployment instructions.
 - Avoid `any` type
 - Use Wayfinder for route type safety
 
+## Architectural Decision Records
+
+This section documents the key design decisions made for the Convention Management System and the reasoning behind them.
+
+### ADR-1: Role-Based Access Control Design
+
+**Context:** The system needs to support multiple permission levels within a single convention, from full administrative control down to single-section management.
+
+**Decision:** Implement a four-tier role system (Owner, ConventionUser, FloorUser, SectionUser) using pivot tables rather than a general-purpose permissions library like Spatie.
+
+**Implementation:**
+- `convention_user` pivot links users to conventions
+- `convention_user_roles` pivot stores per-convention roles with a unique constraint on (convention_id, user_id, role)
+- `floor_user` and `section_user` pivots scope FloorUser and SectionUser access
+- Three middleware layers enforce access: `EnsureConventionAccess` (any role), `EnsureOwnerRole` (owner only), `ScopeByRole` (filters queries by role scope)
+- Laravel Policies provide fine-grained action-level authorization on Convention, Floor, Section, and User models
+
+**Rationale:** A dedicated pivot-based approach is simpler and more performant than a generic permissions system for this fixed set of four roles. The middleware stack provides defense-in-depth: first verifying convention membership, then scoping data visibility, then checking action-level permissions via policies. Users can hold multiple roles simultaneously (e.g., Owner + ConventionUser), and the hierarchy is implicit rather than stored — Owner inherits all ConventionUser capabilities by convention in the policy logic.
+
+### ADR-2: Occupancy Tracking Approach
+
+**Context:** Section managers need to update occupancy quickly from mobile devices during live events. Updates must be immediate and intuitive.
+
+**Decision:** Provide three complementary update methods that all resolve to the same underlying data: a percentage dropdown (0/10/25/50/75/100%), a "FULL" panic button, and a numeric available-seats input.
+
+**Implementation:**
+- `UpdateOccupancyAction` normalizes all three input types into both `occupancy` (percentage) and `available_seats` (integer) fields on the section
+- Dropdown and FULL button set occupancy directly; available-seats input calculates occupancy as `100 - ((available_seats / number_of_seats) * 100)`
+- Every update records `last_occupancy_updated_by` and `last_occupancy_updated_at` for audit
+- A scheduled command (`ResetDailyOccupancy`) resets all sections to 0% at 6:00 AM daily
+- Color coding (green → dark-green → yellow → orange → red) is computed client-side via the `useOccupancyColor` hook
+
+**Rationale:** Predefined percentage steps are fastest for mobile use during busy events. The FULL button handles the most urgent case (section at capacity) with a single tap. Available-seats input provides precision when exact counts are known. Storing both percentage and seat count avoids repeated calculation and keeps the search query simple (filter on `occupancy < 90`). Daily reset ensures each convention day starts fresh without manual intervention.
+
+### ADR-3: Attendance Reporting Flow
+
+**Context:** Convention managers need to collect attendance counts from section managers across the venue, with clear start/stop boundaries and historical immutability.
+
+**Decision:** Use a two-phase model with explicit period creation and locking. Attendance is collected per-section within time-bound periods (morning/afternoon), and locked periods become immutable records.
+
+**Implementation:**
+- `AttendancePeriod` model with `locked` boolean and unique constraint on (convention_id, date, period)
+- `AttendanceReport` model with unique constraint on (attendance_period_id, section_id) — one report per section per period
+- `AttendanceReportService` manages the lifecycle: `startReport()` creates/retrieves a period (max 2 per day), `reportAttendance()` creates/updates individual reports, `stopReport()` locks the period
+- Before locking, only the original reporter can update their section's attendance. After locking, no updates are allowed
+- ConventionUser role can lock periods even when not all sections have reported
+
+**Rationale:** Explicit start/stop boundaries give convention managers clear control over data collection windows. The max-2-per-day limit maps naturally to morning and afternoon sessions. Locking provides data integrity for historical reporting — once a period is locked, the attendance numbers are final. The reporter-only update restriction prevents accidental overwrites during active collection, while the ConventionUser override ensures periods can always be finalized.
+
+### ADR-4: Progressive Web App Implementation
+
+**Context:** The application is primarily used on-site at conventions from mobile devices. Users need quick access without app store installation.
+
+**Decision:** Implement PWA with a Web App Manifest and a basic service worker using a cache-first strategy for the app shell.
+
+**Implementation:**
+- `public/manifest.json` defines the app metadata, icons (72px–512px), and display mode (standalone)
+- `public/sw.js` implements install/fetch events with cache-first for static assets
+- Service worker registration in `app.blade.php` with feature detection
+- `InstallPrompt` React component listens for `beforeinstallprompt` and provides platform-specific installation instructions (iOS Safari, Android Chrome)
+- Meta tags for `theme-color` and `apple-touch-icon` in the HTML head
+
+**Rationale:** A full native app would add significant development and distribution overhead for what is essentially a responsive web application. PWA provides the key benefits — home screen icon, full-screen display, offline shell caching — with zero app store friction. The cache-first strategy ensures the app shell loads quickly even on spotty venue Wi-Fi, while data requests always go to the network for real-time accuracy.
+
+### ADR-5: Export System Design
+
+**Context:** Convention owners need to export complete convention data for external analysis, archiving, and sharing with stakeholders who may not have system access.
+
+**Decision:** Support three export formats (.xlsx, .docx, .md) using dedicated export classes with eager-loaded data to prevent N+1 queries.
+
+**Implementation:**
+- `ExportConventionAction` delegates to format-specific exporters based on the requested format
+- `ConventionExport` (Excel) implements `WithMultipleSheets` from maatwebsite/excel with four sheets: Convention details, Floors & Sections, Attendance History, Users
+- `ConventionWordExport` uses phpoffice/phpword to generate structured .docx documents with tables
+- `ConventionMarkdownExport` generates plain Markdown using PHP string building
+- All exporters eager-load the full relationship tree (`floors.sections`, `users`, `attendancePeriods.reports`) in the constructor to batch all queries upfront
+
+**Rationale:** Three formats cover the main use cases: Excel for data analysis and filtering, Word for formal reports and printing, Markdown for lightweight sharing and version control. The multi-sheet Excel approach keeps related data organized without overwhelming a single sheet. Eager loading all relationships once (rather than lazy-loading during serialization) keeps export performance predictable regardless of convention size. The export action is restricted to the Owner role since it exposes the complete convention dataset.
+
 ## Next Steps
 
 - Learn about [Type-Safe Routing](ROUTING.md)

@@ -10,35 +10,42 @@
 
 A comprehensive convention management system built with Laravel and React. Manage multi-day events with real-time occupancy tracking, attendance reporting, and role-based access control.
 
-## ✨ Key Features
+## Key Features
 
 ### Convention Management
-- 📅 **Event Management** - Multi-day convention organization with date validation and conflict detection
-- 🏢 **Venue Hierarchy** - Convention → Floor → Section structure for organized venue management
-- 📊 **Real-time Occupancy** - Live section capacity tracking with color-coded indicators (0-100%)
-- 📝 **Attendance Reporting** - Morning/afternoon period tracking with locking for historical data integrity
-- 📤 **Data Export** - Multi-format export (.xlsx, .docx, Markdown) for comprehensive reporting
+- Multi-day convention organization with date validation and conflict detection
+- Hierarchical venue structure: Convention → Floor → Section
+- Real-time section occupancy tracking with color-coded indicators (0-100%)
+- Morning/afternoon attendance reporting with period locking for data integrity
+- Multi-format data export (.xlsx, .docx, Markdown)
 
-### User Management & Security
-- 👥 **Role-Based Access** - Four-tier permission system (Owner, ConventionUser, FloorUser, SectionUser)
-- ✉️ **User Invitations** - Secure email invitations with account activation via signed URLs
-- 🔐 **Complete Authentication** - Login with "remember me", password reset, email verification
-- 🛡️ **Two-Factor Authentication** - TOTP-based 2FA with recovery codes
-- 🔒 **Type-Safe Routing** - Laravel Wayfinder for end-to-end type safety
+### User Management and Security
+- Four-tier role-based access control (Owner, ConventionUser, FloorUser, SectionUser)
+- Secure email invitations with signed URL account activation (24h expiry)
+- Login with "remember me", password reset, email verification
+- Two-factor authentication (TOTP) with recovery codes
+- Type-safe routing via Laravel Wayfinder
 
-### Search & Accessibility
-- 🔍 **Section Search** - Find available sections with accessibility filters (elder-friendly, handicap-friendly)
-- 📱 **PWA Support** - Progressive Web App for native-like mobile experience
-- 🌓 **Theme Support** - Built-in light/dark mode
-- 📱 **Mobile-First Design** - Optimized for on-site convention management
+### Search and Accessibility
+- Find available sections with elder-friendly and handicap-friendly filters
+- Progressive Web App for native-like mobile experience
+- Light/dark mode theme support
+- Mobile-first responsive design
 
-### Developer Experience
-- ⚡ **SPA Experience** - Inertia.js bridges Laravel and React seamlessly
-- 🎨 **Modern UI** - Tailwind CSS 4 with Radix UI components
-- 🧪 **Testing Ready** - Pest PHP (backend) and Vitest + React Testing Library (frontend)
-- 🎯 **Code Quality** - ESLint, Prettier, Laravel Pint pre-configured
+## Technology Stack
 
-## 🚀 Quick Start
+| Layer | Technology |
+|-------|-----------|
+| Backend | PHP 8.2+, Laravel 12, Laravel Fortify |
+| Frontend | React 19, TypeScript, Inertia.js, Tailwind CSS 4 |
+| Database | SQLite (dev), MySQL/PostgreSQL (prod) |
+| UI Components | Radix UI, Headless UI, Lucide React |
+| Email | Mailgun |
+| Export | maatwebsite/excel, phpoffice/phpword |
+| Testing | Pest PHP (backend), Vitest + React Testing Library (frontend) |
+| Code Quality | Laravel Pint, ESLint, Prettier |
+
+## Quick Start
 
 ```bash
 # Clone the repository
@@ -48,27 +55,67 @@ cd convention-management-system
 # Install dependencies and set up the project
 composer setup
 
-# Configure email (required for user invitations)
-# Add MAILGUN_DOMAIN and MAILGUN_SECRET to .env
-
-# Seed demo data (optional)
+# Seed demo data (optional but recommended)
 php artisan db:seed
 
 # Start development servers
 composer dev
 ```
 
-Visit `http://localhost:8000` to see your application.
+Visit `http://localhost:8000` to see the application.
 
-## 🧪 Demo Data
+## Configuration
 
-Run the seeder to populate the database with sample data:
+### Environment Setup
+
+The `composer setup` command copies `.env.example` to `.env` and generates an app key. Review `.env` and adjust as needed:
+
+```env
+APP_NAME="Convention Hosts"
+APP_URL=http://localhost:8000
+APP_TIMEZONE="Europe/Stockholm"
+DB_CONNECTION=sqlite
+```
+
+### Mailgun Setup (Required for Email)
+
+The application sends invitation and confirmation emails via Mailgun. To enable email delivery:
+
+1. Sign up at [mailgun.com](https://www.mailgun.com) and verify a sending domain
+2. Copy your domain and API key into `.env`:
+
+```env
+MAIL_MAILER=mailgun
+MAIL_FROM_ADDRESS="noreply@yourdomain.com"
+MAIL_FROM_NAME="${APP_NAME}"
+MAILGUN_DOMAIN=mg.yourdomain.com
+MAILGUN_SECRET=key-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+MAILGUN_ENDPOINT=api.mailgun.net
+```
+
+For EU regions, change the endpoint to `api.eu.mailgun.net`.
+
+For local development without Mailgun, switch to the log driver to write emails to `storage/logs/`:
+
+```env
+MAIL_MAILER=log
+```
+
+### Database
+
+SQLite is the default and requires no extra configuration. The database file lives at `database/database.sqlite`.
+
+To use MySQL or PostgreSQL, update the `DB_*` variables in `.env`. See `.env.example` for commented examples.
+
+## Demo Data
+
+Seed the database with a full demo convention:
 
 ```bash
 php artisan db:seed
 ```
 
-This creates a full demo convention with floors, sections, and users across all four roles:
+This creates floors, sections (with accessibility features), users across all four roles, and a locked attendance period with sample reports.
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -77,35 +124,87 @@ This creates a full demo convention with floors, sections, and users across all 
 | FloorUser | floor@example.com | Password1! |
 | SectionUser | section@example.com | Password1! |
 
-The demo convention includes 3 floors, 6 sections (with accessibility features), and a locked attendance period with sample reports.
-
 To reset and re-seed:
 
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-## 📚 Documentation
+## Development Commands
+
+```bash
+# Start all dev services (server + queue + logs + vite)
+composer dev
+
+# Run PHP tests (Pest)
+composer test
+
+# Run frontend tests (Vitest)
+npm test
+
+# Lint and format
+composer lint               # Fix PHP style (Pint)
+npm run lint                # Fix JS/TS (ESLint)
+npm run format              # Format (Prettier)
+npm run types:check         # TypeScript type checking
+
+# Run all CI checks at once
+composer ci:check
+
+# Build frontend assets
+npm run build
+
+# Regenerate Wayfinder type-safe routes
+php artisan wayfinder:generate
+
+# Run the daily occupancy reset manually
+php artisan app:reset-daily-occupancy
+```
+
+## Testing
+
+The project uses property-based testing alongside traditional feature and unit tests to validate correctness properties.
+
+```bash
+# All backend tests
+composer test
+
+# All frontend tests
+npm test
+
+# Specific backend test file
+php artisan test tests/Property/ConventionPropertiesTest.php
+
+# Specific frontend test file
+npx vitest run resources/js/components/conventions/__tests__/user-row.test.tsx
+
+# Backend with coverage
+php artisan test --coverage
+```
+
+See [Testing Guide](docs/TESTING.md) for details on writing tests and the property-based testing approach.
+
+## Documentation
 
 ### Getting Started
-- [Installation Guide](docs/INSTALLATION.md) - Detailed setup instructions
-- [Development Guide](docs/DEVELOPMENT.md) - Development workflow and commands
-- [FAQ](docs/FAQ.md) - Frequently asked questions
+- [Installation Guide](docs/INSTALLATION.md) — Detailed setup instructions
+- [Development Guide](docs/DEVELOPMENT.md) — Development workflow and commands
+- [FAQ](docs/FAQ.md) — Frequently asked questions
 
 ### Core Concepts
-- [Architecture Overview](docs/ARCHITECTURE.md) - Project structure and patterns
-- [Authentication](docs/AUTHENTICATION.md) - Auth system documentation
-- [Type-Safe Routing](docs/ROUTING.md) - Wayfinder usage guide
-- [Convention Management](docs/CONVENTIONS.md) - Convention system documentation
-
-### Advanced
-- [Testing Guide](docs/TESTING.md) - Writing and running tests
-- [Deployment](docs/DEPLOYMENT.md) - Production deployment guide
-- [Contributing](docs/CONTRIBUTING.md) - How to contribute
+- [Architecture Overview](docs/ARCHITECTURE.md) — Project structure and patterns
+- [Convention Management](docs/CONVENTIONS.md) — Convention system documentation
+- [Authentication](docs/AUTHENTICATION.md) — Auth system documentation
+- [Type-Safe Routing](docs/ROUTING.md) — Wayfinder usage guide
 
 ### Reference
-- [Changelog](docs/CHANGELOG.md) - Version history
+- [API Reference](docs/API.md) — All endpoints, request/response formats, validation rules
+- [User Guide](docs/USER_GUIDE.md) — End-user documentation for all features
+- [Testing Guide](docs/TESTING.md) — Writing and running tests
+- [Deployment](docs/DEPLOYMENT.md) — Production deployment guide
+- [Contributing](docs/CONTRIBUTING.md) — How to contribute
+- [Changelog](docs/CHANGELOG.md) — Version history
 
-## 📄 License
+## License
 
-This project is open-sourced software licensed under the [MIT license](LICENSE)
+This project is open-sourced software licensed under the [MIT license](LICENSE).
