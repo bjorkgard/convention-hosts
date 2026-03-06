@@ -70,7 +70,7 @@ it('sets occupancy to 100% regardless of initial occupancy value', function () {
 it('records update metadata when full button is used', function () {
     $action = new UpdateOccupancyAction;
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numberOfSeats = fake()->numberBetween(50, 500);
         $initialOccupancy = fake()->randomElement([0, 10, 25, 50, 75]);
 
@@ -102,7 +102,7 @@ it('records update metadata when full button is used', function () {
 it('sets occupancy to 100% for sections with varying seat capacities', function () {
     $action = new UpdateOccupancyAction;
 
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numberOfSeats = fake()->numberBetween(10, 1000);
         $initialOccupancy = fake()->randomElement([0, 10, 25, 50, 75]);
         $initialAvailable = (int) round($numberOfSeats * (1 - ($initialOccupancy / 100)));

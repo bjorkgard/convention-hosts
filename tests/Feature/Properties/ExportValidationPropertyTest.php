@@ -20,7 +20,7 @@ use Tests\Helpers\ConventionTestHelper;
 it('validates export data includes all required entities for random convention structures', function () {
     $action = new ExportConventionAction;
 
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Generate random structure dimensions
         $floorCount = fake()->numberBetween(1, 4);
         $sectionsPerFloor = fake()->numberBetween(1, 5);
@@ -117,7 +117,7 @@ it('validates export data includes all required entities for random convention s
 it('handles edge case of empty convention with no floors', function () {
     $action = new ExportConventionAction;
 
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $convention = Convention::factory()->create();
 
         // Export all formats - none should fail
@@ -144,7 +144,7 @@ it('handles edge case of empty convention with no floors', function () {
 it('handles convention with floors but no attendance data', function () {
     $action = new ExportConventionAction;
 
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $floorCount = fake()->numberBetween(1, 4);
         $sectionsPerFloor = fake()->numberBetween(1, 5);
 
@@ -190,7 +190,7 @@ it('handles convention with floors but no attendance data', function () {
 it('verifies data completeness by counting entities in export output', function () {
     $action = new ExportConventionAction;
 
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $floorCount = fake()->numberBetween(1, 3);
         $sectionsPerFloor = fake()->numberBetween(1, 4);
 

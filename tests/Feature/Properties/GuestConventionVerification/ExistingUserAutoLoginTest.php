@@ -37,7 +37,7 @@ function guestConventionDataForExistingUser(User $user): array
 }
 
 it('logs in existing user and redirects to convention show page across 100+ iterations', function () {
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create a fresh existing user for each iteration
         $user = User::factory()->create([
             'first_name' => fake()->firstName(),

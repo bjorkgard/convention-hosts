@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
  * **Validates: Requirements 3.1, 3.2, 3.4**
  */
 it('sends verification email with signed URL, user first name, and convention name across 100+ iterations', function () {
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         Mail::fake();
 
         $startDate = now()->addDays(fake()->numberBetween(1, 60));

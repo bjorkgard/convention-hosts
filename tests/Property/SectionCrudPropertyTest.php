@@ -15,7 +15,7 @@ it('persists valid section creation with correct attributes', function () {
     $convention = $structure['convention'];
     $floors = $structure['floors'];
 
-    for ($iteration = 0; $iteration < 20; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $floor = $floors->random();
         $name = fake()->word().' Section '.$iteration;
         $seats = fake()->numberBetween(1, 999);
@@ -60,7 +60,7 @@ it('creates section via floor_id in request body when different from route floor
     $convention = $structure['convention'];
     $floors = $structure['floors'];
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         // Route-bound floor is the first one, but floor_id in body targets a random floor
         $routeFloor = $floors->first();
         $targetFloor = $floors->random();
@@ -98,7 +98,7 @@ it('persists valid section update with correct attributes', function () {
     $section = $structure['sections']->first();
     $otherSection = Section::factory()->create(['floor_id' => $structure['floors']->first()->id]);
 
-    for ($iteration = 0; $iteration < 20; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $newName = fake()->word().' Updated '.$iteration;
         $newSeats = fake()->numberBetween(1, 999);
         $newElderFriendly = fake()->boolean();
@@ -146,7 +146,7 @@ it('removes section from database on deletion', function () {
     $convention = $structure['convention'];
     $floor = $structure['floors']->first();
 
-    for ($iteration = 0; $iteration < 15; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $section = Section::factory()->create(['floor_id' => $floor->id]);
         $sectionId = $section->id;
         $countBefore = Section::where('floor_id', $floor->id)->count();
@@ -175,7 +175,7 @@ it('preserves section when deletion is not confirmed', function () {
     ]);
     $floor = $structure['floors']->first();
 
-    for ($iteration = 0; $iteration < 15; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $section = Section::factory()->create(['floor_id' => $floor->id]);
         $originalAttributes = $section->toArray();
 

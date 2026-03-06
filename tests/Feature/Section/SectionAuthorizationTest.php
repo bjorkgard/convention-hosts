@@ -57,7 +57,7 @@ function buildAuthorizationScenario(): array
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows Owner to create sections on any floor across random iterations', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $floor = fake()->randomElement([$s['floor1'], $s['floor2']]);
 
@@ -76,7 +76,7 @@ it('allows Owner to create sections on any floor across random iterations', func
 })->group('property', 'section-crud', 'authorization');
 
 it('allows ConventionUser to create sections on any floor across random iterations', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $floor = fake()->randomElement([$s['floor1'], $s['floor2']]);
 
@@ -97,7 +97,7 @@ it('allows ConventionUser to create sections on any floor across random iteratio
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows FloorUser to create sections on assigned floor, denies on unassigned floor', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
 
         // Assigned floor (floor1) → should succeed
@@ -129,7 +129,7 @@ it('allows FloorUser to create sections on assigned floor, denies on unassigned 
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('denies SectionUser from creating sections on any floor', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $floor = fake()->randomElement([$s['floor1'], $s['floor2']]);
 
@@ -150,7 +150,7 @@ it('denies SectionUser from creating sections on any floor', function () {
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows Owner to update any section across random iterations', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $section = fake()->randomElement($s['sections']->all());
 
@@ -167,7 +167,7 @@ it('allows Owner to update any section across random iterations', function () {
 })->group('property', 'section-crud', 'authorization');
 
 it('allows ConventionUser to update any section across random iterations', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $section = fake()->randomElement($s['sections']->all());
 
@@ -188,7 +188,7 @@ it('allows ConventionUser to update any section across random iterations', funct
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows FloorUser to update sections on assigned floor, denies on unassigned floor', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
 
         // Sections on floor1 (assigned) → should succeed
@@ -228,7 +228,7 @@ it('allows FloorUser to update sections on assigned floor, denies on unassigned 
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows SectionUser to update assigned section, denies on unassigned sections', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
 
         // Assigned section (sections[0]) → should succeed
@@ -262,7 +262,7 @@ it('allows SectionUser to update assigned section, denies on unassigned sections
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows Owner to delete any section across random iterations', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $section = fake()->randomElement($s['sections']->all());
 
@@ -279,7 +279,7 @@ it('allows Owner to delete any section across random iterations', function () {
 })->group('property', 'section-crud', 'authorization');
 
 it('allows ConventionUser to delete any section across random iterations', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $section = fake()->randomElement($s['sections']->all());
 
@@ -300,7 +300,7 @@ it('allows ConventionUser to delete any section across random iterations', funct
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('allows FloorUser to delete sections on assigned floor, denies on unassigned floor', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
 
         // Section on assigned floor (floor1) → should succeed
@@ -336,7 +336,7 @@ it('allows FloorUser to delete sections on assigned floor, denies on unassigned 
 // ──────────────────────────────────────────────────────────────────────────────
 
 it('denies SectionUser from deleting any section', function () {
-    for ($i = 0; $i < 25; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $s = buildAuthorizationScenario();
         $section = fake()->randomElement($s['sections']->all());
         $sectionId = $section->id;

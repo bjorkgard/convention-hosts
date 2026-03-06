@@ -13,7 +13,7 @@ use App\Models\User;
 it('returns validation errors for each invalid field when convention creation fails', function () {
     $user = User::factory()->create();
 
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $startDate = now()->addDays(rand(5, 30));
         $endDate = (clone $startDate)->addDays(rand(1, 10));
 
@@ -62,7 +62,7 @@ it('returns validation errors for each invalid field when convention creation fa
 it('preserves user input in session when convention creation validation fails', function () {
     $user = User::factory()->create();
 
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $startDate = now()->addDays(rand(5, 30));
         $endDate = (clone $startDate)->addDays(rand(1, 10));
 

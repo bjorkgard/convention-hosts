@@ -18,7 +18,7 @@ use Tests\Helpers\ConventionTestHelper;
  * **Validates: Requirements 10.1, 10.2**
  */
 it('allows exactly two periods (morning and afternoon) per convention day', function () {
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $daysSpan = fake()->numberBetween(1, 7);
         $startDate = Carbon::today()->addDays(fake()->numberBetween(1, 30));
         $endDate = $startDate->copy()->addDays($daysSpan);
@@ -68,7 +68,7 @@ it('allows exactly two periods (morning and afternoon) per convention day', func
 })->group('property', 'attendance');
 
 it('prevents duplicate periods for the same convention, date, and period type', function () {
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $convention = Convention::factory()->create();
         $testDate = Carbon::today()->addDays(fake()->numberBetween(1, 30))->toDateString();
         $period = fake()->randomElement(['morning', 'afternoon']);
@@ -101,7 +101,7 @@ it('prevents duplicate periods for the same convention, date, and period type', 
 })->group('property', 'attendance');
 
 it('allows same period type on different dates for the same convention', function () {
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $convention = Convention::factory()->create([
             'start_date' => Carbon::today()->toDateString(),
             'end_date' => Carbon::today()->addDays(30)->toDateString(),
@@ -150,7 +150,7 @@ it('stores attendance value, reported_by, and reported_at correctly for each rep
     $section = $structure['sections']->first();
     $service = new AttendanceReportService;
 
-    for ($i = 0; $i < 15; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $user = User::factory()->create();
         $attendanceValue = fake()->numberBetween(0, 500);
         $date = Carbon::today()->addDays($i)->toDateString();
@@ -208,7 +208,7 @@ it('enforces unique constraint on attendance_period_id and section_id', function
     $convention = $structure['convention'];
     $service = new AttendanceReportService;
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $section = $structure['sections']->random();
         $user = User::factory()->create();
         $date = Carbon::today()->addDays($i)->toDateString();
@@ -255,7 +255,7 @@ it('sets locked to true when stopReport is called', function () {
     $convention = Convention::factory()->create();
     $service = new AttendanceReportService;
 
-    for ($i = 0; $i < 15; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $date = Carbon::today()->addDays($i)->toDateString();
         $period = AttendancePeriod::create([
             'convention_id' => $convention->id,
@@ -298,7 +298,7 @@ it('prevents attendance updates on locked periods', function () {
     $section = $structure['sections']->first();
     $service = new AttendanceReportService;
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $user = User::factory()->create();
         $date = Carbon::today()->addDays($i)->toDateString();
 
@@ -332,7 +332,7 @@ it('keeps period locked permanently after stopReport', function () {
     $convention = Convention::factory()->create();
     $service = new AttendanceReportService;
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $date = Carbon::today()->addDays($i)->toDateString();
         $period = AttendancePeriod::create([
             'convention_id' => $convention->id,

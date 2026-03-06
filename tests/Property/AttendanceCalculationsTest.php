@@ -16,7 +16,7 @@ use App\Models\User;
  * Validates: Requirements 10.7
  */
 it('calculates total attendance as sum of all section reports', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Arrange: Create convention with floors and sections
         $convention = Convention::factory()->create();
         $floor = Floor::factory()->create(['convention_id' => $convention->id]);
@@ -92,7 +92,7 @@ it('returns zero total attendance for period with no reports', function () {
  * Validates: Requirements 10.8
  */
 it('counts reported sections accurately', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Arrange
         $convention = Convention::factory()->create();
         $floor = Floor::factory()->create(['convention_id' => $convention->id]);

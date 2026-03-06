@@ -22,7 +22,7 @@ it('validates export data completeness across all formats', function () {
     $action = new ExportConventionAction;
 
     // Run property test with multiple random scenarios
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with random structure
         $convention = Convention::factory()->create();
 

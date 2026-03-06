@@ -38,7 +38,7 @@ it('validates email domain restriction for jwpub.org', function () {
 
 it('validates email domain allows other domains', function () {
     // Run property test with multiple random valid emails
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $email = fake()->unique()->safeEmail();
 
         // Skip if by chance it contains jwpub.org

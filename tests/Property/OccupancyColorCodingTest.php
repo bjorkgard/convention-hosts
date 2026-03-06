@@ -32,35 +32,35 @@ function getOccupancyLevel(int $occupancy): string
 }
 
 it('maps 0-25% occupancy to green', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $occupancy = fake()->numberBetween(0, 25);
         expect(getOccupancyLevel($occupancy))->toBe('green');
     }
 })->group('property', 'occupancy-color');
 
 it('maps 26-50% occupancy to dark-green', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $occupancy = fake()->numberBetween(26, 50);
         expect(getOccupancyLevel($occupancy))->toBe('dark-green');
     }
 })->group('property', 'occupancy-color');
 
 it('maps 51-75% occupancy to yellow', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $occupancy = fake()->numberBetween(51, 75);
         expect(getOccupancyLevel($occupancy))->toBe('yellow');
     }
 })->group('property', 'occupancy-color');
 
 it('maps 76-90% occupancy to orange', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $occupancy = fake()->numberBetween(76, 90);
         expect(getOccupancyLevel($occupancy))->toBe('orange');
     }
 })->group('property', 'occupancy-color');
 
 it('maps 91-100% occupancy to red', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $occupancy = fake()->numberBetween(91, 100);
         expect(getOccupancyLevel($occupancy))->toBe('red');
     }

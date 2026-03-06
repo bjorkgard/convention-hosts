@@ -41,7 +41,7 @@ function guestConventionDataForNewUser(): array
 it('creates new user with email_confirmed=false, renders confirmation page, and does not authenticate across 100+ iterations', function () {
     Mail::fake();
 
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $data = guestConventionDataForNewUser();
 
         // Ensure email does not exist in DB

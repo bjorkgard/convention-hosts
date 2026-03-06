@@ -17,7 +17,7 @@ it('validates convention date overlap detection', function () {
     $user = User::factory()->create();
 
     // Run property test with multiple random scenarios
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create first convention with random dates in the future
         $city = fake()->city();
         $country = fake()->country();

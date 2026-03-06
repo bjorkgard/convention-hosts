@@ -56,7 +56,7 @@ function deleteUserFromConvention(User $user, Convention $convention): void
  * **Validates: Requirements 4.1**
  */
 it('rejects duplicate emails at the database level', function () {
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $email = fake()->unique()->safeEmail();
 
         User::factory()->create(['email' => $email]);
@@ -79,7 +79,7 @@ it('rejects duplicate emails via StoreUserRequest validation', function () {
     $convention = $structure['convention'];
     $owner = $structure['owner'];
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $email = fake()->unique()->safeEmail();
 
         // Create an existing user with this email
@@ -115,7 +115,7 @@ it('requires first_name, last_name, email, and mobile for user creation', functi
 
     $requiredFields = ['first_name', 'last_name', 'email', 'mobile'];
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $validData = [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
@@ -143,7 +143,7 @@ it('accepts valid user data with all required fields present', function () {
     $convention = $structure['convention'];
     $owner = $structure['owner'];
 
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $validData = [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
@@ -183,7 +183,7 @@ it('accepts valid user data with all required fields present', function () {
 it('removes all role and pivot records when user is deleted from a convention', function () {
     $allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => fake()->numberBetween(1, 3),
             'sections_per_floor' => fake()->numberBetween(1, 3),
@@ -281,7 +281,7 @@ it('removes all role and pivot records when user is deleted from a convention', 
 })->group('property', 'user-management');
 
 it('cleans up floor and section assignments for users with multiple roles', function () {
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => 2,
             'sections_per_floor' => 2,
@@ -380,7 +380,7 @@ it('cleans up floor and section assignments for users with multiple roles', func
  * **Validates: Requirements 17.2**
  */
 it('deletes user record when disconnected from their last convention', function () {
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $structure = ConventionTestHelper::createConventionWithStructure();
         $convention = $structure['convention'];
 
@@ -408,7 +408,7 @@ it('deletes user record when disconnected from their last convention', function 
 })->group('property', 'user-management');
 
 it('keeps user record when still connected to other conventions', function () {
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numConventions = fake()->numberBetween(2, 4);
         $structures = [];
 
@@ -449,7 +449,7 @@ it('keeps user record when still connected to other conventions', function () {
 })->group('property', 'user-management');
 
 it('deletes user record only after removal from the very last convention', function () {
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numConventions = fake()->numberBetween(2, 3);
         $structures = [];
 

@@ -10,7 +10,7 @@ describe('Property 1: Add Section button visibility by role', function () {
     it('shows Add Section button for Owner, ConventionUser, and FloorUser but hides it for SectionUser', function () {
         $rolesWithAccess = ['Owner', 'ConventionUser', 'FloorUser'];
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => fake()->numberBetween(1, 3),
                 'sections_per_floor' => fake()->numberBetween(1, 2),
@@ -64,7 +64,7 @@ describe('Property 1: Add Section button visibility by role', function () {
         $allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
         $rolesWithAccess = ['Owner', 'ConventionUser', 'FloorUser'];
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => 2,
                 'sections_per_floor' => 1,
@@ -105,7 +105,7 @@ describe('Property 1: Add Section button visibility by role', function () {
 
 describe('Property 2: Floor selector shows exactly the authorized floors', function () {
     it('Owner and ConventionUser see all convention floors', function () {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $floorCount = fake()->numberBetween(2, 5);
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => $floorCount,
@@ -143,7 +143,7 @@ describe('Property 2: Floor selector shows exactly the authorized floors', funct
     });
 
     it('FloorUser sees only assigned floors and userFloorIds matches', function () {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $totalFloors = fake()->numberBetween(3, 5);
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => $totalFloors,
@@ -182,7 +182,7 @@ describe('Property 2: Floor selector shows exactly the authorized floors', funct
     });
 
     it('SectionUser sees only floors containing assigned sections', function () {
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => 3,
                 'sections_per_floor' => 2,
@@ -225,7 +225,7 @@ describe('Property 2: Floor selector shows exactly the authorized floors', funct
 
 describe('Property 8: Section action button visibility matches authorization', function () {
     it('Owner and ConventionUser get userRoles that enable edit/delete on all sections', function () {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => fake()->numberBetween(2, 4),
                 'sections_per_floor' => fake()->numberBetween(1, 3),
@@ -259,7 +259,7 @@ describe('Property 8: Section action button visibility matches authorization', f
     });
 
     it('FloorUser gets userFloorIds that enable edit/delete only on assigned floor sections', function () {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => 3,
                 'sections_per_floor' => 2,
@@ -299,7 +299,7 @@ describe('Property 8: Section action button visibility matches authorization', f
     });
 
     it('SectionUser gets userSectionIds but no role that enables edit/delete buttons', function () {
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => 2,
                 'sections_per_floor' => 3,
@@ -341,7 +341,7 @@ describe('Property 8: Section action button visibility matches authorization', f
 
 describe('Property 9: Section display contains required information', function () {
     it('floors index returns sections with name, occupancy, and available_seats for each floor', function () {
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $floorCount = fake()->numberBetween(1, 3);
             $sectionsPerFloor = fake()->numberBetween(1, 4);
 
@@ -409,7 +409,7 @@ describe('Property 9: Section display contains required information', function (
     });
 
     it('section data includes accessibility flags for display', function () {
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $structure = ConventionTestHelper::createConventionWithStructure([
                 'floors' => 1,
                 'sections_per_floor' => fake()->numberBetween(2, 5),

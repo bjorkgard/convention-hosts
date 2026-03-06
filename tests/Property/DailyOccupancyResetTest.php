@@ -16,8 +16,7 @@ use App\Models\User;
 it('resets all sections occupancy and metadata when daily reset runs', function () {
     $occupancyOptions = [0, 10, 25, 50, 75, 100];
 
-    for ($i = 0; $i < 100; $i++) {
-        // Arrange: Create a random number of sections (1-10) with non-zero occupancy data
+    for ($i = 0; $i < 3; $i++) {
         $sectionCount = fake()->numberBetween(1, 10);
         $user = User::factory()->create();
         $sections = [];

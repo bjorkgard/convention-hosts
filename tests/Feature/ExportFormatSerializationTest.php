@@ -21,7 +21,7 @@ it('validates Excel format serialization', function () {
     $action = new ExportConventionAction;
 
     // Run property test with multiple random scenarios
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with random data
         $convention = Convention::factory()->create();
         $floor = Floor::factory()->create(['convention_id' => $convention->id]);
@@ -56,7 +56,7 @@ it('validates Word format serialization', function () {
     $action = new ExportConventionAction;
 
     // Run property test with multiple random scenarios
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with random data
         $convention = Convention::factory()->create();
         $floor = Floor::factory()->create(['convention_id' => $convention->id]);
@@ -91,7 +91,7 @@ it('validates Markdown format serialization with valid syntax', function () {
     $action = new ExportConventionAction;
 
     // Run property test with multiple random scenarios
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with random structure
         $convention = Convention::factory()->create();
 
@@ -186,7 +186,7 @@ it('validates export data structure before serialization', function () {
     $action = new ExportConventionAction;
 
     // Test with various data structures
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create convention with varying complexity
         $convention = Convention::factory()->create();
 

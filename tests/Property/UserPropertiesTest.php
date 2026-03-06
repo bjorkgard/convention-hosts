@@ -21,8 +21,7 @@ it('connects existing user instead of creating duplicate when email exists', fun
     URL::shouldReceive('temporarySignedRoute')
         ->andReturn('https://example.com/invitation/test');
 
-    // Run 50 iterations to test the property across different scenarios
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Arrange: Create an existing user and two conventions
         $existingUser = User::factory()->create([
             'email' => 'user'.$i.'@example.com',

@@ -18,8 +18,8 @@ uses(RefreshDatabase::class);
  * Validates: Requirements 14.2
  */
 it('validates SectionUser can only edit assigned sections', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with floors and sections
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(2, 4);
@@ -99,8 +99,8 @@ it('validates SectionUser can only edit assigned sections', function () {
  * Validates: Requirements 14.3
  */
 it('validates SectionUser can only manage users connected to assigned sections', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with floors and sections
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(2, 3);

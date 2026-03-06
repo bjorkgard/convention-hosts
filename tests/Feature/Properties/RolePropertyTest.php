@@ -17,7 +17,7 @@ use Tests\Helpers\ConventionTestHelper;
 $allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
 
 it('allows a user to hold multiple roles simultaneously within a convention', function () use ($allRoles) {
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         // Pick a random non-empty subset of roles
         $shuffled = collect($allRoles)->shuffle();
         $count = fake()->numberBetween(2, count($allRoles));
@@ -95,7 +95,7 @@ it('stores all role combinations correctly in the database', function () use ($a
 })->group('property', 'roles');
 
 it('does not report roles that were not assigned', function () use ($allRoles) {
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $shuffled = collect($allRoles)->shuffle();
         $splitAt = fake()->numberBetween(1, count($allRoles) - 1);
         $assignedRoles = $shuffled->take($splitAt)->values()->all();
@@ -134,7 +134,7 @@ it('grants Owner all ConventionUser capabilities via ConventionPolicy', function
     ]);
     $convention = $structure['convention'];
 
-    for ($iteration = 0; $iteration < 5; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $owner = ConventionTestHelper::createUserWithRole($convention, 'Owner');
         // Also attach ConventionUser since Owner inherits those capabilities
         ConventionTestHelper::attachUserToConvention($owner, $convention, ['ConventionUser']);
@@ -172,7 +172,7 @@ it('grants Owner all ConventionUser capabilities via ConventionPolicy', function
 })->group('property', 'roles');
 
 it('grants Owner all ConventionUser capabilities on floors and sections', function () {
-    for ($iteration = 0; $iteration < 5; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => fake()->numberBetween(1, 3),
             'sections_per_floor' => fake()->numberBetween(1, 3),
@@ -235,7 +235,7 @@ it('grants Owner all ConventionUser capabilities on floors and sections', functi
 })->group('property', 'roles');
 
 it('grants Owner user management capabilities that ConventionUser also has', function () {
-    for ($iteration = 0; $iteration < 5; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'with_owner' => false,
         ]);

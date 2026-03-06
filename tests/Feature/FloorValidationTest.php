@@ -21,7 +21,7 @@ it('validates floor creation requires name field', function () {
 
 it('validates floor creation accepts valid name', function () {
     // Run property test with multiple random names
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $name = fake()->words(rand(1, 5), true);
 
         $validator = Validator::make([

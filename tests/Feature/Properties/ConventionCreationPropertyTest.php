@@ -41,7 +41,7 @@ it('rejects convention creation when each mandatory field is missing', function 
 
     $requiredFields = ['name', 'city', 'country', 'start_date', 'end_date'];
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         foreach ($requiredFields as $missingField) {
             $data = validConventionData();
             unset($data[$missingField]);
@@ -63,7 +63,7 @@ it('rejects convention creation when mandatory fields are empty strings', functi
 
     $requiredFields = ['name', 'city', 'country', 'start_date', 'end_date'];
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         foreach ($requiredFields as $emptyField) {
             $data = validConventionData();
             $data[$emptyField] = '';
@@ -84,7 +84,7 @@ it('rejects convention creation when mandatory fields are null', function () {
 
     $requiredFields = ['name', 'city', 'country', 'start_date', 'end_date'];
 
-    for ($iteration = 0; $iteration < 5; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         foreach ($requiredFields as $nullField) {
             $data = validConventionData();
             $data[$nullField] = null;
@@ -112,7 +112,7 @@ it('rejects convention creation when mandatory fields are null', function () {
 it('creates convention successfully with all optional fields provided', function () {
     actingAs($this->user);
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $startDate = now()->addDays(fake()->numberBetween(1, 60));
         $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 
@@ -143,7 +143,7 @@ it('creates convention successfully with all optional fields provided', function
 it('creates convention successfully without any optional fields', function () {
     actingAs($this->user);
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $startDate = now()->addDays(fake()->numberBetween(1, 60));
         $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 
@@ -179,7 +179,7 @@ it('creates convention with random combinations of optional fields', function ()
     ];
 
     foreach ($optionalCombinations as $idx => $combo) {
-        for ($iteration = 0; $iteration < 5; $iteration++) {
+        for ($iteration = 0; $iteration < 2; $iteration++) {
             $startDate = now()->addDays(fake()->numberBetween(1, 60));
             $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 

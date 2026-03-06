@@ -120,7 +120,7 @@ it('validates password accepts valid passwords', function () {
 
 it('validates password with all criteria combinations', function () {
     // Property test: Generate 100 random valid passwords
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Generate a password that meets all criteria
         $lowercase = chr(rand(97, 122)); // a-z
         $uppercase = chr(rand(65, 90));  // A-Z

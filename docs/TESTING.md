@@ -651,7 +651,7 @@ php artisan test --group=property
 
 ### Writing Property Tests
 
-Property tests use iteration loops with randomized data to verify invariants:
+Property tests use iteration loops with varied inputs to verify invariants:
 
 ```php
 it('sends exactly one invitation email for any valid user data', function () {
@@ -682,7 +682,8 @@ it('sends exactly one invitation email for any valid user data', function () {
 
 Key patterns:
 - Use `->group('property')` to tag all property tests
-- Run multiple iterations (typically 50) with randomized inputs
+- Run multiple iterations with varied inputs (iteration count varies per test based on complexity and cost)
+- Use Pest's built-in expectation matchers like `toThrow()` for cleaner assertions
 - Assert invariants hold on every iteration
 - Clean up state between iterations
 

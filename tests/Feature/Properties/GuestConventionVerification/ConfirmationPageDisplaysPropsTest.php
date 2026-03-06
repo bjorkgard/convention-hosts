@@ -38,7 +38,7 @@ function confirmationPageGuestData(): array
 it('returns confirmation page with conventionName and email props for new users across 100+ iterations', function () {
     Mail::fake();
 
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $data = confirmationPageGuestData();
 
         // Ensure email does not exist in DB

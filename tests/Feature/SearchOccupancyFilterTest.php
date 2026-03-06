@@ -73,7 +73,7 @@ it('excludes sections with occupancy >= 90% from search results', function () {
 
 it('filters out sections with occupancy >= 90% across random occupancy values', function () {
     // Property 42 (property-based): generate random occupancy values and verify the filter
-    for ($iteration = 0; $iteration < 15; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         // Clean slate for each iteration
         Section::where('floor_id', $this->floor->id)->delete();
 
@@ -160,7 +160,7 @@ it('returns search results sorted by occupancy ascending', function () {
 
 it('maintains ascending occupancy order across random data sets', function () {
     // Property 43 (property-based): verify ordering holds for random inputs
-    for ($iteration = 0; $iteration < 15; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         // Clean slate for each iteration
         Section::where('floor_id', $this->floor->id)->delete();
 

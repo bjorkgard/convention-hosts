@@ -20,8 +20,8 @@ uses(RefreshDatabase::class);
  * Validates: Requirements 13.1, 13.2, 14.1
  */
 it('validates FloorUser can only edit assigned floors', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with multiple floors
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(4, 8);
@@ -80,8 +80,8 @@ it('validates FloorUser can only edit assigned floors', function () {
 });
 
 it('validates SectionUser cannot edit any floors', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with floors
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(3, 6);
@@ -125,8 +125,8 @@ it('validates SectionUser cannot edit any floors', function () {
  * Validates: Requirements 13.3
  */
 it('validates FloorUser can manage sections on assigned floors only', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with floors and sections
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(3, 5);

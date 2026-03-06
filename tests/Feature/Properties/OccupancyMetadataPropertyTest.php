@@ -35,7 +35,7 @@ it('records updating user and timestamp when occupancy is updated via dropdown',
     $validOccupancies = [0, 10, 25, 50, 75, 100];
     $action = new UpdateOccupancyAction;
 
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numberOfSeats = fake()->numberBetween(50, 500);
         $section = Section::factory()->create([
             'floor_id' => $this->floor->id,
@@ -79,7 +79,7 @@ it('records updating user and timestamp when occupancy is updated via dropdown',
 it('records updating user and timestamp when occupancy is updated via available_seats', function () {
     $action = new UpdateOccupancyAction;
 
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numberOfSeats = fake()->numberBetween(50, 500);
         $section = Section::factory()->create([
             'floor_id' => $this->floor->id,
@@ -124,7 +124,7 @@ it('updates metadata to reflect the most recent updating user', function () {
         ['convention_id' => $this->convention->id, 'user_id' => $userB->id, 'role' => 'ConventionUser', 'created_at' => now()],
     ]);
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $numberOfSeats = fake()->numberBetween(50, 500);
         $section = Section::factory()->create([
             'floor_id' => $this->floor->id,

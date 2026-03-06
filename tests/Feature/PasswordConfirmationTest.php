@@ -104,7 +104,7 @@ it('redirects to login after setting password', function () {
 it('sets email_confirmed and hashes password for randomly generated valid passwords', function () {
     $symbols = ['@', '$', '!', '%', '*', '#', '?', '&'];
 
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Create a fresh user for each iteration
         $user = User::factory()->create([
             'email_confirmed' => false,

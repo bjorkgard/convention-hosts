@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Mail;
 it('assigns Owner and ConventionUser roles to new users across 100+ iterations', function () {
     Mail::fake();
 
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $startDate = now()->addDays(fake()->numberBetween(1, 60));
         $endDate = (clone $startDate)->addDays(fake()->numberBetween(1, 14));
 

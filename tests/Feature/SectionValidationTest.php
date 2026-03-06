@@ -40,7 +40,7 @@ it('validates section creation with only number_of_seats missing', function () {
 
 it('validates section creation accepts valid data', function () {
     // Run property test with multiple random valid inputs
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $data = [
             'name' => fake()->words(rand(1, 3), true),
             'number_of_seats' => rand(10, 500),

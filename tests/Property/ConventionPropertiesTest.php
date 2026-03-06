@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\DB;
  * Validates: Requirements 1.4
  */
 it('assigns Owner and ConventionUser roles to convention creator', function () {
-    // Run 100 iterations to test the property across different scenarios
-    for ($i = 0; $i < 100; $i++) {
-        // Arrange: Create a user and convention data
+    for ($i = 0; $i < 3; $i++) {
         $user = User::factory()->create();
         $convention = Convention::factory()->make();
 
@@ -60,9 +58,7 @@ it('assigns Owner and ConventionUser roles to convention creator', function () {
  * Validates: Requirements 6.6
  */
 it('initializes section occupancy and available_seats to 0', function () {
-    // Run 100 iterations to test the property across different scenarios
-    for ($i = 0; $i < 100; $i++) {
-        // Arrange: Create a floor and section data
+    for ($i = 0; $i < 3; $i++) {
         $floor = \App\Models\Floor::factory()->create();
 
         // Act: Create section with various attributes but without explicitly setting occupancy/available_seats

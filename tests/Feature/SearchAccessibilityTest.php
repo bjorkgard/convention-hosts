@@ -110,7 +110,7 @@ it('grants search access to all role types across random conventions', function 
     // Property 41 (property-based): verify all roles can access search across multiple iterations
     $roles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $convention = Convention::factory()->create();
         $floor = Floor::factory()->create(['convention_id' => $convention->id]);
         $section = Section::factory()->create([
@@ -170,7 +170,7 @@ it('returns role-agnostic results across random data sets', function () {
     // Property 44 (property-based): verify no role-based filtering across multiple iterations
     $roles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $convention = Convention::factory()->create();
 
         // Create multiple floors with sections

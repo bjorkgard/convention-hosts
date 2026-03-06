@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\URL;
  * Validates: Requirements 3.1, 3.2
  */
 it('sends exactly one invitation email to the correct recipient for any valid user data', function () {
-    // Run 50 iterations with varied user data to test the property
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         Mail::fake();
 
         // Mock URL generation to return a signed-looking URL

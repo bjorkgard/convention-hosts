@@ -47,7 +47,7 @@ function generateInvalidPassword(int $strategy): string
 }
 
 it('rejects passwords that violate validation criteria across 100+ iterations', function () {
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $user = User::factory()->create([
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),

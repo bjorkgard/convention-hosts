@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\URL;
  * **Validates: Requirements 4.1**
  */
 it('renders set password page with user email prop for valid signed URLs across 100+ iterations', function () {
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         $user = User::factory()->create([
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),

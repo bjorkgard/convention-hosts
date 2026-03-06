@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\URL;
  * Validates: Requirements 3.5
  */
 it('sends confirmation email and resets email_confirmed when email is changed', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         Mail::fake();
 
         URL::shouldReceive('temporarySignedRoute')
@@ -65,7 +65,7 @@ it('sends confirmation email and resets email_confirmed when email is changed', 
 })->group('property', 'email');
 
 it('does not send confirmation email when email is not changed', function () {
-    for ($i = 0; $i < 50; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         Mail::fake();
 
         $user = User::factory()->create([

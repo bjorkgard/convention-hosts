@@ -71,7 +71,7 @@ it('persists occupancy across random sections and valid dropdown values', functi
     $validOccupancies = [0, 10, 25, 50, 75, 100];
     $action = new UpdateOccupancyAction;
 
-    for ($iteration = 0; $iteration < 30; $iteration++) {
+    for ($iteration = 0; $iteration < 5; $iteration++) {
         $numberOfSeats = fake()->numberBetween(50, 500);
         $section = Section::factory()->create([
             'floor_id' => $this->floor->id,

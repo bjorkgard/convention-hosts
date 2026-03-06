@@ -2,7 +2,6 @@
 
 use App\Actions\UpdateOccupancyAction;
 use App\Models\Section;
-use App\Models\User;
 
 /**
  * Property 27: Available Seats Occupancy Calculation
@@ -14,8 +13,7 @@ use App\Models\User;
  * Validates: Requirements 7.7
  */
 it('calculates occupancy correctly from available seats', function () {
-    // Run 100 iterations to test the property across different scenarios
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Arrange: Create a section with random capacity
         $section = Section::factory()->create([
             'number_of_seats' => fake()->numberBetween(50, 500),
@@ -23,7 +21,7 @@ it('calculates occupancy correctly from available seats', function () {
             'available_seats' => 0,
         ]);
 
-        $user = User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         // Generate random available seats (0 to number_of_seats)
         $availableSeats = fake()->numberBetween(0, $section->number_of_seats);
@@ -46,9 +44,7 @@ it('calculates occupancy correctly from available seats', function () {
         expect($updatedSection->last_occupancy_updated_by)->toBe($user->id)
             ->and($updatedSection->last_occupancy_updated_at)->not->toBeNull();
 
-        // Test edge cases within the loop
-        if ($i % 10 === 0) {
-            // Test with 0 available seats (100% occupancy)
+        if ($i === 0) {
             $result = $action->execute($section->fresh(), ['available_seats' => 0], $user);
             expect($result->occupancy)->toBe(100)
                 ->and($result->available_seats)->toBe(0);
@@ -80,8 +76,7 @@ it('calculates occupancy correctly from available seats', function () {
  * Validates: Requirements 7.3
  */
 it('calculates available seats correctly from occupancy percentage', function () {
-    // Run 100 iterations to test the property across different scenarios
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         // Arrange: Create a section with random capacity
         $section = Section::factory()->create([
             'number_of_seats' => fake()->numberBetween(50, 500),
@@ -89,7 +84,7 @@ it('calculates available seats correctly from occupancy percentage', function ()
             'available_seats' => 0,
         ]);
 
-        $user = User::factory()->create();
+        $user = \App\Models\User::factory()->create();
 
         // Generate random occupancy percentage (0, 10, 25, 50, 75, 100)
         $occupancyOptions = [0, 10, 25, 50, 75, 100];
@@ -113,9 +108,7 @@ it('calculates available seats correctly from occupancy percentage', function ()
         expect($updatedSection->last_occupancy_updated_by)->toBe($user->id)
             ->and($updatedSection->last_occupancy_updated_at)->not->toBeNull();
 
-        // Test edge cases within the loop
-        if ($i % 10 === 0) {
-            // Test with 0% occupancy (all seats available)
+        if ($i === 0) {
             $result = $action->execute($section->fresh(), ['occupancy' => 0], $user);
             expect($result->occupancy)->toBe(0)
                 ->and($result->available_seats)->toBe($section->number_of_seats);

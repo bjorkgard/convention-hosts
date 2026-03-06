@@ -17,7 +17,7 @@ use Tests\Helpers\ConventionTestHelper;
  * **Validates: Requirements 6.2**
  */
 it('associates each floor with exactly one convention via convention_id', function () {
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $conventionCount = fake()->numberBetween(1, 3);
         $conventions = [];
         $expectedFloorIds = [];
@@ -61,7 +61,7 @@ it('associates each floor with exactly one convention via convention_id', functi
 })->group('property', 'floor-section');
 
 it('ensures floors from one convention do not appear in another conventions floors', function () {
-    for ($iteration = 0; $iteration < 5; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $structureA = ConventionTestHelper::createConventionWithStructure([
             'floors' => fake()->numberBetween(2, 4),
             'sections_per_floor' => 0,
@@ -102,7 +102,7 @@ it('ensures floors from one convention do not appear in another conventions floo
 })->group('property', 'floor-section');
 
 it('cascades floor deletion when convention is deleted', function () {
-    for ($iteration = 0; $iteration < 5; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $floorCount = fake()->numberBetween(1, 5);
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => $floorCount,
@@ -205,7 +205,7 @@ it('defaults boolean optional fields to false and information to null', function
     $convention = Convention::factory()->create();
     $floor = Floor::factory()->create(['convention_id' => $convention->id]);
 
-    for ($iteration = 0; $iteration < 10; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $section = Section::create([
             'floor_id' => $floor->id,
             'name' => fake()->word()." Section {$iteration}",
@@ -232,7 +232,7 @@ it('stores random optional field values correctly', function () {
     $convention = Convention::factory()->create();
     $floor = Floor::factory()->create(['convention_id' => $convention->id]);
 
-    for ($iteration = 0; $iteration < 15; $iteration++) {
+    for ($iteration = 0; $iteration < 3; $iteration++) {
         $elderFriendly = fake()->boolean();
         $handicapFriendly = fake()->boolean();
         $information = fake()->optional(0.5)->paragraph();

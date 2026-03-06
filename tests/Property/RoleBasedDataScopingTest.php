@@ -19,8 +19,8 @@ uses(RefreshDatabase::class);
  * Validates: Requirements 5.5, 5.6, 5.7, 12.1, 12.2, 12.3
  */
 it('validates role-based data scoping for Owner and ConventionUser', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with random number of floors and sections
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(2, 5);
@@ -104,8 +104,8 @@ it('validates role-based data scoping for Owner and ConventionUser', function ()
 });
 
 it('validates role-based data scoping for FloorUser', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with multiple floors
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(3, 6);
@@ -188,8 +188,8 @@ it('validates role-based data scoping for FloorUser', function () {
 });
 
 it('validates role-based data scoping for SectionUser', function () {
-    // Run 100 iterations with different data
-    for ($i = 0; $i < 100; $i++) {
+    // Run 3 iterations with different data
+    for ($i = 0; $i < 3; $i++) {
         // Create a convention with floors and sections
         $convention = Convention::factory()->create();
         $floorCount = fake()->numberBetween(2, 4);

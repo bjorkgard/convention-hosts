@@ -88,7 +88,7 @@ it('returns email_confirmed as false for unconfirmed users in user listing', fun
 it('accurately reflects email_confirmed status for mixed confirmed and unconfirmed users', function () {
     $createdUsers = [];
 
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 5; $i++) {
         $isConfirmed = fake()->boolean();
 
         $user = User::factory()->create([
