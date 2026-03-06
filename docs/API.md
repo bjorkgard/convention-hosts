@@ -126,12 +126,42 @@ Allows unauthenticated users to create a convention without registering first. T
 Custom validation: rejects if an overlapping convention exists in the same city/country.
 
 **Behavior:**
-- If the email already exists, the existing user is used (no duplicate created)
+- If the email already exists, the existing user is used (no duplicate created), logged in, and redirected to `conventions.show`
 - If the email is new, a user account is created with a random password and `email_confirmed` set to false
 - The user is assigned Owner and ConventionUser roles via `CreateConventionAction`
-- The user is automatically logged in after creation
+- **New users are NOT logged in.** A verification email with a signed URL (24h expiry) is sent, and the user sees a confirmation page with instructions to check their email.
 
-On success: redirects to `conventions.show`.
+On success (existing user): redirects to `conventions.show`.
+On success (new user): renders Inertia page `auth/guest-convention-confirmation` with `conventionName` and `email` props.
+
+---
+
+## Guest Convention Verification (Unauthenticated)
+
+### Show Set Password Form
+
+```
+GET /guest-verification/{user}/{convention}
+```
+
+Middleware: `signed` (verifies URL signature and expiration)
+
+Returns Inertia page `auth/guest-convention-set-password` with user (id, first_name, last_name, email) and convention (id, name).
+
+If the signature is invalid or expired, renders `auth/guest-convention-invalid` with a `reason` prop (`'expired'` or `'invalid'`).
+
+### Set Password
+
+```
+POST /guest-verification/{user}/{convention}
+```
+
+| Field | Type | Rules |
+|-------|------|-------|
+| password | string | required, min:8, lowercase, uppercase, number, symbol, confirmed |
+| password_confirmation | string | required |
+
+Sets the user's password, marks `email_confirmed` as true, logs the user in, and redirects to `conventions.show`.
 
 ### Show Convention
 

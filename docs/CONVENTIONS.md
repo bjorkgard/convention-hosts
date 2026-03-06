@@ -247,14 +247,20 @@ Unauthenticated users can create a convention directly from the landing page wit
 
 **Route:** `POST /conventions/guest` (middleware: `guest`)
 
-**Flow:**
+**Flow for existing users:**
 1. Guest submits convention details along with their name, email, and mobile number
-2. System checks if the email already exists
-3. If the email exists, the existing user account is used
-4. If the email is new, a user account is created with a random password and `email_confirmed` set to false
-5. Convention is created via `CreateConventionAction` (assigns Owner and ConventionUser roles)
-6. User is automatically logged in
-7. Redirected to the new convention's detail page
+2. System finds the existing user by email
+3. Convention is created via `CreateConventionAction` (assigns Owner and ConventionUser roles)
+4. User is automatically logged in
+5. Redirected to the new convention's detail page
+
+**Flow for new users:**
+1. Guest submits convention details along with their name, email, and mobile number
+2. System creates a user account with a random password and `email_confirmed` set to false
+3. Convention is created via `CreateConventionAction` (assigns Owner and ConventionUser roles)
+4. A verification email is sent with a signed URL (24h expiry) to set a password
+5. User is redirected to a confirmation page (not logged in) showing the convention name and email
+6. User clicks the email link, sets a password, and is then logged in and redirected to the convention
 
 **Validation:** Uses `StoreGuestConventionRequest` which validates user fields (first_name, last_name, email, mobile) and convention fields (name, city, country, start_date, end_date, address, other_info). Includes the same date overlap detection as authenticated convention creation.
 
@@ -783,15 +789,15 @@ The `GuestConventionController` allows unauthenticated users to create a convent
 
 | Method | Action | Description | Authorization |
 |--------|--------|-------------|---------------|
-| `store()` | POST | Create convention as guest, find/create user, log in | Guest only |
+| `store()` | POST | Create convention as guest, find/create user | Guest only |
 
 **Behavior:**
 
 1. Validates user fields (first_name, last_name, email) and convention fields via `StoreGuestConventionRequest`
-2. Finds an existing user by email or creates a new one with a random password
+2. Finds an existing user by email or creates a new one with a random password and `email_confirmed=false`
 3. Delegates convention creation to `CreateConventionAction` (assigns Owner + ConventionUser roles)
-4. Logs the user in via `Auth::login()`
-5. Redirects to the convention detail page
+4. **Existing user:** Logs the user in via `Auth::login()` and redirects to the convention detail page
+5. **New user:** Sends a `GuestConventionVerification` email with a signed URL (24h expiry), then renders the confirmation page without logging the user in
 
 ## TypeScript Interfaces
 

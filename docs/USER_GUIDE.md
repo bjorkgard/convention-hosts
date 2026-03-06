@@ -6,7 +6,7 @@ This guide walks through the main features of the Convention Management System f
 
 After logging in, you land on the conventions list. From there, navigate to a convention to manage it or create a new one.
 
-If you received an invitation email, click the link to set your password and activate your account. The link expires after 24 hours — ask your convention manager to resend it if needed.
+If you received an invitation email or a guest convention verification email, click the link to set your password and activate your account. The link expires after 24 hours — ask your convention manager to resend it if needed.
 
 ## Creating a Convention
 

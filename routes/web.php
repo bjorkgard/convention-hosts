@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Auth\GuestConventionVerificationController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\ConventionController;
 use App\Http\Controllers\FloorController;
@@ -22,6 +23,13 @@ Route::inertia('/', 'welcome', [
 Route::post('conventions/guest', [GuestConventionController::class, 'store'])
     ->name('conventions.guest.store')
     ->middleware('guest');
+
+// Guest convention verification routes (no auth required)
+Route::get('guest-verification/{user}/{convention}', [GuestConventionVerificationController::class, 'show'])
+    ->name('guest-verification.show')
+    ->middleware('signed');
+Route::post('guest-verification/{user}/{convention}', [GuestConventionVerificationController::class, 'store'])
+    ->name('guest-verification.store');
 
 // Invitation routes (outside auth - user is not yet authenticated)
 Route::get('invitation/{user}/{convention}', [InvitationController::class, 'show'])

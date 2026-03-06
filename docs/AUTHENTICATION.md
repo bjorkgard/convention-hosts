@@ -18,22 +18,32 @@ The Convention Management System includes a complete authentication system with:
 
 ### Guest Convention Creation
 
-Users can create a convention without registering first. The system creates or finds a user account and logs them in automatically.
+Users can create a convention without registering first. The flow differs depending on whether the email already exists in the system.
 
+**Existing user:**
 1. Guest submits convention form with name, email, and convention details at `POST /conventions/guest`
-2. System finds existing user by email or creates a new account (random password, `email_confirmed` = false)
+2. System finds the existing user by email
 3. Convention created with user as Owner and ConventionUser
 4. User logged in via `Auth::login()`
 5. Redirected to convention detail page
 
-New users created this way will need to use the password reset flow or receive an invitation to set a proper password.
+**New user:**
+1. Guest submits convention form at `POST /conventions/guest`
+2. System creates a new user account with a random password and `email_confirmed` = false
+3. Convention created with user as Owner and ConventionUser
+4. A verification email is sent containing a signed URL (24h expiry) to set a password
+5. User is redirected to a confirmation page (not logged in) showing the convention name and instructions to check their email
+6. User clicks the email link, sets a password on the set-password page
+7. System saves the password, sets `email_confirmed` = true, logs the user in, and redirects to the convention detail page
+
+If the signed URL is expired or tampered with, an error page is shown with a link to the home page.
 
 ### User Onboarding
 
 There is no public self-registration. Users join the system through one of two paths:
 
 1. **Invitation** — A convention manager invites the user via email. The invitation contains a signed link to set a password and activate the account.
-2. **Guest convention creation** — An unauthenticated user creates a convention from the welcome page. The system creates (or finds) a user account and logs them in automatically.
+2. **Guest convention creation** — An unauthenticated user creates a convention from the welcome page. Existing users are logged in automatically. New users receive a verification email with a signed link to set their password before gaining access.
 
 ### Login
 

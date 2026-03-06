@@ -35,7 +35,13 @@ return Application::configure(basePath: dirname(__DIR__))
 
             SecurityEventListener::logInvalidSignature($reason);
 
-            return Inertia::render('auth/invitation-invalid', [
+            // Use guest-specific error page for guest verification routes
+            $routeName = $request->route()?->getName() ?? '';
+            $page = str_starts_with($routeName, 'guest-verification.')
+                ? 'auth/guest-convention-invalid'
+                : 'auth/invitation-invalid';
+
+            return Inertia::render($page, [
                 'reason' => $reason,
             ])->toResponse($request)->setStatusCode(403);
         });

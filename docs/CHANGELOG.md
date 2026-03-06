@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Added
+
+- add email verification flow for new guest convention users: new users now receive a verification email with a signed URL to set their password before gaining access; existing users retain auto-login behavior (2026-03-06)
+
 ### Removed
 
 - remove self-registration sign-up link from login page; users now join exclusively via invitation or guest convention creation (2026-03-06)
