@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Changed
+
+- improve ConventionFactory with `withOwner()` state and tighter date ranges (2026-03-06)
+  - Add `withOwner(?User $owner)` factory state that attaches Owner + ConventionUser roles
+  - Narrow default date range to +1 week to +6 months start, max +2 weeks duration
+  - Simplifies test setup for convention scenarios requiring an authenticated owner
+
 ### Added
 
 - add CSRF protection feature tests (`CsrfProtectionTest.php`) (2026-03-06)

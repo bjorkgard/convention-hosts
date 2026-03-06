@@ -29,6 +29,26 @@ class AttendancePeriodFactory extends Factory
     }
 
     /**
+     * Set the period to morning.
+     */
+    public function morning(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'period' => 'morning',
+        ]);
+    }
+
+    /**
+     * Set the period to afternoon.
+     */
+    public function afternoon(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'period' => 'afternoon',
+        ]);
+    }
+
+    /**
      * Indicate that the period is locked.
      */
     public function locked(): static

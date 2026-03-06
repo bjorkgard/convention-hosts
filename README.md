@@ -51,11 +51,39 @@ composer setup
 # Configure email (required for user invitations)
 # Add MAILGUN_DOMAIN and MAILGUN_SECRET to .env
 
+# Seed demo data (optional)
+php artisan db:seed
+
 # Start development servers
 composer dev
 ```
 
 Visit `http://localhost:8000` to see your application.
+
+## 🧪 Demo Data
+
+Run the seeder to populate the database with sample data:
+
+```bash
+php artisan db:seed
+```
+
+This creates a full demo convention with floors, sections, and users across all four roles:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Owner | owner@example.com | Password1! |
+| ConventionUser | manager@example.com | Password1! |
+| FloorUser | floor@example.com | Password1! |
+| SectionUser | section@example.com | Password1! |
+
+The demo convention includes 3 floors, 6 sections (with accessibility features), and a locked attendance period with sample reports.
+
+To reset and re-seed:
+
+```bash
+php artisan migrate:fresh --seed
+```
 
 ## 📚 Documentation
 

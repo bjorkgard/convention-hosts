@@ -22,13 +22,44 @@ class SectionFactory extends Factory
     {
         return [
             'floor_id' => Floor::factory(),
-            'name' => $this->faker->randomElement(['Section A', 'Section B', 'Section C', 'Section D']),
-            'number_of_seats' => $this->faker->numberBetween(50, 300),
+            'name' => 'Section '.$this->faker->randomElement(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']),
+            'number_of_seats' => $this->faker->numberBetween(50, 500),
             'occupancy' => 0,
             'available_seats' => 0,
-            'elder_friendly' => $this->faker->boolean(),
-            'handicap_friendly' => $this->faker->boolean(),
-            'information' => $this->faker->optional()->sentence(),
+            'elder_friendly' => $this->faker->boolean(30),
+            'handicap_friendly' => $this->faker->boolean(25),
+            'information' => $this->faker->optional(0.4)->sentence(),
         ];
+    }
+
+    /**
+     * Mark the section as elder-friendly.
+     */
+    public function elderFriendly(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'elder_friendly' => true,
+        ]);
+    }
+
+    /**
+     * Mark the section as handicap-friendly.
+     */
+    public function handicapFriendly(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'handicap_friendly' => true,
+        ]);
+    }
+
+    /**
+     * Set a specific occupancy percentage.
+     */
+    public function withOccupancy(int $occupancy): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'occupancy' => $occupancy,
+            'available_seats' => (int) round(($attributes['number_of_seats'] ?? 100) * (1 - $occupancy / 100)),
+        ]);
     }
 }

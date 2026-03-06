@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Convention;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +20,8 @@ class ConventionFactory extends Factory
      */
     public function definition(): array
     {
-        $startDate = $this->faker->dateTimeBetween('now', '+1 year');
-        $endDate = $this->faker->dateTimeBetween($startDate, '+2 years');
+        $startDate = $this->faker->dateTimeBetween('+1 week', '+6 months');
+        $endDate = $this->faker->dateTimeBetween($startDate, (clone $startDate)->modify('+2 weeks'));
 
         return [
             'name' => $this->faker->company().' Convention',
@@ -31,5 +32,32 @@ class ConventionFactory extends Factory
             'end_date' => $endDate,
             'other_info' => $this->faker->optional()->paragraph(),
         ];
+    }
+
+    /**
+     * Create the convention with an owner user attached.
+     */
+    public function withOwner(?User $owner = null): static
+    {
+        return $this->afterCreating(function (Convention $convention) use ($owner) {
+            $user = $owner ?? User::factory()->create();
+
+            $convention->users()->attach($user->id);
+
+            \Illuminate\Support\Facades\DB::table('convention_user_roles')->insert([
+                [
+                    'convention_id' => $convention->id,
+                    'user_id' => $user->id,
+                    'role' => 'Owner',
+                    'created_at' => now(),
+                ],
+                [
+                    'convention_id' => $convention->id,
+                    'user_id' => $user->id,
+                    'role' => 'ConventionUser',
+                    'created_at' => now(),
+                ],
+            ]);
+        });
     }
 }

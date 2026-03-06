@@ -22,7 +22,12 @@ class FloorFactory extends Factory
     {
         return [
             'convention_id' => Convention::factory(),
-            'name' => $this->faker->randomElement(['1st Floor', '2nd Floor', '3rd Floor', 'Ground Floor', 'Mezzanine']),
+            'name' => $this->faker->randomElement([
+                'Ground Floor', 'Mezzanine',
+                '1st Floor', '2nd Floor', '3rd Floor',
+                'Basement Level', 'Balcony Level',
+                'Main Hall', 'Upper Gallery', 'Lower Gallery',
+            ]),
         ];
     }
 }

@@ -863,38 +863,38 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 21.9_
 
 
-- [ ] 17. Database seeders and factories
-  - [ ] 17.1 Create ConventionFactory
+- [x] 17. Database seeders and factories
+  - [x] 17.1 Create ConventionFactory
     - Generate realistic convention data
     - Include date range generation
     - Add withOwner() state method
     - _Requirements: 23.3_
 
-  - [ ] 17.2 Create FloorFactory
+  - [x] 17.2 Create FloorFactory
     - Generate floor names
     - Associate with convention
     - _Requirements: 23.3_
 
-  - [ ] 17.3 Create SectionFactory
+  - [x] 17.3 Create SectionFactory
     - Generate section names and capacities
     - Set random accessibility features
     - Associate with floor
     - Initialize occupancy to 0
     - _Requirements: 23.3_
 
-  - [ ] 17.4 Create AttendancePeriodFactory
+  - [x] 17.4 Create AttendancePeriodFactory
     - Generate periods for convention dates
     - Set morning/afternoon periods
     - _Requirements: 23.3_
 
-  - [ ] 17.5 Create DemoSeeder
+  - [x] 17.5 Create DemoSeeder
     - Create demo Owner account
     - Create sample convention with structure
     - Create sample floors and sections
     - Create sample users with various roles
     - _Requirements: 23.4_
 
-  - [ ] 17.6 Document seeder usage
+  - [x] 17.6 Document seeder usage
     - Add instructions to README
     - Document demo account credentials
     - _Requirements: 23.4_
