@@ -414,6 +414,18 @@ APP_DEBUG=false
 
 See [Deployment Guide](DEPLOYMENT.md) for production setup.
 
+## PWA Icon Generation
+
+The project includes a temporary PHP script to generate PWA icons using GD:
+
+```bash
+php generate-icons.php
+```
+
+This creates blue (#3b82f6) PNG icons with "CM" text in `public/icons/` at sizes 72×72 through 512×512. The script requires the PHP GD extension and can use system TTF fonts for larger icons, falling back to GD built-in fonts otherwise.
+
+Delete the script after running it — the generated icons should be committed to version control.
+
 ## Scheduled Tasks
 
 The application includes scheduled tasks that run automatically via Laravel's scheduler:

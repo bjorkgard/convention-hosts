@@ -3,6 +3,7 @@ import { CalendarDays, LayoutGrid } from 'lucide-react';
 
 import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
 import AppLogo from '@/components/app-logo';
+import InstallPrompt from '@/components/install-prompt';
 import { NavConvention } from '@/components/nav-convention';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -52,6 +53,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
+                <InstallPrompt />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
