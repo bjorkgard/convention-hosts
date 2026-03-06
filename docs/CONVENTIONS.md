@@ -262,6 +262,16 @@ Unauthenticated users can create a convention directly from the landing page wit
 5. User is redirected to a confirmation page (not logged in) showing the convention name and email
 6. User clicks the email link, sets a password, and is then logged in and redirected to the convention
 
+**Automatic Cleanup:**
+
+Guest conventions whose owner never confirms their email are automatically cleaned up after 7 days. A scheduled command (`app:cleanup-unconfirmed-guest-conventions`) runs daily at 3:00 AM and:
+
+1. Finds users with `email_confirmed=false` created more than 7 days ago
+2. Deletes all conventions where that user is the Owner (cascading deletes handle floors, sections, attendance, pivots)
+3. If the user has no remaining conventions, deletes the user record as well
+
+This prevents orphaned conventions from accumulating in the database.
+
 **Validation:** Uses `StoreGuestConventionRequest` which validates user fields (first_name, last_name, email, mobile) and convention fields (name, city, country, start_date, end_date, address, other_info). Includes the same date overlap detection as authenticated convention creation.
 
 **Controller:** `GuestConventionController@store`

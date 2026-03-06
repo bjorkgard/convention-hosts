@@ -428,6 +428,10 @@ The application includes scheduled tasks that run automatically via Laravel's sc
 ```bash
 # Daily occupancy reset (runs automatically at 6:00 AM)
 php artisan app:reset-daily-occupancy
+
+# Cleanup unconfirmed guest conventions (runs automatically at 3:00 AM)
+# Deletes conventions whose guest owner never confirmed their email within 7 days
+php artisan app:cleanup-unconfirmed-guest-conventions
 ```
 
 This resets all section occupancy to 0%, clears available seats, and removes update metadata. To run the scheduler locally during development:
