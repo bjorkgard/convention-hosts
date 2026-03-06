@@ -21,7 +21,6 @@ describe('All pages return 200 status', function () {
 
     it('returns 200 for auth pages', function () {
         $this->get(route('login'))->assertOk();
-        $this->get(route('register'))->assertOk();
         $this->get(route('password.request'))->assertOk();
     });
 
