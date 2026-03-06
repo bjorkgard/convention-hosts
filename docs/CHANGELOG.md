@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.1.0] - 2026-03-06
 
+### Other
+
+- docs(steering): update conventions, product, structure, and tech documentation (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
 ### Added
 
 - add section frontend property tests for role-based UI behavior (2026-03-06)
