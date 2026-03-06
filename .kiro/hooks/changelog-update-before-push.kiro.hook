@@ -1,14 +1,14 @@
 {
   "enabled": true,
   "name": "Update Changelog Before Push",
-  "description": "Updates CHANGELOG.md with recent git history, commits it, and prepares for push",
+  "description": "Updates CHANGELOG.md with recent git history under a single Unreleased heading",
   "version": "1",
   "when": {
     "type": "userTriggered"
   },
   "then": {
     "type": "askAgent",
-    "prompt": "Generate or update the CHANGELOG.md file in the docs/ folder based on recent git commit history. Use 'git log' to get recent commits since the last changelog entry. Format the changelog with dates, commit messages, and authors. After updating CHANGELOG.md, stage it with 'git add docs/CHANGELOG.md' and commit it with the message 'docs(changelog): auto-update from git history [skip ci]'. Then inform the user they can now run 'git push' to push all changes including the changelog."
+    "prompt": "Update docs/CHANGELOG.md with recent git commits that are not yet in the changelog.\n\n1. Run 'git log --oneline --format=\"%s (%an, %ad)\" --date=short' to get recent commits.\n2. Compare against existing entries in docs/CHANGELOG.md to find only NEW commits not already listed.\n3. Add new entries as a flat bullet list under the single '## [Unreleased]' heading. Do NOT use subcategories like '### Added', '### Changed', or '### Other'. Just a flat list of bullets.\n4. Each entry format: '- <commit message> (<author name>, <date>)'\n5. Newest entries go at the top of the list, right after '## [Unreleased]'.\n6. Skip merge commits and commits containing '[skip ci]'.\n7. Keep all existing entries under [Unreleased] intact — only prepend new ones.\n8. Do NOT touch any released version sections below [Unreleased].\n9. After updating, stage with 'git add docs/CHANGELOG.md' and commit with message 'docs(changelog): auto-update from git history [skip ci]'.\n10. Tell the user they can now run 'git push'."
   },
   "workspaceFolderName": "Convention-Hosts",
   "shortName": "changelog-update-before-push"
