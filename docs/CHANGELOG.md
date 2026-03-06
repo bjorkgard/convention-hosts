@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Other
+
+- upgrade maatwebsite/excel to 4.x-dev and phpspreadsheet to 5.5 (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
 ### Added
 
 - add Vitest configuration for frontend component testing (2026-03-06)
