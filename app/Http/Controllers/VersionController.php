@@ -24,6 +24,20 @@ class VersionController extends Controller
             return response()->json(['error' => 'Unable to fetch release info'], 503);
         }
 
+        if ($response->status() === 404) {
+            $empty = [
+                'version' => null,
+                'name' => null,
+                'body' => null,
+                'published_at' => null,
+                'html_url' => null,
+            ];
+
+            Cache::put('github_latest_release', $empty, 300);
+
+            return response()->json($empty);
+        }
+
         if ($response->failed()) {
             return response()->json(['error' => 'Unable to fetch release info'], 503);
         }

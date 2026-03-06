@@ -580,23 +580,27 @@ Sets `email_confirmed` to true and redirects to home with flash status message.
 GET /api/version/latest
 ```
 
-Public endpoint (no authentication required). Returns the latest GitHub release for the configured repository. Response is cached for 5 minutes. The GitHub API request has a 5-second timeout; network failures and non-2xx responses both return a 503 error.
+Public endpoint (no authentication required). Returns the latest GitHub release for the configured repository. Response is cached for 5 minutes. The GitHub API request has a 5-second timeout.
 
 **Success Response (200):**
 
 | Field | Type | Description |
 |-------|------|-------------|
-| version | string | Release tag name (e.g., "v1.2.0") |
-| name | string | Release title |
-| body | string | Release notes (Markdown) |
-| published_at | string | ISO 8601 publish date |
-| html_url | string | Link to the release on GitHub |
+| version | string\|null | Release tag name (e.g., "v1.2.0") |
+| name | string\|null | Release title |
+| body | string\|null | Release notes (Markdown) |
+| published_at | string\|null | ISO 8601 publish date |
+| html_url | string\|null | Link to the release on GitHub |
+
+If the repository has no releases (GitHub returns 404), all fields are `null`. This response is also cached for 5 minutes.
 
 **Error Response (503):**
 
 ```json
 { "error": "Unable to fetch release info" }
 ```
+
+Returned on network failures or non-2xx/non-404 GitHub API responses.
 
 Configured via `GITHUB_REPO` environment variable (default: `bjorkgard/convention-hosts`).
 
