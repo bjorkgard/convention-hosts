@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Other
+
+- test: remove self-registration feature tests (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
 ### Added
 
 - add automatic cleanup of unconfirmed conventions after 7 days (, |Nathanael Björkgård|||2026-03-06)
