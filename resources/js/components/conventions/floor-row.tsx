@@ -1,12 +1,12 @@
 import { Link } from '@inertiajs/react';
-import { AlertTriangle, ChevronDown, Pencil, Trash2, Users } from 'lucide-react';
+import { AlertTriangle, ChevronRight, Pencil, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
 import { show } from '@/actions/App/Http/Controllers/SectionController';
+import OccupancyGauge from '@/components/conventions/occupancy-gauge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import OccupancyGauge from '@/components/conventions/occupancy-gauge';
 
 import { cn } from '@/lib/utils';
 import type { Floor, Section } from '@/types/convention';
@@ -58,8 +58,8 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
         <Collapsible open={isOpen} onOpenChange={setIsOpen} className="rounded-lg border">
             <div className="flex items-center justify-between gap-2 px-3 py-3 sm:px-4">
                 <CollapsibleTrigger className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 sm:gap-3">
-                    <ChevronDown
-                        className={cn('size-4 shrink-0 transition-transform duration-200', isOpen && 'rotate-180')}
+                    <ChevronRight
+                        className={cn('size-4 shrink-0 transition-transform duration-200', isOpen && 'rotate-90')}
                     />
                     <span className="truncate font-medium">{floor.name}</span>
                     <OccupancyGauge occupancy={averageOccupancy} size={28} />
