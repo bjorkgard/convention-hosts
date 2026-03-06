@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add mobile number field to guest convention creation (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
+### Added
+
 - update floor row collapsible icon and improve import organization (, |Nathanael Björkgård|||2026-03-06)
 
 
