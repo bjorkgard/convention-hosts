@@ -76,7 +76,6 @@ laravel-react-starter-kit/
 │       │   ├── conventions/      # Convention Pages
 │       │   ├── sections/         # Section Pages
 │       │   ├── settings/         # Settings Pages
-│       │   ├── dashboard.tsx     # Dashboard Page
 │       │   └── welcome.tsx       # Landing Page
 │       ├── routes/               # Wayfinder Routes (generated)
 │       ├── types/                # TypeScript Types
@@ -203,11 +202,11 @@ components/
 Inertia pages map 1:1 with backend routes:
 
 ```tsx
-// resources/js/pages/dashboard.tsx
-export default function Dashboard() {
+// resources/js/pages/conventions/index.tsx
+export default function ConventionsIndex() {
     return (
         <AppLayout>
-            <h1>Dashboard</h1>
+            <h1>My Conventions</h1>
         </AppLayout>
     );
 }
@@ -290,7 +289,7 @@ Laravel Fortify provides the authentication backend:
 2. **Inertia POST** - Form data sent to Fortify endpoint
 3. **Fortify Action** - Fortify processes authentication
 4. **Session Created** - Laravel session established
-5. **Redirect** - User redirected to dashboard
+5. **Redirect** - User redirected to conventions list
 6. **Authenticated State** - React receives authenticated user props
 
 ### Middleware Protection
@@ -299,7 +298,7 @@ Routes are protected using Laravel middleware:
 
 ```php
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/conventions', [ConventionController::class, 'index']);
 });
 ```
 
@@ -349,12 +348,11 @@ This middleware ensures that users can only access conventions they are associat
 Inertia manages server state through props:
 
 ```tsx
-interface DashboardProps {
-    user: User;
-    stats: Stats;
+interface ConventionsPageProps {
+    conventions: Convention[];
 }
 
-export default function Dashboard({ user, stats }: DashboardProps) {
+export default function ConventionsIndex({ conventions }: ConventionsPageProps) {
     // Props are automatically typed and reactive
 }
 ```

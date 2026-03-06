@@ -20,7 +20,7 @@ POST /login
 
 Rate limited: 5 attempts per minute per IP.
 
-On success: redirects to `/dashboard`.
+On success: redirects to `/conventions`.
 On failure: redirects back with `email` validation error.
 
 ### Register
@@ -37,7 +37,7 @@ POST /register
 | password | string | required, min:8, mixed case, number, symbol, confirmed |
 | password_confirmation | string | required |
 
-On success: authenticates and redirects to `/dashboard`.
+On success: authenticates and redirects to `/conventions`.
 
 ### Logout
 

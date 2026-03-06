@@ -122,6 +122,6 @@ it('can use authenticated user with actingAs for HTTP tests', function () {
     $result = ConventionTestHelper::createConventionWithStructure();
 
     $this->actingAs($result['owner'])
-        ->get('/dashboard')
+        ->get('/conventions')
         ->assertStatus(200);
 });

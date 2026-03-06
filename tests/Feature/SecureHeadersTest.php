@@ -5,7 +5,7 @@ use App\Models\User;
 test('responses include X-Content-Type-Options header', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $response->assertHeader('X-Content-Type-Options', 'nosniff');
 });
@@ -13,7 +13,7 @@ test('responses include X-Content-Type-Options header', function () {
 test('responses include X-Frame-Options header', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $response->assertHeader('X-Frame-Options', 'SAMEORIGIN');
 });
@@ -21,7 +21,7 @@ test('responses include X-Frame-Options header', function () {
 test('responses include X-XSS-Protection header', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $response->assertHeader('X-XSS-Protection', '1; mode=block');
 });
@@ -29,7 +29,7 @@ test('responses include X-XSS-Protection header', function () {
 test('responses include Referrer-Policy header', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 });
@@ -37,7 +37,7 @@ test('responses include Referrer-Policy header', function () {
 test('responses include Strict-Transport-Security header', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $response->assertHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 });
@@ -45,7 +45,7 @@ test('responses include Strict-Transport-Security header', function () {
 test('responses include Content-Security-Policy header with required directives', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $csp = $response->headers->get('Content-Security-Policy');
 
@@ -64,7 +64,7 @@ test('responses include Content-Security-Policy header with required directives'
 test('CSP includes Vite dev server in local environment', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get('/dashboard');
+    $response = $this->actingAs($user)->get('/conventions');
 
     $csp = $response->headers->get('Content-Security-Policy');
 

@@ -610,7 +610,7 @@ describe('PWA installation flow', function () {
     it('includes PWA meta tags in HTML', function () {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $response = $this->actingAs($user)->get(route('conventions.index'));
 
         $response->assertOk();
         $content = $response->getContent();

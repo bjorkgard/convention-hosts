@@ -32,8 +32,6 @@ Route::get('email/confirm/{user}', function (\App\Models\User $user) {
 })->name('email.confirm')->middleware('signed');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
     // Convention routes
     Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
     Route::get('conventions/create', [ConventionController::class, 'create'])->name('conventions.create');

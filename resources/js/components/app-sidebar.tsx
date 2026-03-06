@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { CalendarDays, LayoutGrid } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 
 import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
 import AppLogo from '@/components/app-logo';
@@ -16,15 +16,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
     {
         title: 'Conventions',
         href: conventionsIndex.url(),
@@ -39,7 +33,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={conventionsIndex.url()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

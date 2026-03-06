@@ -25,14 +25,6 @@ describe('All pages return 200 status', function () {
         $this->get(route('password.request'))->assertOk();
     });
 
-    it('returns 200 for dashboard', function () {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->get(route('dashboard'))
-            ->assertOk();
-    });
-
     it('returns 200 for conventions index', function () {
         $user = User::factory()->create();
 
@@ -115,7 +107,7 @@ describe('HTML contains responsive meta tags', function () {
     it('includes viewport meta tag on authenticated pages', function () {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('dashboard'));
+        $response = $this->actingAs($user)->get(route('conventions.index'));
 
         $response->assertOk();
         $response->assertSee('name="viewport"', false);

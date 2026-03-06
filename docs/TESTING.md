@@ -108,11 +108,11 @@ All three test directories (`Feature`, `Property`, `Unit`) extend `Tests\TestCas
 
 use App\Models\User;
 
-test('user can view dashboard', function () {
+test('user can view conventions list', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get('/dashboard')
+        ->get('/conventions')
         ->assertOk();
 });
 ```
@@ -121,7 +121,7 @@ test('user can view dashboard', function () {
 
 ```php
 it('redirects guests to login', function () {
-    $this->get('/dashboard')
+    $this->get('/conventions')
         ->assertRedirect('/login');
 });
 ```
@@ -169,7 +169,7 @@ test('user can register', function () {
     ]);
     
     $this->assertAuthenticated();
-    $response->assertRedirect('/dashboard');
+    $response->assertRedirect('/conventions');
 });
 
 test('registration requires valid email', function () {
@@ -217,7 +217,7 @@ test('user can login with valid credentials', function () {
         'password' => 'password',
     ]);
 
-    $response->assertRedirect('/dashboard');
+    $response->assertRedirect('/conventions');
     $this->assertAuthenticatedAs($user);
 });
 
@@ -390,14 +390,14 @@ test('user can delete their account', function () {
 ### Testing Inertia Responses
 
 ```php
-test('dashboard returns inertia response', function () {
+test('conventions page returns inertia response', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get('/dashboard')
+        ->get('/conventions')
         ->assertInertia(fn ($page) => $page
-            ->component('dashboard')
-            ->has('user')
+            ->component('conventions/index')
+            ->has('conventions')
         );
 });
 
@@ -531,8 +531,8 @@ $response->assertSessionHasErrors('email');
 $response->assertSessionDoesntHaveErrors();
 
 // Redirects
-$response->assertRedirect('/dashboard');
-$response->assertRedirectToRoute('dashboard');
+$response->assertRedirect('/conventions');
+$response->assertRedirectToRoute('conventions.index');
 
 // Status
 $response->assertOk();

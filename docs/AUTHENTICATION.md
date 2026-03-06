@@ -22,7 +22,7 @@ The Convention Management System includes a complete authentication system with:
 2. Form data sent to `/register` POST endpoint
 3. Fortify validates input using `CreateNewUser` action
 4. User created and automatically logged in
-5. Redirected to dashboard
+5. Redirected to conventions list
 
 **Frontend Component:**
 ```tsx
@@ -78,7 +78,7 @@ class CreateNewUser implements CreatesNewUsers
 1. User submits credentials at `/login`
 2. Fortify authenticates user
 3. Session created
-4. Redirected to intended page or dashboard
+4. Redirected to intended page or conventions list
 
 **Frontend Component:**
 ```tsx
@@ -169,7 +169,7 @@ Enable email verification in `config/fortify.php`:
 
 ```php
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/conventions', [ConventionController::class, 'index']);
 });
 ```
 
@@ -271,7 +271,7 @@ class TwoFactorAuthenticationController extends Controller
 1. User enters email and password
 2. If 2FA enabled, redirected to `/two-factor-challenge`
 3. User enters code from authenticator app
-4. Authenticated and redirected to dashboard
+4. Authenticated and redirected to conventions list
 
 **Challenge Component:**
 ```tsx
@@ -547,8 +547,8 @@ Fortify::loginView(fn () => inertia('auth/login'));
 Fortify::registerView(fn () => inertia('auth/register'));
 
 // After authentication
-Fortify::redirects('login', '/dashboard');
-Fortify::redirects('register', '/dashboard');
+Fortify::redirects('login', '/conventions');
+Fortify::redirects('register', '/conventions');
 ```
 
 ## Security Best Practices
@@ -574,7 +574,7 @@ test('user can register', function () {
         'password_confirmation' => 'password',
     ]);
 
-    $response->assertRedirect('/dashboard');
+    $response->assertRedirect('/conventions');
     $this->assertAuthenticated();
 });
 
@@ -587,7 +587,7 @@ test('user can login', function () {
         'password' => 'password',
     ]);
 
-    $response->assertRedirect('/dashboard');
+    $response->assertRedirect('/conventions');
     $this->assertAuthenticatedAs($user);
 });
 

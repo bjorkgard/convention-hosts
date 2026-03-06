@@ -196,7 +196,7 @@ Open your browser and navigate to:
 
 1. Click "Register" in the navigation
 2. Fill in the registration form
-3. Submit and verify you're redirected to the dashboard
+3. Submit and verify you're redirected to the conventions list
 
 ## Troubleshooting
 

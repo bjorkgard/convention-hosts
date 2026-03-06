@@ -120,10 +120,10 @@ import { route } from '@/routes';
 
 export function NavigateButton() {
     const navigate = () => {
-        router.visit(route('dashboard'));
+        router.visit(route('conventions.index'));
     };
 
-    return <button onClick={navigate}>Go to Dashboard</button>;
+    return <button onClick={navigate}>Go to Conventions</button>;
 }
 ```
 
@@ -193,8 +193,8 @@ route('admin.users'); // "/admin/users"
 ```php
 // Backend
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
+    Route::get('conventions', [ConventionController::class, 'index'])
+        ->name('conventions.index');
 });
 ```
 
@@ -218,10 +218,10 @@ export function Navigation() {
     return (
         <nav>
             <Link
-                href={route('dashboard')}
-                className={isActive('dashboard') ? 'active' : ''}
+                href={route('conventions.index')}
+                className={isActive('conventions.index') ? 'active' : ''}
             >
-                Dashboard
+                Conventions
             </Link>
         </nav>
     );
