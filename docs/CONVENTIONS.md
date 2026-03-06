@@ -241,6 +241,25 @@ SectionUser (Section-scoped Access)
 
 ## Key Features
 
+### Guest Convention Creation
+
+Unauthenticated users can create a convention directly from the landing page without registering first.
+
+**Route:** `POST /conventions/guest` (middleware: `guest`)
+
+**Flow:**
+1. Guest submits convention details along with their name and email
+2. System checks if the email already exists
+3. If the email exists, the existing user account is used
+4. If the email is new, a user account is created with a random password and `email_confirmed` set to false
+5. Convention is created via `CreateConventionAction` (assigns Owner and ConventionUser roles)
+6. User is automatically logged in
+7. Redirected to the new convention's detail page
+
+**Validation:** Uses `StoreGuestConventionRequest` which validates both user fields (first_name, last_name, email) and convention fields (name, city, country, start_date, end_date, address, other_info). Includes the same date overlap detection as authenticated convention creation.
+
+**Controller:** `GuestConventionController@store`
+
 ### Occupancy Tracking
 
 Real-time section occupancy with visual color coding:
@@ -754,6 +773,26 @@ The `show()` method dynamically scopes data based on the user's role, using scop
 
 The `export()` method delegates to `ExportConventionAction` and returns a downloadable file that is automatically deleted after sending.
 
+### GuestConventionController
+
+The `GuestConventionController` allows unauthenticated users to create a convention without registering first.
+
+**Location:** `app/Http/Controllers/GuestConventionController.php`
+
+**Endpoints:**
+
+| Method | Action | Description | Authorization |
+|--------|--------|-------------|---------------|
+| `store()` | POST | Create convention as guest, find/create user, log in | Guest only |
+
+**Behavior:**
+
+1. Validates user fields (first_name, last_name, email) and convention fields via `StoreGuestConventionRequest`
+2. Finds an existing user by email or creates a new one with a random password
+3. Delegates convention creation to `CreateConventionAction` (assigns Owner + ConventionUser roles)
+4. Logs the user in via `Auth::login()`
+5. Redirects to the convention detail page
+
 ## TypeScript Interfaces
 
 The frontend data models are defined in `resources/js/types/convention.ts` and mirror the Eloquent models:
@@ -875,6 +914,8 @@ The Convention Management System is currently under development.
 
 ### Recently Added
 
+- **`GuestConventionController`** (`app/Http/Controllers/GuestConventionController.php`) — Allows unauthenticated users to create a convention from the landing page. Finds or creates a user by email, creates the convention via `CreateConventionAction`, and logs the user in automatically. Route: `POST /conventions/guest` (guest middleware)
+- **`StoreGuestConventionRequest`** (`app/Http/Requests/StoreGuestConventionRequest.php`) — Form request validating both user fields (first_name, last_name, email) and convention fields with date overlap detection
 - **`NavConvention` component** (`resources/js/components/nav-convention.tsx`) — Context-aware sidebar navigation that displays convention-specific links (Floors, Sections, Users, Search) with role-based visibility using `useConventionRole` and Wayfinder type-safe routing
 - **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and scope data from Inertia page props, exposing `isOwner`, `isConventionUser`, `isFloorUser`, `isSectionUser` booleans and `hasFloorAccess(floorId)` / `hasSectionAccess(sectionId)` helpers
 - **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes

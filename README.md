@@ -14,6 +14,7 @@ A comprehensive convention management system built with Laravel and React. Manag
 
 ### Convention Management
 - Multi-day convention organization with date validation and conflict detection
+- Guest convention creation (no account required, auto-creates user and logs in)
 - Hierarchical venue structure: Convention → Floor → Section
 - Real-time section occupancy tracking with color-coded indicators (0-100%)
 - Morning/afternoon attendance reporting with period locking for data integrity

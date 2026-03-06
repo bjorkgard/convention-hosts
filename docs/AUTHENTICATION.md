@@ -16,6 +16,18 @@ The Convention Management System includes a complete authentication system with:
 
 ## Authentication Flow
 
+### Guest Convention Creation
+
+Users can create a convention without registering first. The system creates or finds a user account and logs them in automatically.
+
+1. Guest submits convention form with name, email, and convention details at `POST /conventions/guest`
+2. System finds existing user by email or creates a new account (random password, `email_confirmed` = false)
+3. Convention created with user as Owner and ConventionUser
+4. User logged in via `Auth::login()`
+5. Redirected to convention detail page
+
+New users created this way will need to use the password reset flow or receive an invitation to set a proper password.
+
 ### Registration
 
 1. User fills registration form at `/register`

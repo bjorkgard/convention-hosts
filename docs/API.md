@@ -99,6 +99,39 @@ Error example:
 { "start_date": "A convention already exists in this location during these dates." }
 ```
 
+### Store Convention as Guest
+
+```
+POST /conventions/guest
+```
+
+Middleware: `guest` (unauthenticated users only)
+
+Allows unauthenticated users to create a convention without registering first. The system finds or creates a user account and logs them in automatically.
+
+| Field | Type | Rules |
+|-------|------|-------|
+| first_name | string | required, max:255 |
+| last_name | string | required, max:255 |
+| email | string | required, email, max:255 |
+| name | string | required, max:255 |
+| city | string | required, max:255 |
+| country | string | required, max:255 |
+| address | string | nullable |
+| start_date | date | required, after_or_equal:today |
+| end_date | date | required, after_or_equal:start_date |
+| other_info | string | nullable |
+
+Custom validation: rejects if an overlapping convention exists in the same city/country.
+
+**Behavior:**
+- If the email already exists, the existing user is used (no duplicate created)
+- If the email is new, a user account is created with a random password and `email_confirmed` set to false
+- The user is assigned Owner and ConventionUser roles via `CreateConventionAction`
+- The user is automatically logged in after creation
+
+On success: redirects to `conventions.show`.
+
 ### Show Convention
 
 ```

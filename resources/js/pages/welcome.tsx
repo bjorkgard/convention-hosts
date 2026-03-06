@@ -1,13 +1,17 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { login, register } from '@/routes';
-import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
+import { Form, Head, Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
-export default function Welcome({
-    canRegister = true,
-}: {
-    canRegister?: boolean;
-}) {
+import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
+import { store as guestStore } from '@/actions/App/Http/Controllers/GuestConventionController';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { login } from '@/routes';
+
+export default function Welcome() {
     const { auth } = usePage().props;
+    const [showForm, setShowForm] = useState(false);
 
     return (
         <>
@@ -36,14 +40,12 @@ export default function Welcome({
                                 >
                                     Log in
                                 </Link>
-                                {canRegister && (
-                                    <Link
-                                        href={register()}
-                                        className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                                    >
-                                        Register
-                                    </Link>
-                                )}
+                                <button
+                                    onClick={() => setShowForm(true)}
+                                    className="inline-block cursor-pointer rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
+                                >
+                                    Create Convention
+                                </button>
                             </>
                         )}
                     </nav>
@@ -803,6 +805,108 @@ export default function Welcome({
                 </div>
                 <div className="hidden h-14.5 lg:block"></div>
             </div>
+
+            {showForm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowForm(false)}>
+                    <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl dark:bg-[#161615]" onClick={(e) => e.stopPropagation()}>
+                        <div className="mb-6 flex items-center justify-between">
+                            <h2 className="text-xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Create Convention</h2>
+                            <button onClick={() => setShowForm(false)} className="cursor-pointer text-[#706f6c] hover:text-[#1b1b18] dark:text-[#A1A09A] dark:hover:text-[#EDEDEC]" aria-label="Close">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        </div>
+
+                        <Form {...guestStore.form()} className="space-y-6">
+                            {({ processing, errors }) => (
+                                <>
+                                    <fieldset className="space-y-4">
+                                        <legend className="text-sm font-medium text-[#706f6c] dark:text-[#A1A09A]">Your Information</legend>
+                                        <div className="grid gap-4 sm:grid-cols-2">
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="first_name">First Name *</Label>
+                                                <Input id="first_name" name="first_name" required placeholder="First name" autoComplete="given-name" />
+                                                <InputError message={errors.first_name} />
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="last_name">Last Name *</Label>
+                                                <Input id="last_name" name="last_name" required placeholder="Last name" autoComplete="family-name" />
+                                                <InputError message={errors.last_name} />
+                                            </div>
+                                        </div>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="email">Email *</Label>
+                                            <Input id="email" name="email" type="email" required placeholder="Email address" autoComplete="email" />
+                                            <InputError message={errors.email} />
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset className="space-y-4">
+                                        <legend className="text-sm font-medium text-[#706f6c] dark:text-[#A1A09A]">Convention Details</legend>
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="name">Name *</Label>
+                                            <Input id="name" name="name" required placeholder="Convention name" autoComplete="off" />
+                                            <InputError message={errors.name} />
+                                        </div>
+
+                                        <div className="grid gap-4 sm:grid-cols-2">
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="city">City *</Label>
+                                                <Input id="city" name="city" required placeholder="City" autoComplete="off" />
+                                                <InputError message={errors.city} />
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="country">Country *</Label>
+                                                <Input id="country" name="country" required placeholder="Country" autoComplete="off" />
+                                                <InputError message={errors.country} />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="address">Address</Label>
+                                            <Input id="address" name="address" placeholder="Venue address (optional)" autoComplete="off" />
+                                            <InputError message={errors.address} />
+                                        </div>
+
+                                        <div className="grid gap-4 sm:grid-cols-2">
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="start_date">Start Date *</Label>
+                                                <Input id="start_date" name="start_date" type="date" required />
+                                                <InputError message={errors.start_date} />
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="end_date">End Date *</Label>
+                                                <Input id="end_date" name="end_date" type="date" required />
+                                                <InputError message={errors.end_date} />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="other_info">Other Information</Label>
+                                            <textarea
+                                                id="other_info"
+                                                name="other_info"
+                                                rows={3}
+                                                placeholder="Additional information (optional)"
+                                                className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 flex w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                            />
+                                            <InputError message={errors.other_info} />
+                                        </div>
+                                    </fieldset>
+
+                                    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
+                                        <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setShowForm(false)}>
+                                            Cancel
+                                        </Button>
+                                        <Button type="submit" disabled={processing} className="w-full sm:w-auto">
+                                            {processing ? 'Creating...' : 'Create Convention'}
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </Form>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

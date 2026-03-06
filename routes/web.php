@@ -4,6 +4,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\InvitationController;
 use App\Http\Controllers\ConventionController;
 use App\Http\Controllers\FloorController;
+use App\Http\Controllers\GuestConventionController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UserController;
@@ -16,6 +17,11 @@ use Laravel\Fortify\Features;
 Route::inertia('/', 'welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
+
+// Guest convention creation (no auth required)
+Route::post('conventions/guest', [GuestConventionController::class, 'store'])
+    ->name('conventions.guest.store')
+    ->middleware('guest');
 
 // Invitation routes (outside auth - user is not yet authenticated)
 Route::get('invitation/{user}/{convention}', [InvitationController::class, 'show'])
