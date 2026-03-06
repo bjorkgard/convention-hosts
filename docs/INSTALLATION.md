@@ -159,6 +159,16 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
+### GitHub Version Tracking
+
+The application checks for the latest release via the GitHub API. Configure the repository in `.env`:
+
+```env
+GITHUB_REPO="bjorkgard/convention-hosts"
+```
+
+This powers the `GET /api/version/latest` endpoint, which returns the latest release info (cached for 5 minutes). No GitHub token is required for public repositories.
+
 ### Mail Configuration
 
 For development, the log driver is used by default. For production, configure your mail service:

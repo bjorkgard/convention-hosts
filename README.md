@@ -33,6 +33,11 @@ A comprehensive convention management system built with Laravel and React. Manag
 - Light/dark mode theme support
 - Mobile-first responsive design
 
+### Version Tracking
+- Automatic version checking via GitHub releases API
+- Cached responses (5-minute TTL) for performance
+- In-app update notification modal with release notes and one-click reload
+
 ## Technology Stack
 
 | Layer | Technology |

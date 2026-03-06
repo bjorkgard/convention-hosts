@@ -7,6 +7,8 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { UpdateNotificationModal } from '@/components/update-notification-modal';
+import { VersionBadge } from '@/components/version-badge';
 import { login } from '@/routes';
 
 export default function Welcome() {
@@ -804,6 +806,7 @@ export default function Welcome() {
                     </main>
                 </div>
                 <div className="hidden h-14.5 lg:block"></div>
+                <VersionBadge className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-60" />
             </div>
 
             {showForm && (
@@ -912,6 +915,7 @@ export default function Welcome() {
                     </div>
                 </div>
             )}
+            <UpdateNotificationModal />
         </>
     );
 }

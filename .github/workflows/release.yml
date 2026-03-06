@@ -89,7 +89,10 @@ jobs:
         run: |
           NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
           
-          git add docs/CHANGELOG.md
+          # Create VERSION file for runtime version detection
+          echo "$NEW_VERSION" > VERSION
+          
+          git add docs/CHANGELOG.md VERSION
           git commit -m "chore(release): bump version to $NEW_VERSION [skip ci]" || echo "No changes to commit"
           git push origin main
 

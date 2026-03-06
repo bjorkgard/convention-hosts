@@ -17,6 +17,7 @@ export interface PageProps {
     auth: Auth;
     name: string;
     sidebarOpen: boolean;
+    appVersion: string | null;
     flash?: Flash;
     errors?: Errors;
 }

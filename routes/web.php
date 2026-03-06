@@ -9,6 +9,7 @@ use App\Http\Controllers\GuestConventionController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VersionController;
 use App\Http\Middleware\EnsureConventionAccess;
 use App\Http\Middleware\EnsureOwnerRole;
 use App\Http\Middleware\ScopeByRole;
@@ -111,3 +112,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+// Version API (public, cached)
+Route::get('api/version/latest', [VersionController::class, 'latest'])->name('version.latest');

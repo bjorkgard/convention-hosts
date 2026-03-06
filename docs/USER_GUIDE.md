@@ -211,6 +211,10 @@ The application can be installed on your phone's home screen for a native-like e
 
 Once installed, the app opens in full-screen mode without the browser address bar, and loads quickly thanks to cached assets.
 
+## Update Notifications
+
+When a new version of the application is released, a notification modal appears automatically. It shows your current version, the new version number, release name, and release notes. You can click **Reload Now** to update immediately, or dismiss the modal to continue working — it won't reappear until the next check cycle (every 5 minutes).
+
 ## Account Settings
 
 Access your settings from the user menu:

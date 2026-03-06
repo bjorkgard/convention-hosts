@@ -16,6 +16,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { VersionBadge } from '@/components/version-badge';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -49,6 +50,7 @@ export function AppSidebar() {
             <SidebarFooter>
                 <InstallPrompt />
                 <NavUser />
+                <VersionBadge className="px-2 pb-1 text-left group-data-[collapsible=icon]:hidden" />
             </SidebarFooter>
         </Sidebar>
     );

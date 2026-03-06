@@ -572,6 +572,36 @@ Sets `email_confirmed` to true and redirects to home with flash status message.
 
 ---
 
+## Version
+
+### Latest Release
+
+```
+GET /api/version/latest
+```
+
+Public endpoint (no authentication required). Returns the latest GitHub release for the configured repository. Response is cached for 5 minutes.
+
+**Success Response (200):**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| version | string | Release tag name (e.g., "v1.2.0") |
+| name | string | Release title |
+| body | string | Release notes (Markdown) |
+| published_at | string | ISO 8601 publish date |
+| html_url | string | Link to the release on GitHub |
+
+**Error Response (503):**
+
+```json
+{ "error": "Unable to fetch release info" }
+```
+
+Configured via `GITHUB_REPO` environment variable (default: `bjorkgard/convention-hosts`).
+
+---
+
 ## Error Responses
 
 All validation errors are returned as Inertia redirects with errors in the session. The frontend accesses them via `usePage().props.errors`.

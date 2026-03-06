@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add in-app update notification modal that alerts users when a new version is available, with release notes and one-click reload (2026-03-06)
 - add email verification flow for new guest convention users: new users now receive a verification email with a signed URL to set their password before gaining access; existing users retain auto-login behavior (2026-03-06)
 
 ### Removed

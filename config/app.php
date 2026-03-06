@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | GitHub Repository
+    |--------------------------------------------------------------------------
+    |
+    | The GitHub repository used for version tracking via releases.
+    | Format: "owner/repo"
+    |
+    */
+
+    'github_repo' => env('GITHUB_REPO', 'bjorkgard/convention-hosts'),
+
 ];

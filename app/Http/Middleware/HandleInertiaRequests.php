@@ -42,6 +42,26 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'appVersion' => $this->getAppVersion(),
         ];
+    }
+
+    /**
+     * Get the current application version from the latest git tag.
+     */
+    private function getAppVersion(): ?string
+    {
+        return once(function () {
+            // First check for a VERSION file (created during deployment)
+            $versionFile = base_path('VERSION');
+            if (file_exists($versionFile)) {
+                return trim(file_get_contents($versionFile));
+            }
+
+            // Fall back to git tag
+            $version = trim((string) shell_exec('git describe --tags --abbrev=0 2>/dev/null'));
+
+            return $version !== '' ? $version : null;
+        });
     }
 }
