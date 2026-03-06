@@ -55,6 +55,7 @@ tests/
 ├── Feature/              # Feature tests (HTTP, integration)
 │   ├── Auth/            # Authentication tests
 │   ├── Settings/        # Settings tests
+│   ├── CsrfProtectionTest.php  # CSRF token enforcement
 │   └── ...
 ├── Property/            # Property-based tests (correctness properties)
 │   ├── AttendancePropertiesTest.php
@@ -610,6 +611,7 @@ php artisan test --group=property
 | `RoleBasedDataScopingTest` | Role-based query scoping | 5.5, 5.6, 5.7 |
 | `FloorUserPermissionsTest` | FloorUser permission enforcement | 13.1, 13.2, 13.3 |
 | `SectionUserRestrictionsTest` | SectionUser edit and scope restrictions | 14.2, 14.3 |
+| `CsrfProtectionTest` | CSRF token enforcement on all state-changing routes | 21.3 |
 
 ### Writing Property Tests
 

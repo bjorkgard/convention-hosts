@@ -7,16 +7,8 @@ import { destroy, index, show } from '@/actions/App/Http/Controllers/ConventionC
 import AttendanceReportBanner from '@/components/conventions/attendance-report-banner';
 import ExportDropdown from '@/components/conventions/export-dropdown';
 import FloorRow from '@/components/conventions/floor-row';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { useAttendanceReport } from '@/hooks/use-attendance-report';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
@@ -183,32 +175,16 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
             </div>
 
             {/* Delete confirmation dialog */}
-            <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Delete Convention</DialogTitle>
-                        <DialogDescription>
-                            Are you sure you want to delete "{convention.name}"? This action cannot be undone.
-                            All floors, sections, users, and attendance data will be permanently removed.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline" className="cursor-pointer">
-                                Cancel
-                            </Button>
-                        </DialogClose>
-                        <Button
-                            variant="destructive"
-                            className="cursor-pointer"
-                            disabled={deleting}
-                            onClick={handleDelete}
-                        >
-                            {deleting ? 'Deleting...' : 'Delete convention'}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <ConfirmationDialog
+                open={showDeleteDialog}
+                onOpenChange={setShowDeleteDialog}
+                title="Delete Convention"
+                description={`Are you sure you want to delete "${convention.name}"? This action cannot be undone. All floors, sections, users, and attendance data will be permanently removed.`}
+                confirmLabel="Delete convention"
+                variant="destructive"
+                loading={deleting}
+                onConfirm={handleDelete}
+            />
         </AppLayout>
     );
 }

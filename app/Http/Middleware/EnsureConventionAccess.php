@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Listeners\SecurityEventListener;
 use App\Models\Convention;
 use Closure;
 use Illuminate\Http\Request;
@@ -29,6 +30,11 @@ class EnsureConventionAccess
 
         // Check if user has any role for this convention
         if (! $user->conventions->contains($convention)) {
+            SecurityEventListener::logAuthorizationFailure(
+                "No access to convention #{$convention->id}",
+                $user->id,
+            );
+
             abort(403, 'No access to this convention');
         }
 

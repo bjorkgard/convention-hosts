@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { index as conventionsIndex, show } from '@/actions/App/Http/Controllers/ConventionController';
 import { destroy, index as floorsIndex, store, update } from '@/actions/App/Http/Controllers/FloorController';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import FloorRow from '@/components/conventions/floor-row';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -11,10 +12,10 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DialogDescription,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -208,30 +209,15 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
             </Dialog>
 
             {/* Delete confirmation dialog */}
-            <Dialog open={!!deletingFloor} onOpenChange={(open) => !open && setDeletingFloor(null)}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Delete Floor</DialogTitle>
-                        <DialogDescription>
-                            Are you sure you want to delete "{deletingFloor?.name}"? All sections on this floor will also be deleted. This action cannot be undone.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline" className="cursor-pointer">
-                                Cancel
-                            </Button>
-                        </DialogClose>
-                        <Button
-                            variant="destructive"
-                            className="cursor-pointer"
-                            onClick={handleDelete}
-                        >
-                            Delete floor
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <ConfirmationDialog
+                open={!!deletingFloor}
+                onOpenChange={(open) => !open && setDeletingFloor(null)}
+                title="Delete Floor"
+                description={`Are you sure you want to delete "${deletingFloor?.name}"? All sections on this floor will also be deleted. This action cannot be undone.`}
+                confirmLabel="Delete floor"
+                variant="destructive"
+                onConfirm={handleDelete}
+            />
         </AppLayout>
     );
 }

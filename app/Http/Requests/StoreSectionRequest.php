@@ -2,10 +2,23 @@
 
 namespace App\Http\Requests;
 
+use App\Concerns\SanitizesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSectionRequest extends FormRequest
 {
+    use SanitizesInput;
+
+    /**
+     * Fields that may contain rich text content.
+     *
+     * @return array<int, string>
+     */
+    protected function richTextFields(): array
+    {
+        return ['information'];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */

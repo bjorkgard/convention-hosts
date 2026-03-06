@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add CSRF protection feature tests (`CsrfProtectionTest.php`) (2026-03-06)
+  - Verifies ValidateCsrfToken middleware is in web middleware group
+  - Tests rejection of POST/PUT/PATCH/DELETE requests without CSRF token (419 status)
+  - Confirms valid CSRF token allows state-changing requests
+  - Validates all application state-changing routes use web middleware
+  - Asserts no CSRF token exclusions are configured
 - add PWA icon generation script (`generate-icons.php`) using PHP GD (2026-03-06)
   - Generates blue (#3b82f6) PNG icons with "CM" text at 8 sizes (72–512px)
   - Outputs to `public/icons/` for Web App Manifest

@@ -1,21 +1,23 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Accessibility, ArrowLeft, Clock, Heart, Send, Users } from 'lucide-react';
+import { Accessibility, ArrowLeft, Clock, Heart, Send, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
 import { report } from '@/actions/App/Http/Controllers/AttendanceController';
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
-import { setFull, show as sectionShow, updateOccupancy } from '@/actions/App/Http/Controllers/SectionController';
+import { destroy, setFull, show as sectionShow, updateOccupancy } from '@/actions/App/Http/Controllers/SectionController';
 import AvailableSeatsInput from '@/components/conventions/available-seats-input';
 import FullButton from '@/components/conventions/full-button';
 import OccupancyDropdown from '@/components/conventions/occupancy-dropdown';
 import OccupancyIndicator from '@/components/conventions/occupancy-indicator';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
 import type { AttendancePeriod, Convention, Floor, Section } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
@@ -30,6 +32,11 @@ interface SectionsShowProps {
 
 export default function SectionsShow({ section, floor, convention, activePeriod }: SectionsShowProps) {
     const [attendanceValue, setAttendanceValue] = useState('');
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const { isOwner, isConventionUser, isFloorUser, hasFloorAccess } = useConventionRole();
+
+    const canDeleteSection = isOwner || isConventionUser || (isFloorUser && hasFloorAccess(floor.id));
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Conventions', href: conventionsIndex.url() },
@@ -65,6 +72,16 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
         );
     }
 
+    function handleDeleteSection() {
+        setDeleting(true);
+        router.delete(destroy.url(section.id), {
+            onFinish: () => {
+                setDeleting(false);
+                setShowDeleteDialog(false);
+            },
+        });
+    }
+
     function formatLastUpdate(): string | null {
         if (!section.last_occupancy_updated_at) return null;
 
@@ -87,18 +104,32 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
             <Head title={`${section.name} — ${convention.name}`} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 {/* Header */}
-                <div className="flex items-start gap-2">
-                    <Button variant="ghost" size="icon" asChild className="mt-0.5 shrink-0">
-                        <Link href={floorsIndex.url(convention.id)}>
-                            <ArrowLeft />
-                        </Link>
-                    </Button>
-                    <div className="flex flex-col gap-1">
-                        <h1 className="text-2xl font-semibold tracking-tight">{section.name}</h1>
-                        <p className="text-muted-foreground text-sm">
-                            {floor.name} · {convention.name}
-                        </p>
+                <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-2">
+                        <Button variant="ghost" size="icon" asChild className="mt-0.5 shrink-0">
+                            <Link href={floorsIndex.url(convention.id)}>
+                                <ArrowLeft />
+                            </Link>
+                        </Button>
+                        <div className="flex flex-col gap-1">
+                            <h1 className="text-2xl font-semibold tracking-tight">{section.name}</h1>
+                            <p className="text-muted-foreground text-sm">
+                                {floor.name} · {convention.name}
+                            </p>
+                        </div>
                     </div>
+
+                    {canDeleteSection && (
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            className="cursor-pointer gap-1.5 shrink-0"
+                            onClick={() => setShowDeleteDialog(true)}
+                        >
+                            <Trash2 className="size-4" />
+                            Delete
+                        </Button>
+                    )}
                 </div>
 
                 {/* Section info card */}
@@ -190,6 +221,18 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                     </Card>
                 )}
             </div>
+
+            {/* Delete section confirmation dialog */}
+            <ConfirmationDialog
+                open={showDeleteDialog}
+                onOpenChange={setShowDeleteDialog}
+                title="Delete Section"
+                description={`Are you sure you want to delete "${section.name}"? All occupancy data and attendance reports for this section will be permanently removed. This action cannot be undone.`}
+                confirmLabel="Delete section"
+                variant="destructive"
+                loading={deleting}
+                onConfirm={handleDeleteSection}
+            />
         </AppLayout>
     );
 }

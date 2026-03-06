@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Listeners\SecurityEventListener;
 use App\Models\Convention;
 use Closure;
 use Illuminate\Http\Request;
@@ -29,6 +30,11 @@ class EnsureOwnerRole
 
         // Check if user has Owner role for this convention
         if (! $user->hasRole($convention, 'Owner')) {
+            SecurityEventListener::logAuthorizationFailure(
+                "Owner role required for convention #{$convention->id}",
+                $user->id,
+            );
+
             abort(403, 'Owner role required for this action');
         }
 

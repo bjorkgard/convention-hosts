@@ -3,17 +3,9 @@ import { AlertTriangle, CheckCircle2, Mail, Pencil, Trash2 } from 'lucide-react'
 import { useState } from 'react';
 
 import { destroy, resendInvitation } from '@/actions/App/Http/Controllers/UserController';
+import ConfirmationDialog from '@/components/confirmation-dialog';
 import RoleBadge from '@/components/conventions/role-badge';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import type { Convention } from '@/types/convention';
 import type { ConventionUser } from '@/types/user';
 
@@ -107,25 +99,15 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                 )}
             </div>
 
-            <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Remove User</DialogTitle>
-                        <DialogDescription>
-                            Are you sure you want to remove {user.first_name} {user.last_name} from this convention?
-                            This action cannot be undone.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline" className="cursor-pointer">Cancel</Button>
-                        </DialogClose>
-                        <Button variant="destructive" className="cursor-pointer" onClick={handleDelete}>
-                            Remove
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <ConfirmationDialog
+                open={showDeleteConfirm}
+                onOpenChange={setShowDeleteConfirm}
+                title="Remove User"
+                description={`Are you sure you want to remove ${user.first_name} ${user.last_name} from this convention? This action cannot be undone.`}
+                confirmLabel="Remove"
+                variant="destructive"
+                onConfirm={handleDelete}
+            />
         </>
     );
 }

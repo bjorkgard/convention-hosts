@@ -3,12 +3,14 @@
 namespace App\Http\Requests\Settings;
 
 use App\Concerns\ProfileValidationRules;
+use App\Concerns\SanitizesInput;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProfileUpdateRequest extends FormRequest
 {
     use ProfileValidationRules;
+    use SanitizesInput;
 
     /**
      * Get the validation rules that apply to the request.

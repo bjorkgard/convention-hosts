@@ -2,11 +2,24 @@
 
 namespace App\Http\Requests;
 
+use App\Concerns\SanitizesInput;
 use App\Models\Convention;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateConventionRequest extends FormRequest
 {
+    use SanitizesInput;
+
+    /**
+     * Fields that may contain rich text content.
+     *
+     * @return array<int, string>
+     */
+    protected function richTextFields(): array
+    {
+        return ['other_info'];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
