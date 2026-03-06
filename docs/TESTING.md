@@ -67,15 +67,20 @@ tests/
 │   ├── RoleBasedDataScopingTest.php
 │   ├── SectionUserRestrictionsTest.php
 │   └── UserPropertiesTest.php
-├── Unit/                # Unit tests (isolated logic)
+├── Unit/                # Unit tests (with database support via RefreshDatabase)
 ├── Pest.php             # Pest configuration
 └── TestCase.php         # Base test case
 ```
 
+### Pest Configuration
+
+All three test directories (`Feature`, `Property`, `Unit`) extend `Tests\TestCase` and use `RefreshDatabase`, so every test has full access to the Laravel application and a fresh database per test.
+
 ### Test File Naming
 
 - Feature tests: `*Test.php` (e.g., `LoginTest.php`)
-- Unit tests: `*Test.php` (e.g., `UserTest.php`)
+- Property tests: `*Test.php` (e.g., `ConventionPropertiesTest.php`)
+- Unit tests: `*Test.php` (e.g., `ValidationTest.php`)
 
 ## Writing Tests
 
