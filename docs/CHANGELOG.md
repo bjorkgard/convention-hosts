@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-03-06
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -25,7 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - test(security): enhance test coverage and fix code style issues (, |Nathanael Björkgård|||2026-03-06)
 
 
-## [Unreleased] - 2026-03-06
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -44,14 +48,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add Kiro hooks for auto-linting and fix import ordering (, |Nathanael Björkgård|||2026-03-06)
 
 
-## [Unreleased] - 2026-03-06
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Other
 
 - upgrade maatwebsite/excel to 4.x-dev and phpspreadsheet to 5.5 (, |Nathanael Björkgård|||2026-03-06)
 
 
-## [Unreleased] - 2026-03-06
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -90,7 +98,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Uses TTF fonts when available, falls back to GD built-in fonts
   - Temporary script — delete after running
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -112,7 +122,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs(structure): update project structure documentation with implemented features (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -125,7 +137,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add TypeScript interfaces for convention data models (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -141,7 +155,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement middleware and policies for role-based access control (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -162,14 +178,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement validation classes and update user model (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Other
 
 - docs(steering): add comprehensive convention management system documentation (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
@@ -181,14 +201,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add convention management system specification (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Added
 
 - add comprehensive skill documentation for Laravel and React development (, |Nathanael Björkgård|||2026-03-05)
 
 
-## [Unreleased] - 2026-03-05
+## [Unreleased]
+
+## [v0.1.0] - 2026-03-06
 
 ### Other
 
