@@ -10,7 +10,7 @@ import ConfirmationDialog from '@/components/confirmation-dialog';
 import AvailableSeatsInput from '@/components/conventions/available-seats-input';
 import FullButton from '@/components/conventions/full-button';
 import OccupancyDropdown from '@/components/conventions/occupancy-dropdown';
-import OccupancyIndicator from '@/components/conventions/occupancy-indicator';
+import OccupancyGauge from '@/components/conventions/occupancy-gauge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -137,7 +137,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <CardTitle className="text-lg">Section Details</CardTitle>
-                            <OccupancyIndicator occupancy={section.occupancy} showLabel size="md" />
+                            <OccupancyGauge occupancy={section.occupancy} size={48} />
                         </div>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-4">
@@ -168,6 +168,11 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                         )}
 
                         <Separator />
+
+                        {/* Occupancy help text */}
+                        <p className="text-muted-foreground text-sm">
+                            Set occupancy by selecting a percentage, entering available seats, or pressing FULL.<br/>You can update these as often as needed throughout the day. All numbers reset automatically every night.
+                        </p>
 
                         {/* Occupancy controls */}
                         <div className="flex flex-col gap-4">
