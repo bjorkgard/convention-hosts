@@ -2,8 +2,8 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useState } from 'react';
 
-import { show } from '@/actions/App/Http/Controllers/ConventionController';
-import { destroy, store, update } from '@/actions/App/Http/Controllers/FloorController';
+import { index as conventionsIndex, show } from '@/actions/App/Http/Controllers/ConventionController';
+import { destroy, index as floorsIndex, store, update } from '@/actions/App/Http/Controllers/FloorController';
 import FloorRow from '@/components/conventions/floor-row';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -45,9 +45,9 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
     const editForm = useForm({ name: '' });
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: '/conventions' },
+        { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: show.url(convention.id) },
-        { title: 'Floors', href: `/conventions/${convention.id}/floors` },
+        { title: 'Floors', href: floorsIndex.url(convention.id) },
     ];
 
     function handleAdd(e: React.FormEvent) {
@@ -104,7 +104,8 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
                             onClick={() => setShowAddDialog(true)}
                         >
                             <Plus className="size-4" />
-                            Add Floor
+                            <span className="hidden sm:inline">Add Floor</span>
+                            <span className="sm:hidden">Add</span>
                         </Button>
                     )}
                 </div>

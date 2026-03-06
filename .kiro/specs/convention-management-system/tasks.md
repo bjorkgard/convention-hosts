@@ -750,25 +750,25 @@ This implementation plan breaks down the Convention Management System into discr
     - **Validates: Requirements 2.3**
 
 
-- [ ] 14. Navigation and layout
-  - [ ] 14.1 Update app-layout navigation
+- [x] 14. Navigation and layout
+  - [x] 14.1 Update app-layout navigation
     - Add navigation links: Conventions, Floors, Sections, Users, Search
     - Scope navigation visibility based on user role
     - Use Wayfinder type-safe routing
     - _Requirements: 18.2, 18.3_
 
-  - [ ] 14.2 Write property test for navigation visibility
+  - [x] 14.2 Write property test for navigation visibility
     - **Property 47: Navigation Visibility by Role**
     - **Validates: Requirements 18.3**
 
-  - [ ] 14.2 Implement mobile-first responsive design
+  - [x] 14.2 Implement mobile-first responsive design
     - Ensure all pages work on mobile (375px minimum)
     - Test at breakpoints: 375px, 768px, 1024px, 1440px
     - Optimize datatables for mobile
     - Optimize forms for mobile
     - _Requirements: 18.4_
 
-  - [ ] 14.3 Implement drill-down navigation
+  - [x] 14.3 Implement drill-down navigation
     - Convention → Floor → Section navigation flow
     - Breadcrumb navigation
     - Back button support

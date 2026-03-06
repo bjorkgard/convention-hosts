@@ -1,7 +1,7 @@
 import { Form, Head, Link } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 
-import { store } from '@/actions/App/Http/Controllers/ConventionController';
+import { create, index, store } from '@/actions/App/Http/Controllers/ConventionController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,11 +13,11 @@ import type { BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Conventions',
-        href: '/conventions',
+        href: index.url(),
     },
     {
         title: 'Create Convention',
-        href: '/conventions/create',
+        href: create.url(),
     },
 ];
 
@@ -28,7 +28,7 @@ export default function ConventionsCreate() {
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" asChild>
-                        <Link href="/conventions">
+                        <Link href={index.url()}>
                             <ArrowLeft />
                         </Link>
                     </Button>
@@ -132,11 +132,11 @@ export default function ConventionsCreate() {
                                         <InputError message={errors.other_info} />
                                     </div>
 
-                                    <div className="flex items-center justify-end gap-4">
-                                        <Button variant="outline" asChild>
-                                            <Link href="/conventions">Cancel</Link>
+                                    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
+                                        <Button variant="outline" className="w-full sm:w-auto" asChild>
+                                            <Link href={index.url()}>Cancel</Link>
                                         </Button>
-                                        <Button type="submit" disabled={processing}>
+                                        <Button type="submit" disabled={processing} className="w-full sm:w-auto">
                                             {processing ? 'Creating...' : 'Create Convention'}
                                         </Button>
                                     </div>

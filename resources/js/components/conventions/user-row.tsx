@@ -44,7 +44,7 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
 
     return (
         <>
-            <div className="flex items-center justify-between gap-3 border-b px-4 py-3 last:border-b-0">
+            <div className="flex items-center justify-between gap-2 border-b px-3 py-3 last:border-b-0 sm:gap-3 sm:px-4">
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <div className="flex items-center gap-2">
                         <span className="truncate text-sm font-medium">

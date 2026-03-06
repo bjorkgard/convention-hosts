@@ -821,6 +821,36 @@ function FloorList({ floors }) {
 
 Owner and ConventionUser roles automatically have access to all floors and sections. FloorUser and SectionUser access is determined by the scoped ID sets.
 
+## Frontend Navigation
+
+### Convention Sidebar Navigation
+
+When viewing a convention, the sidebar displays context-aware navigation links scoped to the current convention. The `NavConvention` component reads the convention from Inertia page props and renders role-appropriate links.
+
+**Location:** `resources/js/components/nav-convention.tsx`
+
+**Displayed Links:**
+
+| Link | Icon | Visible To |
+|------|------|------------|
+| Floors | Building2 | Owner, ConventionUser, FloorUser |
+| Sections | Grid3X3 | All convention users |
+| Users | Users | Owner, ConventionUser, FloorUser |
+| Search | Search | All convention users |
+
+The component uses the `useConventionRole` hook for role checks and Wayfinder type-safe actions for URL generation. It only renders when a `convention` prop is present in the page props.
+
+**Integration:**
+
+The `NavConvention` component is rendered in the `AppSidebar` below the main navigation. It automatically appears on convention detail pages and hides on non-convention pages.
+
+```tsx
+<SidebarContent>
+    <NavMain items={mainNavItems} />
+    <NavConvention />
+</SidebarContent>
+```
+
 ## Implementation Status
 
 The Convention Management System is currently under development.
@@ -841,11 +871,11 @@ The Convention Management System is currently under development.
 
 - Email system (Mailgun integration, invitation and confirmation mailables)
 - Frontend UI components and Inertia pages
-- Navigation and layout updates
 - PWA support
 
 ### Recently Added
 
+- **`NavConvention` component** (`resources/js/components/nav-convention.tsx`) — Context-aware sidebar navigation that displays convention-specific links (Floors, Sections, Users, Search) with role-based visibility using `useConventionRole` and Wayfinder type-safe routing
 - **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and scope data from Inertia page props, exposing `isOwner`, `isConventionUser`, `isFloorUser`, `isSectionUser` booleans and `hasFloorAccess(floorId)` / `hasSectionAccess(sectionId)` helpers
 - **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes
 

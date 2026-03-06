@@ -2,8 +2,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Plus, Users } from 'lucide-react';
 import { useState } from 'react';
 
-import { show } from '@/actions/App/Http/Controllers/ConventionController';
-import { store, update } from '@/actions/App/Http/Controllers/UserController';
+import { index as conventionsIndex, show } from '@/actions/App/Http/Controllers/ConventionController';
+import { index as usersIndex, store, update } from '@/actions/App/Http/Controllers/UserController';
 import UserRow from '@/components/conventions/user-row';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -65,9 +65,9 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
     const editForm = useForm<UserFormData>({ ...emptyForm });
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: '/conventions' },
+        { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: show.url(convention.id) },
-        { title: 'Users', href: `/conventions/${convention.id}/users` },
+        { title: 'Users', href: usersIndex.url(convention.id) },
     ];
 
     function toggleRole(form: ReturnType<typeof useForm<UserFormData>>, role: Role) {
@@ -154,7 +154,8 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
                             onClick={() => setShowAddDialog(true)}
                         >
                             <Plus className="size-4" />
-                            Add User
+                            <span className="hidden sm:inline">Add User</span>
+                            <span className="sm:hidden">Add</span>
                         </Button>
                     )}
                 </div>

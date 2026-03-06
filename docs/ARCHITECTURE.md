@@ -191,6 +191,7 @@ components/
 ├── ui/              # Base components (buttons, inputs, etc.)
 ├── app-shell.tsx    # Application shell
 ├── nav-main.tsx     # Main navigation
+├── nav-convention.tsx # Convention-scoped navigation (role-aware)
 └── ...              # Feature-specific components
 ```
 

@@ -38,17 +38,17 @@ export default function FloorRow({ floor, sections, userRole, onEdit, onDelete }
 
     return (
         <Collapsible open={isOpen} onOpenChange={setIsOpen} className="rounded-lg border">
-            <div className="flex items-center justify-between gap-2 px-4 py-3">
-                <CollapsibleTrigger className="flex flex-1 cursor-pointer items-center gap-3">
+            <div className="flex items-center justify-between gap-2 px-3 py-3 sm:px-4">
+                <CollapsibleTrigger className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 sm:gap-3">
                     <ChevronDown
                         className={cn('size-4 shrink-0 transition-transform duration-200', isOpen && 'rotate-180')}
                     />
-                    <span className="font-medium">{floor.name}</span>
+                    <span className="truncate font-medium">{floor.name}</span>
                     <span
                         className={cn('inline-flex size-3 shrink-0 rounded-full', getOccupancyColorClass(averageOccupancy))}
                         aria-label={`Average occupancy ${averageOccupancy}%`}
                     />
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-muted-foreground shrink-0 text-sm">
                         {sections.length} {sections.length === 1 ? 'section' : 'sections'}
                     </span>
                 </CollapsibleTrigger>
@@ -94,7 +94,7 @@ export default function FloorRow({ floor, sections, userRole, onEdit, onDelete }
                             <li key={section.id} className="border-b last:border-b-0">
                                 <Link
                                     href={show.url(section.id)}
-                                    className="flex cursor-pointer items-center gap-3 px-6 py-2.5 transition-colors hover:bg-accent/50"
+                                    className="flex cursor-pointer items-center gap-3 px-4 py-2.5 transition-colors hover:bg-accent/50 sm:px-6"
                                 >
                                     <span
                                         className={cn(

@@ -3,9 +3,9 @@ import { Accessibility, ArrowLeft, Clock, Heart, Send, Users } from 'lucide-reac
 import { useState } from 'react';
 
 import { report } from '@/actions/App/Http/Controllers/AttendanceController';
-import { show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
+import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
-import { setFull, updateOccupancy } from '@/actions/App/Http/Controllers/SectionController';
+import { setFull, show as sectionShow, updateOccupancy } from '@/actions/App/Http/Controllers/SectionController';
 import AvailableSeatsInput from '@/components/conventions/available-seats-input';
 import FullButton from '@/components/conventions/full-button';
 import OccupancyDropdown from '@/components/conventions/occupancy-dropdown';
@@ -32,11 +32,11 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
     const [attendanceValue, setAttendanceValue] = useState('');
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: '/conventions' },
+        { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
         { title: 'Floors', href: floorsIndex.url(convention.id) },
         { title: floor.name, href: floorsIndex.url(convention.id) },
-        { title: section.name, href: '#' },
+        { title: section.name, href: sectionShow.url(section.id) },
     ];
 
     function handleOccupancyUpdate(occupancy: number) {
@@ -89,7 +89,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                 {/* Header */}
                 <div className="flex items-start gap-2">
                     <Button variant="ghost" size="icon" asChild className="mt-0.5 shrink-0">
-                        <Link href={conventionShow.url(convention.id)}>
+                        <Link href={floorsIndex.url(convention.id)}>
                             <ArrowLeft />
                         </Link>
                     </Button>
@@ -111,7 +111,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                     </CardHeader>
                     <CardContent className="flex flex-col gap-4">
                         {/* Seats & accessibility */}
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             <div className="flex items-center gap-1.5 text-sm">
                                 <Users className="text-muted-foreground size-4" />
                                 <span className="font-medium">{section.number_of_seats}</span>

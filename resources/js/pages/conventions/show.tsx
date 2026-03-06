@@ -3,7 +3,7 @@ import { ArrowLeft, Calendar, ClipboardList, MapPin, Trash2 } from 'lucide-react
 import { useState } from 'react';
 
 import { start } from '@/actions/App/Http/Controllers/AttendanceController';
-import { destroy, index } from '@/actions/App/Http/Controllers/ConventionController';
+import { destroy, index, show } from '@/actions/App/Http/Controllers/ConventionController';
 import AttendanceReportBanner from '@/components/conventions/attendance-report-banner';
 import ExportDropdown from '@/components/conventions/export-dropdown';
 import FloorRow from '@/components/conventions/floor-row';
@@ -67,7 +67,7 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Conventions', href: index.url() },
-        { title: convention.name, href: `/conventions/${convention.id}` },
+        { title: convention.name, href: show.url(convention.id) },
     ];
 
     function handleDelete() {
@@ -123,7 +123,7 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
 
                     {/* Owner actions */}
                     {isOwner && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 self-start sm:self-auto">
                             <ExportDropdown convention={convention} />
                             <Button
                                 variant="destructive"

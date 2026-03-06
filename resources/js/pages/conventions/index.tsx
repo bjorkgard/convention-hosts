@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 
-import { create } from '@/actions/App/Http/Controllers/ConventionController';
+import { create, index } from '@/actions/App/Http/Controllers/ConventionController';
 import ConventionCard from '@/components/conventions/convention-card';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -10,7 +10,7 @@ import type { BreadcrumbItem, Convention } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Conventions',
-        href: '/conventions',
+        href: index.url(),
     },
 ];
 
@@ -23,12 +23,13 @@ export default function ConventionsIndex({ conventions }: ConventionsIndexProps)
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Conventions" />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                     <h1 className="text-2xl font-semibold tracking-tight">Conventions</h1>
                     <Button asChild>
                         <Link href={create.url()}>
                             <Plus />
-                            Create Convention
+                            <span className="hidden sm:inline">Create Convention</span>
+                            <span className="sm:hidden">Create</span>
                         </Link>
                     </Button>
                 </div>

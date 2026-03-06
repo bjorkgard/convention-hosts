@@ -20,23 +20,23 @@ export default function SectionCard({ section }: { section: Section }) {
                     <CardTitle className="flex-1 text-base">{section.name}</CardTitle>
                     <span className="text-muted-foreground text-sm">{section.occupancy}%</span>
                 </CardHeader>
-                <CardContent className="flex items-center justify-between gap-2">
+                <CardContent className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-muted-foreground flex items-center gap-1.5 text-sm">
                         <Users className="size-4 shrink-0" />
                         {section.available_seats}/{section.number_of_seats} seats
                     </span>
                     {(section.elder_friendly || section.handicap_friendly) && (
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex flex-wrap items-center gap-1.5">
                             {section.elder_friendly && (
                                 <Badge variant="secondary" aria-label="Elder friendly">
                                     <Heart className="size-3" />
-                                    Elder
+                                    <span className="hidden sm:inline">Elder</span>
                                 </Badge>
                             )}
                             {section.handicap_friendly && (
                                 <Badge variant="secondary" aria-label="Handicap friendly">
                                     <Armchair className="size-3" />
-                                    Accessible
+                                    <span className="hidden sm:inline">Accessible</span>
                                 </Badge>
                             )}
                         </div>

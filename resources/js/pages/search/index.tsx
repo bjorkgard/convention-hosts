@@ -2,7 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, SearchX } from 'lucide-react';
 import { useCallback } from 'react';
 
-import { show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
+import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as searchIndex } from '@/actions/App/Http/Controllers/SearchController';
 import { show as sectionShow } from '@/actions/App/Http/Controllers/SectionController';
 import OccupancyIndicator from '@/components/conventions/occupancy-indicator';
@@ -39,7 +39,7 @@ interface SearchIndexProps {
 
 export default function SearchIndex({ convention, sections, floors, filters }: SearchIndexProps) {
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: '/conventions' },
+        { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
         { title: 'Search', href: searchIndex.url(convention.id) },
     ];
@@ -147,7 +147,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                 <Link
                                     key={section.id}
                                     href={sectionShow.url(section.id)}
-                                    className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50"
+                                    className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50"
                                 >
                                     <OccupancyIndicator occupancy={section.occupancy} />
                                     <div className="min-w-0 flex-1">
@@ -161,13 +161,13 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
                         {/* Pagination */}
                         {sections.last_page > 1 && (
-                            <nav className="flex items-center justify-center gap-1 pt-2" aria-label="Pagination">
+                            <nav className="flex flex-wrap items-center justify-center gap-1 pt-2" aria-label="Pagination">
                                 {sections.links.map((link, i) => {
                                     if (!link.url) {
                                         return (
                                             <span
                                                 key={i}
-                                                className="text-muted-foreground px-3 py-1.5 text-sm"
+                                                className="text-muted-foreground min-h-[44px] min-w-[44px] px-3 py-2 text-center text-sm"
                                                 dangerouslySetInnerHTML={{ __html: link.label }}
                                             />
                                         );
@@ -176,7 +176,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                         <Link
                                             key={i}
                                             href={link.url}
-                                            className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+                                            className={`min-h-[44px] min-w-[44px] rounded-md px-3 py-2 text-center text-sm transition-colors ${
                                                 link.active
                                                     ? 'bg-primary text-primary-foreground'
                                                     : 'hover:bg-accent'

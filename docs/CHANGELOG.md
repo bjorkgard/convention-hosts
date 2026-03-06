@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add NavConvention sidebar component with role-based convention navigation (2026-03-05)
+  - Context-aware sidebar section showing Floors, Sections, Users, Search links
+  - Role-based visibility: Floors and Users hidden from SectionUser role
+  - Wayfinder type-safe URL generation for all navigation links
+  - Active state highlighting via useCurrentUrl hook
+  - Integrated into AppSidebar below main navigation
 - add conventions index page component (2026-03-05)
   - Inertia page listing user's conventions with ConventionCard grid
   - Empty state with prompt to create first convention
