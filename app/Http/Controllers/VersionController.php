@@ -12,27 +12,33 @@ class VersionController extends Controller
     {
         $repo = config('app.github_repo');
 
-        $release = Cache::remember('github_latest_release', 300, function () use ($repo) {
-            $response = Http::get("https://api.github.com/repos/{$repo}/releases/latest");
+        $cached = Cache::get('github_latest_release');
 
-            if ($response->failed()) {
-                return null;
-            }
+        if ($cached !== null) {
+            return response()->json($cached);
+        }
 
-            $data = $response->json();
-
-            return [
-                'version' => $data['tag_name'] ?? null,
-                'name' => $data['name'] ?? null,
-                'body' => $data['body'] ?? null,
-                'published_at' => $data['published_at'] ?? null,
-                'html_url' => $data['html_url'] ?? null,
-            ];
-        });
-
-        if (! $release) {
+        try {
+            $response = Http::timeout(5)->get("https://api.github.com/repos/{$repo}/releases/latest");
+        } catch (\Throwable) {
             return response()->json(['error' => 'Unable to fetch release info'], 503);
         }
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'Unable to fetch release info'], 503);
+        }
+
+        $data = $response->json();
+
+        $release = [
+            'version' => $data['tag_name'] ?? null,
+            'name' => $data['name'] ?? null,
+            'body' => $data['body'] ?? null,
+            'published_at' => $data['published_at'] ?? null,
+            'html_url' => $data['html_url'] ?? null,
+        ];
+
+        Cache::put('github_latest_release', $release, 300);
 
         return response()->json($release);
     }

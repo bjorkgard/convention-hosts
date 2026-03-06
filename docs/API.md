@@ -580,7 +580,7 @@ Sets `email_confirmed` to true and redirects to home with flash status message.
 GET /api/version/latest
 ```
 
-Public endpoint (no authentication required). Returns the latest GitHub release for the configured repository. Response is cached for 5 minutes.
+Public endpoint (no authentication required). Returns the latest GitHub release for the configured repository. Response is cached for 5 minutes. The GitHub API request has a 5-second timeout; network failures and non-2xx responses both return a 503 error.
 
 **Success Response (200):**
 
