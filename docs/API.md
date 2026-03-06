@@ -64,6 +64,7 @@ Returns Inertia page `conventions/index` with:
 | Prop | Type | Description |
 |------|------|-------------|
 | conventions | Convention[] | User's conventions ordered by start_date desc |
+| canCreateConvention | boolean | Whether the user has Owner role on any convention (controls "Create Convention" button visibility) |
 
 ### Create Convention Form
 

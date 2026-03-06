@@ -26,8 +26,14 @@ class ConventionController extends Controller
             ->orderBy('start_date', 'desc')
             ->get();
 
+        $canCreateConvention = DB::table('convention_user_roles')
+            ->where('user_id', $request->user()->id)
+            ->where('role', 'Owner')
+            ->exists();
+
         return Inertia::render('conventions/index', [
             'conventions' => $conventions,
+            'canCreateConvention' => $canCreateConvention,
         ]);
     }
 
