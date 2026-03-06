@@ -78,7 +78,9 @@ class CreateNewUser implements CreatesNewUsers
 1. User submits credentials at `/login`
 2. Fortify authenticates user
 3. Session created
-4. Redirected to intended page or conventions list
+4. Smart redirect based on convention membership:
+   - If the user belongs to exactly one convention, they are redirected directly to that convention's detail page
+   - Otherwise, they are redirected to the conventions list
 
 **Frontend Component:**
 ```tsx
@@ -540,15 +542,35 @@ Configure features in `config/fortify.php`:
 
 ### Redirects
 
-Customize redirects in `app/Providers/FortifyServiceProvider.php`:
+Login redirects are handled by a custom `LoginResponse` class bound in `FortifyServiceProvider`:
+
+```php
+// app/Http/Responses/LoginResponse.php
+class LoginResponse implements LoginResponseContract
+{
+    public function toResponse($request)
+    {
+        $user = $request->user();
+        $conventions = $user->conventions()->pluck('conventions.id');
+
+        $redirectTo = $conventions->count() === 1
+            ? route('conventions.show', $conventions->first())
+            : config('fortify.home', '/conventions');
+
+        return $request->wantsJson()
+            ? response()->json(['two_factor' => false])
+            : redirect()->intended($redirectTo);
+    }
+}
+```
+
+Users with a single convention skip the list and land directly on their convention page. Users with zero or multiple conventions go to the conventions index.
+
+Customize views in `app/Providers/FortifyServiceProvider.php`:
 
 ```php
 Fortify::loginView(fn () => inertia('auth/login'));
 Fortify::registerView(fn () => inertia('auth/register'));
-
-// After authentication
-Fortify::redirects('login', '/conventions');
-Fortify::redirects('register', '/conventions');
 ```
 
 ## Security Best Practices

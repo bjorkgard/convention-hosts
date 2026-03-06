@@ -35,8 +35,9 @@ laravel-react-starter-kit/
 │   │   ├── Controllers/          # HTTP Controllers
 │   │   │   └── Settings/         # Settings feature controllers
 │   │   ├── Middleware/           # Custom Middleware
-│   │   └── Requests/             # Form Request Validation
-│   │       └── Settings/         # Settings feature requests
+│   │   ├── Requests/             # Form Request Validation
+│   │   │   └── Settings/         # Settings feature requests
+│   │   └── Responses/            # Custom Fortify Responses (LoginResponse)
 │   ├── Models/                    # Eloquent Models
 │   └── Providers/                 # Service Providers
 │
