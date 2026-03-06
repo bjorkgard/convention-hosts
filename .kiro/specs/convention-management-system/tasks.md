@@ -900,51 +900,51 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 23.4_
 
 
-- [ ] 18. Testing infrastructure and property-based tests
-  - [ ] 18.1 Install property-based testing dependencies
+- [x] 18. Testing infrastructure and property-based tests
+  - [x] 18.1 Install property-based testing dependencies
     - Add pest-plugin-faker for PHP (if not present)
     - Add fast-check for TypeScript via npm
     - _Requirements: Testing strategy_
 
-  - [ ] 18.2 Create test helpers
+  - [x] 18.2 Create test helpers
     - Create ConventionTestHelper with createConventionWithStructure()
     - Create ConventionTestHelper with createUserWithRole()
     - Create test helper for authentication
     - _Requirements: Testing strategy_
 
-  - [ ] 18.3 Write remaining property-based tests for conventions
+  - [x] 18.3 Write remaining property-based tests for conventions
     - **Property 1: Convention Creation Requires All Mandatory Fields**
     - **Property 2: Optional Fields Are Accepted**
     - _Requirements: 1.1, 1.2_
 
-  - [ ] 18.4 Write property-based tests for roles
+  - [x] 18.4 Write property-based tests for roles
     - **Property 16: Multiple Role Assignment**
     - **Property 17: Owner Role Inherits ConventionUser Permissions**
     - _Requirements: 5.3, 5.4_
 
-  - [ ] 18.5 Write property-based tests for floor-section relationships
+  - [x] 18.5 Write property-based tests for floor-section relationships
     - **Property 20: Floor-Convention Association**
     - **Property 22: Section Optional Fields**
     - _Requirements: 6.2, 6.4, 6.5_
 
-  - [ ] 18.6 Write property-based tests for occupancy metadata
+  - [x] 18.6 Write property-based tests for occupancy metadata
     - **Property 24: Occupancy Update Metadata Recording**
     - _Requirements: 6.7, 7.8_
 
-  - [ ] 18.7 Write property-based tests for attendance periods
+  - [x] 18.7 Write property-based tests for attendance periods
     - **Property 30: Two Attendance Periods Per Day**
     - **Property 31: Attendance Report Data Storage**
     - **Property 35: Attendance Period Locking**
     - _Requirements: 10.1, 10.2, 10.4, 11.3_
 
-  - [ ] 18.8 Write property-based tests for user management
+  - [x] 18.8 Write property-based tests for user management
     - **Property 12: Email Uniqueness Enforcement**
     - **Property 15: User Required Fields Validation**
     - **Property 45: User Deletion Cascade**
     - **Property 46: User Record Cleanup**
     - _Requirements: 4.1, 4.4, 17.1, 17.2_
 
-  - [ ] 18.9 Write property-based tests for export validation
+  - [x] 18.9 Write property-based tests for export validation
     - **Property 54: Export Data Validation**
     - _Requirements: 25.5_
 

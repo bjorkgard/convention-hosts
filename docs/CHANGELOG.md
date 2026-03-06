@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add `ConventionTestHelper` utility class for test setup (2026-03-06)
+  - `createConventionWithStructure()` builds full convention hierarchy (floors, sections, optional owner)
+  - `createUserWithRole()` creates users with role and pivot attachments (FloorUser/SectionUser scoping)
+  - `attachUserToConvention()` handles convention_user and convention_user_roles pivot inserts
+  - `createAuthenticatedUser()` shorthand for quick test scenario setup
 - add CSRF protection feature tests (`CsrfProtectionTest.php`) (2026-03-06)
   - Verifies ValidateCsrfToken middleware is in web middleware group
   - Tests rejection of POST/PUT/PATCH/DELETE requests without CSRF token (419 status)
