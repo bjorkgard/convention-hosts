@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "Lint JS/TS on Save",
+  "description": "Runs ESLint --fix on JavaScript and TypeScript files when they are saved",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "*.ts",
+      "*.tsx",
+      "*.js",
+      "*.jsx"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npx eslint --fix \"$KIRO_FILE_PATH\"",
+    "timeout": 30
+  }
+}

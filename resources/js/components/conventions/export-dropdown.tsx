@@ -22,7 +22,8 @@ interface ExportDropdownProps {
 
 export default function ExportDropdown({ convention }: ExportDropdownProps) {
     function handleExport(format: string) {
-        window.location.href = exportMethod.url(convention.id, { query: { format } });
+        const url = exportMethod.url(convention.id, { query: { format } });
+        window.open(url, '_self');
     }
 
     return (

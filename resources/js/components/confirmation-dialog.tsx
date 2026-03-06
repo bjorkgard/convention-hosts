@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -7,7 +8,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 
 interface ConfirmationDialogProps {
     open: boolean;

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 // Mock the Select UI components to render simple HTML select/option elements
@@ -70,8 +71,6 @@ vi.mock('@/hooks/use-occupancy-color', () => ({
 vi.mock('@/lib/utils', () => ({
     cn: (...inputs: string[]) => inputs.filter(Boolean).join(' '),
 }));
-
-import React from 'react';
 
 import OccupancyDropdown from '../occupancy-dropdown';
 
