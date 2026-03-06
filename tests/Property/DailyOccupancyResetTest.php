@@ -6,9 +6,10 @@ use App\Models\User;
 /**
  * Property 28: Daily Occupancy Reset
  *
- * For any section, when the daily reset task runs, both occupancy and
- * available_seats should be reset to 0, and last_occupancy_updated_by
- * and last_occupancy_updated_at should be cleared.
+ * For any section, when the daily reset task runs, occupancy should be
+ * reset to 0, available_seats should be reset to number_of_seats (all
+ * seats available), and last_occupancy_updated_by and
+ * last_occupancy_updated_at should be cleared.
  *
  * Validates: Requirements 8.2, 8.3
  */
@@ -35,11 +36,12 @@ it('resets all sections occupancy and metadata when daily reset runs', function 
             ]);
         }
 
-        // Also include a section that already has zero occupancy (should remain zero)
+        // Also include a section that already has zero occupancy (should have available_seats = number_of_seats after reset)
+        $zeroOccupancySeats = fake()->numberBetween(50, 500);
         $sections[] = Section::factory()->create([
-            'number_of_seats' => fake()->numberBetween(50, 500),
+            'number_of_seats' => $zeroOccupancySeats,
             'occupancy' => 0,
-            'available_seats' => 0,
+            'available_seats' => $zeroOccupancySeats,
             'last_occupancy_updated_by' => null,
             'last_occupancy_updated_at' => null,
         ]);
@@ -47,12 +49,12 @@ it('resets all sections occupancy and metadata when daily reset runs', function 
         // Act: Run the daily reset command
         $exitCode = $this->artisan('app:reset-daily-occupancy')->assertSuccessful()->execute();
 
-        // Assert: ALL sections have been reset
+        // Assert: ALL sections have been reset (available_seats = number_of_seats)
         foreach ($sections as $section) {
             $fresh = $section->fresh();
 
             expect($fresh->occupancy)->toBe(0)
-                ->and($fresh->available_seats)->toBe(0)
+                ->and($fresh->available_seats)->toBe($fresh->number_of_seats)
                 ->and($fresh->last_occupancy_updated_by)->toBeNull()
                 ->and($fresh->last_occupancy_updated_at)->toBeNull();
         }

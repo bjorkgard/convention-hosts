@@ -129,7 +129,7 @@ The Convention Management System is a full-stack web application designed to man
 
 1. THE System SHALL execute a Laravel Scheduler task every morning
 2. WHEN the daily scheduler task runs, THE System SHALL reset occupancy to 0 for all sections
-3. WHEN the daily scheduler task runs, THE System SHALL reset available_seats to 0 for all sections
+3. WHEN the daily scheduler task runs, THE System SHALL reset available_seats to number_of_seats for all sections (all seats available)
 
 ### Requirement 9: Occupancy Color Coding
 

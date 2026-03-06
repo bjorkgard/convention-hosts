@@ -283,8 +283,8 @@ Real-time section occupancy with visual color coding:
 
 **Daily Reset:**
 - Automated scheduler runs at 6:00 AM
-- Resets all occupancy to 0%
-- Clears available seats and update metadata
+- Resets all occupancy to 0% and available seats to number_of_seats (all seats available)
+- Clears update metadata (user and timestamp)
 
 ### Attendance Reporting
 

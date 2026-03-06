@@ -29,8 +29,8 @@ vi.mock('@/actions/App/Http/Controllers/SectionController', () => ({
     show: { url: (id: number) => `/sections/${id}` },
 }));
 
-// Mock OccupancyIndicator
-vi.mock('@/components/conventions/occupancy-indicator', () => ({
+// Mock OccupancyGauge
+vi.mock('@/components/conventions/occupancy-gauge', () => ({
     default: ({ occupancy }: { occupancy: number }) => (
         <span data-testid={`occupancy-indicator-${occupancy}`}>Occupancy: {occupancy}%</span>
     ),
@@ -300,8 +300,8 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('10%')).toBeInTheDocument();
-            expect(screen.getByText('50%')).toBeInTheDocument();
+            expect(screen.getByText('Occupancy: 10%')).toBeInTheDocument();
+            expect(screen.getByText('Occupancy: 50%')).toBeInTheDocument();
         });
 
         it('shows total count text with plural "sections"', () => {

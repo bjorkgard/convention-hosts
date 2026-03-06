@@ -325,7 +325,7 @@ Authorization: SectionPolicy `create`
 | handicap_friendly | boolean | nullable |
 | information | string | nullable |
 
-Defaults: `occupancy` = 0, `available_seats` = 0.
+Defaults: `occupancy` = 0, `available_seats` = `number_of_seats` (starts fully available).
 
 When `floor_id` is provided in the request body, the section is created on that floor (used when creating from the FloorsIndex page with a floor selector dropdown). Otherwise, the route-bound `{floor}` parameter is used.
 

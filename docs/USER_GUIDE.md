@@ -86,7 +86,7 @@ Occupancy levels are color-coded across all views:
 
 ### Daily Reset
 
-All occupancy data resets to 0% automatically at 6:00 AM each day, so each convention day starts fresh.
+All occupancy data resets automatically at 6:00 AM each day — occupancy goes to 0% and available seats resets to the section's total capacity — so each convention day starts fresh.
 
 ## Attendance Reporting
 

@@ -498,7 +498,7 @@ This implementation plan breaks down the Convention Management System into discr
   - [x] 9.1 Create daily occupancy reset command
     - Create artisan command: ResetDailyOccupancy
     - Reset occupancy to 0 for all sections
-    - Reset available_seats to 0 for all sections
+    - Reset available_seats to number_of_seats for all sections (all seats available)
     - Clear last_occupancy_updated_by and last_occupancy_updated_at
     - _Requirements: 8.1, 8.2, 8.3_
 

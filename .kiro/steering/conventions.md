@@ -294,7 +294,7 @@ Convention
 ### Daily Occupancy Reset
 - Runs every day at 6:00 AM
 - Resets occupancy to 0 for all sections
-- Resets available_seats to 0 for all sections
+- Resets available_seats to number_of_seats for all sections (all seats available)
 - Clears last_occupancy_updated_by
 - Clears last_occupancy_updated_at
 

@@ -913,7 +913,7 @@ protected function schedule(Schedule $schedule)
     $schedule->call(function () {
         Section::query()->update([
             'occupancy' => 0,
-            'available_seats' => 0,
+            'available_seats' => DB::raw('number_of_seats'),
             'last_occupancy_updated_by' => null,
             'last_occupancy_updated_at' => null,
         ]);
@@ -1929,7 +1929,7 @@ For any section with number_of_seats N and available_seats A submitted, the occu
 
 ### Property 28: Daily Occupancy Reset
 
-For any section, when the daily reset task runs, both occupancy and available_seats should be reset to 0, and last_occupancy_updated_by and last_occupancy_updated_at should be cleared.
+For any section, when the daily reset task runs, occupancy should be reset to 0, available_seats should be reset to number_of_seats (all seats available), and last_occupancy_updated_by and last_occupancy_updated_at should be cleared.
 
 **Validates: Requirements 8.2, 8.3**
 

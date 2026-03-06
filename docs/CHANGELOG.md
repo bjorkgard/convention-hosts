@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- revert daily occupancy reset to set available_seats to number_of_seats (all seats available at day start) (2026-03-06)
 - add occupancy help text to section detail page explaining controls and daily reset (2026-03-06)
 - replace OccupancyIndicator with OccupancyGauge in section detail page for consistent semi-circle gauge display (2026-03-06)
 - eager-load assigned users on floors and sections in convention show endpoint for user display (2026-03-06)
