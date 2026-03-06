@@ -23,7 +23,7 @@ class SearchController extends Controller
             ->whereHas('floor', function ($q) use ($convention) {
                 $q->where('convention_id', $convention->id);
             })
-            ->where('occupancy', '<', 90)
+            ->available()
             ->with('floor');
 
         if ($request->filled('floor_id')) {

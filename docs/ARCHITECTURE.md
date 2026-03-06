@@ -73,6 +73,8 @@ laravel-react-starter-kit/
 │       ├── lib/                  # Utility Functions
 │       ├── pages/                # Inertia Pages
 │       │   ├── auth/             # Authentication Pages
+│       │   ├── conventions/      # Convention Pages
+│       │   ├── sections/         # Section Pages
 │       │   ├── settings/         # Settings Pages
 │       │   ├── dashboard.tsx     # Dashboard Page
 │       │   └── welcome.tsx       # Landing Page

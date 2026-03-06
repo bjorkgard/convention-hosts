@@ -22,6 +22,7 @@ class ConventionController extends Controller
     {
         $conventions = $request->user()
             ->conventions()
+            ->with('floors.sections')
             ->orderBy('start_date', 'desc')
             ->get();
 
@@ -83,12 +84,16 @@ class ConventionController extends Controller
             ->orderBy('period', 'desc')
             ->get();
 
-        // Load users with their roles for this convention
-        $users = $convention->users()->get()->map(function ($user) use ($convention) {
-            $user->roles = DB::table('convention_user_roles')
-                ->where('convention_id', $convention->id)
-                ->where('user_id', $user->id)
-                ->pluck('role');
+        // Load users with their roles for this convention (single query for all roles)
+        $users = $convention->users()->get();
+        $allRoles = DB::table('convention_user_roles')
+            ->where('convention_id', $convention->id)
+            ->whereIn('user_id', $users->pluck('id'))
+            ->get()
+            ->groupBy('user_id');
+
+        $users = $users->map(function ($user) use ($allRoles) {
+            $user->roles = ($allRoles[$user->id] ?? collect())->pluck('role');
 
             return $user;
         });

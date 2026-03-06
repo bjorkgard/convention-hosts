@@ -79,4 +79,13 @@ class Section extends Model
     {
         return $this->hasMany(AttendanceReport::class);
     }
+
+    /**
+     * Scope: sections with occupancy below 90% (available for search).
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('occupancy', '<', 90);
+    }
+
 }

@@ -6,6 +6,7 @@ use App\Actions\InviteUserAction;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Convention;
+use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,33 +46,35 @@ class UserController extends Controller
             $users = $users->filter(fn (User $user) => $userIdsOnSections->contains($user->id));
         }
 
-        // Load roles and assignments for each user
-        $users = $users->values()->map(function (User $user) use ($convention) {
-            $user->roles = DB::table('convention_user_roles')
-                ->where('convention_id', $convention->id)
-                ->where('user_id', $user->id)
-                ->pluck('role');
+        // Batch-load roles and assignments for all users (avoid N+1)
+        $userIds = $users->pluck('id');
 
-            $conventionFloorIds = $convention->floors()->pluck('id');
+        $allRoles = DB::table('convention_user_roles')
+            ->where('convention_id', $convention->id)
+            ->whereIn('user_id', $userIds)
+            ->get()
+            ->groupBy('user_id');
 
-            $user->floor_ids = DB::table('floor_user')
-                ->where('user_id', $user->id)
-                ->whereIn('floor_id', $conventionFloorIds)
-                ->pluck('floor_id')
-                ->values()
-                ->toArray();
+        $conventionFloorIds = $convention->floors()->pluck('id');
 
-            $conventionSectionIds = $convention->floors()
-                ->with('sections')
-                ->get()
-                ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
+        $allFloorAssignments = DB::table('floor_user')
+            ->whereIn('user_id', $userIds)
+            ->whereIn('floor_id', $conventionFloorIds)
+            ->get()
+            ->groupBy('user_id');
 
-            $user->section_ids = DB::table('section_user')
-                ->where('user_id', $user->id)
-                ->whereIn('section_id', $conventionSectionIds)
-                ->pluck('section_id')
-                ->values()
-                ->toArray();
+        $conventionSectionIds = Section::whereIn('floor_id', $conventionFloorIds)->pluck('id');
+
+        $allSectionAssignments = DB::table('section_user')
+            ->whereIn('user_id', $userIds)
+            ->whereIn('section_id', $conventionSectionIds)
+            ->get()
+            ->groupBy('user_id');
+
+        $users = $users->values()->map(function (User $user) use ($allRoles, $allFloorAssignments, $allSectionAssignments) {
+            $user->roles = ($allRoles[$user->id] ?? collect())->pluck('role');
+            $user->floor_ids = ($allFloorAssignments[$user->id] ?? collect())->pluck('floor_id')->values()->toArray();
+            $user->section_ids = ($allSectionAssignments[$user->id] ?? collect())->pluck('section_id')->values()->toArray();
 
             return $user;
         });

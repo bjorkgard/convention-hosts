@@ -75,4 +75,21 @@ class AttendancePeriod extends Model
     {
         return $this->reports()->count();
     }
+
+    /**
+     * Scope: active (unlocked) attendance periods.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('locked', false);
+    }
+
+    /**
+     * Scope: attendance periods for today.
+     */
+    public function scopeForToday($query)
+    {
+        return $query->whereDate('date', now()->toDateString());
+    }
+
 }

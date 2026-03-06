@@ -1098,21 +1098,21 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: User documentation_
 
 
-- [ ] 22. Integration and final wiring
-  - [ ] 22.1 Wire all components together
+- [x] 22. Integration and final wiring
+  - [x] 22.1 Wire all components together
     - Verify all routes are registered
     - Verify all middleware is applied correctly
     - Verify all policies are registered
     - Verify all Inertia pages are connected
     - _Requirements: All integration requirements_
 
-  - [ ] 22.2 Configure Wayfinder
+  - [x] 22.2 Configure Wayfinder
     - Ensure all controllers are scanned
     - Generate type-safe route actions
     - Verify frontend can import actions
     - _Requirements: Type-safe routing_
 
-  - [ ] 22.3 Test complete user flows
+  - [x] 22.3 Test complete user flows
     - Test convention creation to deletion flow
     - Test user invitation to login flow
     - Test occupancy tracking flow
@@ -1122,14 +1122,14 @@ This implementation plan breaks down the Convention Management System into discr
     - Test PWA installation flow
     - _Requirements: All user stories_
 
-  - [ ] 22.4 Verify role-based access across all pages
+  - [x] 22.4 Verify role-based access across all pages
     - Test Owner access to all features
     - Test ConventionUser access and restrictions
     - Test FloorUser scoping and restrictions
     - Test SectionUser scoping and restrictions
     - _Requirements: 5.4, 5.5, 5.6, 5.7, 12.1, 12.2, 12.3_
 
-  - [ ] 22.5 Test mobile responsiveness
+  - [x] 22.5 Test mobile responsiveness
     - Test all pages at 375px width
     - Test all pages at 768px width
     - Test all pages at 1024px width
@@ -1137,14 +1137,14 @@ This implementation plan breaks down the Convention Management System into discr
     - Test PWA on mobile devices
     - _Requirements: 18.4_
 
-  - [ ] 22.6 Performance optimization
+  - [x] 22.6 Performance optimization
     - Optimize database queries (eager loading)
     - Add appropriate indexes
     - Optimize frontend bundle size
     - Test page load times
     - _Requirements: Performance best practices_
 
-  - [ ] 22.7 Security audit
+  - [x] 22.7 Security audit
     - Verify all authorization checks
     - Verify CSRF protection
     - Verify input validation

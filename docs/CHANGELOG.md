@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Added
+
+- add sections index page component (2026-03-06)
+  - Inertia page listing sections within a floor with SectionCard components
+  - Role-based "Add Section" button (Owner, ConventionUser, or assigned FloorUser)
+  - Add section dialog with name, seats, elder-friendly/handicap-friendly toggles, and info field
+  - Delete section confirmation dialog with cascade warning
+  - Breadcrumb navigation: Conventions → Convention → Floors → Floor
+  - Empty state with prompt to add first section
+  - Wayfinder type-safe routing for all navigation and form actions
+
 ### Other
 
 - docs: add comprehensive documentation and update environment configuration (, |Nathanael Björkgård|||2026-03-06)

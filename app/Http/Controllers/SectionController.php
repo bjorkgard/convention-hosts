@@ -20,7 +20,7 @@ class SectionController extends Controller
      */
     public function index(Request $request, Convention $convention, Floor $floor): Response
     {
-        $query = $floor->sections();
+        $query = $floor->sections()->with('floor');
 
         // Apply role-based scoping from ScopeByRole middleware
         if ($scopedSectionIds = $request->get('scoped_section_ids')) {
@@ -51,7 +51,7 @@ class SectionController extends Controller
 
         // Find active (unlocked) attendance period for this convention
         $activePeriod = $convention->attendancePeriods()
-            ->where('locked', false)
+            ->active()
             ->latest('created_at')
             ->first();
 
