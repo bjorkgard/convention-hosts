@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- handle 404 responses from GitHub API gracefully (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
+### Fixed
+
 - improve GitHub API error handling and caching logic (, |Nathanael Björkgård|||2026-03-06)
 
 
