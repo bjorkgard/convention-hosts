@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- docs: add comprehensive documentation and update environment configuration (, |Nathanael Björkgård|||2026-03-06)
+- add Kiro hooks for auto-linting and fix import ordering (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
+### Other
+
 - upgrade maatwebsite/excel to 4.x-dev and phpspreadsheet to 5.5 (, |Nathanael Björkgård|||2026-03-06)
 
 
