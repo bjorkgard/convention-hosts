@@ -1,17 +1,16 @@
 import { useCallback } from 'react';
 
-export type GetInitialsFn = (fullName: string) => string;
+export type GetInitialsFn = (firstName: string, lastName: string) => string;
 
 export function useInitials(): GetInitialsFn {
-    return useCallback((fullName: string): string => {
-        const names = fullName.trim().split(' ');
+    return useCallback((firstName: string, lastName: string): string => {
+        const first = firstName.trim();
+        const last = lastName.trim();
 
-        if (names.length === 0) return '';
-        if (names.length === 1) return names[0].charAt(0).toUpperCase();
+        if (!first && !last) return '';
+        if (!last) return first.charAt(0).toUpperCase();
+        if (!first) return last.charAt(0).toUpperCase();
 
-        const firstInitial = names[0].charAt(0);
-        const lastInitial = names[names.length - 1].charAt(0);
-
-        return `${firstInitial}${lastInitial}`.toUpperCase();
+        return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
     }, []);
 }

@@ -312,12 +312,14 @@ test('user can update profile information', function () {
 
     $this->actingAs($user)
         ->put('/settings/profile', [
-            'name' => 'Updated Name',
+            'first_name' => 'Updated',
+            'last_name' => 'Name',
             'email' => $user->email,
         ])
         ->assertRedirect();
 
-    expect($user->fresh()->name)->toBe('Updated Name');
+    expect($user->fresh()->first_name)->toBe('Updated');
+    expect($user->fresh()->last_name)->toBe('Name');
 });
 
 test('user cannot update email to existing email', function () {
@@ -326,7 +328,8 @@ test('user cannot update email to existing email', function () {
 
     $this->actingAs($user)
         ->put('/settings/profile', [
-            'name' => $user->name,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
             'email' => 'existing@example.com',
         ])
         ->assertSessionHasErrors('email');
@@ -400,7 +403,8 @@ test('dashboard returns inertia response', function () {
 
 test('profile page receives user data', function () {
     $user = User::factory()->create([
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
     ]);
 
@@ -408,7 +412,8 @@ test('profile page receives user data', function () {
         ->get('/settings/profile')
         ->assertInertia(fn ($page) => $page
             ->component('settings/profile')
-            ->where('user.name', 'Test User')
+            ->where('user.first_name', 'Test')
+            ->where('user.last_name', 'User')
             ->where('user.email', 'test@example.com')
         );
 });
@@ -423,10 +428,12 @@ use App\Models\User;
 
 test('factory creates user with valid data', function () {
     $user = User::factory()->create([
-        'name' => 'Custom Name',
+        'first_name' => 'Custom',
+        'last_name' => 'Name',
     ]);
 
-    expect($user->name)->toBe('Custom Name');
+    expect($user->first_name)->toBe('Custom');
+    expect($user->last_name)->toBe('Name');
     expect($user->email)->toContain('@');
 });
 
@@ -571,7 +578,8 @@ test('registration sends welcome email', function () {
     Mail::fake();
 
     $this->post('/register', [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
@@ -593,7 +601,8 @@ test('registration dispatches event', function () {
     Event::fake();
 
     $this->post('/register', [
-        'name' => 'Test User',
+        'first_name' => 'Test',
+        'last_name' => 'User',
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
@@ -766,13 +775,15 @@ test('user can update profile', function () {
     // Act
     $response = $this->actingAs($user)
         ->put('/settings/profile', [
-            'name' => 'New Name',
+            'first_name' => 'New',
+            'last_name' => 'Name',
             'email' => $user->email,
         ]);
 
     // Assert
     $response->assertRedirect();
-    expect($user->fresh()->name)->toBe('New Name');
+    expect($user->fresh()->first_name)->toBe('New');
+    expect($user->fresh()->last_name)->toBe('Name');
 });
 ```
 
@@ -804,7 +815,8 @@ $user = User::factory()->create();
 
 // ❌ Bad
 $user = User::create([
-    'name' => 'Test',
+    'first_name' => 'Test',
+    'last_name' => 'User',
     'email' => 'test@example.com',
     'password' => bcrypt('password'),
 ]);

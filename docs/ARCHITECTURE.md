@@ -159,7 +159,8 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
         ];
     }
@@ -454,12 +455,14 @@ test('user can update profile', function () {
 
     $this->actingAs($user)
         ->put('/settings/profile', [
-            'name' => 'New Name',
+            'first_name' => 'New',
+            'last_name' => 'Name',
             'email' => $user->email,
         ])
         ->assertRedirect();
 
-    expect($user->fresh()->name)->toBe('New Name');
+    expect($user->fresh()->first_name)->toBe('New');
+    expect($user->fresh()->last_name)->toBe('Name');
 });
 ```
 
