@@ -20,6 +20,7 @@
 - Radix UI components
 - Headless UI
 - Lucide React (icons)
+- Vitest (frontend testing framework)
 
 ## Code Quality Tools
 
@@ -47,6 +48,7 @@ php artisan serve           # Laravel dev server only
 ```bash
 composer test               # Run PHP tests with Pest
 php artisan test            # Alternative test command
+npx vitest --run            # Run frontend tests (single run)
 ```
 
 ### Linting & Formatting

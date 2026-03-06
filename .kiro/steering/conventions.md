@@ -24,12 +24,18 @@ Convention
 - Located in a specific city and country
 - Can have optional address and other_info fields
 - Automatically validate against overlapping conventions in the same location
+- Can be created by authenticated users or guests (guest convention creation flow)
+- Can be updated by users with convention access
+- Can be deleted by Owner role only
 
 ### Floors
 - Physical levels within a convention venue
 - Belong to exactly one convention
 - Contain multiple sections
 - Can be assigned to FloorUser roles for scoped management
+- Can be created by Owner and ConventionUser (FloorUser cannot add floors)
+- Can be edited by Owner, ConventionUser, and assigned FloorUser
+- Can be deleted by Owner and ConventionUser only
 
 ### Sections
 - Seating areas within a floor
@@ -39,6 +45,7 @@ Convention
 - Support accessibility features:
   - elder_friendly (boolean)
   - handicap_friendly (boolean)
+- Optional information text field
 - Store last occupancy update metadata (user, timestamp)
 - Can be assigned to SectionUser roles for scoped management
 
@@ -62,6 +69,34 @@ Convention
 - Sections report attendance individually
 - Periods can be locked to prevent further updates
 - Locked periods become immutable historical records
+- Business logic encapsulated in AttendanceReportService
+
+## Section CRUD Management
+
+### Create Section
+- Accessed via modal dialog from the floors index page
+- Floor selector dropdown (auto-selects when only one floor exists)
+- Required fields: name, number_of_seats
+- Optional fields: elder_friendly, handicap_friendly, information
+- floor_id can come from route parameter or request body (for FloorsIndex modal)
+- Redirects to floors index after creation
+
+### Edit Section
+- Same modal dialog in edit mode
+- Floor displayed as read-only (cannot change floor assignment)
+- Pre-populates all current values
+- Redirects to floors index after update
+
+### Delete Section
+- Authorized via SectionPolicy
+- Cascading cleanup handled by database
+- Redirects to floors index after deletion
+
+### Section CRUD Authorization
+- Owner: Can create, update, and delete all sections
+- ConventionUser: Can create, update, and delete all sections
+- FloorUser: Can create, update, and delete sections on assigned floors only
+- SectionUser: Can update assigned sections only (cannot create or delete)
 
 ## Role-Based Access Control
 
@@ -82,7 +117,7 @@ Convention
 ### FloorUser
 - Access limited to assigned floors
 - Can view/edit assigned floors
-- Can manage sections on assigned floors
+- Can create, update, and delete sections on assigned floors
 - Can report attendance for sections on assigned floors
 - Cannot add or delete floors
 
@@ -91,8 +126,19 @@ Convention
 - Can view/edit assigned sections only
 - Can update occupancy for assigned sections
 - Can report attendance for assigned sections
+- Cannot create or delete sections
 - Cannot manage floors or add sections
 - If responsible for only one section, automatically loads that section's detail view
+
+## Guest Convention Creation Flow
+
+1. Unauthenticated user submits convention creation form from welcome page
+2. System validates user fields (first_name, last_name, email) and convention fields
+3. If email exists: Uses existing user account
+4. If new: Creates user with random password and email_confirmed=false
+5. Creates convention via CreateConventionAction (user becomes Owner)
+6. Logs the user in automatically
+7. Redirects to convention show page
 
 ## User Invitation Flow
 
@@ -101,7 +147,7 @@ Convention
 3. If exists: Attach existing user to convention
 4. If new: Create user record without password
 5. Generate signed URL with 24-hour expiration
-6. Send invitation email via Mailgun
+6. Send invitation email via UserInvitation mailable
 7. User clicks invitation link
 8. System verifies signature and expiration
 9. User sets password
@@ -158,7 +204,7 @@ Convention
 
 ### Available to All Users
 - No role-based filtering applied
-- Accessible to any authenticated user
+- Accessible to any authenticated user with convention access
 
 ### Search Filters
 - Floor: Optional dropdown to filter by specific floor
@@ -196,6 +242,29 @@ Convention
 - Custom rule: No overlapping conventions in same city/country
 - Constraint: end_date >= start_date
 
+### Convention Update
+- Same required/optional fields as creation
+- Same overlap validation (excludes current convention from check)
+- Uses UpdateConventionRequest with SanitizesInput trait
+
+### Guest Convention Creation
+- User fields required: first_name, last_name, email
+- Convention fields required: name, city, country, start_date (after_or_equal:today), end_date
+- Convention fields optional: address, other_info
+- Same overlap validation as regular creation
+
+### Section Creation
+- Required: name, number_of_seats
+- Optional: floor_id (sometimes required, from route or request body), elder_friendly, handicap_friendly, information
+- number_of_seats must be positive integer
+- occupancy defaults to 0
+- available_seats defaults to 0
+
+### Section Update
+- Required: name, number_of_seats
+- Optional: elder_friendly, handicap_friendly, information
+- Same validation rules as creation (minus floor_id)
+
 ### User Creation
 - Required for convention invitations: first_name, last_name, email, mobile
 - Required for self-registration: first_name, last_name, email, password
@@ -208,19 +277,17 @@ Convention
 
 **Note:** The `mobile` field is required when convention managers invite users to conventions, but is not collected during self-registration.
 
+### User Update
+- Same fields as user creation for invitations
+- Email uniqueness check excludes current user
+- Same role/floor_ids/section_ids conditional requirements
+
 ### Password Requirements
 - Minimum 8 characters
 - At least one lowercase letter
 - At least one uppercase letter
 - At least one number
 - At least one symbol (@$!%*#?&)
-
-### Section Creation
-- Required: name, number_of_seats
-- Optional: elder_friendly, handicap_friendly, information
-- number_of_seats must be positive integer
-- occupancy defaults to 0
-- available_seats defaults to 0
 
 ## Scheduled Tasks
 
@@ -240,14 +307,19 @@ Convention
 ### Email Types
 
 #### User Invitation Email
+- Mailable class: `App\Mail\UserInvitation`
 - Sent when: New user created or existing user added to convention
 - Contains: Signed URL with 24-hour expiration
+- Template: Markdown email with user name, convention name, invitation URL, expiration
 - Action: Set password and confirm email
 
 #### Email Confirmation Email
-- Sent when: User updates their email address
+- Mailable class: `App\Mail\EmailConfirmation`
+- Sent when: User updates their email address (triggered by UserObserver)
 - Contains: Signed URL with 24-hour expiration
+- Template: Markdown email with user name, confirmation URL, expiration
 - Action: Confirm new email address
+- UserObserver automatically sets email_confirmed=false when email changes
 
 ### Email Confirmation Status
 - Green checkmark icon: Email confirmed
@@ -274,15 +346,22 @@ Convention
 
 ### Authorization
 - Role-based access control enforced at middleware level
-- Query scoping based on user roles
+- Query scoping based on user roles (ScopeByRole middleware)
 - Policies for Convention, Floor, Section, User entities
 - Signed URLs for invitation links with expiration
 
+### Security Event Logging
+- SecurityEventListener logs security-relevant events to dedicated security log channel
+- Logged events: failed login attempts, authorization failures, invalid signed URL access, rate limit violations
+- Each log entry includes: event type, IP address, URL, user agent, and contextual data
+
 ### Input Validation
 - All inputs validated server-side via Form Requests
+- SanitizesInput trait applied to form requests for XSS prevention
 - CSRF protection on all state-changing requests
 - SQL injection prevention via Eloquent ORM
 - XSS prevention via Blade/React escaping
+- Secure HTTP headers via SecureHeaders middleware
 
 ### Rate Limiting
 - Login: 5 attempts per minute per IP

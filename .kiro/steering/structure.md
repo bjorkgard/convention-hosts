@@ -4,12 +4,14 @@
 
 ### Application Code (`app/`)
 - `Actions/` - Business logic actions (CreateConventionAction, ExportConventionAction, InviteUserAction, UpdateOccupancyAction, Fortify/)
-- `Concerns/` - Reusable traits (validation rules for password, profile)
+- `Concerns/` - Reusable traits (PasswordValidationRules, ProfileValidationRules, SanitizesInput)
 - `Console/Commands/` - Artisan commands (ResetDailyOccupancy)
-- `Exports/` - Data export classes (ConventionExport, ConventionWordExport, ConventionMarkdownExport, sheets for attendance/floors/users)
+- `Exports/` - Data export classes (ConventionExport, ConventionWordExport, ConventionMarkdownExport, sheets for attendance/floors/users/convention)
 - `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/)
-- `Http/Middleware/` - Custom middleware (EnsureConventionAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, ScopeByRole)
-- `Http/Requests/` - Form request validation classes organized by feature (Settings/, plus convention/floor/section/user/occupancy/attendance/search requests)
+- `Http/Middleware/` - Custom middleware (EnsureConventionAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, ScopeByRole, SecureHeaders)
+- `Http/Requests/` - Form request validation classes organized by feature (Settings/, plus Store/Update requests for convention, floor, section, user, occupancy, attendance, search, guest convention, set password)
+- `Listeners/` - Event listeners (SecurityEventListener for failed login, authorization failure, invalid signed URL, rate limit logging)
+- `Mail/` - Mailable classes (UserInvitation, EmailConfirmation)
 - `Models/` - Eloquent models:
   - `User.php` - User model with convention relationships
   - `Convention.php` - Convention model with floors and attendance periods
@@ -17,7 +19,10 @@
   - `Section.php` - Section model with occupancy tracking
   - `AttendancePeriod.php` - Time-bound attendance reporting periods
   - `AttendanceReport.php` - Section attendance data
+- `Observers/` - Model observers (UserObserver - resets email_confirmed on email change, sends confirmation email)
+- `Policies/` - Authorization policies (ConventionPolicy, FloorPolicy, SectionPolicy, UserPolicy)
 - `Providers/` - Service providers (AppServiceProvider, FortifyServiceProvider)
+- `Services/` - Business logic services (AttendanceReportService - start/stop reports, report attendance, period determination)
 
 ### Configuration (`config/`)
 Standard Laravel configuration files including `fortify.php` for authentication settings.
@@ -29,11 +34,12 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - User pivot tables (convention_user, floor_user, section_user)
   - Role management (convention_user_roles)
   - Attendance tracking (attendance_periods, attendance_reports)
-- `seeders/` - Database seeders
+  - Two-factor authentication columns
+- `seeders/` - Database seeders (DatabaseSeeder, DemoSeeder with sample convention data and all role types)
 - `database.sqlite` - SQLite database file (development)
 
 ### Routes
-- `routes/web.php` - Main web routes
+- `routes/web.php` - Main web routes (conventions, floors, sections, users, attendance, search, guest convention, invitation, email confirmation)
 - `routes/settings.php` - Settings-related routes (included in web.php)
 - `routes/console.php` - Artisan console commands
 
@@ -47,8 +53,8 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   
 - `components/` - React components
   - `ui/` - Reusable UI components (shadcn/ui style, DO NOT EDIT)
-  - `conventions/` - Convention feature components (attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-indicator, role-badge, section-card, user-row)
-  - General components (app-shell, app-sidebar, nav-main, breadcrumbs, heading, input-error, etc.)
+  - `conventions/` - Convention feature components (attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-indicator, role-badge, section-card, section-modal, user-row)
+  - General components (alert-error, app-content, app-header, app-logo, app-logo-icon, app-shell, app-sidebar, app-sidebar-header, appearance-tabs, breadcrumbs, confirmation-dialog, delete-user, heading, input-error, install-prompt, nav-convention, nav-footer, nav-main, nav-user, text-link, two-factor-recovery-codes, two-factor-setup-modal, user-info, user-menu-content)
   
 - `hooks/` - Custom React hooks
   - `use-appearance.tsx` - Theme/appearance management
@@ -63,9 +69,9 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `use-two-factor-auth.ts` - 2FA state management
   
 - `layouts/` - Page layout components
-  - `app/` - Authenticated app layout configuration
-  - `auth/` - Authentication pages layout configuration
-  - `settings/` - Settings pages layout configuration
+  - `app/` - Authenticated app layouts (app-header-layout, app-sidebar-layout)
+  - `auth/` - Authentication page layouts (auth-card-layout, auth-simple-layout, auth-split-layout)
+  - `settings/` - Settings page layout
   - `app-layout.tsx` - Main app layout wrapper
   - `auth-layout.tsx` - Auth pages layout wrapper
   
@@ -73,12 +79,14 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `utils.ts` - Common utilities (cn for class merging)
   
 - `pages/` - Inertia.js page components
-  - `auth/` - Authentication pages (login, register, confirm-password, forgot-password, reset-password, two-factor-challenge, verify-email)
+  - `auth/` - Authentication pages (login, register, confirm-password, forgot-password, reset-password, two-factor-challenge, verify-email, invitation, invitation-invalid)
+  - `conventions/` - Convention pages (index, create, show)
+  - `floors/` - Floor pages (index)
+  - `sections/` - Section pages (index, show)
+  - `search/` - Search pages (index)
+  - `users/` - User management pages (index)
   - `settings/` - Settings pages (profile, password, two-factor, appearance)
-  - `dashboard.tsx` - Main dashboard
   - `welcome.tsx` - Landing page
-  - `conventions/index.tsx` - Convention listing with grid layout and empty state
-  - Note: Remaining convention pages (create, show) and floor/section/user/search pages are planned but not yet implemented as page components.
   
 - `routes/` - **Auto-generated** Wayfinder route definitions (DO NOT EDIT)
   
@@ -98,6 +106,12 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - `app.tsx` - Main client-side entry point
 - `ssr.tsx` - Server-side rendering entry point
 
+### Frontend Tests
+- `resources/js/hooks/__tests__/` - Hook unit tests (use-attendance-report, use-convention-role, use-occupancy-color)
+- `resources/js/components/conventions/__tests__/` - Convention component tests (convention-card, occupancy-dropdown, user-row)
+- `resources/js/pages/search/__tests__/` - Search page tests
+- `resources/js/test/setup.ts` - Vitest test setup
+
 ## Styling (`resources/css/`)
 - `app.css` - Main Tailwind CSS entry point
 
@@ -105,13 +119,32 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - `build/` - Compiled frontend assets (auto-generated)
 - Static assets (favicon, icons, etc.)
 
+## Tests (`tests/`)
+
+### Backend Tests (Pest PHP)
+- `tests/Feature/` - Feature tests organized by domain:
+  - `Auth/` - Authentication flows (login, registration, password reset, email verification, 2FA challenge)
+  - `Integration/` - End-to-end integration tests (complete user flows, mobile responsiveness, performance, role-based access, security audit)
+  - `Properties/` - Property-based feature tests (attendance periods, convention creation, CSRF, email confirmation, exports, floor/section, occupancy, roles, user management)
+  - `Section/` - Section-specific tests (authorization)
+  - `Settings/` - Settings tests (password update, profile update, 2FA)
+  - Root-level feature tests for convention overlap, CSRF, dashboard, exports, floor/section validation, form errors, input sanitization, rate limiting, navigation, password, search, security headers/logging, signed URLs, user email validation
+- `tests/Property/` - Property-based unit tests (attendance, conventions, occupancy, roles, sections, users, email, invitations)
+- `tests/Unit/` - Unit tests (attendance reporting, convention creation, exports, occupancy, role-based access, search, user invitation, validation)
+- `tests/Helpers/` - Test utilities (ConventionTestHelper)
+
 ## Key Conventions
 
 ### Backend
 - Controllers are organized by feature in subdirectories
-- Form requests handle validation logic
+- Form requests handle validation logic with SanitizesInput trait
 - Actions contain reusable business logic
+- Services encapsulate complex domain logic (e.g., AttendanceReportService)
 - Concerns provide shared traits
+- Policies enforce role-based authorization per model
+- Observers handle model lifecycle events (e.g., email confirmation on change)
+- Listeners handle application events (e.g., security logging)
+- Mail classes use Markdown templates for email rendering
 
 ### Frontend
 - Components use TypeScript with strict typing
@@ -119,6 +152,7 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - UI components follow shadcn/ui patterns
 - Hooks encapsulate reusable stateful logic
 - Pages map 1:1 with Inertia routes
+- Modal dialogs used for CRUD operations (e.g., section-modal for create/edit)
 
 ### Auto-Generated Files (DO NOT EDIT)
 - `resources/js/actions/**` - Generated by Wayfinder
