@@ -15,7 +15,7 @@ export default function FullButton({ section, onUpdate }: FullButtonProps) {
         <Button
             variant="destructive"
             size="lg"
-            className="w-full cursor-pointer py-6 text-lg font-bold uppercase tracking-wider"
+            className="w-full cursor-pointer rounded-xl py-6 text-lg font-bold uppercase tracking-wider"
             disabled={isAlreadyFull}
             onClick={onUpdate}
         >

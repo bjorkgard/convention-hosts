@@ -55,7 +55,7 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
     const averageOccupancy = getAverageOccupancy(sections);
 
     return (
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="rounded-lg border">
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="rounded-xl border border-border transition-colors duration-200 hover:border-primary/20">
             <div className="flex items-center justify-between gap-2 px-3 py-3 sm:px-4">
                 <CollapsibleTrigger className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 sm:gap-3">
                     <ChevronRight
@@ -125,7 +125,7 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
 
                             return (
                                 <li key={section.id} className="border-b last:border-b-0">
-                                    <div className="flex items-center gap-0 transition-colors hover:bg-accent/50">
+                                    <div className="flex items-center gap-0 transition-colors duration-200 hover:bg-accent">
                                         <Link
                                             href={show.url(section.id)}
                                             className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-4 py-2.5 sm:px-6"

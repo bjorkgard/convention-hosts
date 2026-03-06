@@ -157,7 +157,7 @@ export default function FloorsIndex({ convention, floors, userFloorIds = [], use
 
                 {/* Floors list */}
                 {floors.length === 0 ? (
-                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-8 text-center dark:border-sidebar-border">
+                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                         <p className="text-muted-foreground">No floors yet.</p>
                         {isManager && (
                             <Button

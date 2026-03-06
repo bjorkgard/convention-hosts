@@ -90,7 +90,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                 </div>
 
                 {/* Filters */}
-                <div className="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-end sm:gap-4">
+                <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-end sm:gap-4">
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="floor-filter">Floor</Label>
                         <Select value={filters.floor_id ?? 'all'} onValueChange={handleFloorChange}>
@@ -133,7 +133,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
                 {/* Results */}
                 {sections.data.length === 0 ? (
-                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-8 text-center dark:border-sidebar-border">
+                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                         <SearchX className="text-muted-foreground mb-2 size-10" />
                         <p className="text-muted-foreground">No available sections found matching your filters.</p>
                     </div>
@@ -147,7 +147,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                 <Link
                                     key={section.id}
                                     href={sectionShow.url(section.id)}
-                                    className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50"
+                                    className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-xl border border-border p-3 transition-colors duration-200 hover:border-primary/30 hover:bg-accent"
                                 >
                                     <OccupancyGauge occupancy={section.occupancy} size={40} />
                                     <div className="min-w-0 flex-1">

@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Plus, CalendarDays } from 'lucide-react';
 
 import { create, index } from '@/actions/App/Http/Controllers/ConventionController';
 import ConventionCard from '@/components/conventions/convention-card';
@@ -27,7 +27,7 @@ export default function ConventionsIndex({ conventions, canCreateConvention }: C
                 <div className="flex items-center justify-between gap-2">
                     <h1 className="text-2xl font-semibold tracking-tight">Conventions</h1>
                     {canCreateConvention && (
-                        <Button asChild>
+                        <Button asChild className="cursor-pointer">
                             <Link href={create.url()}>
                                 <Plus />
                                 <span className="hidden sm:inline">Create Convention</span>
@@ -38,10 +38,13 @@ export default function ConventionsIndex({ conventions, canCreateConvention }: C
                 </div>
 
                 {conventions.length === 0 ? (
-                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-8 text-center dark:border-sidebar-border">
+                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
+                        <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                            <CalendarDays className="size-6" />
+                        </div>
                         <p className="text-muted-foreground">No conventions yet.</p>
                         {canCreateConvention && (
-                            <Button asChild variant="link" className="mt-2">
+                            <Button asChild variant="link" className="mt-2 cursor-pointer">
                                 <Link href={create.url()}>Create your first convention</Link>
                             </Button>
                         )}

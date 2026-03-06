@@ -102,7 +102,7 @@ export default function SectionsIndex({ convention, floor, sections }: SectionsI
 
                 {/* Sections list */}
                 {sections.length === 0 ? (
-                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-8 text-center dark:border-sidebar-border">
+                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                         <p className="text-muted-foreground">No sections yet.</p>
                         {canAddSection && (
                             <Button variant="link" className="mt-2 cursor-pointer" onClick={() => setShowAddDialog(true)}>

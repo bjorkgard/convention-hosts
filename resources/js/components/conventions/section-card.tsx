@@ -10,15 +10,15 @@ import type { Section } from '@/types/convention';
 
 export default function SectionCard({ section }: { section: Section }) {
     return (
-        <Link href={show.url(section.id)} className="block">
-            <Card className="cursor-pointer transition-colors hover:bg-accent/50">
+        <Link href={show.url(section.id)} className="group block">
+            <Card className="cursor-pointer border-border transition-colors duration-200 hover:border-primary/30 hover:bg-accent">
                 <CardHeader className="flex-row items-center gap-3 space-y-0">
                     <span
                         className={cn('inline-flex size-3 shrink-0 rounded-full', getOccupancyColorClass(section.occupancy))}
                         aria-label={`Occupancy ${section.occupancy}%`}
                     />
                     <CardTitle className="flex-1 text-base">{section.name}</CardTitle>
-                    <span className="text-muted-foreground text-sm">{section.occupancy}%</span>
+                    <span className="text-muted-foreground text-sm font-medium">{section.occupancy}%</span>
                 </CardHeader>
                 <CardContent className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-muted-foreground flex items-center gap-1.5 text-sm">

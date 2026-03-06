@@ -35,7 +35,7 @@ export default function ConventionsCreate() {
                     <h1 className="text-2xl font-semibold tracking-tight">Create Convention</h1>
                 </div>
 
-                <Card className="mx-auto w-full max-w-2xl">
+                <Card className="mx-auto w-full max-w-2xl rounded-xl border border-border shadow-sm">
                     <CardHeader>
                         <CardTitle>Convention Details</CardTitle>
                         <CardDescription>Fill in the details for your new convention.</CardDescription>

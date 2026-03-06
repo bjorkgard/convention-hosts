@@ -49,21 +49,21 @@ export default function AttendanceReportBanner({
 
     return (
         <>
-            <Alert className="border-blue-200 bg-blue-50">
+            <Alert className="rounded-xl border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/30">
                 <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex flex-col gap-1">
-                        <span className="flex items-center gap-1.5 text-sm font-medium text-blue-900">
+                        <span className="flex items-center gap-1.5 text-sm font-medium text-blue-900 dark:text-blue-200">
                             <Users className="size-4" />
                             {reportedCount} of {totalCount} sections reported
                         </span>
-                        <span className="text-sm text-blue-700">
+                        <span className="text-sm text-blue-700 dark:text-blue-300">
                             Total attendance: {totalAttendance}
                         </span>
                     </div>
                     <Button
                         variant="outline"
                         size="sm"
-                        className="cursor-pointer gap-1.5 border-blue-300 text-blue-800 hover:bg-blue-100"
+                        className="cursor-pointer gap-1.5 border-blue-300 text-blue-800 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-200 dark:hover:bg-blue-900/30"
                         onClick={handleStop}
                     >
                         <Square className="size-3.5 fill-current" />

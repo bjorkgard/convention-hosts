@@ -156,7 +156,7 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
                 <div className="flex flex-col gap-2">
                     <h2 className="text-lg font-medium">Floors</h2>
                     {floors.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-8 text-center dark:border-sidebar-border">
+                        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                             <p className="text-muted-foreground">No floors yet.</p>
                         </div>
                     ) : (

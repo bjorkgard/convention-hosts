@@ -133,7 +133,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                 </div>
 
                 {/* Section info card */}
-                <Card>
+                <Card className="rounded-xl border border-border shadow-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <CardTitle className="text-lg">Section Details</CardTitle>
@@ -197,7 +197,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
 
                 {/* Attendance reporting section */}
                 {activePeriod && (
-                    <Card>
+                    <Card className="rounded-xl border border-border shadow-sm">
                         <CardHeader>
                             <CardTitle className="text-lg">Attendance Report</CardTitle>
                         </CardHeader>

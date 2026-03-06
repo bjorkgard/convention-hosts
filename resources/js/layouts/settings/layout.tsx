@@ -61,8 +61,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 size="sm"
                                 variant="ghost"
                                 asChild
-                                className={cn('w-full justify-start', {
-                                    'bg-muted': isCurrentOrParentUrl(item.href),
+                                className={cn('w-full cursor-pointer justify-start', {
+                                    'bg-accent': isCurrentOrParentUrl(item.href),
                                 })}
                             >
                                 <Link href={item.href}>

@@ -162,7 +162,7 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
 
                 {/* Users list */}
                 {users.length === 0 ? (
-                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-sidebar-border/70 p-8 text-center dark:border-sidebar-border">
+                    <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                         <Users className="text-muted-foreground mb-2 size-8" />
                         <p className="text-muted-foreground">No users yet.</p>
                         {isManager && (
@@ -176,7 +176,7 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
                         )}
                     </div>
                 ) : (
-                    <div className="rounded-xl border">
+                    <div className="rounded-xl border border-border">
                         {users.map((user) => (
                             <UserRow
                                 key={user.id}
