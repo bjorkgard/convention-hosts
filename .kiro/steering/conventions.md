@@ -258,7 +258,7 @@ Convention
 - Optional: floor_id (sometimes required, from route or request body), elder_friendly, handicap_friendly, information
 - number_of_seats must be positive integer
 - occupancy defaults to 0
-- available_seats defaults to 0
+- available_seats defaults to number_of_seats (new sections start fully available)
 
 ### Section Update
 - Required: name, number_of_seats

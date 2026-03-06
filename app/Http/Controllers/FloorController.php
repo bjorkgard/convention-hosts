@@ -17,7 +17,7 @@ class FloorController extends Controller
      */
     public function index(Request $request, Convention $convention): Response
     {
-        $query = $convention->floors()->with('sections');
+        $query = $convention->floors()->with(['sections.users:id,first_name,last_name', 'users:id,first_name,last_name']);
 
         // Apply role-based scoping from ScopeByRole middleware
         if ($scopedFloorIds = $request->get('scoped_floor_ids')) {
@@ -29,7 +29,7 @@ class FloorController extends Controller
                 $q->whereIn('id', $scopedSectionIds);
             });
             $query->with(['sections' => function ($q) use ($scopedSectionIds) {
-                $q->whereIn('id', $scopedSectionIds);
+                $q->whereIn('id', $scopedSectionIds)->with('users:id,first_name,last_name');
             }]);
         }
 

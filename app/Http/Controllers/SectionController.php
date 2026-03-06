@@ -82,6 +82,8 @@ class SectionController extends Controller
 
         $this->authorize('create', [Section::class, $floor]);
 
+        $validated['available_seats'] = $validated['number_of_seats'];
+
         $floor->sections()->create($validated);
 
         return redirect()->route('floors.index', $convention);

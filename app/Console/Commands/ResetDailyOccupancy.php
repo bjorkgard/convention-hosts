@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Section;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ResetDailyOccupancy extends Command
 {
@@ -30,7 +31,7 @@ class ResetDailyOccupancy extends Command
 
         Section::query()->update([
             'occupancy' => 0,
-            'available_seats' => 0,
+            'available_seats' => DB::raw('number_of_seats'),
             'last_occupancy_updated_by' => null,
             'last_occupancy_updated_at' => null,
         ]);

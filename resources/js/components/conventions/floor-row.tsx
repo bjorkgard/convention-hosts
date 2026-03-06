@@ -1,11 +1,13 @@
 import { Link } from '@inertiajs/react';
-import { ChevronDown, Pencil, Trash2 } from 'lucide-react';
+import { AlertTriangle, ChevronDown, Pencil, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
 import { show } from '@/actions/App/Http/Controllers/SectionController';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { getOccupancyColorClass } from '@/hooks/use-occupancy-color';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import OccupancyGauge from '@/components/conventions/occupancy-gauge';
+
 import { cn } from '@/lib/utils';
 import type { Floor, Section } from '@/types/convention';
 import type { Role } from '@/types/user';
@@ -60,14 +62,25 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                         className={cn('size-4 shrink-0 transition-transform duration-200', isOpen && 'rotate-180')}
                     />
                     <span className="truncate font-medium">{floor.name}</span>
-                    <span
-                        className={cn('inline-flex size-3 shrink-0 rounded-full', getOccupancyColorClass(averageOccupancy))}
-                        aria-label={`Average occupancy ${averageOccupancy}%`}
-                    />
+                    <OccupancyGauge occupancy={averageOccupancy} size={28} />
                     <span className="text-muted-foreground shrink-0 text-sm">
                         {sections.length} {sections.length === 1 ? 'section' : 'sections'}
                     </span>
                 </CollapsibleTrigger>
+
+                {(floor.users?.length ?? 0) > 0 && (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <span className="text-muted-foreground flex shrink-0 cursor-default items-center gap-1 text-sm">
+                                <Users className="size-3.5" />
+                                {floor.users!.length}
+                            </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            {floor.users!.map((u) => `${u.first_name} ${u.last_name}`).join(', ')}
+                        </TooltipContent>
+                    </Tooltip>
+                )}
 
                 {(canEdit(userRole) || canDelete(userRole)) && (
                     <div className="flex items-center gap-1">
@@ -117,18 +130,34 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                                             href={show.url(section.id)}
                                             className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-4 py-2.5 sm:px-6"
                                         >
-                                            <span
-                                                className={cn(
-                                                    'inline-flex size-2.5 shrink-0 rounded-full',
-                                                    getOccupancyColorClass(section.occupancy),
-                                                )}
-                                                aria-label={`Occupancy ${section.occupancy}%`}
-                                            />
-                                            <span className="flex-1 truncate text-sm font-medium">{section.name}</span>
+                                            <OccupancyGauge occupancy={section.occupancy} size={32} />
+                                            <span className={cn('flex-1 truncate text-sm font-medium', (section.users?.length ?? 0) === 0 && 'text-red-600 dark:text-red-400')}>{section.name}</span>
                                             <span className="text-muted-foreground shrink-0 text-xs">
                                                 {section.available_seats}/{section.number_of_seats} seats
                                             </span>
                                         </Link>
+                                        {(section.users?.length ?? 0) > 0 ? (
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <span className="text-muted-foreground flex shrink-0 cursor-default items-center gap-1 text-xs">
+                                                        <Users className="size-3" />
+                                                        {section.users!.length}
+                                                    </span>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    {section.users!.map((u) => `${u.first_name} ${u.last_name}`).join(', ')}
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        ) : (
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <span className="flex shrink-0 cursor-default items-center gap-1 text-xs text-red-600 dark:text-red-400">
+                                                        <AlertTriangle className="size-3" />
+                                                    </span>
+                                                </TooltipTrigger>
+                                                <TooltipContent>No section manager assigned</TooltipContent>
+                                            </Tooltip>
+                                        )}
                                         {(showEditSection || showDeleteSection) && (
                                             <div className="flex shrink-0 items-center gap-0.5 pr-2 sm:pr-3">
                                                 {showEditSection && (

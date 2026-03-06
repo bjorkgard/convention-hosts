@@ -538,6 +538,7 @@ This section documents the key design decisions made for the Convention Manageme
 - Every update records `last_occupancy_updated_by` and `last_occupancy_updated_at` for audit
 - A scheduled command (`ResetDailyOccupancy`) resets all sections to 0% at 6:00 AM daily
 - Color coding (green → dark-green → yellow → orange → red) is computed client-side via the `useOccupancyColor` hook
+- `OccupancyGauge` component renders a semi-circle SVG gauge with color-mapped fill and percentage label, reusing `getOccupancyLevel` from the same hook
 
 **Rationale:** Predefined percentage steps are fastest for mobile use during busy events. The FULL button handles the most urgent case (section at capacity) with a single tap. Available-seats input provides precision when exact counts are known. Storing both percentage and seat count avoids repeated calculation and keeps the search query simple (filter on `occupancy < 90`). Daily reset ensures each convention day starts fresh without manual intervention.
 

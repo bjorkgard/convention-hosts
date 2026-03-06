@@ -66,7 +66,7 @@ class ConventionController extends Controller
         $user = $request->user();
 
         // Load floors with sections, scoped by user role
-        $floorsQuery = $convention->floors()->with('sections');
+        $floorsQuery = $convention->floors()->with('sections.users:id,first_name,last_name', 'users:id,first_name,last_name');
 
         if ($scopedFloorIds = $request->get('scoped_floor_ids')) {
             $floorsQuery->whereIn('id', $scopedFloorIds);
@@ -77,7 +77,7 @@ class ConventionController extends Controller
                 $query->whereIn('id', $scopedSectionIds);
             });
             $floorsQuery->with(['sections' => function ($query) use ($scopedSectionIds) {
-                $query->whereIn('id', $scopedSectionIds);
+                $query->whereIn('id', $scopedSectionIds)->with('users:id,first_name,last_name');
             }]);
         }
 

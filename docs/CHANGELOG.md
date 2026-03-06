@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- eager-load assigned users on floors and sections in convention show endpoint for user display (2026-03-06)
+- replace OccupancyIndicator with OccupancyGauge in search results for consistent semi-circle gauge display (2026-03-06)
+- initialize available_seats to number_of_seats on section creation so new sections start fully available (2026-03-06)
+- enhance OccupancyGauge with tooltip showing occupancy level label and human-readable descriptions (2026-03-06)
+- add OccupancyGauge SVG semi-circle component for visual occupancy display (2026-03-06)
+- add FloorRow collapsible component with inline sections, role-based actions, occupancy indicators, and assigned user tooltips (2026-03-06)
+- eager-load assigned users on floors index endpoint for floor-level user display (2026-03-06)
+
 ## [v0.1.0] - 2026-03-06
 
 - docs(steering): update conventions, product, structure, and tech documentation (Nathanael Björkgård, 2026-03-06)

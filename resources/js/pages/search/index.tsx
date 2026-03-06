@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as searchIndex } from '@/actions/App/Http/Controllers/SearchController';
 import { show as sectionShow } from '@/actions/App/Http/Controllers/SectionController';
-import OccupancyIndicator from '@/components/conventions/occupancy-indicator';
+import OccupancyGauge from '@/components/conventions/occupancy-gauge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -149,12 +149,11 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                     href={sectionShow.url(section.id)}
                                     className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50"
                                 >
-                                    <OccupancyIndicator occupancy={section.occupancy} />
+                                    <OccupancyGauge occupancy={section.occupancy} size={40} />
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate font-medium">{section.name}</p>
                                         <p className="text-muted-foreground truncate text-sm">{section.floor?.name ?? 'Unknown floor'}</p>
                                     </div>
-                                    <span className="text-muted-foreground shrink-0 text-sm">{section.occupancy}%</span>
                                 </Link>
                             ))}
                         </div>

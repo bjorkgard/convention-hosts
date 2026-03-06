@@ -205,7 +205,7 @@ Returns Inertia page `floors/index` with:
 | Prop | Type | Description |
 |------|------|-------------|
 | convention | Convention | Parent convention |
-| floors | Floor[] | Role-scoped floors with sections |
+| floors | Floor[] | Role-scoped floors with sections and assigned users (id, first_name, last_name) |
 | userRoles | string[] | Current user's roles |
 | userFloorIds | number[] | Assigned floor IDs |
 | userSectionIds | number[] | Assigned section IDs |
