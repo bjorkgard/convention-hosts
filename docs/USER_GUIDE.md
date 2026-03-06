@@ -36,14 +36,22 @@ Only Owner and ConventionUser roles can add or delete floors. FloorUsers can ren
 
 ### Adding Sections
 
-1. Navigate to a floor
-2. Click **Add Section**
-3. Fill in:
+Sections can be managed directly from the Floors page:
+
+1. Navigate to **Floors** within your convention
+2. Click **Add Section** in the page header
+3. Select a floor from the dropdown (auto-selected if you only have access to one floor)
+4. Fill in:
    - Section name
    - Number of seats (capacity)
    - Optionally: elder-friendly, handicap-friendly, additional information
+5. Click **Add Section**
+
+To edit a section, expand a floor row and click the pencil icon next to the section. To delete, click the trash icon and confirm.
 
 Sections start with 0% occupancy and 0 available seats.
+
+The floor dropdown shows only floors you have access to based on your role. Owner and ConventionUser see all floors; FloorUser sees only assigned floors. SectionUser cannot create sections.
 
 ## Tracking Occupancy
 

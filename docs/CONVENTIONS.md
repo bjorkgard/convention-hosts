@@ -914,6 +914,13 @@ The Convention Management System is currently under development.
 
 ### Recently Added
 
+- **Section CRUD from FloorsIndex** — Full section create/edit/delete management from the Floors page via modal dialogs. Includes:
+  - **`SectionModal` component** (`resources/js/components/conventions/section-modal.tsx`) — Dialog for creating and editing sections with floor selector dropdown, accessibility checkboxes, and inline validation errors. Uses `useForm` from Inertia with Wayfinder type-safe routing.
+  - **`FloorRow` section action buttons** — Inline edit (Pencil) and delete (Trash2) icon buttons next to each section in expanded floor rows. Visibility is role-gated: Owner, ConventionUser, and assigned FloorUser can edit/delete; SectionUser sees no action buttons. Props: `onEditSection`, `onDeleteSection`, `userFloorIds`, `userSectionIds`.
+  - **`UpdateSectionRequest`** (`app/Http/Requests/UpdateSectionRequest.php`) — Dedicated form request for section updates (no `floor_id` since sections don't change floors on edit).
+  - **`StoreSectionRequest` updated** — Added `floor_id` validation (`sometimes|required|exists:floors,id`) for creating sections from the FloorsIndex page.
+  - **`SectionController` updated** — Store/update/destroy actions redirect to `floors.index` route. Store accepts `floor_id` from request body. Update uses `UpdateSectionRequest`.
+  - **Property-based tests** — Comprehensive PBT coverage for creation, update, deletion, cancellation, authorization enforcement, and server-side validation rejection.
 - **`GuestConventionController`** (`app/Http/Controllers/GuestConventionController.php`) — Allows unauthenticated users to create a convention from the landing page. Finds or creates a user by email, creates the convention via `CreateConventionAction`, and logs the user in automatically. Route: `POST /conventions/guest` (guest middleware)
 - **`StoreGuestConventionRequest`** (`app/Http/Requests/StoreGuestConventionRequest.php`) — Form request validating both user fields (first_name, last_name, email) and convention fields with date overlap detection
 - **`NavConvention` component** (`resources/js/components/nav-convention.tsx`) — Context-aware sidebar navigation that displays convention-specific links (Floors, Sections, Users, Search) with role-based visibility using `useConventionRole` and Wayfinder type-safe routing

@@ -287,6 +287,7 @@ Authorization: SectionPolicy `create`
 
 | Field | Type | Rules |
 |-------|------|-------|
+| floor_id | integer | sometimes, required, exists:floors |
 | name | string | required, max:255 |
 | number_of_seats | integer | required, min:1 |
 | elder_friendly | boolean | nullable |
@@ -294,6 +295,10 @@ Authorization: SectionPolicy `create`
 | information | string | nullable |
 
 Defaults: `occupancy` = 0, `available_seats` = 0.
+
+When `floor_id` is provided in the request body, the section is created on that floor (used when creating from the FloorsIndex page with a floor selector dropdown). Otherwise, the route-bound `{floor}` parameter is used.
+
+On success: redirects to `floors.index`.
 
 ### Update Section
 
@@ -303,7 +308,17 @@ PUT /sections/{section}
 
 Authorization: SectionPolicy `update`
 
-Same fields as Store Section.
+Uses `UpdateSectionRequest` (no `floor_id` — sections don't change floors on edit).
+
+| Field | Type | Rules |
+|-------|------|-------|
+| name | string | required, max:255 |
+| number_of_seats | integer | required, min:1 |
+| elder_friendly | boolean | nullable |
+| handicap_friendly | boolean | nullable |
+| information | string | nullable |
+
+On success: redirects to `floors.index`.
 
 ### Update Occupancy
 
@@ -337,6 +352,8 @@ DELETE /sections/{section}
 ```
 
 Authorization: SectionPolicy `delete`
+
+On success: redirects to `floors.index`.
 
 ---
 

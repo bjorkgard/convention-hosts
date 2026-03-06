@@ -144,7 +144,7 @@ describe('Owner access - full control', function () {
                 'name' => 'New Section',
                 'number_of_seats' => 100,
             ])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can update any section', function () {
@@ -153,7 +153,7 @@ describe('Owner access - full control', function () {
                 'name' => 'Renamed Section',
                 'number_of_seats' => 150,
             ])
-            ->assertRedirect(route('sections.show', $this->section3));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can delete any section', function () {
@@ -161,7 +161,7 @@ describe('Owner access - full control', function () {
 
         $this->actingAs($this->owner)
             ->delete(route('sections.destroy', $this->section4))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Section::find($sectionId))->toBeNull();
     });
@@ -297,7 +297,7 @@ describe('ConventionUser access - convention-wide read/write', function () {
                 'name' => 'CU Section',
                 'number_of_seats' => 80,
             ])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can update any section', function () {
@@ -306,7 +306,7 @@ describe('ConventionUser access - convention-wide read/write', function () {
                 'name' => 'CU Updated Section',
                 'number_of_seats' => 120,
             ])
-            ->assertRedirect(route('sections.show', $this->section4));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can delete any section', function () {
@@ -314,7 +314,7 @@ describe('ConventionUser access - convention-wide read/write', function () {
 
         $this->actingAs($this->conventionUser)
             ->delete(route('sections.destroy', $this->section4))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Section::find($sectionId))->toBeNull();
     });
@@ -438,7 +438,7 @@ describe('FloorUser scoping - assigned floors only', function () {
                 'name' => 'FU Section',
                 'number_of_seats' => 60,
             ])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('CANNOT create sections on unassigned floor', function () {
@@ -456,7 +456,7 @@ describe('FloorUser scoping - assigned floors only', function () {
                 'name' => 'FU Updated',
                 'number_of_seats' => 90,
             ])
-            ->assertRedirect(route('sections.show', $this->section1));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('CANNOT update sections on unassigned floor', function () {
@@ -473,7 +473,7 @@ describe('FloorUser scoping - assigned floors only', function () {
 
         $this->actingAs($this->floorUser)
             ->delete(route('sections.destroy', $this->section2))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Section::find($sectionId))->toBeNull();
     });
@@ -569,7 +569,7 @@ describe('SectionUser scoping - assigned sections only', function () {
                 'name' => 'SU Updated',
                 'number_of_seats' => $this->section1->number_of_seats,
             ])
-            ->assertRedirect(route('sections.show', $this->section1));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('CANNOT update unassigned section', function () {

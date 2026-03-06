@@ -74,6 +74,8 @@ tests/                          # Backend tests (Pest PHP)
 │   ├── InvitationEmailDeliveryTest.php
 │   ├── OccupancyPropertiesTest.php
 │   ├── RoleBasedDataScopingTest.php
+│   ├── SectionCrudPropertyTest.php
+│   ├── SectionFrontendPropertyTest.php
 │   ├── SectionUserRestrictionsTest.php
 │   └── UserPropertiesTest.php
 ├── Unit/                      # Unit tests (with database support via RefreshDatabase)
@@ -642,6 +644,9 @@ php artisan test --group=property
 | `RoleBasedDataScopingTest` | Role-based query scoping | 5.5, 5.6, 5.7 |
 | `FloorUserPermissionsTest` | FloorUser permission enforcement | 13.1, 13.2, 13.3 |
 | `SectionUserRestrictionsTest` | SectionUser edit and scope restrictions | 14.2, 14.3 |
+| `SectionCrudPropertyTest` | Section create/update/delete persistence, cancellation | Section CRUD 3, 4, 5, 6 |
+| `SectionFrontendPropertyTest` | Button visibility by role, floor selector filtering, action button auth, section display data | Section CRUD 1, 2, 8, 9 |
+| `SectionAuthorizationTest` | Section CRUD authorization enforcement across all roles | Section CRUD 7 |
 | `CsrfProtectionTest` | CSRF token enforcement on all state-changing routes | 21.3 |
 
 ### Writing Property Tests

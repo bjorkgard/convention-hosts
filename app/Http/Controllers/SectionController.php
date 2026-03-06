@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\UpdateOccupancyAction;
 use App\Http\Requests\StoreSectionRequest;
 use App\Http\Requests\UpdateOccupancyRequest;
+use App\Http\Requests\UpdateSectionRequest;
 use App\Models\Convention;
 use App\Models\Floor;
 use App\Models\Section;
@@ -66,26 +67,36 @@ class SectionController extends Controller
 
     /**
      * Store a newly created section for the floor.
+     *
+     * When floor_id is present in the request body (from FloorsIndex modal),
+     * resolve the Floor model from it; otherwise use the route-bound $floor.
      */
     public function store(StoreSectionRequest $request, Convention $convention, Floor $floor): RedirectResponse
     {
+        $validated = $request->validated();
+
+        // When creating from FloorsIndex page, floor_id comes from the request body
+        if (isset($validated['floor_id'])) {
+            $floor = Floor::findOrFail($validated['floor_id']);
+        }
+
         $this->authorize('create', [Section::class, $floor]);
 
-        $floor->sections()->create($request->validated());
+        $floor->sections()->create($validated);
 
-        return redirect()->route('conventions.show', $convention);
+        return redirect()->route('floors.index', $convention);
     }
 
     /**
      * Update the specified section's attributes.
      */
-    public function update(StoreSectionRequest $request, Section $section): RedirectResponse
+    public function update(UpdateSectionRequest $request, Section $section): RedirectResponse
     {
         $this->authorize('update', $section);
 
         $section->update($request->validated());
 
-        return redirect()->route('sections.show', $section);
+        return redirect()->route('floors.index', $section->floor->convention);
     }
 
     /**
@@ -123,6 +134,6 @@ class SectionController extends Controller
 
         $section->delete();
 
-        return redirect()->route('conventions.show', $convention);
+        return redirect()->route('floors.index', $convention);
     }
 }

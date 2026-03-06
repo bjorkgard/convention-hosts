@@ -14,8 +14,12 @@ interface FloorRowProps {
     floor: Floor;
     sections: Section[];
     userRole: Role;
+    userFloorIds?: number[];
+    userSectionIds?: number[];
     onEdit?: (floor: Floor) => void;
     onDelete?: (floor: Floor) => void;
+    onEditSection?: (section: Section) => void;
+    onDeleteSection?: (section: Section) => void;
 }
 
 function getAverageOccupancy(sections: Section[]): number {
@@ -32,7 +36,19 @@ function canDelete(role: Role): boolean {
     return role === 'Owner' || role === 'ConventionUser';
 }
 
-export default function FloorRow({ floor, sections, userRole, onEdit, onDelete }: FloorRowProps) {
+function canEditSection(role: Role, floor: Floor, userFloorIds?: number[]): boolean {
+    if (role === 'Owner' || role === 'ConventionUser') return true;
+    if (role === 'FloorUser' && userFloorIds?.includes(floor.id)) return true;
+    return false;
+}
+
+function canDeleteSection(role: Role, floor: Floor, userFloorIds?: number[]): boolean {
+    if (role === 'Owner' || role === 'ConventionUser') return true;
+    if (role === 'FloorUser' && userFloorIds?.includes(floor.id)) return true;
+    return false;
+}
+
+export default function FloorRow({ floor, sections, userRole, userFloorIds, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
     const [isOpen, setIsOpen] = useState(false);
     const averageOccupancy = getAverageOccupancy(sections);
 
@@ -90,26 +106,59 @@ export default function FloorRow({ floor, sections, userRole, onEdit, onDelete }
                     <p className="text-muted-foreground px-4 pb-3 text-sm">No sections on this floor.</p>
                 ) : (
                     <ul className="border-t">
-                        {sections.map((section) => (
-                            <li key={section.id} className="border-b last:border-b-0">
-                                <Link
-                                    href={show.url(section.id)}
-                                    className="flex cursor-pointer items-center gap-3 px-4 py-2.5 transition-colors hover:bg-accent/50 sm:px-6"
-                                >
-                                    <span
-                                        className={cn(
-                                            'inline-flex size-2.5 shrink-0 rounded-full',
-                                            getOccupancyColorClass(section.occupancy),
+                        {sections.map((section) => {
+                            const showEditSection = canEditSection(userRole, floor, userFloorIds) && !!onEditSection;
+                            const showDeleteSection = canDeleteSection(userRole, floor, userFloorIds) && !!onDeleteSection;
+
+                            return (
+                                <li key={section.id} className="border-b last:border-b-0">
+                                    <div className="flex items-center gap-0 transition-colors hover:bg-accent/50">
+                                        <Link
+                                            href={show.url(section.id)}
+                                            className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-4 py-2.5 sm:px-6"
+                                        >
+                                            <span
+                                                className={cn(
+                                                    'inline-flex size-2.5 shrink-0 rounded-full',
+                                                    getOccupancyColorClass(section.occupancy),
+                                                )}
+                                                aria-label={`Occupancy ${section.occupancy}%`}
+                                            />
+                                            <span className="flex-1 truncate text-sm font-medium">{section.name}</span>
+                                            <span className="text-muted-foreground shrink-0 text-xs">
+                                                {section.available_seats}/{section.number_of_seats} seats
+                                            </span>
+                                        </Link>
+                                        {(showEditSection || showDeleteSection) && (
+                                            <div className="flex shrink-0 items-center gap-0.5 pr-2 sm:pr-3">
+                                                {showEditSection && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="size-7 cursor-pointer"
+                                                        onClick={() => onEditSection(section)}
+                                                        aria-label={`Edit ${section.name}`}
+                                                    >
+                                                        <Pencil className="size-3.5" />
+                                                    </Button>
+                                                )}
+                                                {showDeleteSection && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="size-7 cursor-pointer"
+                                                        onClick={() => onDeleteSection(section)}
+                                                        aria-label={`Delete ${section.name}`}
+                                                    >
+                                                        <Trash2 className="size-3.5" />
+                                                    </Button>
+                                                )}
+                                            </div>
                                         )}
-                                        aria-label={`Occupancy ${section.occupancy}%`}
-                                    />
-                                    <span className="flex-1 text-sm font-medium">{section.name}</span>
-                                    <span className="text-muted-foreground text-xs">
-                                        {section.available_seats}/{section.number_of_seats} seats
-                                    </span>
-                                </Link>
-                            </li>
-                        ))}
+                                    </div>
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </CollapsibleContent>

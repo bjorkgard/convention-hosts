@@ -1,11 +1,13 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { index as conventionsIndex, show } from '@/actions/App/Http/Controllers/ConventionController';
 import { destroy, index as floorsIndex, store, update } from '@/actions/App/Http/Controllers/FloorController';
+import { destroy as destroySection } from '@/actions/App/Http/Controllers/SectionController';
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import FloorRow from '@/components/conventions/floor-row';
+import SectionModal from '@/components/conventions/section-modal';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
-import type { Convention, Floor } from '@/types/convention';
+import type { Convention, Floor, Section } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
 import type { Role } from '@/types/user';
 
@@ -33,14 +35,26 @@ interface FloorsIndexProps {
     userSectionIds: number[];
 }
 
-export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
-    const { isOwner, isConventionUser } = useConventionRole();
+export default function FloorsIndex({ convention, floors, userFloorIds = [], userSectionIds = [] }: FloorsIndexProps) {
+    const { isOwner, isConventionUser, isFloorUser } = useConventionRole();
     const isManager = isOwner || isConventionUser;
-    const userRole: Role = isOwner ? 'Owner' : isConventionUser ? 'ConventionUser' : 'FloorUser';
+    const canAddSection = isOwner || isConventionUser || isFloorUser;
+    const userRole: Role = isOwner ? 'Owner' : isConventionUser ? 'ConventionUser' : isFloorUser ? 'FloorUser' : 'SectionUser';
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingFloor, setEditingFloor] = useState<Floor | null>(null);
     const [deletingFloor, setDeletingFloor] = useState<Floor | null>(null);
+
+    // Section CRUD state
+    const [showSectionModal, setShowSectionModal] = useState(false);
+    const [editingSection, setEditingSection] = useState<Section | null>(null);
+    const [deletingSection, setDeletingSection] = useState<Section | null>(null);
+
+    // Filter floors for the section modal based on user role
+    const sectionModalFloors = useMemo(() => {
+        if (isOwner || isConventionUser) return floors;
+        return floors.filter((f) => userFloorIds.includes(f.id));
+    }, [floors, isOwner, isConventionUser, userFloorIds]);
 
     const addForm = useForm({ name: '' });
     const editForm = useForm({ name: '' });
@@ -84,6 +98,23 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
         });
     }
 
+    function openSectionCreate() {
+        setEditingSection(null);
+        setShowSectionModal(true);
+    }
+
+    function openSectionEdit(section: Section) {
+        setEditingSection(section);
+        setShowSectionModal(true);
+    }
+
+    function handleDeleteSection() {
+        if (!deletingSection) return;
+        router.delete(destroySection.url(deletingSection.id), {
+            onSuccess: () => setDeletingSection(null),
+        });
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Floors — ${convention.name}`} />
@@ -99,16 +130,29 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
                         <h1 className="text-2xl font-semibold tracking-tight">Floors</h1>
                     </div>
 
-                    {isManager && (
-                        <Button
-                            className="cursor-pointer gap-1.5"
-                            onClick={() => setShowAddDialog(true)}
-                        >
-                            <Plus className="size-4" />
-                            <span className="hidden sm:inline">Add Floor</span>
-                            <span className="sm:hidden">Add</span>
-                        </Button>
-                    )}
+                    <div className="flex items-center gap-2">
+                        {canAddSection && (
+                            <Button
+                                variant="outline"
+                                className="cursor-pointer gap-1.5"
+                                onClick={openSectionCreate}
+                            >
+                                <Plus className="size-4" />
+                                <span className="hidden sm:inline">Add Section</span>
+                                <span className="sm:hidden">Section</span>
+                            </Button>
+                        )}
+                        {isManager && (
+                            <Button
+                                className="cursor-pointer gap-1.5"
+                                onClick={() => setShowAddDialog(true)}
+                            >
+                                <Plus className="size-4" />
+                                <span className="hidden sm:inline">Add Floor</span>
+                                <span className="sm:hidden">Add</span>
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Floors list */}
@@ -133,8 +177,12 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
                                 floor={floor}
                                 sections={floor.sections ?? []}
                                 userRole={userRole}
+                                userFloorIds={userFloorIds}
+                                userSectionIds={userSectionIds}
                                 onEdit={openEditDialog}
                                 onDelete={(f) => setDeletingFloor(f)}
+                                onEditSection={openSectionEdit}
+                                onDeleteSection={(s) => setDeletingSection(s)}
                             />
                         ))}
                     </div>
@@ -217,6 +265,26 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
                 confirmLabel="Delete floor"
                 variant="destructive"
                 onConfirm={handleDelete}
+            />
+
+            {/* Section modal (create / edit) */}
+            <SectionModal
+                open={showSectionModal}
+                onOpenChange={setShowSectionModal}
+                convention={convention}
+                floors={sectionModalFloors}
+                section={editingSection}
+            />
+
+            {/* Delete section confirmation dialog */}
+            <ConfirmationDialog
+                open={!!deletingSection}
+                onOpenChange={(open) => !open && setDeletingSection(null)}
+                title="Delete Section"
+                description={`Are you sure you want to delete "${deletingSection?.name}"? This action cannot be undone.`}
+                confirmLabel="Delete section"
+                variant="destructive"
+                onConfirm={handleDeleteSection}
             />
         </AppLayout>
     );

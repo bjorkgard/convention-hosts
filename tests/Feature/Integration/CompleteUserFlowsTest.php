@@ -72,7 +72,7 @@ describe('Convention creation to deletion flow', function () {
             'number_of_seats' => 200,
             'elder_friendly' => true,
             'handicap_friendly' => false,
-        ])->assertRedirect(route('conventions.show', $convention));
+        ])->assertRedirect(route('floors.index', $convention));
 
         $section = Section::where('floor_id', $floor->id)->first();
         expect($section)->not->toBeNull()

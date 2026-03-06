@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Added
+
+- add section frontend property tests for role-based UI behavior (2026-03-06)
+  - Property 1: Add Section button visibility by role (Owner, ConventionUser, FloorUser vs SectionUser)
+  - Property 2: Floor selector shows exactly the authorized floors per role
+  - Property 8: Section action button visibility matches authorization
+  - Property 9: Section display contains required information (name, occupancy, seats, accessibility)
+
+- wire section CRUD into FloorsIndex page (2026-03-06)
+  - Import SectionModal component, section destroy action, and Section type
+  - Add useMemo for role-based floor filtering in section modal
+  - Enables create/edit/delete sections directly from the Floors page via modal dialogs
+
 ### Other
 
 - test(security): enhance test coverage and fix code style issues (, |Nathanael Björkgård|||2026-03-06)

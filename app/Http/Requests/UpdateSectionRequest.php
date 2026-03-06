@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Concerns\SanitizesInput;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSectionRequest extends FormRequest
+class UpdateSectionRequest extends FormRequest
 {
     use SanitizesInput;
 
@@ -35,7 +35,6 @@ class StoreSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'floor_id' => ['sometimes', 'required', 'exists:floors,id'],
             'name' => ['required', 'string', 'max:255'],
             'number_of_seats' => ['required', 'integer', 'min:1'],
             'elder_friendly' => ['nullable', 'boolean'],
