@@ -7,11 +7,11 @@
 - `Concerns/` - Reusable traits (PasswordValidationRules, ProfileValidationRules, SanitizesInput)
 - `Console/Commands/` - Artisan commands (ResetDailyOccupancy)
 - `Exports/` - Data export classes (ConventionExport, ConventionWordExport, ConventionMarkdownExport, sheets for attendance/floors/users/convention)
-- `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/)
+- `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/, VersionController)
 - `Http/Middleware/` - Custom middleware (EnsureConventionAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, ScopeByRole, SecureHeaders)
 - `Http/Requests/` - Form request validation classes organized by feature (Settings/, plus Store/Update requests for convention, floor, section, user, occupancy, attendance, search, guest convention, set password)
 - `Listeners/` - Event listeners (SecurityEventListener for failed login, authorization failure, invalid signed URL, rate limit logging)
-- `Mail/` - Mailable classes (UserInvitation, EmailConfirmation)
+- `Mail/` - Mailable classes (UserInvitation, EmailConfirmation, GuestConventionVerification)
 - `Models/` - Eloquent models:
   - `User.php` - User model with convention relationships
   - `Convention.php` - Convention model with floors and attendance periods
@@ -39,9 +39,9 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - `database.sqlite` - SQLite database file (development)
 
 ### Routes
-- `routes/web.php` - Main web routes (conventions, floors, sections, users, attendance, search, guest convention, invitation, email confirmation)
+- `routes/web.php` - Main web routes (conventions, floors, sections, users, attendance, search, guest convention, invitation, email confirmation, version API)
 - `routes/settings.php` - Settings-related routes (included in web.php)
-- `routes/console.php` - Artisan console commands
+- `routes/console.php` - Artisan console commands and scheduled tasks
 
 ## Frontend (React + TypeScript)
 
@@ -53,10 +53,11 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   
 - `components/` - React components
   - `ui/` - Reusable UI components (shadcn/ui style, DO NOT EDIT)
-  - `conventions/` - Convention feature components (attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-indicator, role-badge, section-card, section-modal, user-row)
-  - General components (alert-error, app-content, app-header, app-logo, app-logo-icon, app-shell, app-sidebar, app-sidebar-header, appearance-tabs, breadcrumbs, confirmation-dialog, delete-user, heading, input-error, install-prompt, nav-convention, nav-footer, nav-main, nav-user, text-link, two-factor-recovery-codes, two-factor-setup-modal, user-info, user-menu-content)
+  - `conventions/` - Convention feature components (attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-gauge, occupancy-indicator, role-badge, section-card, section-modal, user-row)
+  - General components (alert-error, app-content, app-header, app-logo, app-logo-icon, app-shell, app-sidebar, app-sidebar-header, appearance-tabs, breadcrumbs, confirmation-dialog, delete-user, heading, input-error, install-prompt, nav-convention, nav-footer, nav-main, nav-user, text-link, two-factor-recovery-codes, two-factor-setup-modal, update-notification-modal, user-info, user-menu-content, version-badge)
   
 - `hooks/` - Custom React hooks
+  - `use-app-version.ts` - GitHub release version checking
   - `use-appearance.tsx` - Theme/appearance management
   - `use-attendance-report.ts` - Attendance report state management
   - `use-clipboard.ts` - Clipboard copy utility
@@ -79,7 +80,7 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `utils.ts` - Common utilities (cn for class merging)
   
 - `pages/` - Inertia.js page components
-  - `auth/` - Authentication pages (login, register, confirm-password, forgot-password, reset-password, two-factor-challenge, verify-email, invitation, invitation-invalid)
+  - `auth/` - Authentication pages (login, confirm-password, forgot-password, reset-password, two-factor-challenge, verify-email, invitation, invitation-invalid, guest-convention-confirmation, guest-convention-invalid, guest-convention-set-password)
   - `conventions/` - Convention pages (index, create, show)
   - `floors/` - Floor pages (index)
   - `sections/` - Section pages (index, show)
@@ -123,13 +124,15 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 
 ### Backend Tests (Pest PHP)
 - `tests/Feature/` - Feature tests organized by domain:
-  - `Auth/` - Authentication flows (login, registration, password reset, email verification, 2FA challenge)
+  - `Auth/` - Authentication flows (login, registration, password reset, email verification, 2FA challenge, verification notification)
+  - `GuestConventionVerification/` - Guest convention verification tests (confirmation page, set password page, signed URL error handling)
   - `Integration/` - End-to-end integration tests (complete user flows, mobile responsiveness, performance, role-based access, security audit)
-  - `Properties/` - Property-based feature tests (attendance periods, convention creation, CSRF, email confirmation, exports, floor/section, occupancy, roles, user management)
+  - `Properties/` - Property-based feature tests (attendance periods, convention creation, CSRF, email confirmation, exports, floor/section, occupancy dropdown/full button/metadata, roles, user management)
+    - `GuestConventionVerification/` - Guest convention property tests (account activation, confirmation page, existing user auto-login, new user creation, role assignment, password validation, set password page, verification email content)
   - `Section/` - Section-specific tests (authorization)
   - `Settings/` - Settings tests (password update, profile update, 2FA)
-  - Root-level feature tests for convention overlap, CSRF, dashboard, exports, floor/section validation, form errors, input sanitization, rate limiting, navigation, password, search, security headers/logging, signed URLs, user email validation
-- `tests/Property/` - Property-based unit tests (attendance, conventions, occupancy, roles, sections, users, email, invitations)
+  - Root-level feature tests for convention overlap, convention test helper, CSRF, dashboard, exports (data completeness, format serialization), floor/section validation, form errors, input sanitization, rate limiting (login, invitation resend), navigation, password (confirmation, validation), remember me session, search (accessibility, occupancy filter), security (headers, logging), signed URLs, user email validation
+- `tests/Property/` - Property-based unit tests (attendance calculations, attendance properties, convention properties, daily occupancy reset, email update confirmation, floor user permissions, invitation email delivery, occupancy color coding, occupancy properties, role-based data scoping, section CRUD property, section frontend property, section user restrictions, section validation property, user properties)
 - `tests/Unit/` - Unit tests (attendance reporting, convention creation, exports, occupancy, role-based access, search, user invitation, validation)
 - `tests/Helpers/` - Test utilities (ConventionTestHelper)
 

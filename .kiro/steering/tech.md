@@ -21,6 +21,7 @@
 - Headless UI
 - Lucide React (icons)
 - Vitest (frontend testing framework)
+- fast-check (property-based testing)
 
 ## Code Quality Tools
 
@@ -46,9 +47,9 @@ php artisan serve           # Laravel dev server only
 
 ### Testing
 ```bash
-composer test               # Run PHP tests with Pest
-php artisan test            # Alternative test command
-npx vitest --run            # Run frontend tests (single run)
+composer test               # Run lint:check + PHP tests with Pest
+php artisan test            # Run PHP tests only (no lint)
+npm run test                # Run frontend tests with Vitest (single run)
 ```
 
 ### Linting & Formatting
@@ -80,3 +81,6 @@ composer ci:check           # Run all checks (lint, format, types, tests)
 - `laravel-vite-plugin` - Laravel Vite integration
 - `class-variance-authority` - Component variant utilities
 - `clsx` / `tailwind-merge` - Tailwind class utilities
+- `maatwebsite/excel` - Excel export
+- `phpoffice/phpword` - Word document export
+- `symfony/mailgun-mailer` - Mailgun email integration

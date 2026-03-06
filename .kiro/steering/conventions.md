@@ -25,7 +25,7 @@ Convention
 - Can have optional address and other_info fields
 - Automatically validate against overlapping conventions in the same location
 - Can be created by authenticated users or guests (guest convention creation flow)
-- Can be updated by users with convention access
+- Can be updated by users with convention access (Owner or ConventionUser)
 - Can be deleted by Owner role only
 
 ### Floors
@@ -133,12 +133,15 @@ Convention
 ## Guest Convention Creation Flow
 
 1. Unauthenticated user submits convention creation form from welcome page
-2. System validates user fields (first_name, last_name, email) and convention fields
-3. If email exists: Uses existing user account
-4. If new: Creates user with random password and email_confirmed=false
-5. Creates convention via CreateConventionAction (user becomes Owner)
-6. Logs the user in automatically
-7. Redirects to convention show page
+2. System validates user fields (first_name, last_name, email, mobile) and convention fields
+3. If email exists: Uses existing user account, creates convention, logs user in, redirects to convention show page
+4. If new user:
+   a. Creates user with random password and email_confirmed=false
+   b. Creates convention via CreateConventionAction (user becomes Owner + ConventionUser)
+   c. Generates signed verification URL (24-hour expiration)
+   d. Sends GuestConventionVerification email
+   e. Renders confirmation page (user is NOT logged in)
+   f. User must click verification link, set password, then gets logged in and redirected to convention
 
 ## User Invitation Flow
 
@@ -152,7 +155,14 @@ Convention
 8. System verifies signature and expiration
 9. User sets password
 10. Email is automatically confirmed
-11. User can log in
+11. User is redirected to login page
+
+## User Removal Flow
+
+1. Convention manager deletes user from convention
+2. System removes all roles, floor assignments, and section assignments for that convention
+3. System detaches user from convention_user pivot
+4. If user has no remaining conventions, the user record is deleted entirely
 
 ## Occupancy Update Methods
 
@@ -214,8 +224,8 @@ Convention
 ### Search Results
 - Only shows sections with occupancy < 90%
 - Sorted by occupancy percentage (ascending)
-- Displays: floor name, section name, color-coded occupancy icon
-- Paginated for mobile optimization
+- Displays: floor name, section name, color-coded occupancy gauge
+- Paginated (20 per page) for mobile optimization
 - Click to navigate to section detail
 
 ## Data Export
@@ -237,19 +247,21 @@ Convention
 ## Validation Rules
 
 ### Convention Creation
-- Required: name, city, country, start_date, end_date
+- Required: name, city, country, start_date (after_or_equal:today), end_date (after_or_equal:start_date)
 - Optional: address, other_info
 - Custom rule: No overlapping conventions in same city/country
-- Constraint: end_date >= start_date
+- SanitizesInput trait applied (other_info treated as rich text)
 
 ### Convention Update
-- Same required/optional fields as creation
+- Required: name, city, country, start_date, end_date (after_or_equal:start_date)
+- Optional: address, other_info
+- Note: start_date does NOT have after_or_equal:today constraint (allows editing past conventions)
 - Same overlap validation (excludes current convention from check)
 - Uses UpdateConventionRequest with SanitizesInput trait
 
 ### Guest Convention Creation
-- User fields required: first_name, last_name, email
-- Convention fields required: name, city, country, start_date (after_or_equal:today), end_date
+- User fields required: first_name, last_name, email, mobile
+- Convention fields required: name, city, country, start_date (after_or_equal:today), end_date (after_or_equal:start_date)
 - Convention fields optional: address, other_info
 - Same overlap validation as regular creation
 
@@ -283,11 +295,9 @@ Convention
 - Same role/floor_ids/section_ids conditional requirements
 
 ### Password Requirements
-- Minimum 8 characters
-- At least one lowercase letter
-- At least one uppercase letter
-- At least one number
-- At least one symbol (@$!%*#?&)
+- Uses Laravel's `Password::default()` rule
+- In production: minimum 12 characters, mixed case, letters, numbers, symbols, uncompromised (checked against breach databases)
+- In non-production: no additional password rules beyond `required`, `string`, `confirmed`
 
 ## Scheduled Tasks
 
@@ -321,11 +331,32 @@ Convention
 - Action: Confirm new email address
 - UserObserver automatically sets email_confirmed=false when email changes
 
+#### Guest Convention Verification Email
+- Mailable class: `App\Mail\GuestConventionVerification`
+- Sent when: New user creates a convention as a guest (unauthenticated)
+- Contains: Signed URL with 24-hour expiration
+- Template: Markdown email with user name, convention name, verification URL
+- Action: Set password, confirm email, log in, and redirect to convention
+
 ### Email Confirmation Status
 - Green checkmark icon: Email confirmed
 - Warning icon: Email not confirmed
 - "Resend invitation" button available to managers
 - Rate limited: 3 resends per 60 minutes
+
+## Version Checking
+
+### API Endpoint
+- `GET /api/version/latest` - Public endpoint (no auth required)
+- Fetches latest GitHub release info via VersionController
+- Response cached for 5 minutes (300 seconds)
+- Returns: version (tag_name), name, body, published_at, html_url
+
+### Frontend Integration
+- `use-app-version` hook polls for version updates
+- `version-badge` component displays current app version
+- `update-notification-modal` shows when new version is available
+- App version shared via HandleInertiaRequests middleware (from git tag or VERSION file)
 
 ## Progressive Web App (PWA)
 
@@ -340,9 +371,8 @@ Convention
 
 ### Authentication
 - Session-based authentication via Laravel Fortify
-- "Remember me" option: 30-day persistent cookie
-- Default session: Expires on browser close
-- Rate limiting: 5 login attempts per minute per IP
+- "Remember me" option: persistent cookie
+- Rate limiting: 5 login attempts per minute per IP (via Fortify limiter)
 
 ### Authorization
 - Role-based access control enforced at middleware level
@@ -358,11 +388,16 @@ Convention
 ### Input Validation
 - All inputs validated server-side via Form Requests
 - SanitizesInput trait applied to form requests for XSS prevention
+  - Plain text fields: trimmed and HTML tags stripped
+  - Rich text fields (other_info, information): trimmed, dangerous tags/attributes removed, basic formatting preserved
+  - Excluded fields: password, password_confirmation, current_password
 - CSRF protection on all state-changing requests
 - SQL injection prevention via Eloquent ORM
 - XSS prevention via Blade/React escaping
 - Secure HTTP headers via SecureHeaders middleware
+- CSP nonce via Vite::useCspNonce()
 
 ### Rate Limiting
-- Login: 5 attempts per minute per IP
+- Login: 5 attempts per minute per IP (Fortify default)
 - Invitation resend: 3 attempts per 60 minutes per user
+- Password update: 6 attempts per minute

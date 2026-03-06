@@ -34,6 +34,7 @@ This is a Convention Management System built with Laravel and React that enables
 - User authentication (login with "remember me" option)
 - Secure user invitation flow with email confirmation
 - User editing and role reassignment
+- User removal from convention (deletes user record if no remaining conventions)
 - Four-tier role-based access control:
   - Owner: Full administrative privileges
   - ConventionUser: Convention-wide access
@@ -48,6 +49,12 @@ This is a Convention Management System built with Laravel and React that enables
 - Mobile-optimized search for available sections
 - Accessibility filters (elder-friendly, handicap-friendly)
 - Progressive Web App (PWA) installation support
+
+### Version Checking
+- GitHub release version checking via VersionController API
+- Cached latest release info (5-minute TTL)
+- Update notification modal when new version available
+- Version badge display in UI
 
 ### Security
 - Security event logging (failed logins, authorization failures, invalid signed URLs, rate limit violations)
