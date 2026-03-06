@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- test(mobile-responsiveness): remove self-registration endpoint test (, |Nathanael Björkgård|||2026-03-06)
+
+
+## [Unreleased] - 2026-03-06
+
+### Other
+
 - test: remove self-registration feature tests (, |Nathanael Björkgård|||2026-03-06)
 
 
