@@ -6,13 +6,13 @@ This guide covers the authentication system built with Laravel Fortify and Inert
 
 The Convention Management System includes a complete authentication system with:
 
-- User registration
 - Login/logout
 - Password reset via email
 - Email verification
 - Two-factor authentication (2FA)
 - Remember me functionality
 - Password confirmation for sensitive actions
+- Invitation-based user onboarding (no self-registration)
 
 ## Authentication Flow
 
@@ -28,62 +28,12 @@ Users can create a convention without registering first. The system creates or f
 
 New users created this way will need to use the password reset flow or receive an invitation to set a proper password.
 
-### Registration
+### User Onboarding
 
-1. User fills registration form at `/register`
-2. Form data sent to `/register` POST endpoint
-3. Fortify validates input using `CreateNewUser` action
-4. User created and automatically logged in
-5. Redirected to conventions list
+There is no public self-registration. Users join the system through one of two paths:
 
-**Frontend Component:**
-```tsx
-// resources/js/pages/auth/register.tsx
-export default function Register() {
-    const { data, setData, post, processing, errors } = useForm({
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
-
-    const submit = (e: FormEvent) => {
-        e.preventDefault();
-        post(route('register'));
-    };
-
-    return <form onSubmit={submit}>...</form>;
-}
-```
-
-**Note:** The `mobile` field is not required during registration. It is only required when users are invited to conventions by convention managers.
-
-**Backend Action:**
-```php
-// app/Actions/Fortify/CreateNewUser.php
-class CreateNewUser implements CreatesNewUsers
-{
-    public function create(array $input): User
-    {
-        Validator::make($input, [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => $this->passwordRules(),
-        ])->validate();
-
-        return User::create([
-            'first_name' => $input['first_name'],
-            'last_name' => $input['last_name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-        ]);
-    }
-}
-```
-
-**Note:** The `mobile` field is stored in the database but is not collected during self-registration. It is only required when convention managers invite users to conventions.
+1. **Invitation** — A convention manager invites the user via email. The invitation contains a signed link to set a password and activate the account.
+2. **Guest convention creation** — An unauthenticated user creates a convention from the welcome page. The system creates (or finds) a user account and logs them in automatically.
 
 ### Login
 
@@ -94,24 +44,7 @@ class CreateNewUser implements CreatesNewUsers
    - If the user belongs to exactly one convention, they are redirected directly to that convention's detail page
    - Otherwise, they are redirected to the conventions list
 
-**Frontend Component:**
-```tsx
-// resources/js/pages/auth/login.tsx
-export default function Login() {
-    const { data, setData, post, processing, errors } = useForm({
-        email: '',
-        password: '',
-        remember: false,
-    });
-
-    const submit = (e: FormEvent) => {
-        e.preventDefault();
-        post(route('login'));
-    };
-
-    return <form onSubmit={submit}>...</form>;
-}
-```
+The login page uses Inertia's `<Form>` component with Wayfinder type-safe routing. It includes email, password, and "remember me" fields. There is no link to a registration page — users are onboarded via invitation or guest convention creation.
 
 ### Logout
 
@@ -598,20 +531,6 @@ Fortify::registerView(fn () => inertia('auth/register'));
 ## Testing Authentication
 
 ```php
-// Test registration
-test('user can register', function () {
-    $response = $this->post('/register', [
-        'first_name' => 'Test',
-        'last_name' => 'User',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
-    ]);
-
-    $response->assertRedirect('/conventions');
-    $this->assertAuthenticated();
-});
-
 // Test login
 test('user can login', function () {
     $user = User::factory()->create();

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Removed
+
+- remove self-registration sign-up link from login page; users now join exclusively via invitation or guest convention creation (2026-03-06)
+
 ### Other
 
 - add Laravel Cloud deployment step to release workflow (, |Nathanael Björkgård|||2026-03-06)
