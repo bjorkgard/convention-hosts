@@ -7,84 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v0.2.0] - 2026-03-06 - 2026-03-06
-
-### Other
-
-- test(mobile-responsiveness): remove self-registration endpoint test (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased] - 2026-03-06
-
-### Other
-
-- test: remove self-registration feature tests (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased]
-
-## [v0.2.0] - 2026-03-06 - 2026-03-06
-
-### Added
-
-- add automatic cleanup of unconfirmed conventions after 7 days (, |Nathanael Björkgård|||2026-03-06)
-
-### Other
-
-- test: reduce property test iteration counts for faster feedback (, |Nathanael Björkgård|||2026-03-06)
-- docs(steering): clarify conventions, flows, validation, and security details (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased]
-
-## [v0.2.0] - 2026-03-06 - 2026-03-06
-
-### Added
-
-- add in-app update notification modal that alerts users when a new version is available, with release notes and one-click reload (2026-03-06)
-- add email verification flow for new guest convention users: new users now receive a verification email with a signed URL to set their password before gaining access; existing users retain auto-login behavior (2026-03-06)
-
-### Removed
-
-- remove self-registration sign-up link from login page; users now join exclusively via invitation or guest convention creation (2026-03-06)
-
-### Other
-
-- add Laravel Cloud deployment step to release workflow (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased]
-
-## [v0.2.0] - 2026-03-06 - 2026-03-06
-
-### Added
-
-- add mobile number field to guest convention creation (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased]
-
-## [v0.2.0] - 2026-03-06 - 2026-03-06
-
-### Added
-
-- update floor row collapsible icon and improve import organization (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased]
+- test(mobile-responsiveness): remove self-registration endpoint test (Nathanael Björkgård, 2026-03-06)
+- test: remove self-registration feature tests (Nathanael Björkgård, 2026-03-06)
 
 ## [v0.2.0] - 2026-03-06
 
-- revert daily occupancy reset to set available_seats to number_of_seats (all seats available at day start) (2026-03-06)
-- add occupancy help text to section detail page explaining controls and daily reset (2026-03-06)
-- replace OccupancyIndicator with OccupancyGauge in section detail page for consistent semi-circle gauge display (2026-03-06)
-- eager-load assigned users on floors and sections in convention show endpoint for user display (2026-03-06)
-- replace OccupancyIndicator with OccupancyGauge in search results for consistent semi-circle gauge display (2026-03-06)
-- initialize available_seats to number_of_seats on section creation so new sections start fully available (2026-03-06)
-- enhance OccupancyGauge with tooltip showing occupancy level label and human-readable descriptions (2026-03-06)
-- add OccupancyGauge SVG semi-circle component for visual occupancy display (2026-03-06)
-- add FloorRow collapsible component with inline sections, role-based actions, occupancy indicators, and assigned user tooltips (2026-03-06)
-- eager-load assigned users on floors index endpoint for floor-level user display (2026-03-06)
+- add automatic cleanup of unconfirmed conventions after 7 days (Nathanael Björkgård, 2026-03-06)
+- test: reduce property test iteration counts for faster feedback (Nathanael Björkgård, 2026-03-06)
+- docs(steering): clarify conventions, flows, validation, and security details (Nathanael Björkgård, 2026-03-06)
+- add in-app update notification modal that alerts users when a new version is available, with release notes and one-click reload (Nathanael Björkgård, 2026-03-06)
+- add email verification flow for new guest convention users: new users now receive a verification email with a signed URL to set their password before gaining access; existing users retain auto-login behavior (Nathanael Björkgård, 2026-03-06)
+- remove self-registration sign-up link from login page; users now join exclusively via invitation or guest convention creation (Nathanael Björkgård, 2026-03-06)
+- add Laravel Cloud deployment step to release workflow (Nathanael Björkgård, 2026-03-06)
+- add mobile number field to guest convention creation (Nathanael Björkgård, 2026-03-06)
+- update floor row collapsible icon and improve import organization (Nathanael Björkgård, 2026-03-06)
+- revert daily occupancy reset to set available_seats to number_of_seats (Nathanael Björkgård, 2026-03-06)
+- add occupancy help text to section detail page explaining controls and daily reset (Nathanael Björkgård, 2026-03-06)
+- replace OccupancyIndicator with OccupancyGauge in section detail page for consistent semi-circle gauge display (Nathanael Björkgård, 2026-03-06)
+- eager-load assigned users on floors and sections in convention show endpoint for user display (Nathanael Björkgård, 2026-03-06)
+- replace OccupancyIndicator with OccupancyGauge in search results for consistent semi-circle gauge display (Nathanael Björkgård, 2026-03-06)
+- initialize available_seats to number_of_seats on section creation so new sections start fully available (Nathanael Björkgård, 2026-03-06)
+- enhance OccupancyGauge with tooltip showing occupancy level label and human-readable descriptions (Nathanael Björkgård, 2026-03-06)
+- add OccupancyGauge SVG semi-circle component for visual occupancy display (Nathanael Björkgård, 2026-03-06)
+- add FloorRow collapsible component with inline sections, role-based actions, occupancy indicators, and assigned user tooltips (Nathanael Björkgård, 2026-03-06)
+- eager-load assigned users on floors index endpoint for floor-level user display (Nathanael Björkgård, 2026-03-06)
 
 ## [v0.1.0] - 2026-03-06
 

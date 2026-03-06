@@ -77,11 +77,17 @@ jobs:
           NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
           RELEASE_DATE=$(date +"%Y-%m-%d")
           
-          # Replace [Unreleased] with the new version
-          sed -i "s/## \[Unreleased\]/## [$NEW_VERSION] - $RELEASE_DATE/" docs/CHANGELOG.md
-          
-          # Add new Unreleased section at the top (after the header block)
-          sed -i "/^## \[$NEW_VERSION\]/i ## [Unreleased]\n" docs/CHANGELOG.md
+          # Replace only the FIRST [Unreleased] with the new version, and prepend a fresh [Unreleased] section
+          awk -v ver="$NEW_VERSION" -v date="$RELEASE_DATE" '
+            /^## \[Unreleased\]/ && !done {
+              print "## [Unreleased]"
+              print ""
+              print "## [" ver "] - " date
+              done = 1
+              next
+            }
+            { print }
+          ' docs/CHANGELOG.md > docs/CHANGELOG.tmp && mv docs/CHANGELOG.tmp docs/CHANGELOG.md
           
           echo "Updated CHANGELOG.md with version $NEW_VERSION"
 
@@ -109,7 +115,12 @@ jobs:
           NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
           
           # Extract the section for this version from CHANGELOG.md
-          RELEASE_NOTES=$(awk "/^## \[$NEW_VERSION\]/,/^## \[/" docs/CHANGELOG.md | sed '1d;$d' | sed '/^$/d')
+          # Matches from the version heading until the next ## heading, excluding both boundary lines
+          RELEASE_NOTES=$(awk -v ver="$NEW_VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' docs/CHANGELOG.md | sed '/^$/d')
           
           # If no release notes found, use a default message
           if [ -z "$RELEASE_NOTES" ]; then
