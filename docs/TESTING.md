@@ -1,49 +1,58 @@
 # Testing Guide
 
-This guide covers testing your Laravel React application using Pest PHP.
+This guide covers testing the Convention Management System using Pest PHP (backend) and Vitest with React Testing Library (frontend).
 
 ## Overview
 
-The Convention Management System uses Pest PHP, an elegant testing framework built on top of PHPUnit. Pest provides:
+The project uses two testing frameworks:
 
-- Expressive syntax
-- Better readability
-- Powerful expectations API
-- Laravel integration
-- Fast test execution
+- **Pest PHP** - Backend tests (feature, property, unit) running on Laravel
+- **Vitest** - Frontend tests for React components and hooks using React Testing Library
 
 ## Running Tests
+
+### Backend Tests (Pest PHP)
+
+```bash
+# Run all backend tests
+composer test
+# or
+php artisan test
+
+# Specific test file
+php artisan test tests/Feature/Auth/LoginTest.php
+
+# Specific test by name
+php artisan test --filter="user can login"
+
+# With coverage
+php artisan test --coverage
+
+# Parallel testing
+php artisan test --parallel
+```
+
+### Frontend Tests (Vitest)
+
+```bash
+# Run all frontend tests
+npm test
+
+# Watch mode (re-runs on file changes)
+npx vitest
+
+# Run specific test file
+npx vitest run resources/js/components/conventions/__tests__/user-row.test.tsx
+
+# With coverage
+npx vitest run --coverage
+```
 
 ### All Tests
 
 ```bash
-composer test
-# or
-php artisan test
-```
-
-### Specific Test File
-
-```bash
-php artisan test tests/Feature/Auth/LoginTest.php
-```
-
-### Specific Test
-
-```bash
-php artisan test --filter="user can login"
-```
-
-### With Coverage
-
-```bash
-php artisan test --coverage
-```
-
-### Parallel Testing
-
-```bash
-php artisan test --parallel
+# Backend + frontend
+composer test && npm test
 ```
 
 ## Test Structure
@@ -51,13 +60,13 @@ php artisan test --parallel
 ### Directory Structure
 
 ```
-tests/
-├── Feature/              # Feature tests (HTTP, integration)
-│   ├── Auth/            # Authentication tests
-│   ├── Settings/        # Settings tests
-│   ├── CsrfProtectionTest.php  # CSRF token enforcement
+tests/                          # Backend tests (Pest PHP)
+├── Feature/                   # Feature tests (HTTP, integration)
+│   ├── Auth/                 # Authentication tests
+│   ├── Settings/             # Settings tests
+│   ├── CsrfProtectionTest.php
 │   └── ...
-├── Property/            # Property-based tests (correctness properties)
+├── Property/                  # Property-based tests (correctness properties)
 │   ├── AttendancePropertiesTest.php
 │   ├── ConventionPropertiesTest.php
 │   ├── EmailUpdateConfirmationTest.php
@@ -67,9 +76,17 @@ tests/
 │   ├── RoleBasedDataScopingTest.php
 │   ├── SectionUserRestrictionsTest.php
 │   └── UserPropertiesTest.php
-├── Unit/                # Unit tests (with database support via RefreshDatabase)
-├── Pest.php             # Pest configuration
-└── TestCase.php         # Base test case
+├── Unit/                      # Unit tests (with database support via RefreshDatabase)
+├── Pest.php                   # Pest configuration
+└── TestCase.php               # Base test case
+
+resources/js/                   # Frontend tests (Vitest)
+├── components/
+│   └── conventions/__tests__/ # Convention component tests
+├── pages/
+│   └── search/__tests__/      # Page component tests
+└── test/
+    └── setup.ts               # Vitest setup (imports jest-dom matchers)
 ```
 
 ### Pest Configuration
@@ -654,6 +671,74 @@ Key patterns:
 - Run multiple iterations (typically 50) with randomized inputs
 - Assert invariants hold on every iteration
 - Clean up state between iterations
+
+## Frontend Testing (Vitest + React Testing Library)
+
+### Configuration
+
+Frontend tests are configured in `vitest.config.ts`:
+
+- **Environment**: jsdom (browser-like DOM for component rendering)
+- **Globals**: `describe`, `it`, `expect` available without imports
+- **Setup**: `resources/js/test/setup.ts` loads jest-dom matchers
+- **Path alias**: `@` resolves to `resources/js/`
+
+### Writing Component Tests
+
+Place test files in `__tests__/` directories alongside the components they test:
+
+```tsx
+// resources/js/components/conventions/__tests__/my-component.test.tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MyComponent } from '../my-component';
+
+describe('MyComponent', () => {
+    it('renders the title', () => {
+        render(<MyComponent title="Hello" />);
+        expect(screen.getByText('Hello')).toBeInTheDocument();
+    });
+
+    it('handles click events', async () => {
+        const user = userEvent.setup();
+        const onClick = vi.fn();
+
+        render(<MyComponent title="Click me" onClick={onClick} />);
+        await user.click(screen.getByRole('button'));
+
+        expect(onClick).toHaveBeenCalledOnce();
+    });
+});
+```
+
+### Frontend Property Tests (fast-check)
+
+The project includes `fast-check` for property-based testing on the frontend:
+
+```tsx
+import fc from 'fast-check';
+
+describe('occupancy color', () => {
+    it('returns green for 0-25%', () => {
+        fc.assert(
+            fc.property(fc.integer({ min: 0, max: 25 }), (occupancy) => {
+                expect(getOccupancyColor(occupancy)).toBe('green');
+            }),
+        );
+    });
+});
+```
+
+### Key Testing Libraries
+
+| Package | Purpose |
+|---------|---------|
+| `vitest` | Test runner and assertion library |
+| `@testing-library/react` | Component rendering and queries |
+| `@testing-library/user-event` | Simulating user interactions |
+| `@testing-library/jest-dom` | DOM-specific matchers (`toBeInTheDocument`, etc.) |
+| `fast-check` | Property-based testing for frontend logic |
+| `jsdom` | Browser-like DOM environment |
 
 ## Best Practices
 

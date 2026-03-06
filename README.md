@@ -35,7 +35,7 @@ A comprehensive convention management system built with Laravel and React. Manag
 ### Developer Experience
 - ⚡ **SPA Experience** - Inertia.js bridges Laravel and React seamlessly
 - 🎨 **Modern UI** - Tailwind CSS 4 with Radix UI components
-- 🧪 **Testing Ready** - Pest PHP for elegant testing
+- 🧪 **Testing Ready** - Pest PHP (backend) and Vitest + React Testing Library (frontend)
 - 🎯 **Code Quality** - ESLint, Prettier, Laravel Pint pre-configured
 
 ## 🚀 Quick Start

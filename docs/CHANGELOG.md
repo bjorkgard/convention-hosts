@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-06
 
+### Added
+
+- add Vitest configuration for frontend component testing (2026-03-06)
+  - `vitest.config.ts` with jsdom environment, React plugin, and `@` path alias
+  - Test setup file at `resources/js/test/setup.ts` importing jest-dom matchers
+  - `npm test` script runs `vitest run` for single-pass execution
+  - Dev dependencies: vitest, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, fast-check, jsdom
+
 ### Changed
 
 - extend Pest configuration to support Unit tests with `TestCase` and `RefreshDatabase` (2026-03-06)

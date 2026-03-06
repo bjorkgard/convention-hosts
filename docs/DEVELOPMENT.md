@@ -203,39 +203,34 @@ This runs:
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all backend tests (Pest PHP)
 composer test
 
-# Run specific test file
+# Run all frontend tests (Vitest)
+npm test
+
+# Run specific backend test file
 php artisan test tests/Feature/MyTest.php
 
-# Run with coverage
+# Run specific frontend test file
+npx vitest run resources/js/components/conventions/__tests__/my-component.test.tsx
+
+# Backend with coverage
 php artisan test --coverage
+
+# Frontend in watch mode
+npx vitest
 ```
 
 ### Writing Tests
 
-Create a new test:
+Create a new backend test:
 
 ```bash
 php artisan make:test MyTest
 ```
 
-Example Pest test:
-
-```php
-<?php
-
-use App\Models\User;
-
-test('user can view dashboard', function () {
-    $user = User::factory()->create();
-
-    $this->actingAs($user)
-        ->get('/dashboard')
-        ->assertOk();
-});
-```
+For frontend tests, create a `__tests__/` directory next to the component and add a `.test.tsx` file.
 
 See [Testing Guide](TESTING.md) for more details.
 

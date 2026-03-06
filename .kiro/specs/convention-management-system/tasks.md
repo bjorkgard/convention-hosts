@@ -1009,43 +1009,43 @@ This implementation plan breaks down the Convention Management System into discr
     - _Requirements: 4.2, 21.4, 24.2, 24.4_
 
 
-- [ ] 20. Frontend component tests
-  - [ ] 20.1 Write tests for ConventionCard component
+- [x] 20. Frontend component tests
+  - [x] 20.1 Write tests for ConventionCard component
     - Test rendering with valid props
     - Test date formatting
     - Test navigation on click
     - _Requirements: 18.1_
 
-  - [ ] 20.2 Write tests for OccupancyDropdown component
+  - [x] 20.2 Write tests for OccupancyDropdown component
     - Test dropdown options
     - Test auto-save on selection
     - Test current value display
     - _Requirements: 7.2, 7.3_
 
-  - [ ] 20.3 Write tests for useConventionRole hook
+  - [x] 20.3 Write tests for useConventionRole hook
     - Test role detection
     - Test floor access checking
     - Test section access checking
     - _Requirements: 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
 
-  - [ ] 20.4 Write tests for useOccupancyColor hook
+  - [x] 20.4 Write tests for useOccupancyColor hook
     - Test color mapping for all ranges
     - Test boundary values
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
 
-  - [ ] 20.5 Write tests for useAttendanceReport hook
+  - [x] 20.5 Write tests for useAttendanceReport hook
     - Test active period detection
     - Test canStart calculation
     - Test reported count calculation
     - _Requirements: 10.6, 10.7, 10.8_
 
-  - [ ] 20.6 Write tests for UserRow component
+  - [x] 20.6 Write tests for UserRow component
     - Test email confirmation icon display
     - Test role badges display
     - Test resend invitation button visibility
     - _Requirements: 3.6, 3.7, 3.8_
 
-  - [ ] 20.7 Write tests for search page
+  - [x] 20.7 Write tests for search page
     - Test filter inputs
     - Test result display
     - Test occupancy filtering
