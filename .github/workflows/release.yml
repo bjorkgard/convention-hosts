@@ -128,6 +128,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Deploy to Laravel Cloud
+        run: |
+          curl -X POST "https://cloud.laravel.com/deploy/a13ca029-a1e9-4867-b534-5e7a5f274e16/AOSkCAzaGvlqEEzd"
+
       - name: Summary
         run: |
           NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
