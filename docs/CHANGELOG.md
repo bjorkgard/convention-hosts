@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.4.0] - 2026-03-07
 
+### Added
+
+- update profile and email rules to accept string and UUID types (, |Nathanael Björkgård|||2026-03-07)
+
+
+## [Unreleased] - 2026-03-07
+
 ### Changed
 
 - streamline CLAUDE.md by removing outdated guidelines and enhancing project overview (, |Nathanael Björkgård|||2026-03-07)
