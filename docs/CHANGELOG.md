@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-03-07
+
+### Added
+
+- snap available-seats calculation to closest dropdown option (, |Nathanael Björkgård|||2026-03-07)
+
+
 ## [Unreleased]
 
 - snap available-seats occupancy calculation to closest dropdown option (0, 10, 25, 50, 75, 100) instead of raw rounded percentage (Nathanael Björkgård, 2026-03-07)
