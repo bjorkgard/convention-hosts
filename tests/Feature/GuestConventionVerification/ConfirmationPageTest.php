@@ -39,9 +39,9 @@ test('confirmation page renders without authentication for new users', function 
     // No user is logged in before the request
     expect(Auth::check())->toBeFalse();
 
-    $response = $this->post(route('conventions.guest.store'), $data);
+    $response = $this->followingRedirects()->post(route('conventions.guest.store'), $data);
 
-    // Page renders successfully (200 OK, not a redirect)
+    // Page renders successfully after redirect
     $response->assertOk();
     $response->assertInertia(
         fn ($page) => $page->component('auth/guest-convention-confirmation')
@@ -59,7 +59,7 @@ test('confirmation page contains instructional text about checking email', funct
         'email' => 'visitor-'.uniqid().'@example.com',
     ]);
 
-    $response = $this->post(route('conventions.guest.store'), $data);
+    $response = $this->followingRedirects()->post(route('conventions.guest.store'), $data);
 
     $response->assertOk();
     $response->assertInertia(
@@ -78,7 +78,7 @@ test('confirmation page props include convention name and email for new user', f
         'email' => 'newuser-'.uniqid().'@example.com',
     ]);
 
-    $response = $this->post(route('conventions.guest.store'), $data);
+    $response = $this->followingRedirects()->post(route('conventions.guest.store'), $data);
 
     $response->assertOk();
     $response->assertInertia(

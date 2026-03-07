@@ -49,7 +49,7 @@ it('creates new user with email_confirmed=false, renders confirmation page, and 
             "Iteration {$i}: Email should not exist before guest convention creation"
         );
 
-        $response = $this->post(route('conventions.guest.store'), $data);
+        $response = $this->followingRedirects()->post(route('conventions.guest.store'), $data);
 
         // Assert user was created in DB with email_confirmed=false
         $user = User::where('email', $data['email'])->first();

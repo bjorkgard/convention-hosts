@@ -46,7 +46,7 @@ it('returns confirmation page with conventionName and email props for new users 
             "Iteration {$i}: Email should not exist before guest convention creation"
         );
 
-        $response = $this->post(route('conventions.guest.store'), $data);
+        $response = $this->followingRedirects()->post(route('conventions.guest.store'), $data);
 
         // Assert the response renders the confirmation Inertia page with correct props
         $response->assertOk();

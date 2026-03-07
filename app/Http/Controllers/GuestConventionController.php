@@ -64,16 +64,26 @@ class GuestConventionController extends Controller
                 new GuestConventionVerification($user, $convention, $verificationUrl)
             );
 
-            // Render confirmation page (user is NOT logged in)
-            return Inertia::render('auth/guest-convention-confirmation', [
-                'conventionName' => $convention->name,
-                'email' => $user->email,
-            ]);
+            // Redirect to confirmation page (Inertia requires redirect after POST)
+            return redirect()->route('guest-convention.confirmation')
+                ->with('conventionName', $convention->name)
+                ->with('email', $user->email);
         }
 
         // Existing user: log in and redirect to convention
         Auth::login($user);
 
         return redirect()->route('conventions.show', $convention);
+    }
+
+    /**
+     * Show the confirmation page after a guest convention is created.
+     */
+    public function confirmation(): InertiaResponse
+    {
+        return Inertia::render('auth/guest-convention-confirmation', [
+            'conventionName' => session('conventionName'),
+            'email' => session('email'),
+        ]);
     }
 }

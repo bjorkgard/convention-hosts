@@ -24,6 +24,9 @@ Route::inertia('/', 'welcome', [
 Route::post('conventions/guest', [GuestConventionController::class, 'store'])
     ->name('conventions.guest.store')
     ->middleware('guest');
+Route::get('conventions/guest/confirmation', [GuestConventionController::class, 'confirmation'])
+    ->name('guest-convention.confirmation')
+    ->middleware('guest');
 
 // Guest convention verification routes (no auth required)
 Route::get('guest-verification/{user}/{convention}', [GuestConventionVerificationController::class, 'show'])
