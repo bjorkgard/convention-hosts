@@ -56,6 +56,10 @@ This is a Convention Management System built with Laravel and React that enables
 - Update notification modal when new version available
 - Version badge display in UI
 
+### Automated Maintenance
+- Daily occupancy reset (6:00 AM)
+- Cleanup of unconfirmed guest conventions after 7 days (3:00 AM)
+
 ### Security
 - Security event logging (failed logins, authorization failures, invalid signed URLs, rate limit violations)
 - Secure HTTP headers

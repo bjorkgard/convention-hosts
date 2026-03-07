@@ -5,7 +5,7 @@
 ### Application Code (`app/`)
 - `Actions/` - Business logic actions (CreateConventionAction, ExportConventionAction, InviteUserAction, UpdateOccupancyAction, Fortify/)
 - `Concerns/` - Reusable traits (PasswordValidationRules, ProfileValidationRules, SanitizesInput)
-- `Console/Commands/` - Artisan commands (ResetDailyOccupancy)
+- `Console/Commands/` - Artisan commands (ResetDailyOccupancy, CleanupUnconfirmedGuestConventions)
 - `Exports/` - Data export classes (ConventionExport, ConventionWordExport, ConventionMarkdownExport, sheets for attendance/floors/users/convention)
 - `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/, VersionController)
 - `Http/Middleware/` - Custom middleware (EnsureConventionAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, ScopeByRole, SecureHeaders)

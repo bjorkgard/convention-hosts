@@ -308,6 +308,14 @@ Convention
 - Clears last_occupancy_updated_by
 - Clears last_occupancy_updated_at
 
+### Cleanup Unconfirmed Guest Conventions
+- Runs every day at 3:00 AM
+- Finds users with email_confirmed=false created more than 7 days ago
+- Deletes conventions where these unconfirmed users are the Owner
+- Cascading foreign keys handle cleanup of floors, sections, attendance, pivots
+- If the user has no remaining conventions after cleanup, the user record is also deleted
+- Prevents accumulation of abandoned guest-created conventions
+
 ## Email System
 
 ### Mailgun Integration
