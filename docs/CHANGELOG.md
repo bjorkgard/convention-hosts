@@ -7,29 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v0.4.0] - 2026-03-07
-
-### Added
-
-- update profile and email rules to accept string and UUID types (, |Nathanael Björkgård|||2026-03-07)
-
-
-## [Unreleased] - 2026-03-07
-
-### Changed
-
-- streamline CLAUDE.md by removing outdated guidelines and enhancing project overview (, |Nathanael Björkgård|||2026-03-07)
-
-
-## [Unreleased] - 2026-03-07
-
-### Added
-
-- snap available-seats calculation to closest dropdown option (, |Nathanael Björkgård|||2026-03-07)
-
-
-## [Unreleased]
-
+- streamline CLAUDE.md by removing outdated guidelines and enhancing project overview (Nathanael Björkgård, 2026-03-07)
 - snap available-seats occupancy calculation to closest dropdown option (0, 10, 25, 50, 75, 100) instead of raw rounded percentage (Nathanael Björkgård, 2026-03-07)
 - auto-show PWA install dialog on first mobile visit with localStorage dismissal tracking (Nathanael Björkgård, 2026-03-07)
 - enhance update reload to clear service workers, browser caches, and use cache-bust navigation for reliable asset refresh (Nathanael Björkgård, 2026-03-07)
@@ -42,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - enhance UI with typography, branding, and visual polish (Nathanael Björkgård, 2026-03-06)
 - enhance component styling with dark mode support and visual refinements (Nathanael Björkgård, 2026-03-06)
 - improve GitHub API error handling and caching logic (Nathanael Björkgård, 2026-03-06)
+- update profile and email rules to accept string and UUID types (Nathanael Björkgård, 2026-03-07)
+
+## [v0.4.0] - 2026-03-07
 
 ## [v0.3.0] - 2026-03-06
 
