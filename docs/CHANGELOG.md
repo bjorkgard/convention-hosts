@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2026-03-08
 
+### Fixed
+
+- change id type from number to string in User, Convention, Floor, Section, and AttendancePeriod interfaces (, |Nathanael Björkgård|||2026-03-08)
+- standardize date formatting in formatDateRange function (, |Nathanael Björkgård|||2026-03-08)
+
+
+## [Unreleased] - 2026-03-08
+
 ### Added
 
 - implement confirmation page and redirect after guest convention creation (, |Nathanael Björkgård|||2026-03-08)
