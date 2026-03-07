@@ -18,13 +18,23 @@ class UpdateOccupancyAction
         if (isset($data['available_seats'])) {
             $availableSeats = (int) $data['available_seats'];
 
-            // Calculate occupancy: 100 - ((available_seats / number_of_seats) * 100)
-            $occupancy = 100 - (($availableSeats / $section->number_of_seats) * 100);
+            // Calculate raw occupancy: 100 - ((available_seats / number_of_seats) * 100)
+            $rawOccupancy = 100 - (($availableSeats / $section->number_of_seats) * 100);
+            $rawOccupancy = max(0, min(100, $rawOccupancy));
 
-            // Round and clamp between 0 and 100
-            $occupancy = max(0, min(100, round($occupancy)));
+            // Snap to closest dropdown option
+            $options = [0, 10, 25, 50, 75, 100];
+            $occupancy = $options[0];
+            $minDiff = abs($rawOccupancy - $options[0]);
+            foreach ($options as $option) {
+                $diff = abs($rawOccupancy - $option);
+                if ($diff < $minDiff) {
+                    $minDiff = $diff;
+                    $occupancy = $option;
+                }
+            }
 
-            $section->occupancy = (int) $occupancy;
+            $section->occupancy = $occupancy;
             $section->available_seats = $availableSeats;
         }
         // Calculate available_seats if occupancy percentage provided

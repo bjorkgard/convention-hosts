@@ -13,14 +13,21 @@ interface AvailableSeatsInputProps {
 }
 
 export default function AvailableSeatsInput({ section, onUpdate }: AvailableSeatsInputProps) {
-    const [value, setValue] = useState(String(section.available_seats));
+    const [localValue, setLocalValue] = useState<string | null>(null);
 
-    function handleSubmit(e: React.FormEvent) {
+    const displayValue = localValue ?? String(section.available_seats);
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setLocalValue(e.target.value);
+    }
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const seats = Number(value);
+        const seats = Number(displayValue);
         if (isNaN(seats) || seats < 0) return;
 
+        setLocalValue(null);
         onUpdate(seats);
     }
 
@@ -33,8 +40,8 @@ export default function AvailableSeatsInput({ section, onUpdate }: AvailableSeat
                     type="number"
                     min={0}
                     max={section.number_of_seats}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
+                    value={displayValue}
+                    onChange={handleChange}
                     className="flex-1"
                 />
                 <Tooltip>

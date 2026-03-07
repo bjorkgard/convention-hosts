@@ -364,7 +364,7 @@ Authorization: SectionPolicy `update`
 | occupancy | integer | nullable, one of: 0, 10, 25, 50, 75, 100 |
 | available_seats | integer | nullable, min:0 |
 
-At least one of `occupancy` or `available_seats` must be provided. When `available_seats` is given, occupancy is calculated as `100 - ((available_seats / number_of_seats) * 100)`. Records the updating user and timestamp.
+At least one of `occupancy` or `available_seats` must be provided. When `available_seats` is given, the raw occupancy is calculated as `100 - ((available_seats / number_of_seats) * 100)`, then snapped to the closest dropdown option (0, 10, 25, 50, 75, 100). Records the updating user and timestamp.
 
 ### Set Full
 

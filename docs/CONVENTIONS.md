@@ -289,7 +289,7 @@ Real-time section occupancy with visual color coding:
 **Update Methods:**
 1. Dropdown selection (0%, 10%, 25%, 50%, 75%, 100%)
 2. "FULL" panic button (instant 100%)
-3. Available seats input (auto-calculates percentage)
+3. Available seats input (calculates raw percentage, then snaps to the closest dropdown option)
 
 **Daily Reset:**
 - Automated scheduler runs at 6:00 AM

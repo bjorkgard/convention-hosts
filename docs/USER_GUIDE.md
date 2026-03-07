@@ -64,11 +64,7 @@ Select from predefined values: 0%, 10%, 25%, 50%, 75%, 100%. The value saves aut
 A single-tap panic button that immediately sets occupancy to 100%. Use this when a section fills up quickly.
 
 ### Available Seats Input
-Enter the exact number of available seats and tap **Send**. The system calculates the occupancy percentage automatically using the formula:
-
-```
-occupancy = 100 - ((available_seats / total_seats) * 100)
-```
+Enter the exact number of available seats and tap **Send**. The system calculates a raw occupancy percentage, then snaps it to the closest dropdown value (0%, 10%, 25%, 50%, 75%, or 100%) so the occupancy gauge always matches one of the predefined levels.
 
 All updates record who made the change and when. This information appears in the section detail footer.
 

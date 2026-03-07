@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- snap available-seats occupancy calculation to closest dropdown option (0, 10, 25, 50, 75, 100) instead of raw rounded percentage (Nathanael Björkgård, 2026-03-07)
 - auto-show PWA install dialog on first mobile visit with localStorage dismissal tracking (Nathanael Björkgård, 2026-03-07)
 - enhance update reload to clear service workers, browser caches, and use cache-bust navigation for reliable asset refresh (Nathanael Björkgård, 2026-03-07)
 - add tooltip descriptions to role badges explaining each role's access level (Nathanael Björkgård, 2026-03-07)
