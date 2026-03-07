@@ -25,7 +25,7 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'floor_id' => ['nullable', 'integer', 'exists:floors,id'],
+            'floor_id' => ['nullable', 'uuid', 'exists:floors,id'],
             'elder_friendly' => ['nullable', 'boolean'],
             'handicap_friendly' => ['nullable', 'boolean'],
         ];

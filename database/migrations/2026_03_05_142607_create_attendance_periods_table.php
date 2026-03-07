@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attendance_periods', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('convention_id')->constrained()->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('convention_id')->constrained()->onDelete('cascade');
             $table->date('date');
             $table->string('period', 20);
             $table->boolean('locked')->default(false);

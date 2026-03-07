@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sections', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('floor_id')->constrained()->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('floor_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->integer('number_of_seats');
             $table->integer('occupancy')->default(0);
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('elder_friendly')->default(false);
             $table->boolean('handicap_friendly')->default(false);
             $table->text('information')->nullable();
-            $table->foreignId('last_occupancy_updated_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignUuid('last_occupancy_updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamp('last_occupancy_updated_at')->nullable();
             $table->timestamps();
 

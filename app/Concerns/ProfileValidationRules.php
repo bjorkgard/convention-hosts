@@ -12,7 +12,7 @@ trait ProfileValidationRules
      *
      * @return array<string, array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>>
      */
-    protected function profileRules(?int $userId = null): array
+    protected function profileRules(int|string|null $userId = null): array
     {
         return [
             'first_name' => $this->firstNameRules(),
@@ -46,7 +46,7 @@ trait ProfileValidationRules
      *
      * @return array<int, \Illuminate\Contracts\Validation\Rule|array<mixed>|string>
      */
-    protected function emailRules(?int $userId = null): array
+    protected function emailRules(int|string|null $userId = null): array
     {
         return [
             'required',

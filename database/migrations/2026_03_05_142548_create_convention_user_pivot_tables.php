@@ -14,8 +14,8 @@ return new class extends Migration
         // Convention-User pivot table
         Schema::create('convention_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('convention_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('convention_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('created_at')->nullable();
 
             // Unique constraint
@@ -29,8 +29,8 @@ return new class extends Migration
         // Convention-User-Roles pivot table
         Schema::create('convention_user_roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('convention_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('convention_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->string('role', 50);
             $table->timestamp('created_at')->nullable();
 
@@ -44,8 +44,8 @@ return new class extends Migration
         // Floor-User pivot table
         Schema::create('floor_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('floor_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('floor_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('created_at')->nullable();
 
             // Unique constraint
@@ -59,8 +59,8 @@ return new class extends Migration
         // Section-User pivot table
         Schema::create('section_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('section_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('section_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('created_at')->nullable();
 
             // Unique constraint

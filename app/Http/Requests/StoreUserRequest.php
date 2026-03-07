@@ -44,9 +44,9 @@ class StoreUserRequest extends FormRequest
             'roles' => ['required', 'array', 'min:1'],
             'roles.*' => ['required', 'string', Rule::in(['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'])],
             'floor_ids' => ['nullable', 'array'],
-            'floor_ids.*' => ['integer', 'exists:floors,id'],
+            'floor_ids.*' => ['uuid', 'exists:floors,id'],
             'section_ids' => ['nullable', 'array'],
-            'section_ids.*' => ['integer', 'exists:sections,id'],
+            'section_ids.*' => ['uuid', 'exists:sections,id'],
         ];
     }
 

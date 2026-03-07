@@ -26,7 +26,7 @@ class ReportAttendanceRequest extends FormRequest
     {
         return [
             'attendance' => ['required', 'integer', 'min:0'],
-            'period_id' => ['required', 'integer', 'exists:attendance_periods,id'],
+            'period_id' => ['required', 'uuid', 'exists:attendance_periods,id'],
         ];
     }
 }

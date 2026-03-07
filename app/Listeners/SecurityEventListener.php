@@ -24,7 +24,7 @@ class SecurityEventListener
     /**
      * Log authorization failure (403).
      */
-    public static function logAuthorizationFailure(string $reason, ?int $userId = null): void
+    public static function logAuthorizationFailure(string $reason, int|string|null $userId = null): void
     {
         Log::channel('security')->warning('Authorization failure', [
             'event' => 'authorization_failure',
@@ -54,7 +54,7 @@ class SecurityEventListener
     /**
      * Log rate limit violation.
      */
-    public static function logRateLimitViolation(?int $userId = null): void
+    public static function logRateLimitViolation(int|string|null $userId = null): void
     {
         Log::channel('security')->warning('Rate limit exceeded', [
             'event' => 'rate_limit_exceeded',
