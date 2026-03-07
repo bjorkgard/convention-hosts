@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.4.1] - 2026-03-07
+
 - streamline CLAUDE.md by removing outdated guidelines and enhancing project overview (Nathanael Björkgård, 2026-03-07)
 - snap available-seats occupancy calculation to closest dropdown option (0, 10, 25, 50, 75, 100) instead of raw rounded percentage (Nathanael Björkgård, 2026-03-07)
 - auto-show PWA install dialog on first mobile visit with localStorage dismissal tracking (Nathanael Björkgård, 2026-03-07)
