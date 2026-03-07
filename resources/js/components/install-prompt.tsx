@@ -18,6 +18,8 @@ interface BeforeInstallPromptEvent extends Event {
     userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+const INSTALL_PROMPT_DISMISSED_KEY = 'install-prompt-dismissed';
+
 function isIosSafari(): boolean {
     if (typeof navigator === 'undefined') return false;
     const ua = navigator.userAgent;
@@ -30,10 +32,26 @@ function isStandalone(): boolean {
         || ('standalone' in window.navigator && (window.navigator as unknown as { standalone: boolean }).standalone === true);
 }
 
+function isMobileDevice(): boolean {
+    if (typeof navigator === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function wasPromptDismissed(): boolean {
+    if (typeof localStorage === 'undefined') return false;
+    return localStorage.getItem(INSTALL_PROMPT_DISMISSED_KEY) === 'true';
+}
+
+function markPromptDismissed(): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem(INSTALL_PROMPT_DISMISSED_KEY, 'true');
+}
+
 export default function InstallPrompt() {
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [showIos] = useState(() => isIosSafari());
     const [installed, setInstalled] = useState(() => isStandalone());
+    const [autoOpen, setAutoOpen] = useState(false);
 
     useEffect(() => {
         if (installed) return;
@@ -46,6 +64,7 @@ export default function InstallPrompt() {
         const appInstalledHandler = () => {
             setInstalled(true);
             setDeferredPrompt(null);
+            markPromptDismissed();
         };
 
         window.addEventListener('beforeinstallprompt', handler);
@@ -57,6 +76,27 @@ export default function InstallPrompt() {
         };
     }, [installed]);
 
+    // Auto-show modal on first visit for mobile browser users
+    useEffect(() => {
+        if (installed || isStandalone()) return;
+        if (!isMobileDevice()) return;
+        if (wasPromptDismissed()) return;
+
+        // Small delay to let the page settle before showing the modal
+        const timer = setTimeout(() => {
+            setAutoOpen(true);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [installed]);
+
+    const handleAutoOpenChange = useCallback((open: boolean) => {
+        setAutoOpen(open);
+        if (!open) {
+            markPromptDismissed();
+        }
+    }, []);
+
     const handleInstallClick = useCallback(async () => {
         if (!deferredPrompt) return;
         await deferredPrompt.prompt();
@@ -65,6 +105,7 @@ export default function InstallPrompt() {
             setInstalled(true);
         }
         setDeferredPrompt(null);
+        markPromptDismissed();
     }, [deferredPrompt]);
 
     if (installed || (!deferredPrompt && !showIos)) {
@@ -74,7 +115,7 @@ export default function InstallPrompt() {
     // Android/Chrome: direct install available
     if (deferredPrompt && !showIos) {
         return (
-            <Dialog>
+            <Dialog open={autoOpen} onOpenChange={handleAutoOpenChange}>
                 <div className="flex items-center gap-2">
                     <Button
                         variant="outline"
@@ -111,7 +152,7 @@ export default function InstallPrompt() {
 
     // iOS Safari: show instructions dialog
     return (
-        <Dialog>
+        <Dialog open={autoOpen} onOpenChange={handleAutoOpenChange}>
             <DialogTrigger asChild>
                 <Button variant="outline" size="sm" className="w-full cursor-pointer">
                     <Download className="size-4" />

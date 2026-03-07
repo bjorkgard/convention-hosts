@@ -197,17 +197,19 @@ The export includes all floors, sections (with capacity and occupancy), the full
 
 The application can be installed on your phone's home screen for a native-like experience.
 
+On your first visit from a mobile browser, an install dialog appears automatically to guide you through the process. If you dismiss it, the dialog won't appear again — you can still install later using the **Install App** button in the sidebar.
+
 ### Android (Chrome)
 1. Open the app in Chrome
-2. Tap the menu (three dots) in the top right
-3. Tap **Add to Home screen** or **Install app**
-4. Confirm the installation
+2. Tap **Install App** when the dialog appears (or use the sidebar button)
+3. Confirm the installation
 
 ### iOS (Safari)
 1. Open the app in Safari
-2. Tap the Share button (square with arrow)
-3. Scroll down and tap **Add to Home Screen**
-4. Tap **Add**
+2. When the install dialog appears, follow the instructions:
+   - Tap the Share button (square with arrow)
+   - Scroll down and tap **Add to Home Screen**
+   - Tap **Add**
 
 Once installed, the app opens in full-screen mode without the browser address bar, and loads quickly thanks to cached assets.
 
