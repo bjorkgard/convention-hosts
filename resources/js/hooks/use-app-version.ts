@@ -11,6 +11,20 @@ interface LatestRelease {
 
 const CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
+function isNewerVersion(latest: string, current: string): boolean {
+    const parse = (v: string) =>
+        v
+            .replace(/^v/, '')
+            .split('.')
+            .map((n) => parseInt(n, 10) || 0);
+    const [lMajor = 0, lMinor = 0, lPatch = 0] = parse(latest);
+    const [cMajor = 0, cMinor = 0, cPatch = 0] = parse(current);
+
+    if (lMajor !== cMajor) return lMajor > cMajor;
+    if (lMinor !== cMinor) return lMinor > cMinor;
+    return lPatch > cPatch;
+}
+
 export function useAppVersion() {
     const { appVersion } = usePage<{ appVersion: string | null }>().props;
     const [latestRelease, setLatestRelease] = useState<LatestRelease | null>(
@@ -27,7 +41,11 @@ export function useAppVersion() {
 
             const data: LatestRelease = await response.json();
 
-            if (data.version && appVersion && data.version !== appVersion) {
+            if (
+                data.version &&
+                appVersion &&
+                isNewerVersion(data.version, appVersion)
+            ) {
                 setLatestRelease(data);
                 setHasUpdate(true);
             } else {
