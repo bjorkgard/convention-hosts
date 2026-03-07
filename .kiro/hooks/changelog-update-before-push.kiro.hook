@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "name": "Update Changelog Before Push",
+  "description": "Updates CHANGELOG.md with recent git history under a single Unreleased heading",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Update docs/CHANGELOG.md with recent git commits not yet in the changelog.\n\nSTEP 1 — GET GIT HISTORY:\nRun: git log --format=\"- %s (%an, %ad)\" --date=short\nThis produces one bullet per commit. Save the full list.\n\nSTEP 2 — READ THE FILE:\nRead docs/CHANGELOG.md.\n\nSTEP 3 — IDENTIFY NEW COMMITS:\nCompare the git log bullets to the existing bullets in the file.\nA commit is already present if its subject text (the part before the author) appears anywhere in the file.\nSkip commits that contain '[skip ci]' or are merge commits.\nIf there are no new commits, tell the user and stop.\n\nSTEP 4 — REPAIR DUPLICATES (do this before anything else):\nCount how many lines in the file begin with '## [Unreleased]' (with or without anything after it).\nIf more than one such line exists:\n  a. Collect every bullet line (lines starting with '- ') from ALL of those unreleased sections.\n  b. Remove every '## [Unreleased]...' heading line and all content between those headings down to the next version heading.\n  c. You now have a single merged list of existing bullets.\nIf exactly one '## [Unreleased]' line exists, collect its existing bullets normally.\n\nSTEP 5 — WRITE THE FILE:\nThe file must begin with the header block (title, description, links) exactly as it currently is, then:\n\n## [Unreleased]\n\n- newest new commit bullet\n- next new commit bullet\n- existing bullet 1\n- existing bullet 2\n(continue for all bullets)\n\n## [v0.x.x] - YYYY-MM-DD\n(all released version sections unchanged)\n\nRules — every rule below is mandatory, no exceptions:\n- The heading is the EXACT string '## [Unreleased]' — no date, no dash, no suffix after the bracket.\n- There is ONE blank line between the heading and the first bullet.\n- There is ONE blank line between the last bullet and the next section heading.\n- There are NO subcategory headings (### Added / ### Fixed / ### Changed / ### Removed / anything with ###).\n- Bullets are a flat list, newest commits first.\n- All released version sections (## [v...]) are copied exactly as they appear in the current file.\n\nSTEP 6 — VERIFY BEFORE SAVING:\nCount how many lines in the new content begin with '## [Unreleased]'.\nIf the count is not exactly 1, fix the content before saving.\n\nSTEP 7 — STAGE AND COMMIT:\ngit add docs/CHANGELOG.md\ngit commit -m 'docs(changelog): auto-update from git history [skip ci]'\nTell the user they can now run 'git push'.\n\nWHEN A RELEASE IS TAGGED:\nIf the latest git tag is newer than the topmost released version in the changelog, rename '## [Unreleased]' to '## [<tag>] - <date>' and add a fresh empty '## [Unreleased]' heading above it. Only do this if the tag actually exists in git tags."
+  },
+  "workspaceFolderName": "Convention-Hosts",
+  "shortName": "changelog-update-before-push"
+}

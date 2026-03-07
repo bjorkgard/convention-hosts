@@ -5,22 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-03-08
-
-### Fixed
-
-- change id type from number to string in User, Convention, Floor, Section, and AttendancePeriod interfaces (, |Nathanael Björkgård|||2026-03-08)
-- standardize date formatting in formatDateRange function (, |Nathanael Björkgård|||2026-03-08)
-
-
-## [Unreleased] - 2026-03-08
-
-### Added
-
-- implement confirmation page and redirect after guest convention creation (, |Nathanael Björkgård|||2026-03-08)
-
-
 ## [Unreleased]
+
+- standardize date formatting in formatDateRange function (Nathanael Björkgård, 2026-03-08)
+- change id type from number to string in User, Convention, Floor, Section, and AttendancePeriod interfaces (Nathanael Björkgård, 2026-03-08)
+- implement confirmation page and redirect after guest convention creation (Nathanael Björkgård, 2026-03-08)
 
 ## [v0.4.1] - 2026-03-07
 
@@ -116,6 +105,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add ui-ux-pro-max design system steering (Nathanael Björkgård, 2026-03-05)
 - add project steering documentation (Nathanael Björkgård, 2026-03-05)
 - Configure Boost post-update script (Nathanael Björkgård, 2026-03-05)
-- Install Laravel Boost (Nathanael Björkgård, 2026-03-05)
-- Install Pest (Nathanael Björkgård, 2026-03-05)
+- Install Laravel Pest (Nathanael Björkgård, 2026-03-05)
 - Set up a fresh Laravel app (Nathanael Björkgård, 2026-03-05)
