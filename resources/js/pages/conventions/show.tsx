@@ -9,6 +9,7 @@ import AttendanceReportBanner from '@/components/conventions/attendance-report-b
 import ExportDropdown from '@/components/conventions/export-dropdown';
 import FloorRow from '@/components/conventions/floor-row';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendanceReport } from '@/hooks/use-attendance-report';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
@@ -117,15 +118,20 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
                     {isOwner && (
                         <div className="flex items-center gap-2 self-start sm:self-auto">
                             <ExportDropdown convention={convention} />
-                            <Button
-                                variant="destructive"
-                                size="sm"
-                                className="cursor-pointer gap-1.5"
-                                onClick={() => setShowDeleteDialog(true)}
-                            >
-                                <Trash2 className="size-4" />
-                                Delete
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        className="cursor-pointer gap-1.5"
+                                        onClick={() => setShowDeleteDialog(true)}
+                                    >
+                                        <Trash2 className="size-4" />
+                                        Delete
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Permanently delete this convention and all its data</TooltipContent>
+                            </Tooltip>
                         </div>
                     )}
                 </div>
@@ -142,19 +148,27 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
                 )}
 
                 {isManager && !activePeriod && canStart && (
-                    <Button
-                        variant="outline"
-                        className="cursor-pointer gap-1.5 self-start"
-                        onClick={handleStartAttendance}
-                    >
-                        <ClipboardList className="size-4" />
-                        Start attendance report
-                    </Button>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                className="cursor-pointer gap-1.5 self-start"
+                                onClick={handleStartAttendance}
+                            >
+                                <ClipboardList className="size-4" />
+                                Start attendance report
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Begin collecting attendance from each section for this period</TooltipContent>
+                    </Tooltip>
                 )}
 
                 {/* Floors list */}
                 <div className="flex flex-col gap-2">
                     <h2 className="text-lg font-medium">Floors</h2>
+                    <p className="text-muted-foreground text-sm">
+                        Expand a floor to see its sections and current occupancy. Tap a section to update its status.
+                    </p>
                     {floors.length === 0 ? (
                         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                             <p className="text-muted-foreground">No floors yet.</p>

@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
 import type { Convention, Floor } from '@/types/convention';
@@ -145,18 +146,28 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
                                 <ArrowLeft />
                             </Link>
                         </Button>
-                        <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
+                        <div>
+                            <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
+                            <p className="text-muted-foreground text-sm">
+                                Manage who has access to this convention. Invite users and assign roles to control what they can see and do.
+                            </p>
+                        </div>
                     </div>
 
                     {isManager && (
-                        <Button
-                            className="cursor-pointer gap-1.5"
-                            onClick={() => setShowAddDialog(true)}
-                        >
-                            <Plus className="size-4" />
-                            <span className="hidden sm:inline">Add User</span>
-                            <span className="sm:hidden">Add</span>
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    className="cursor-pointer gap-1.5"
+                                    onClick={() => setShowAddDialog(true)}
+                                >
+                                    <Plus className="size-4" />
+                                    <span className="hidden sm:inline">Add User</span>
+                                    <span className="sm:hidden">Add</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Invite a new user by email and assign their role</TooltipContent>
+                        </Tooltip>
                     )}
                 </div>
 

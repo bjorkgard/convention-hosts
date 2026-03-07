@@ -17,6 +17,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
 import type { AttendancePeriod, Convention, Floor, Section } from '@/types/convention';
@@ -120,15 +121,20 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
                     </div>
 
                     {canDeleteSection && (
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            className="cursor-pointer gap-1.5 shrink-0"
-                            onClick={() => setShowDeleteDialog(true)}
-                        >
-                            <Trash2 className="size-4" />
-                            Delete
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    className="cursor-pointer gap-1.5 shrink-0"
+                                    onClick={() => setShowDeleteDialog(true)}
+                                >
+                                    <Trash2 className="size-4" />
+                                    Delete
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Permanently delete this section and its data</TooltipContent>
+                        </Tooltip>
                     )}
                 </div>
 

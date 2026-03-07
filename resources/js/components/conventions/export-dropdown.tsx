@@ -8,6 +8,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Convention } from '@/types/convention';
 
 const EXPORT_FORMATS = [
@@ -28,12 +29,17 @@ export default function ExportDropdown({ convention }: ExportDropdownProps) {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="cursor-pointer gap-1.5">
-                    <Download className="size-4" />
-                    Export
-                </Button>
-            </DropdownMenuTrigger>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" className="cursor-pointer gap-1.5">
+                            <Download className="size-4" />
+                            Export
+                        </Button>
+                    </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Download convention data as Excel, Word, or Markdown</TooltipContent>
+            </Tooltip>
             <DropdownMenuContent align="end">
                 {EXPORT_FORMATS.map(({ format, label, icon: Icon }) => (
                     <DropdownMenuItem

@@ -14,6 +14,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { AttendancePeriod, Convention } from '@/types/convention';
 
 interface AttendanceReportBannerProps {
@@ -60,15 +61,20 @@ export default function AttendanceReportBanner({
                             Total attendance: {totalAttendance}
                         </span>
                     </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="cursor-pointer gap-1.5 border-blue-300 text-blue-800 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-200 dark:hover:bg-blue-900/30"
-                        onClick={handleStop}
-                    >
-                        <Square className="size-3.5 fill-current" />
-                        Stop attendance report
-                    </Button>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="cursor-pointer gap-1.5 border-blue-300 text-blue-800 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-200 dark:hover:bg-blue-900/30"
+                                onClick={handleStop}
+                            >
+                                <Square className="size-3.5 fill-current" />
+                                Stop attendance report
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Lock this period and stop collecting attendance</TooltipContent>
+                    </Tooltip>
                 </AlertDescription>
             </Alert>
 

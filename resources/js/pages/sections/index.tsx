@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
 import type { Convention, Floor, Section } from '@/types/convention';
@@ -87,16 +88,21 @@ export default function SectionsIndex({ convention, floor, sections }: SectionsI
                         </Button>
                         <div>
                             <h1 className="text-2xl font-semibold tracking-tight">Sections</h1>
-                            <p className="text-muted-foreground text-sm">{floor.name}</p>
+                            <p className="text-muted-foreground text-sm">{floor.name} · Manage seating sections and their capacity on this floor.</p>
                         </div>
                     </div>
 
                     {canAddSection && (
-                        <Button className="cursor-pointer gap-1.5" onClick={() => setShowAddDialog(true)}>
-                            <Plus className="size-4" />
-                            <span className="hidden sm:inline">Add Section</span>
-                            <span className="sm:hidden">Add</span>
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button className="cursor-pointer gap-1.5" onClick={() => setShowAddDialog(true)}>
+                                    <Plus className="size-4" />
+                                    <span className="hidden sm:inline">Add Section</span>
+                                    <span className="sm:hidden">Add</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Add a new seating section to this floor</TooltipContent>
+                        </Tooltip>
                     )}
                 </div>
 

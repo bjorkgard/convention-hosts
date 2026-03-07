@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- add tooltip descriptions to role badges explaining each role's access level (, |Nathanael Björkgård|||2026-03-07)
+- enhance conventions index page with description text, tooltip on create button, and styled empty state (, |Nathanael Björkgård|||2026-03-07)
 - make resend invitation button visible to all convention users, not just managers (disabled when email already confirmed) (, |Nathanael Björkgård|||2026-03-07)
+- enhance floors index page with description text and tooltips on Add Floor/Add Section buttons (, |Nathanael Björkgård|||2026-03-07)
+- add tooltips to floor row edit and delete buttons for clearer action descriptions (, |Nathanael Björkgård|||2026-03-07)
+- add tooltip to available seats Send button explaining occupancy update action (, |Nathanael Björkgård|||2026-03-07)
 
 ## [Unreleased] - 2026-03-06
 

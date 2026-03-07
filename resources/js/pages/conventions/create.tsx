@@ -38,7 +38,7 @@ export default function ConventionsCreate() {
                 <Card className="mx-auto w-full max-w-2xl rounded-xl border border-border shadow-sm">
                     <CardHeader>
                         <CardTitle>Convention Details</CardTitle>
-                        <CardDescription>Fill in the details for your new convention.</CardDescription>
+                        <CardDescription>Fill in the details for your new convention. Dates cannot overlap with existing conventions in the same city and country.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Form

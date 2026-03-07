@@ -85,30 +85,40 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                 {(canEdit(userRole) || canDelete(userRole)) && (
                     <div className="flex items-center gap-1">
                         {canEdit(userRole) && onEdit && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onEdit(floor);
-                                }}
-                                aria-label={`Edit ${floor.name}`}
-                            >
-                                <Pencil className="size-4" />
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onEdit(floor);
+                                        }}
+                                        aria-label={`Edit ${floor.name}`}
+                                    >
+                                        <Pencil className="size-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Rename this floor</TooltipContent>
+                            </Tooltip>
                         )}
                         {canDelete(userRole) && onDelete && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete(floor);
-                                }}
-                                aria-label={`Delete ${floor.name}`}
-                            >
-                                <Trash2 className="size-4" />
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDelete(floor);
+                                        }}
+                                        aria-label={`Delete ${floor.name}`}
+                                    >
+                                        <Trash2 className="size-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Delete this floor and all its sections</TooltipContent>
+                            </Tooltip>
                         )}
                     </div>
                 )}
@@ -161,26 +171,36 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                                         {(showEditSection || showDeleteSection) && (
                                             <div className="flex shrink-0 items-center gap-0.5 pr-2 sm:pr-3">
                                                 {showEditSection && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="size-7 cursor-pointer"
-                                                        onClick={() => onEditSection(section)}
-                                                        aria-label={`Edit ${section.name}`}
-                                                    >
-                                                        <Pencil className="size-3.5" />
-                                                    </Button>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="size-7 cursor-pointer"
+                                                                onClick={() => onEditSection(section)}
+                                                                aria-label={`Edit ${section.name}`}
+                                                            >
+                                                                <Pencil className="size-3.5" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>Edit section details</TooltipContent>
+                                                    </Tooltip>
                                                 )}
                                                 {showDeleteSection && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="size-7 cursor-pointer"
-                                                        onClick={() => onDeleteSection(section)}
-                                                        aria-label={`Delete ${section.name}`}
-                                                    >
-                                                        <Trash2 className="size-3.5" />
-                                                    </Button>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="size-7 cursor-pointer"
+                                                                onClick={() => onDeleteSection(section)}
+                                                                aria-label={`Delete ${section.name}`}
+                                                            >
+                                                                <Trash2 className="size-3.5" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>Delete this section</TooltipContent>
+                                                    </Tooltip>
                                                 )}
                                             </div>
                                         )}

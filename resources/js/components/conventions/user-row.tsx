@@ -6,6 +6,7 @@ import { destroy, resendInvitation } from '@/actions/App/Http/Controllers/UserCo
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import RoleBadge from '@/components/conventions/role-badge';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Convention } from '@/types/convention';
 import type { ConventionUser } from '@/types/user';
 
@@ -44,15 +45,25 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                                 {user.first_name} {user.last_name}
                             </span>
                             {user.email_confirmed ? (
-                                <CheckCircle2
-                                    className="size-4 shrink-0 text-green-500"
-                                    aria-label="Email confirmed"
-                                />
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <CheckCircle2
+                                            className="size-4 shrink-0 text-green-500"
+                                            aria-label="Email confirmed"
+                                        />
+                                    </TooltipTrigger>
+                                    <TooltipContent>Email confirmed</TooltipContent>
+                                </Tooltip>
                             ) : (
-                                <AlertTriangle
-                                    className="size-4 shrink-0 text-amber-500"
-                                    aria-label="Email not confirmed"
-                                />
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <AlertTriangle
+                                            className="size-4 shrink-0 text-amber-500"
+                                            aria-label="Email not confirmed"
+                                        />
+                                    </TooltipTrigger>
+                                    <TooltipContent>Email not yet confirmed</TooltipContent>
+                                </Tooltip>
                             )}
                         </div>
                         <span className="text-muted-foreground truncate text-xs">{user.email}</span>
@@ -71,34 +82,51 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                 <div className="flex shrink-0 items-center gap-1">
                     {canManage && (
                         <>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                disabled={user.email_confirmed || resending}
-                                onClick={handleResend}
-                                aria-label="Resend invitation"
-                                className="cursor-pointer"
-                            >
-                                <Mail className="size-4" />
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        disabled={user.email_confirmed || resending}
+                                        onClick={handleResend}
+                                        aria-label="Resend invitation"
+                                        className="cursor-pointer"
+                                    >
+                                        <Mail className="size-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    {user.email_confirmed ? 'Email already confirmed' : 'Resend invitation email'}
+                                </TooltipContent>
+                            </Tooltip>
                             {onEdit && (
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => onEdit(user)}
-                                    aria-label={`Edit ${user.first_name} ${user.last_name}`}
-                                >
-                                    <Pencil className="size-4" />
-                                </Button>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => onEdit(user)}
+                                            aria-label={`Edit ${user.first_name} ${user.last_name}`}
+                                        >
+                                            <Pencil className="size-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Edit user details and roles</TooltipContent>
+                                </Tooltip>
                             )}
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setShowDeleteConfirm(true)}
-                                aria-label={`Delete ${user.first_name} ${user.last_name}`}
-                            >
-                                <Trash2 className="size-4" />
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => setShowDeleteConfirm(true)}
+                                        aria-label={`Delete ${user.first_name} ${user.last_name}`}
+                                    >
+                                        <Trash2 className="size-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Remove user from this convention</TooltipContent>
+                            </Tooltip>
                         </>
                     )}
                 </div>

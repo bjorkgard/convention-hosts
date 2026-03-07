@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Section } from '@/types/convention';
 
 interface AvailableSeatsInputProps {
@@ -36,10 +37,15 @@ export default function AvailableSeatsInput({ section, onUpdate }: AvailableSeat
                     onChange={(e) => setValue(e.target.value)}
                     className="flex-1"
                 />
-                <Button type="submit" size="default" className="cursor-pointer gap-1.5">
-                    <Send className="size-4" />
-                    Send
-                </Button>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button type="submit" size="default" className="cursor-pointer gap-1.5">
+                            <Send className="size-4" />
+                            Send
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Update occupancy based on available seats</TooltipContent>
+                </Tooltip>
             </div>
         </form>
     );

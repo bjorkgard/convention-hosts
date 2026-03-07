@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
 import type { Convention, Floor, Section } from '@/types/convention';
@@ -127,30 +128,45 @@ export default function FloorsIndex({ convention, floors, userFloorIds = [], use
                                 <ArrowLeft />
                             </Link>
                         </Button>
-                        <h1 className="text-2xl font-semibold tracking-tight">Floors</h1>
+                        <div>
+                            <h1 className="text-2xl font-semibold tracking-tight">Floors</h1>
+                            <p className="text-muted-foreground text-sm">
+                                Organize your venue into floors and sections. Expand a floor to view or manage its sections.
+                            </p>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                         {canAddSection && (
-                            <Button
-                                variant="outline"
-                                className="cursor-pointer gap-1.5"
-                                onClick={openSectionCreate}
-                            >
-                                <Plus className="size-4" />
-                                <span className="hidden sm:inline">Add Section</span>
-                                <span className="sm:hidden">Section</span>
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="cursor-pointer gap-1.5"
+                                        onClick={openSectionCreate}
+                                    >
+                                        <Plus className="size-4" />
+                                        <span className="hidden sm:inline">Add Section</span>
+                                        <span className="sm:hidden">Section</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Add a new seating section to a floor</TooltipContent>
+                            </Tooltip>
                         )}
                         {isManager && (
-                            <Button
-                                className="cursor-pointer gap-1.5"
-                                onClick={() => setShowAddDialog(true)}
-                            >
-                                <Plus className="size-4" />
-                                <span className="hidden sm:inline">Add Floor</span>
-                                <span className="sm:hidden">Add</span>
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        className="cursor-pointer gap-1.5"
+                                        onClick={() => setShowAddDialog(true)}
+                                    >
+                                        <Plus className="size-4" />
+                                        <span className="hidden sm:inline">Add Floor</span>
+                                        <span className="sm:hidden">Add</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Add a new floor level to the venue</TooltipContent>
+                            </Tooltip>
                         )}
                     </div>
                 </div>

@@ -86,7 +86,12 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                     <Link href={conventionShow.url(convention.id)} aria-label="Back to convention">
                         <ArrowLeft className="text-muted-foreground size-5" />
                     </Link>
-                    <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
+                        <p className="text-muted-foreground text-sm">
+                            Find available sections with less than 90% occupancy. Use filters to narrow results by floor or accessibility.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Filters */}

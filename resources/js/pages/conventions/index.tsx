@@ -4,6 +4,7 @@ import { Plus, CalendarDays } from 'lucide-react';
 import { create, index } from '@/actions/App/Http/Controllers/ConventionController';
 import ConventionCard from '@/components/conventions/convention-card';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, Convention } from '@/types';
 
@@ -25,15 +26,25 @@ export default function ConventionsIndex({ conventions, canCreateConvention }: C
             <Head title="Conventions" />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center justify-between gap-2">
-                    <h1 className="text-2xl font-semibold tracking-tight">Conventions</h1>
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight">Conventions</h1>
+                        <p className="text-muted-foreground text-sm">
+                            View and manage your conventions. Tap a convention to see its floors, sections, and occupancy details.
+                        </p>
+                    </div>
                     {canCreateConvention && (
-                        <Button asChild className="cursor-pointer">
-                            <Link href={create.url()}>
-                                <Plus />
-                                <span className="hidden sm:inline">Create Convention</span>
-                                <span className="sm:hidden">Create</span>
-                            </Link>
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button asChild className="cursor-pointer">
+                                    <Link href={create.url()}>
+                                        <Plus />
+                                        <span className="hidden sm:inline">Create Convention</span>
+                                        <span className="sm:hidden">Create</span>
+                                    </Link>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Create a new convention with venue details and dates</TooltipContent>
+                        </Tooltip>
                     )}
                 </div>
 
