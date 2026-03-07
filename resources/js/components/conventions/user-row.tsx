@@ -37,66 +37,71 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
     return (
         <>
             <div className="flex items-center justify-between gap-2 border-b border-border/50 px-3 py-3 transition-colors duration-200 last:border-b-0 hover:bg-accent/50 sm:gap-3 sm:px-4">
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium">
-                            {user.first_name} {user.last_name}
-                        </span>
-                        {user.email_confirmed ? (
-                            <CheckCircle2
-                                className="size-4 shrink-0 text-green-500"
-                                aria-label="Email confirmed"
-                            />
-                        ) : (
-                            <AlertTriangle
-                                className="size-4 shrink-0 text-amber-500"
-                                aria-label="Email not confirmed"
-                            />
+                <div className='flex min-w-0 flex-1 gap-2'>
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                            <span className="truncate text-sm font-medium">
+                                {user.first_name} {user.last_name}
+                            </span>
+                            {user.email_confirmed ? (
+                                <CheckCircle2
+                                    className="size-4 shrink-0 text-green-500"
+                                    aria-label="Email confirmed"
+                                />
+                            ) : (
+                                <AlertTriangle
+                                    className="size-4 shrink-0 text-amber-500"
+                                    aria-label="Email not confirmed"
+                                />
+                            )}
+                        </div>
+                        <span className="text-muted-foreground truncate text-xs">{user.email}</span>
+                    </div>
+                    <div>
+                        {user.roles && user.roles.length > 0 && (
+                            <div className="flex flex-wrap gap-1 pt-0.5">
+                                {user.roles.map((role) => (
+                                    <RoleBadge key={role} role={role} />
+                                ))}
+                            </div>
                         )}
                     </div>
-                    <span className="text-muted-foreground truncate text-xs">{user.email}</span>
-                    {user.roles && user.roles.length > 0 && (
-                        <div className="flex flex-wrap gap-1 pt-0.5">
-                            {user.roles.map((role) => (
-                                <RoleBadge key={role} role={role} />
-                            ))}
-                        </div>
-                    )}
                 </div>
 
-                {canManage && (
-                    <div className="flex shrink-0 items-center gap-1">
-                        {!user.email_confirmed && (
+                <div className="flex shrink-0 items-center gap-1">
+                    {canManage && (
+                        <>
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                disabled={resending}
+                                disabled={user.email_confirmed || resending}
                                 onClick={handleResend}
                                 aria-label="Resend invitation"
+                                className="cursor-pointer"
                             >
                                 <Mail className="size-4" />
                             </Button>
-                        )}
-                        {onEdit && (
+                            {onEdit && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => onEdit(user)}
+                                    aria-label={`Edit ${user.first_name} ${user.last_name}`}
+                                >
+                                    <Pencil className="size-4" />
+                                </Button>
+                            )}
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => onEdit(user)}
-                                aria-label={`Edit ${user.first_name} ${user.last_name}`}
+                                onClick={() => setShowDeleteConfirm(true)}
+                                aria-label={`Delete ${user.first_name} ${user.last_name}`}
                             >
-                                <Pencil className="size-4" />
+                                <Trash2 className="size-4" />
                             </Button>
-                        )}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setShowDeleteConfirm(true)}
-                            aria-label={`Delete ${user.first_name} ${user.last_name}`}
-                        >
-                            <Trash2 className="size-4" />
-                        </Button>
-                    </div>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
 
             <ConfirmationDialog

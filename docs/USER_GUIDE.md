@@ -136,7 +136,7 @@ The system sends an invitation email with a secure link. If the email already be
 - Green checkmark: email is confirmed
 - Warning icon: email is not yet confirmed
 
-You can click **Resend Invitation** to send a new activation link. This is rate-limited to 3 resends per hour.
+Any user with convention access can click **Resend Invitation** to send a new activation link (the button is disabled once the email is confirmed). This is rate-limited to 3 resends per hour.
 
 ### Editing Users
 
