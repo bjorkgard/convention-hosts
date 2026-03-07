@@ -5,44 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-03-07
-
-### Changed
-
-- add tooltip descriptions to role badges explaining each role's access level (, |Nathanael Björkgård|||2026-03-07)
-- enhance conventions index page with description text, tooltip on create button, and styled empty state (, |Nathanael Björkgård|||2026-03-07)
-- make resend invitation button visible to all convention users, not just managers (disabled when email already confirmed) (, |Nathanael Björkgård|||2026-03-07)
-- enhance floors index page with description text and tooltips on Add Floor/Add Section buttons (, |Nathanael Björkgård|||2026-03-07)
-- add tooltips to floor row edit and delete buttons for clearer action descriptions (, |Nathanael Björkgård|||2026-03-07)
-- add tooltip to available seats Send button explaining occupancy update action (, |Nathanael Björkgård|||2026-03-07)
-
-## [Unreleased] - 2026-03-06
-
-### Added
-
-- enhance UI with typography, branding, and visual polish (, |Nathanael Björkgård|||2026-03-06)
-- enhance component styling with dark mode support and visual refinements (, |Nathanael Björkgård|||2026-03-06)
-
-
 ## [Unreleased]
+
+- add tooltip descriptions to role badges explaining each role's access level (Nathanael Björkgård, 2026-03-07)
+- enhance conventions index page with description text, tooltip on create button, and styled empty state (Nathanael Björkgård, 2026-03-07)
+- make resend invitation button visible to all convention users, not just managers (disabled when email already confirmed) (Nathanael Björkgård, 2026-03-07)
+- enhance floors index page with description text and tooltips on Add Floor/Add Section buttons (Nathanael Björkgård, 2026-03-07)
+- add tooltips to floor row edit and delete buttons for clearer action descriptions (Nathanael Björkgård, 2026-03-07)
+- add tooltip to available seats Send button explaining occupancy update action (Nathanael Björkgård, 2026-03-07)
+- enhance UI with typography, branding, and visual polish (Nathanael Björkgård, 2026-03-06)
+- enhance component styling with dark mode support and visual refinements (Nathanael Björkgård, 2026-03-06)
+- improve GitHub API error handling and caching logic (Nathanael Björkgård, 2026-03-06)
 
 ## [v0.3.0] - 2026-03-06
 
+- handle 404 responses from GitHub API gracefully (Nathanael Björkgård, 2026-03-06)
+
 ## [v0.2.2] - 2026-03-06
 
-### Fixed
-
-- handle 404 responses from GitHub API gracefully (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased] - 2026-03-06
-
-### Fixed
-
-- improve GitHub API error handling and caching logic (, |Nathanael Björkgård|||2026-03-06)
-
-
-## [Unreleased]
+- handle 404 responses from GitHub API gracefully (Nathanael Björkgård, 2026-03-06)
 
 ## [v0.2.1] - 2026-03-06
 
