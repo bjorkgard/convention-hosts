@@ -75,8 +75,24 @@ export function useAppVersion() {
         setDismissed(true);
     }, []);
 
-    const hardReload = useCallback(() => {
-        window.location.reload();
+    const hardReload = useCallback(async () => {
+        // Unregister service workers so stale caches don't serve old assets
+        if ('serviceWorker' in navigator) {
+            const registrations =
+                await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map((r) => r.unregister()));
+        }
+
+        // Clear all browser caches (Cache Storage API)
+        if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map((key) => caches.delete(key)));
+        }
+
+        // Force a no-cache reload by navigating with a cache-bust param
+        const url = new URL(window.location.href);
+        url.searchParams.set('_cb', Date.now().toString());
+        window.location.replace(url.toString());
     }, []);
 
     return {

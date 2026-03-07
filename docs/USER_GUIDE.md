@@ -213,7 +213,7 @@ Once installed, the app opens in full-screen mode without the browser address ba
 
 ## Update Notifications
 
-When a new version of the application is released, a notification modal appears automatically. It shows your current version, the new version number, release name, and release notes. You can click **Reload Now** to update immediately, or dismiss the modal to continue working — it won't reappear until the next check cycle (every 5 minutes).
+When a new version of the application is released, a notification modal appears automatically. It shows your current version, the new version number, release name, and release notes. You can click **Reload Now** to update immediately — this clears cached assets and service workers to ensure you get the latest version cleanly. Alternatively, dismiss the modal to continue working — it won't reappear until the next check cycle (every 5 minutes).
 
 ## Account Settings
 

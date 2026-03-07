@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- enhance update reload to clear service workers, browser caches, and use cache-bust navigation for reliable asset refresh (Nathanael Björkgård, 2026-03-07)
 - add tooltip descriptions to role badges explaining each role's access level (Nathanael Björkgård, 2026-03-07)
 - enhance conventions index page with description text, tooltip on create button, and styled empty state (Nathanael Björkgård, 2026-03-07)
 - make resend invitation button visible to all convention users, not just managers (disabled when email already confirmed) (Nathanael Björkgård, 2026-03-07)
