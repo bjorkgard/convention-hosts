@@ -128,11 +128,12 @@ describe('UserRow', () => {
         expect(screen.getByLabelText('Resend invitation')).toBeInTheDocument();
     });
 
-    it('hides resend invitation button when email_confirmed=true even with canManage=true', () => {
+    it('disables resend invitation button when email_confirmed=true even with canManage=true', () => {
         const user = makeUser({ email_confirmed: true });
         render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
 
-        expect(screen.queryByLabelText('Resend invitation')).not.toBeInTheDocument();
+        const resendButton = screen.getByLabelText('Resend invitation');
+        expect(resendButton).toBeDisabled();
     });
 
     it('hides all action buttons when canManage=false', () => {

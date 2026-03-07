@@ -534,7 +534,7 @@ This section documents the key design decisions made for the Convention Manageme
 
 **Implementation:**
 - `UpdateOccupancyAction` normalizes all three input types into both `occupancy` (percentage) and `available_seats` (integer) fields on the section
-- Dropdown and FULL button set occupancy directly; available-seats input calculates occupancy as `100 - ((available_seats / number_of_seats) * 100)`
+- Dropdown and FULL button set occupancy directly; available-seats input calculates a raw percentage via `100 - ((available_seats / number_of_seats) * 100)`, then snaps it to the closest dropdown option (0, 10, 25, 50, 75, 100)
 - Every update records `last_occupancy_updated_by` and `last_occupancy_updated_at` for audit
 - A scheduled command (`ResetDailyOccupancy`) resets all sections to 0% occupancy and restores available_seats to number_of_seats at 6:00 AM daily
 - Color coding (green → dark-green → yellow → orange → red) is computed client-side via the `useOccupancyColor` hook

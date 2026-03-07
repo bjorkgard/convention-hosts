@@ -26,9 +26,19 @@ it('calculates occupancy correctly from available seats', function () {
         // Generate random available seats (0 to number_of_seats)
         $availableSeats = fake()->numberBetween(0, $section->number_of_seats);
 
-        // Calculate expected occupancy
-        $expectedOccupancy = 100 - (($availableSeats / $section->number_of_seats) * 100);
-        $expectedOccupancy = max(0, min(100, round($expectedOccupancy)));
+        // Calculate expected occupancy (snapped to nearest dropdown option)
+        $rawOccupancy = 100 - (($availableSeats / $section->number_of_seats) * 100);
+        $rawOccupancy = max(0, min(100, $rawOccupancy));
+        $options = [0, 10, 25, 50, 75, 100];
+        $expectedOccupancy = $options[0];
+        $minDiff = abs($rawOccupancy - $options[0]);
+        foreach ($options as $option) {
+            $diff = abs($rawOccupancy - $option);
+            if ($diff < $minDiff) {
+                $minDiff = $diff;
+                $expectedOccupancy = $option;
+            }
+        }
 
         // Act: Update occupancy using available seats
         $action = new UpdateOccupancyAction;
