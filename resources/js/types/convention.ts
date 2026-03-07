@@ -1,7 +1,7 @@
 import type { User } from './auth';
 
 export interface Convention {
-    id: number;
+    id: string;
     name: string;
     city: string;
     country: string;
@@ -17,7 +17,7 @@ export interface Convention {
 }
 
 export interface Floor {
-    id: number;
+    id: string;
     convention_id: number;
     name: string;
     created_at: string;
@@ -28,7 +28,7 @@ export interface Floor {
 }
 
 export interface Section {
-    id: number;
+    id: string;
     floor_id: number;
     name: string;
     number_of_seats: number;
@@ -48,7 +48,7 @@ export interface Section {
 }
 
 export interface AttendancePeriod {
-    id: number;
+    id: string;
     convention_id: number;
     date: string;
     period: 'morning' | 'afternoon';
@@ -60,7 +60,7 @@ export interface AttendancePeriod {
 }
 
 export interface AttendanceReport {
-    id: number;
+    id: string;
     attendance_period_id: number;
     section_id: number;
     attendance: number;
