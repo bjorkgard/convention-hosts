@@ -10,6 +10,10 @@ class VersionController extends Controller
 {
     public function latest(): JsonResponse
     {
+        if (app()->isLocal()) {
+            return response()->json(['version' => null, 'name' => null, 'body' => null, 'published_at' => null, 'html_url' => null]);
+        }
+
         $repo = config('app.github_repo');
 
         $cached = Cache::get('github_latest_release');
