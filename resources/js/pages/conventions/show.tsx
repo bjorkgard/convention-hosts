@@ -25,29 +25,25 @@ interface ConventionsShowProps {
 }
 
 function formatDateRange(startDate: string, endDate: string): string {
-    const start = new Date(startDate + 'T00:00:00');
-    const end = new Date(endDate + 'T00:00:00');
+    // Slice to YYYY-MM-DD to handle full ISO timestamps; use noon to avoid DST edge cases
+    const start = new Date(startDate.slice(0, 10) + 'T12:00:00');
+    const end = new Date(endDate.slice(0, 10) + 'T12:00:00');
 
-    const startMonth = start.toLocaleDateString('en-US', { month: 'short' });
-    const endMonth = end.toLocaleDateString('en-US', { month: 'short' });
-    const startDay = start.getDate();
-    const endDay = end.getDate();
-    const endYear = end.getFullYear();
+    const fmt = (d: Date, opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('sv-SE', opts).format(d);
 
-    if (startDate === endDate) {
-        return `${startMonth} ${startDay}, ${endYear}`;
+    if (startDate.slice(0, 10) === endDate.slice(0, 10)) {
+        return fmt(start, { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
     if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
-        return `${startMonth} ${startDay} - ${endDay}, ${endYear}`;
+        return `${start.getDate()}–${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
     }
 
     if (start.getFullYear() === end.getFullYear()) {
-        return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${endYear}`;
+        return `${fmt(start, { day: 'numeric', month: 'long' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
     }
 
-    const startYear = start.getFullYear();
-    return `${startMonth} ${startDay}, ${startYear} - ${endMonth} ${endDay}, ${endYear}`;
+    return `${fmt(start, { day: 'numeric', month: 'long', year: 'numeric' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
 }
 
 export default function ConventionsShow({ convention, floors }: ConventionsShowProps) {
