@@ -26,7 +26,7 @@ This document provides a comprehensive overview of the Convention Management Sys
 ## Project Structure
 
 ```
-laravel-react-starter-kit/
+convention-hosts/
 ├── app/                           # Laravel Application
 │   ├── Actions/                   # Business Logic Actions
 │   │   └── Fortify/              # Fortify action implementations
@@ -59,26 +59,30 @@ laravel-react-starter-kit/
 │
 ├── public/                        # Public Assets
 │   ├── build/                    # Compiled Assets (generated)
+│   ├── icons/                    # PWA icons
+│   ├── manifest.json             # PWA manifest
+│   ├── sw.js                     # Service worker
 │   └── index.php                 # Application Entry Point
 │
 ├── resources/                     # Frontend Resources
 │   ├── css/
 │   │   └── app.css               # Tailwind Entry Point
 │   └── js/
-│       ├── actions/              # Wayfinder Actions (generated)
+│       ├── actions/              # Wayfinder Actions (generated — do not edit)
 │       ├── components/           # React Components
-│       │   ├── ui/               # Base UI Components
+│       │   ├── ui/               # Base UI Components (Radix, Headless UI)
 │       │   └── ...               # Feature Components
 │       ├── hooks/                # Custom React Hooks
 │       ├── layouts/              # Layout Components
 │       ├── lib/                  # Utility Functions
-│       ├── pages/                # Inertia Pages
+│       ├── pages/                # Inertia Pages (1:1 with backend routes)
 │       │   ├── auth/             # Authentication Pages
 │       │   ├── conventions/      # Convention Pages
+│       │   ├── floors/           # Floor Pages
 │       │   ├── sections/         # Section Pages
 │       │   ├── settings/         # Settings Pages
-│       │   └── welcome.tsx       # Landing Page
-│       ├── routes/               # Wayfinder Routes (generated)
+│       │   └── welcome.tsx       # Landing Page / Guest Convention Creation
+│       ├── routes/               # Wayfinder Routes (generated — do not edit)
 │       ├── types/                # TypeScript Types
 │       ├── app.tsx               # Client Entry Point
 │       └── ssr.tsx               # SSR Entry Point
@@ -94,8 +98,16 @@ laravel-react-starter-kit/
 │   └── logs/                     # Application Logs
 │
 └── tests/                         # Tests
-    ├── Feature/                  # Feature Tests
-    └── Unit/                     # Unit Tests
+    ├── Feature/                  # HTTP-level feature tests
+    │   ├── Auth/                 # Authentication flows
+    │   ├── Settings/             # Settings flows
+    │   ├── Section/              # Section authorization
+    │   ├── Integration/          # End-to-end multi-step flows and performance
+    │   ├── GuestConventionVerification/
+    │   └── Properties/           # Feature-level property-based tests
+    ├── Property/                 # Pure property-based tests
+    ├── Unit/                     # Unit tests for actions and services
+    └── Helpers/                  # ConventionTestHelper — shared test setup
 ```
 
 ## Architecture Patterns
@@ -278,11 +290,12 @@ Wayfinder generates TypeScript definitions from Laravel routes, ensuring type sa
 
 Laravel Fortify provides the authentication backend:
 
-- User registration
 - Login/logout
 - Password reset
 - Email verification
 - Two-factor authentication
+
+> **Note:** There is no public self-registration UI. Users join via email invitation or by creating a guest convention from the welcome page. The Fortify registration endpoint is present but not linked in the interface.
 
 ### Authentication Flow
 
@@ -385,9 +398,12 @@ export function AppearanceProvider({ children }: PropsWithChildren) {
 
 ```sql
 users
-├── id
-├── name
+├── id (uuid)
+├── first_name
+├── last_name
 ├── email
+├── mobile
+├── email_confirmed   -- false until guest-convention email is verified
 ├── email_verified_at
 ├── password
 ├── two_factor_secret

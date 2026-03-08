@@ -49,23 +49,26 @@ This builds SSR assets and starts the Inertia SSR server instead of Vite.
 ## Project Structure
 
 ```
-laravel-react-starter-kit/
+convention-hosts/
 ├── app/                    # Laravel backend
-│   ├── Actions/           # Business logic
+│   ├── Actions/           # Business logic (CreateConventionAction, etc.)
 │   ├── Http/              # Controllers, middleware, requests
 │   ├── Models/            # Eloquent models
 │   └── Providers/         # Service providers
 ├── resources/
 │   ├── js/                # React frontend
+│   │   ├── actions/       # Wayfinder actions (generated)
 │   │   ├── components/    # React components
 │   │   ├── pages/         # Inertia pages
 │   │   ├── layouts/       # Layout components
 │   │   ├── hooks/         # Custom hooks
+│   │   ├── routes/        # Wayfinder routes (generated)
 │   │   └── types/         # TypeScript types
 │   └── css/               # Stylesheets
-├── routes/                # Laravel routes
+├── routes/                # Laravel routes (web.php, settings.php)
 ├── database/              # Migrations, seeders, factories
-└── tests/                 # Pest tests
+├── docs/                  # Documentation
+└── tests/                 # Pest tests (Feature/, Property/, Unit/, Helpers/)
 ```
 
 See [Architecture Overview](ARCHITECTURE.md) for detailed structure documentation.
@@ -408,18 +411,6 @@ APP_DEBUG=false
 ```
 
 See [Deployment Guide](DEPLOYMENT.md) for production setup.
-
-## PWA Icon Generation
-
-The project includes a temporary PHP script to generate PWA icons using GD:
-
-```bash
-php generate-icons.php
-```
-
-This creates blue (#3b82f6) PNG icons with "CM" text in `public/icons/` at sizes 72×72 through 512×512. The script requires the PHP GD extension and can use system TTF fonts for larger icons, falling back to GD built-in fonts otherwise.
-
-Delete the script after running it — the generated icons should be committed to version control.
 
 ## Scheduled Tasks
 

@@ -61,12 +61,15 @@ composer test && npm test
 
 ```
 tests/                          # Backend tests (Pest PHP)
-├── Feature/                   # Feature tests (HTTP, integration)
-│   ├── Auth/                 # Authentication tests
-│   ├── Settings/             # Settings tests
-│   ├── CsrfProtectionTest.php
-│   └── ...
-├── Property/                  # Property-based tests (correctness properties)
+├── Feature/                   # HTTP-level feature tests
+│   ├── Auth/                 # Authentication flows
+│   ├── Settings/             # Settings flows
+│   ├── Section/              # Section authorization
+│   ├── Integration/          # End-to-end multi-step flows and performance
+│   ├── GuestConventionVerification/
+│   ├── Properties/           # Feature-level property-based tests
+│   └── ...                   # Other feature tests
+├── Property/                  # Pure property-based tests
 │   ├── AttendancePropertiesTest.php
 │   ├── ConventionPropertiesTest.php
 │   ├── EmailUpdateConfirmationTest.php
@@ -78,7 +81,8 @@ tests/                          # Backend tests (Pest PHP)
 │   ├── SectionFrontendPropertyTest.php
 │   ├── SectionUserRestrictionsTest.php
 │   └── UserPropertiesTest.php
-├── Unit/                      # Unit tests (with database support via RefreshDatabase)
+├── Unit/                      # Unit tests for actions and services
+├── Helpers/                   # ConventionTestHelper — shared test setup
 ├── Pest.php                   # Pest configuration
 └── TestCase.php               # Base test case
 
@@ -144,60 +148,50 @@ describe('authentication', function () {
 
 ## Authentication Tests
 
-### Registration
+> **Note:** There is no public self-registration UI. Users join via invitation or guest convention creation. Use the helpers below to create users with proper roles.
+
+### Guest Convention Creation
 
 ```php
 <?php
 
 use App\Models\User;
 
-test('user can register', function () {
-    $response = $this->post('/register', [
+test('new user can create a guest convention and receives verification email', function () {
+    Mail::fake();
+
+    $response = $this->post('/conventions/guest', [
         'first_name' => 'Test',
-        'last_name' => 'User',
-        'email' => 'test@example.com',
-        'mobile' => '+1234567890',
-        'password' => 'Password123!',
-        'password_confirmation' => 'Password123!',
+        'last_name'  => 'User',
+        'email'      => 'guest@example.com',
+        'mobile'     => '+1234567890',
+        'name'       => 'My Convention',
+        'start_date' => '2026-06-01',
+        'end_date'   => '2026-06-03',
     ]);
 
     $response->assertSessionHasNoErrors();
-    
-    // Verify user was created in database
     $this->assertDatabaseHas('users', [
-        'email' => 'test@example.com',
-        'first_name' => 'Test',
-        'last_name' => 'User',
+        'email'          => 'guest@example.com',
+        'email_confirmed' => false,
     ]);
-    
-    $this->assertAuthenticated();
-    $response->assertRedirect('/conventions');
+    Mail::assertSent(\App\Mail\GuestConventionVerification::class);
 });
 
-test('registration requires valid email', function () {
-    $response = $this->post('/register', [
-        'first_name' => 'Test',
-        'last_name' => 'User',
-        'email' => 'invalid-email',
-        'mobile' => '+1234567890',
-        'password' => 'Password123!',
-        'password_confirmation' => 'Password123!',
+test('existing user is auto-logged in when creating a guest convention', function () {
+    $user = User::factory()->create(['email' => 'existing@example.com']);
+
+    $this->post('/conventions/guest', [
+        'first_name' => $user->first_name,
+        'last_name'  => $user->last_name,
+        'email'      => 'existing@example.com',
+        'mobile'     => $user->mobile,
+        'name'       => 'My Convention',
+        'start_date' => '2026-06-01',
+        'end_date'   => '2026-06-03',
     ]);
 
-    $response->assertSessionHasErrors('email');
-});
-
-test('registration requires password confirmation', function () {
-    $response = $this->post('/register', [
-        'first_name' => 'Test',
-        'last_name' => 'User',
-        'email' => 'test@example.com',
-        'mobile' => '+1234567890',
-        'password' => 'Password123!',
-        'password_confirmation' => 'DifferentPass123!',
-    ]);
-
-    $response->assertSessionHasErrors('password');
+    $this->assertAuthenticatedAs($user);
 });
 ```
 
@@ -574,43 +568,47 @@ afterAll(function () {
 
 ```php
 use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeEmail;
+use App\Mail\UserInvitation;
 
-test('registration sends welcome email', function () {
+test('inviting a user sends an invitation email', function () {
     Mail::fake();
 
-    $this->post('/register', [
-        'first_name' => 'Test',
-        'last_name' => 'User',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+    $convention = Convention::factory()->create();
+    $owner = User::factory()->create();
+    $convention->users()->attach($owner, ['role' => 'Owner']);
+
+    $this->actingAs($owner)->post(route('conventions.users.store', $convention), [
+        'first_name' => 'Invited',
+        'last_name'  => 'User',
+        'email'      => 'invited@example.com',
+        'mobile'     => '+1234567890',
+        'roles'      => ['SectionUser'],
     ]);
 
-    Mail::assertSent(WelcomeEmail::class, function ($mail) {
-        return $mail->hasTo('test@example.com');
-    });
+    Mail::assertSent(UserInvitation::class, fn ($mail) => $mail->hasTo('invited@example.com'));
 });
 ```
 
 ### Mocking Events
 
 ```php
-use Illuminate\Support\Facades\Event;
-use App\Events\UserRegistered;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\GuestConventionVerification;
 
-test('registration dispatches event', function () {
-    Event::fake();
+test('guest convention creation sends verification email to new user', function () {
+    Mail::fake();
 
-    $this->post('/register', [
-        'first_name' => 'Test',
-        'last_name' => 'User',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+    $this->post('/conventions/guest', [
+        'first_name' => 'New',
+        'last_name'  => 'User',
+        'email'      => 'new@example.com',
+        'mobile'     => '+1234567890',
+        'name'       => 'Test Convention',
+        'start_date' => '2026-06-01',
+        'end_date'   => '2026-06-03',
     ]);
 
-    Event::assertDispatched(UserRegistered::class);
+    Mail::assertSent(GuestConventionVerification::class);
 });
 ```
 
@@ -633,21 +631,25 @@ php artisan test --group=property
 
 ### Test Coverage
 
-| Test File | Properties Validated | Requirements |
-|-----------|---------------------|--------------|
-| `ConventionPropertiesTest` | Date overlap detection, creator role assignment | 1.3, 1.4 |
-| `UserPropertiesTest` | Email domain restriction, user deduplication | 4.2, 4.3 |
-| `OccupancyPropertiesTest` | Available seats calculation, color coding | 7.7, 9.x |
-| `AttendancePropertiesTest` | Max reports per day, update restrictions | 10.6, 11.5, 11.6 |
-| `InvitationEmailDeliveryTest` | Invitation email delivery via signed URL | 3.1, 3.2 |
-| `EmailUpdateConfirmationTest` | Email update triggers confirmation | 3.5 |
-| `RoleBasedDataScopingTest` | Role-based query scoping | 5.5, 5.6, 5.7 |
-| `FloorUserPermissionsTest` | FloorUser permission enforcement | 13.1, 13.2, 13.3 |
-| `SectionUserRestrictionsTest` | SectionUser edit and scope restrictions | 14.2, 14.3 |
-| `SectionCrudPropertyTest` | Section create/update/delete persistence, cancellation | Section CRUD 3, 4, 5, 6 |
-| `SectionFrontendPropertyTest` | Button visibility by role, floor selector filtering, action button auth, section display data | Section CRUD 1, 2, 8, 9 |
-| `SectionAuthorizationTest` | Section CRUD authorization enforcement across all roles | Section CRUD 7 |
-| `CsrfProtectionTest` | CSRF token enforcement on all state-changing routes | 21.3 |
+| Test File | Properties Validated |
+|-----------|---------------------|
+| `Property/ConventionPropertiesTest` | Date overlap detection, creator role assignment |
+| `Property/UserPropertiesTest` | Email uniqueness, user field validation |
+| `Property/OccupancyPropertiesTest` | Available seats calculation, occupancy snapping to dropdown values |
+| `Property/AttendancePropertiesTest` | Max 2 reports per day, update restrictions before/after locking |
+| `Property/AttendanceCalculationsTest` | Attendance arithmetic invariants |
+| `Property/InvitationEmailDeliveryTest` | Invitation email delivery via signed URL |
+| `Property/EmailUpdateConfirmationTest` | Email update triggers re-confirmation |
+| `Property/RoleBasedDataScopingTest` | Role-based query scoping across all four roles |
+| `Property/FloorUserPermissionsTest` | FloorUser permission enforcement |
+| `Property/SectionUserRestrictionsTest` | SectionUser edit and scope restrictions |
+| `Property/SectionCrudPropertyTest` | Section create/update/delete persistence |
+| `Property/SectionFrontendPropertyTest` | Button visibility by role, floor selector, section display data |
+| `Property/OccupancyColorCodingTest` | Color coding thresholds across full occupancy range |
+| `Property/DailyOccupancyResetTest` | Reset command restores seats and clears metadata |
+| `Property/SectionValidationPropertyTest` | Section field validation rules |
+| `Feature/Properties/*` | Feature-level property tests (CSRF, role access, guest convention) |
+| `Feature/Integration/*` | End-to-end flows (complete user flows, mobile responsiveness, performance, security audit) |
 
 ### Writing Property Tests
 
@@ -797,19 +799,21 @@ test('user can update profile', function () {
 
 ```php
 // ✅ Good - Tests one behavior
-test('registration requires email', function () {
-    $this->post('/register', [
+test('guest convention creation requires email', function () {
+    $this->post('/conventions/guest', [
         'first_name' => 'Test',
-        'last_name' => 'User',
-        'mobile' => '+1234567890',
-        'password' => 'Password123!',
-        'password_confirmation' => 'Password123!',
+        'last_name'  => 'User',
+        'mobile'     => '+1234567890',
+        'name'       => 'My Convention',
+        'start_date' => '2026-06-01',
+        'end_date'   => '2026-06-03',
+        // email intentionally omitted
     ])->assertSessionHasErrors('email');
 });
 
 // ❌ Bad - Tests multiple behaviors
-test('registration validation', function () {
-    // Tests email, password, name all in one test
+test('guest convention validation', function () {
+    // Tests email, name, dates all in one test
 });
 ```
 

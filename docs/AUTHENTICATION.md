@@ -132,11 +132,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 ### Verification Flow
 
-1. User registers
+1. New user is invited or creates a guest convention
 2. Verification email sent automatically
-3. User clicks verification link
-4. Email marked as verified
-5. User can access protected routes
+3. User clicks verification link and sets a password
+4. Email marked as verified (`email_confirmed = true`)
+5. User is logged in and can access protected routes
 
 **Verification Notice:**
 ```tsx
@@ -483,7 +483,9 @@ Configure features in `config/fortify.php`:
 
 ```php
 'features' => [
-    Features::registration(),
+    // Features::registration() — endpoint exists in Fortify but there is
+    // no registration link in the UI. Users join via invitation or guest
+    // convention creation only.
     Features::resetPasswords(),
     Features::emailVerification(),
     Features::updateProfileInformation(),
@@ -525,7 +527,7 @@ Customize views in `app/Providers/FortifyServiceProvider.php`:
 
 ```php
 Fortify::loginView(fn () => inertia('auth/login'));
-Fortify::registerView(fn () => inertia('auth/register'));
+// No registerView — registration is invitation-only (no public register page)
 ```
 
 ## Security Best Practices

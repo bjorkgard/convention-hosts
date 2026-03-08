@@ -202,11 +202,21 @@ Open your browser and navigate to:
 - **Application**: http://localhost:8000
 - **Vite Dev Server**: http://localhost:5173 (proxied through Laravel)
 
-### Test Registration
+### Log In
 
-1. Click "Register" in the navigation
-2. Fill in the registration form
-3. Submit and verify you're redirected to the conventions list
+There is no public self-registration. Use the seeded demo credentials to log in:
+
+```
+Email:    owner@example.com
+Password: Password1!
+```
+
+Or create a convention as a guest from the welcome page — you will receive an email to set a password (requires mail to be configured or use `MAIL_MAILER=log` and check `storage/logs/laravel.log`).
+
+To seed demo data first:
+```bash
+php artisan db:seed
+```
 
 ## Troubleshooting
 
