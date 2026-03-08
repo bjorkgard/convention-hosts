@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.4.2] - 2026-03-08
 
+### Other
+
+- Add BM25 search engine for UI/UX style guides with design system generation and persistence options (, |Nathanael Björkgård|||2026-03-08)
+
+
+## [Unreleased] - 2026-03-08
+
 ### Added
 
 - add Mailgun configuration to services (, |Nathanael Björkgård|||2026-03-08)
