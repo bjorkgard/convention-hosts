@@ -7,119 +7,150 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [v0.4.2] - 2026-03-08
-
 ### Other
 
-- Add BM25 search engine for UI/UX style guides with design system generation and persistence options (, |Nathanael Björkgård|||2026-03-08)
+- Add BM25 search engine for UI/UX style guides with design system generation and persistence options
 
-
-## [Unreleased] - 2026-03-08
+## [v0.4.2] - 2026-03-08
 
 ### Added
 
-- add Mailgun configuration to services (, |Nathanael Björkgård|||2026-03-08)
+- Add Mailgun configuration to services
 
+### Changed
 
-## [Unreleased]
+- Update hooks for changelog management before commit and push
+- Standardize date formatting in formatDateRange function
 
-- standardize date formatting in formatDateRange function (Nathanael Björkgård, 2026-03-08)
-- change id type from number to string in User, Convention, Floor, Section, and AttendancePeriod interfaces (Nathanael Björkgård, 2026-03-08)
-- implement confirmation page and redirect after guest convention creation (Nathanael Björkgård, 2026-03-08)
+### Fixed
+
+- Change id type from number to string in User, Convention, Floor, Section, and AttendancePeriod interfaces
+- Implement confirmation page and redirect after guest convention creation
 
 ## [v0.4.1] - 2026-03-07
 
-- streamline CLAUDE.md by removing outdated guidelines and enhancing project overview (Nathanael Björkgård, 2026-03-07)
-- snap available-seats occupancy calculation to closest dropdown option (0, 10, 25, 50, 75, 100) instead of raw rounded percentage (Nathanael Björkgård, 2026-03-07)
-- auto-show PWA install dialog on first mobile visit with localStorage dismissal tracking (Nathanael Björkgård, 2026-03-07)
-- enhance update reload to clear service workers, browser caches, and use cache-bust navigation for reliable asset refresh (Nathanael Björkgård, 2026-03-07)
-- add tooltip descriptions to role badges explaining each role's access level (Nathanael Björkgård, 2026-03-07)
-- enhance conventions index page with description text, tooltip on create button, and styled empty state (Nathanael Björkgård, 2026-03-07)
-- make resend invitation button visible to all convention users, not just managers (disabled when email already confirmed) (Nathanael Björkgård, 2026-03-07)
-- enhance floors index page with description text and tooltips on Add Floor/Add Section buttons (Nathanael Björkgård, 2026-03-07)
-- add tooltips to floor row edit and delete buttons for clearer action descriptions (Nathanael Björkgård, 2026-03-07)
-- add tooltip to available seats Send button explaining occupancy update action (Nathanael Björkgård, 2026-03-07)
-- enhance UI with typography, branding, and visual polish (Nathanael Björkgård, 2026-03-06)
-- enhance component styling with dark mode support and visual refinements (Nathanael Björkgård, 2026-03-06)
-- improve GitHub API error handling and caching logic (Nathanael Björkgård, 2026-03-06)
-- update profile and email rules to accept string and UUID types (Nathanael Björkgård, 2026-03-07)
+### Added
+
+- Auto-show PWA install dialog on first mobile visit with localStorage dismissal tracking
+- Enhance update reload to clear service workers, browser caches, and use cache-bust navigation for reliable asset refresh
+- Add tooltip descriptions to role badges explaining each role's access level
+- Enhance conventions index page with description text, tooltip on create button, and styled empty state
+- Make resend invitation button visible to all convention users, not just managers (disabled when email already confirmed)
+- Enhance floors index page with description text and tooltips on Add Floor/Add Section buttons
+- Add tooltips to floor row edit and delete buttons for clearer action descriptions
+- Add tooltip to available seats Send button explaining occupancy update action
+- Enhance UI with typography, branding, and visual polish
+- Enhance component styling with dark mode support and visual refinements
+
+### Changed
+
+- Snap available-seats occupancy calculation to closest dropdown option (0, 10, 25, 50, 75, 100) instead of raw rounded percentage
+
+### Fixed
+
+- Improve GitHub API error handling and caching logic
+- Update profile and email rules to accept string and UUID types
+
+### Other
+
+- Streamline CLAUDE.md by removing outdated guidelines and enhancing project overview
 
 ## [v0.4.0] - 2026-03-07
 
 ## [v0.3.0] - 2026-03-06
 
-- handle 404 responses from GitHub API gracefully (Nathanael Björkgård, 2026-03-06)
+### Fixed
+
+- Handle 404 responses from GitHub API gracefully
 
 ## [v0.2.2] - 2026-03-06
 
-- handle 404 responses from GitHub API gracefully (Nathanael Björkgård, 2026-03-06)
+### Fixed
+
+- Handle 404 responses from GitHub API gracefully
 
 ## [v0.2.1] - 2026-03-06
 
-- test(mobile-responsiveness): remove self-registration endpoint test (Nathanael Björkgård, 2026-03-06)
-- test: remove self-registration feature tests (Nathanael Björkgård, 2026-03-06)
+### Other
+
+- Remove self-registration endpoint test
+- Remove self-registration feature tests
 
 ## [v0.2.0] - 2026-03-06
 
-- add automatic cleanup of unconfirmed conventions after 7 days (Nathanael Björkgård, 2026-03-06)
-- test: reduce property test iteration counts for faster feedback (Nathanael Björkgård, 2026-03-06)
-- docs(steering): clarify conventions, flows, validation, and security details (Nathanael Björkgård, 2026-03-06)
-- add in-app update notification modal that alerts users when a new version is available, with release notes and one-click reload (Nathanael Björkgård, 2026-03-06)
-- add email verification flow for new guest convention users: new users now receive a verification email with a signed URL to set their password before gaining access; existing users retain auto-login behavior (Nathanael Björkgård, 2026-03-06)
-- remove self-registration sign-up link from login page; users now join exclusively via invitation or guest convention creation (Nathanael Björkgård, 2026-03-06)
-- add Laravel Cloud deployment step to release workflow (Nathanael Björkgård, 2026-03-06)
-- add mobile number field to guest convention creation (Nathanael Björkgård, 2026-03-06)
-- update floor row collapsible icon and improve import organization (Nathanael Björkgård, 2026-03-06)
-- revert daily occupancy reset to set available_seats to number_of_seats (Nathanael Björkgård, 2026-03-06)
-- add occupancy help text to section detail page explaining controls and daily reset (Nathanael Björkgård, 2026-03-06)
-- replace OccupancyIndicator with OccupancyGauge in section detail page for consistent semi-circle gauge display (Nathanael Björkgård, 2026-03-06)
-- eager-load assigned users on floors and sections in convention show endpoint for user display (Nathanael Björkgård, 2026-03-06)
-- replace OccupancyIndicator with OccupancyGauge in search results for consistent semi-circle gauge display (Nathanael Björkgård, 2026-03-06)
-- initialize available_seats to number_of_seats on section creation so new sections start fully available (Nathanael Björkgård, 2026-03-06)
-- enhance OccupancyGauge with tooltip showing occupancy level label and human-readable descriptions (Nathanael Björkgård, 2026-03-06)
-- add OccupancyGauge SVG semi-circle component for visual occupancy display (Nathanael Björkgård, 2026-03-06)
-- add FloorRow collapsible component with inline sections, role-based actions, occupancy indicators, and assigned user tooltips (Nathanael Björkgård, 2026-03-06)
-- eager-load assigned users on floors index endpoint for floor-level user display (Nathanael Björkgård, 2026-03-06)
+### Added
+
+- Add automatic cleanup of unconfirmed conventions after 7 days
+- Add in-app update notification modal that alerts users when a new version is available, with release notes and one-click reload
+- Add email verification flow for new guest convention users: new users now receive a verification email with a signed URL to set their password before gaining access; existing users retain auto-login behavior
+- Add Laravel Cloud deployment step to release workflow
+- Add mobile number field to guest convention creation
+- Add occupancy help text to section detail page explaining controls and daily reset
+- Replace OccupancyIndicator with OccupancyGauge in section detail page for consistent semi-circle gauge display
+- Replace OccupancyIndicator with OccupancyGauge in search results for consistent semi-circle gauge display
+- Initialize available_seats to number_of_seats on section creation so new sections start fully available
+- Enhance OccupancyGauge with tooltip showing occupancy level label and human-readable descriptions
+- Add OccupancyGauge SVG semi-circle component for visual occupancy display
+- Add FloorRow collapsible component with inline sections, role-based actions, occupancy indicators, and assigned user tooltips
+- Remove self-registration sign-up link from login page; users now join exclusively via invitation or guest convention creation
+
+### Changed
+
+- Update floor row collapsible icon and improve import organization
+- Revert daily occupancy reset to set available_seats to number_of_seats
+- Eager-load assigned users on floors and sections in convention show endpoint for user display
+- Eager-load assigned users on floors index endpoint for floor-level user display
+
+### Other
+
+- Reduce property test iteration counts for faster feedback
+- Clarify conventions, flows, validation, and security details in docs
 
 ## [v0.1.0] - 2026-03-06
 
-- docs(steering): update conventions, product, structure, and tech documentation (Nathanael Björkgård, 2026-03-06)
-- add section frontend property tests for role-based UI behavior (Nathanael Björkgård, 2026-03-06)
-- wire section CRUD into FloorsIndex page (Nathanael Björkgård, 2026-03-06)
-- test(security): enhance test coverage and fix code style issues (Nathanael Björkgård, 2026-03-06)
-- add sections index page component (Nathanael Björkgård, 2026-03-06)
-- docs: add comprehensive documentation and update environment configuration (Nathanael Björkgård, 2026-03-06)
-- add Kiro hooks for auto-linting and fix import ordering (Nathanael Björkgård, 2026-03-06)
-- upgrade maatwebsite/excel to 4.x-dev and phpspreadsheet to 5.5 (Nathanael Björkgård, 2026-03-06)
-- add Vitest configuration for frontend component testing (Nathanael Björkgård, 2026-03-06)
-- extend Pest configuration to support Unit tests with TestCase and RefreshDatabase (Nathanael Björkgård, 2026-03-06)
-- improve ConventionFactory with withOwner() state and tighter date ranges (Nathanael Björkgård, 2026-03-06)
-- add ConventionTestHelper utility class for test setup (Nathanael Björkgård, 2026-03-06)
-- add CSRF protection feature tests (Nathanael Björkgård, 2026-03-06)
-- add PWA icon generation script using PHP GD (Nathanael Björkgård, 2026-03-06)
-- add NavConvention sidebar component with role-based convention navigation (Nathanael Björkgård, 2026-03-05)
-- add conventions index page component (Nathanael Björkgård, 2026-03-05)
-- add convention management UI components and tests (Nathanael Björkgård, 2026-03-05)
-- add useConventionRole React hook for frontend role-based access control (Nathanael Björkgård, 2026-03-05)
-- implement daily occupancy reset command and scheduling (Nathanael Björkgård, 2026-03-05)
-- add TypeScript interfaces for convention data models (Nathanael Björkgård, 2026-03-05)
-- docs(structure): update project structure documentation with implemented features (Nathanael Björkgård, 2026-03-05)
-- add property test for invitation email delivery (Nathanael Björkgård, 2026-03-05)
-- implement ConventionController with full CRUD, role-scoped data loading, and export (Nathanael Björkgård, 2026-03-05)
-- implement middleware and policies for role-based access control (Nathanael Björkgård, 2026-03-05)
-- implement EnsureConventionAccess middleware for role-based access control (Nathanael Björkgård, 2026-03-05)
-- implement ConventionExport with multi-sheet Excel architecture (Nathanael Björkgård, 2026-03-05)
-- implement CreateConventionAction with automatic role assignment (Nathanael Björkgård, 2026-03-05)
-- implement validation classes and update user model (Nathanael Björkgård, 2026-03-05)
-- docs(steering): add comprehensive convention management system documentation (Nathanael Björkgård, 2026-03-05)
-- add Convention model with relationships and role management methods (Nathanael Björkgård, 2026-03-05)
-- add database migrations for convention management system (Nathanael Björkgård, 2026-03-05)
-- add convention management system specification (Nathanael Björkgård, 2026-03-05)
-- add comprehensive skill documentation for Laravel and React development (Nathanael Björkgård, 2026-03-05)
-- add changelog update hook for pre-push automation (Nathanael Björkgård, 2026-03-05)
-- add documentation sync hook and docs directory (Nathanael Björkgård, 2026-03-05)
-- add ui-ux-pro-max design system steering (Nathanael Björkgård, 2026-03-05)
-- add project steering documentation (Nathanael Björkgård, 2026-03-05)
-- Configure Boost post-update script (Nathanael Björkgård, 2026-03-05)
-- Install Laravel Pest (Nathanael Björkgård, 2026-03-05)
-- Set up a fresh Laravel app (Nathanael Björkgård, 2026-03-05)
+### Added
+
+- Add section frontend property tests for role-based UI behavior
+- Wire section CRUD into FloorsIndex page
+- Add sections index page component
+- Add Kiro hooks for auto-linting and fix import ordering
+- Upgrade maatwebsite/excel to 4.x-dev and phpspreadsheet to 5.5
+- Add Vitest configuration for frontend component testing
+- Extend Pest configuration to support Unit tests with TestCase and RefreshDatabase
+- Improve ConventionFactory with withOwner() state and tighter date ranges
+- Add ConventionTestHelper utility class for test setup
+- Add CSRF protection feature tests
+- Add PWA icon generation script using PHP GD
+- Add NavConvention sidebar component with role-based convention navigation
+- Add conventions index page component
+- Add convention management UI components and tests
+- Add useConventionRole React hook for frontend role-based access control
+- Implement daily occupancy reset command and scheduling
+- Add TypeScript interfaces for convention data models
+- Add property test for invitation email delivery
+- Implement ConventionController with full CRUD, role-scoped data loading, and export
+- Implement middleware and policies for role-based access control
+- Implement EnsureConventionAccess middleware for role-based access control
+- Implement ConventionExport with multi-sheet Excel architecture
+- Implement CreateConventionAction with automatic role assignment
+- Implement validation classes and update user model
+- Add Convention model with relationships and role management methods
+- Add database migrations for convention management system
+- Add convention management system specification
+- Add comprehensive skill documentation for Laravel and React development
+- Add changelog update hook for pre-push automation
+- Add documentation sync hook and docs directory
+- Add ui-ux-pro-max design system steering
+- Add project steering documentation
+- Configure Boost post-update script
+- Install Laravel Pest
+- Set up a fresh Laravel app
+
+### Other
+
+- Add comprehensive documentation and update environment configuration
+- Update project structure documentation with implemented features
+- Add comprehensive convention management system documentation
+- Update conventions, product, structure, and tech documentation
+- Update conventions, flows, validation, and security details in docs
+- Enhance test coverage and fix code style issues

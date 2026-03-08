@@ -76,20 +76,87 @@ jobs:
         run: |
           NEW_VERSION="${{ steps.calculate_version.outputs.new_version }}"
           RELEASE_DATE=$(date +"%Y-%m-%d")
-          
-          # Replace only the FIRST [Unreleased] with the new version, and prepend a fresh [Unreleased] section
-          awk -v ver="$NEW_VERSION" -v date="$RELEASE_DATE" '
-            /^## \[Unreleased\]/ && !done {
-              print "## [Unreleased]"
-              print ""
-              print "## [" ver "] - " date
-              done = 1
-              next
-            }
-            { print }
-          ' docs/CHANGELOG.md > docs/CHANGELOG.tmp && mv docs/CHANGELOG.tmp docs/CHANGELOG.md
-          
-          echo "Updated CHANGELOG.md with version $NEW_VERSION"
+
+          # Use Python to:
+          # 1. Merge ALL [Unreleased] sections into a single versioned release entry
+          # 2. Prepend a fresh empty [Unreleased] section at the top
+          python3 - docs/CHANGELOG.md "$NEW_VERSION" "$RELEASE_DATE" << 'PYEOF'
+          import sys, re
+
+          changelog_file = sys.argv[1]
+          new_version    = sys.argv[2]
+          release_date   = sys.argv[3]
+
+          SECTION_ORDER = ['Added', 'Changed', 'Deprecated', 'Removed', 'Fixed', 'Security', 'Other']
+
+          with open(changelog_file) as f:
+              content = f.read()
+
+          # Collect all lines from every [Unreleased] section (any variant heading)
+          unreleased_re = re.compile(r'^## \[Unreleased\][^\n]*\n', re.MULTILINE)
+          collected = {s: [] for s in SECTION_ORDER}
+          remaining = content
+
+          for m in unreleased_re.finditer(content):
+              body_start = m.end()
+              next_sec   = re.search(r'^## \[', content[body_start:], re.MULTILINE)
+              body_end   = body_start + next_sec.start() if next_sec else len(content)
+              body       = content[body_start:body_end]
+
+              current = None
+              for line in body.splitlines():
+                  sec_m = re.match(r'^### (.+)$', line)
+                  if sec_m:
+                      current = sec_m.group(1).strip()
+                      if current not in collected:
+                          current = None
+                  elif line.startswith('- '):
+                      key = current if current else 'Other'
+                      if line not in collected[key]:
+                          collected[key].append(line)
+
+          # Build the new versioned release block
+          release_block = f"## [{new_version}] - {release_date}\n\n"
+          for section in SECTION_ORDER:
+              if collected[section]:
+                  release_block += f"### {section}\n\n"
+                  release_block += '\n'.join(collected[section]) + "\n\n"
+
+          # Strip ALL [Unreleased] sections from content
+          def remove_unreleased(text):
+              result = []
+              lines  = text.splitlines(keepends=True)
+              i = 0
+              while i < len(lines):
+                  if re.match(r'^## \[Unreleased\]', lines[i]):
+                      i += 1
+                      # Skip until next ## [ heading or end
+                      while i < len(lines) and not re.match(r'^## \[', lines[i]):
+                          i += 1
+                  else:
+                      result.append(lines[i])
+                      i += 1
+              return ''.join(result)
+
+          stripped = remove_unreleased(content)
+
+          # Find where versioned releases start in stripped content
+          first_ver = re.search(r'^## \[', stripped, re.MULTILINE)
+          if first_ver:
+              insert_pos = first_ver.start()
+          else:
+              insert_pos = len(stripped)
+
+          header   = stripped[:insert_pos].rstrip('\n') + '\n\n'
+          tail     = stripped[insert_pos:]
+
+          new_content = header + "## [Unreleased]\n\n" + release_block + tail
+
+          with open(changelog_file, 'w') as f:
+              f.write(new_content)
+
+          print(f"Updated CHANGELOG.md with version {new_version}")
+          PYEOF
 
       - name: Commit version bump
         run: |
