@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- add Mailgun transport configuration to mailers
+
 ### Other
 
 - Add BM25 search engine for UI/UX style guides with design system generation and persistence options
