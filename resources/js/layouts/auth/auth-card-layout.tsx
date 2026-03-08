@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
+import AppLogoIcon from '@/components/app-logo-icon';
 
 import type { PropsWithChildren } from 'react';
 import {
@@ -40,7 +41,7 @@ export default function AuthCardLayout({
                         className="flex cursor-pointer items-center gap-2 self-center font-medium"
                     >
                         <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                            <img src="/icons/favicon-32x32.png" className="size-5" alt="" />
+                            <AppLogoIcon className="size-5" />
                         </div>
                         <span className="text-lg font-semibold">
                             {import.meta.env.VITE_APP_NAME}

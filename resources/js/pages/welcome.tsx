@@ -1,10 +1,10 @@
 import { Form, Head, Link, usePage } from '@inertiajs/react';
+import AppLogoIcon from '@/components/app-logo-icon';
 import {
     ArrowRight,
     BarChart3,
     CalendarDays,
     ChevronDown,
-
     LayoutGrid,
     Search,
     Shield,
@@ -121,7 +121,7 @@ export default function Welcome() {
                             className="flex cursor-pointer items-center gap-2"
                         >
                             <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                                <img src="/icons/favicon-32x32.png" className="size-5" alt="" />
+                                <AppLogoIcon className="size-5" />
                             </div>
                             <span className="text-lg font-semibold">
                                 {import.meta.env.VITE_APP_NAME}
@@ -554,7 +554,7 @@ export default function Welcome() {
                 <footer className="border-t border-border px-4 py-8 sm:px-6">
                     <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <img src="/icons/favicon-32x32.png" className="size-4" alt="" />
+                            <AppLogoIcon className="size-4" />
                             <span>{import.meta.env.VITE_APP_NAME}</span>
                             <VersionBadge />
                         </div>

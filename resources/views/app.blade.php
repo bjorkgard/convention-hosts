@@ -20,6 +20,9 @@
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48x48.png" />
 
+        <!-- Preload the app-logo image used in every page navbar (improves LCP) -->
+        <link rel="preload" as="image" href="/icons/favicon-32x32.png" />
+
         <!-- ── iOS / iPadOS (Apple) ── -->
         <!-- Prevents Safari from adding the URL bar chrome when saved to Home Screen -->
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -27,18 +30,7 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="ConvHosts" />
 
-        <!-- Apple Touch Icons — NO "precomposed" suffix (let iOS apply gloss) -->
-        <!-- iOS uses the largest icon ≤ the device's required size -->
-        <link rel="apple-touch-icon" sizes="57x57"   href="/icons/apple-touch-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="60x60"   href="/icons/apple-touch-icon-60x60.png" />
-        <link rel="apple-touch-icon" sizes="72x72"   href="/icons/apple-touch-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="76x76"   href="/icons/apple-touch-icon-76x76.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="167x167" href="/icons/apple-touch-icon-167x167.png" />
-        <!-- 180×180 is the "primary" modern iOS size (iPhone 6+, all current iPads) -->
+        <!-- Apple Touch Icon — 180×180 covers all modern iOS devices (iPhone 6+, all iPads) -->
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png" />
 
         <!-- ── Microsoft Tiles (legacy Windows / Edge) ── -->
@@ -91,8 +83,6 @@
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        <link rel="manifest" href="/manifest.json">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
