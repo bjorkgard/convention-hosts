@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Other
 
 - Add BM25 search engine for UI/UX style guides with design system generation and persistence options
+- update documentation for architecture, authentication, development, installation, and testing guides
 
 ## [v0.4.2] - 2026-03-08
 
