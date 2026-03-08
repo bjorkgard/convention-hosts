@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - add Mailgun transport configuration to mailers
+- update app icons and manifest for improved branding and PWA support
 
 ### Other
 
