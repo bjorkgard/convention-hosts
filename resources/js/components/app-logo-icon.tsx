@@ -1,6 +1,3 @@
-import { Hotel } from 'lucide-react';
-import type { SVGAttributes } from 'react';
-
-export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
-    return <Hotel {...props} />;
+export default function AppLogoIcon({ className }: { className?: string }) {
+    return <img src="/icons/favicon-32x32.png" className={className} alt="" />;
 }

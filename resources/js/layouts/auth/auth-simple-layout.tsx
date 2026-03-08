@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { Hotel } from 'lucide-react';
+
 import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
 
@@ -31,7 +31,7 @@ export default function AuthSimpleLayout({
                                 className="flex cursor-pointer items-center gap-2 font-medium"
                             >
                                 <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                                    <Hotel className="size-5" />
+                                    <img src="/icons/favicon-32x32.png" className="size-5" alt="" />
                                 </div>
                                 <span className="text-lg font-semibold">
                                     {import.meta.env.VITE_APP_NAME}
