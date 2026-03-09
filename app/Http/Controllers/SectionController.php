@@ -110,7 +110,7 @@ class SectionController extends Controller
 
         $action->execute($section, $request->validated(), $request->user());
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Occupancy updated.');
     }
 
     /**
@@ -122,7 +122,7 @@ class SectionController extends Controller
 
         $action->execute($section, ['occupancy' => 100], $request->user());
 
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Section marked as full.');
     }
 
     /**
