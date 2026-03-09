@@ -133,7 +133,8 @@
 }
 
 /* === THEMES ===
- * Each theme overrides only the accent/primary color variables.
+ * Simple themes (Ocean, Forest, Sunset, Rose) override only accent/primary color variables.
+ * Full-override themes (Apple, Android) redefine all color tokens to match platform HIG.
  * Light/dark backgrounds are preserved from .dark class handling above.
  * Themes are applied via data-theme attribute on <html>.
  * Default theme = no override (falls through to :root above).
@@ -300,7 +301,7 @@
     --muted: oklch(0.35 0.025 295);               /* Surface-variant — #49454F */
     --muted-foreground: oklch(0.81 0.015 295);     /* On-surface-variant — #CAC4D0 */
     --accent: oklch(0.38 0.14 295);               /* Primary-container — #4F378B */
-    --accent-foreground: oklch(0.93 0.06 300);     /* On-primary-container */
+    --accent-foreground: oklch(0.93 0.06 295);     /* On-primary-container */
     --destructive: oklch(0.79 0.12 27);            /* Error — #F2B8B5 */
     --destructive-foreground: oklch(0.32 0.15 27);
     --border: oklch(0.38 0.025 295);              /* Outline-variant — #49454F */
@@ -316,7 +317,7 @@
     --sidebar-primary: oklch(0.82 0.10 295);
     --sidebar-primary-foreground: oklch(0.29 0.13 295);
     --sidebar-accent: oklch(0.38 0.14 295);
-    --sidebar-accent-foreground: oklch(0.93 0.06 300);
+    --sidebar-accent-foreground: oklch(0.93 0.06 295);
     --sidebar-border: oklch(0.38 0.025 295);
     --sidebar-ring: oklch(0.82 0.10 295);
 }
