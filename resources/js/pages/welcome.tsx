@@ -1,5 +1,4 @@
 import { Form, Head, Link, usePage } from '@inertiajs/react';
-import AppLogoIcon from '@/components/app-logo-icon';
 import {
     ArrowRight,
     BarChart3,
@@ -15,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
 import { store as guestStore } from '@/actions/App/Http/Controllers/GuestConventionController';
+import AppLogoIcon from '@/components/app-logo-icon';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

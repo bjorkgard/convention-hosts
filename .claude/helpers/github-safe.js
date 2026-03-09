@@ -10,10 +10,10 @@
  */
 
 import { execSync } from 'child_process';
+import { randomBytes } from 'crypto';
 import { writeFileSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { randomBytes } from 'crypto';
 
 const args = process.argv.slice(2);
 

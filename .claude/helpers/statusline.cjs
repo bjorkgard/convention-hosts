@@ -22,10 +22,10 @@
  * The require() syntax is intentional for CommonJS compatibility.
  */
 
-/* eslint-disable @typescript-eslint/no-var-requires */
+ 
+const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 // Configuration
 const CONFIG = {

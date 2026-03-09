@@ -8,10 +8,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { THEME_LABELS, THEMES, useTheme } from '@/hooks/use-theme';
+import type { Theme } from '@/hooks/use-theme';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { edit as editTheme } from '@/routes/theme';
-import type { Theme } from '@/hooks/use-theme';
 import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [

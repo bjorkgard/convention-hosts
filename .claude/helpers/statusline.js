@@ -6,9 +6,9 @@
  * Usage: node statusline.js [--json] [--compact]
  */
 
+const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 // Configuration
 const CONFIG = {

@@ -13,8 +13,8 @@
  *   session-end    - End session and persist state
  */
 
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 
 const helpersDir = __dirname;
 

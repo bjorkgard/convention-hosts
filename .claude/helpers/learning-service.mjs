@@ -17,11 +17,11 @@
  * - Pattern storage: <5ms
  */
 
-import { createRequire } from 'module';
+import { execSync, spawn } from 'child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { createRequire } from 'module';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { execSync, spawn } from 'child_process';
 import Database from 'better-sqlite3';
 
 const __filename = fileURLToPath(import.meta.url);

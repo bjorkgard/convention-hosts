@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
+import type { PropsWithChildren } from 'react';
 import AppLogoIcon from '@/components/app-logo-icon';
 
-import type { PropsWithChildren } from 'react';
 import {
     Card,
     CardContent,
