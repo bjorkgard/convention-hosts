@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
 
 - implement theme selection feature with multiple color themes
+- Add V3 Security Overhaul, Swarm Coordination, and Verification & Quality Assurance skills
+- add Apple theme support with iOS design guidelines
 
 ## [v0.4.4] - 2026-03-08
 

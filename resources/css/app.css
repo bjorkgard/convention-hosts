@@ -243,6 +243,191 @@
     --sidebar-ring: oklch(0.46 0.14 345);
 }
 
+/* ============================================================
+ * Apple Theme — Apple Human Interface Guidelines
+ * SF Pro system font · iOS system colors · frosted glass surfaces
+ * ============================================================ */
+
+/* Light mode — iOS/macOS system palette */
+:root[data-theme="apple"] {
+    --background: oklch(0.965 0.002 264);          /* #F2F2F7 — iOS grouped background */
+    --foreground: oklch(0.09 0 0);                  /* near-black label */
+    --card: oklch(1 0 0);                           /* #FFFFFF — white grouped sections */
+    --card-foreground: oklch(0.09 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.09 0 0);
+    --primary: oklch(0.56 0.22 251);               /* #007AFF — Apple blue */
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.95 0.002 264);            /* #EFEFF4 — secondary grouped */
+    --secondary-foreground: oklch(0.09 0 0);
+    --muted: oklch(0.95 0.002 264);
+    --muted-foreground: oklch(0.56 0.005 260);     /* #8E8E93 — system gray label */
+    --accent: oklch(0.92 0.05 251);                /* blue tint fill */
+    --accent-foreground: oklch(0.56 0.22 251);
+    --destructive: oklch(0.55 0.22 27);            /* #FF3B30 — Apple red */
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.89 0.003 260);               /* #C7C7CC — separator */
+    --input: oklch(0.97 0.002 264);                /* slightly lighter fill */
+    --ring: oklch(0.56 0.22 251);
+    --radius: 0.75rem;                              /* 12px — iOS rounded rect */
+    --chart-1: oklch(0.56 0.22 251);               /* blue */
+    --chart-2: oklch(0.55 0.17 155);               /* green */
+    --chart-3: oklch(0.55 0.22 27);                /* red */
+    --chart-4: oklch(0.65 0.19 55);                /* orange */
+    --chart-5: oklch(0.55 0.19 295);               /* purple */
+    --sidebar: oklch(0.965 0.002 264);
+    --sidebar-foreground: oklch(0.09 0 0);
+    --sidebar-primary: oklch(0.56 0.22 251);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.92 0.05 251);
+    --sidebar-accent-foreground: oklch(0.56 0.22 251);
+    --sidebar-border: oklch(0.89 0.003 260);
+    --sidebar-ring: oklch(0.56 0.22 251);
+}
+
+/* Dark mode — iOS dark/OLED palette */
+.dark[data-theme="apple"] {
+    --background: oklch(0 0 0);                    /* #000000 — true black (OLED) */
+    --foreground: oklch(0.97 0 0);                 /* #F8F8F8 */
+    --card: oklch(0.135 0 0);                      /* #1C1C1E — elevated surface */
+    --card-foreground: oklch(0.97 0 0);
+    --popover: oklch(0.135 0 0);
+    --popover-foreground: oklch(0.97 0 0);
+    --primary: oklch(0.62 0.23 250);              /* #0A84FF — blue (dark) */
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.195 0 0);                /* #2C2C2E */
+    --secondary-foreground: oklch(0.97 0 0);
+    --muted: oklch(0.24 0 0);                     /* #3A3A3C */
+    --muted-foreground: oklch(0.62 0.005 260);    /* #98989E */
+    --accent: oklch(0.22 0.05 250);
+    --accent-foreground: oklch(0.62 0.23 250);
+    --destructive: oklch(0.56 0.23 25);           /* #FF453A — red (dark) */
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.31 0.003 260);              /* #48484A */
+    --input: oklch(0.195 0 0);
+    --ring: oklch(0.62 0.23 250);
+    --chart-1: oklch(0.62 0.23 250);              /* blue */
+    --chart-2: oklch(0.65 0.17 145);              /* green */
+    --chart-3: oklch(0.56 0.23 25);               /* red */
+    --chart-4: oklch(0.68 0.18 55);               /* orange */
+    --chart-5: oklch(0.62 0.2 295);               /* purple */
+    --sidebar: oklch(0.105 0 0);                  /* slightly lighter than true black */
+    --sidebar-foreground: oklch(0.97 0 0);
+    --sidebar-primary: oklch(0.62 0.23 250);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.22 0.05 250);
+    --sidebar-accent-foreground: oklch(0.62 0.23 250);
+    --sidebar-border: oklch(0.31 0.003 260);
+    --sidebar-ring: oklch(0.62 0.23 250);
+}
+
+/* === Apple HIG Component Overrides ===
+ * All rules are scoped to [data-theme="apple"] so they are
+ * completely isolated from other themes.
+ */
+
+/* SF Pro system font stack */
+[data-theme="apple"] body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* iOS safe area padding (home bar / notch) */
+@supports (padding: env(safe-area-inset-top)) {
+    [data-theme="apple"] body {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* Buttons: pill-shaped (iOS HIG — prominent actions use fully rounded corners) */
+[data-theme="apple"] [data-slot="button"] {
+    border-radius: 9999px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+/* Inputs: filled background with no border until focused — iOS text field pattern */
+[data-theme="apple"] [data-slot="input"] {
+    background-color: var(--input);
+    border-color: transparent;
+    border-radius: calc(var(--radius) - 2px);
+    height: 2.625rem; /* 42px — iOS minimum touch target */
+}
+[data-theme="apple"] [data-slot="input"]:focus-visible {
+    border-color: var(--ring);
+    background-color: var(--card);
+    box-shadow: 0 0 0 3px oklch(0.56 0.22 251 / 0.25);
+}
+.dark[data-theme="apple"] [data-slot="input"]:focus-visible {
+    box-shadow: 0 0 0 3px oklch(0.62 0.23 250 / 0.3);
+}
+
+/* Select trigger: same filled style as inputs */
+[data-theme="apple"] [data-slot="select-trigger"] {
+    border-color: transparent;
+    background-color: var(--input);
+    border-radius: calc(var(--radius) - 2px);
+    height: 2.625rem;
+}
+
+/* Cards: white surface on system-gray background, no visible border, layered shadow */
+[data-theme="apple"] [data-slot="card"] {
+    border: none;
+    box-shadow:
+        0 1px 0 oklch(0 0 0 / 0.04),
+        0 2px 6px oklch(0 0 0 / 0.06),
+        0 8px 24px oklch(0 0 0 / 0.04);
+}
+.dark[data-theme="apple"] [data-slot="card"] {
+    border: 1px solid var(--border);
+    box-shadow: none;
+}
+
+/* Header: iOS navigation bar — sticky frosted glass */
+[data-theme="apple"] header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background-color: oklch(0.965 0.002 264 / 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 0.5px solid oklch(0.89 0.003 260 / 0.8);
+}
+.dark[data-theme="apple"] header {
+    background-color: oklch(0 0 0 / 0.85);
+    border-bottom: 0.5px solid oklch(0.31 0.003 260 / 0.7);
+}
+
+/* Sidebar: frosted glass — translucent with blur */
+[data-theme="apple"] [data-sidebar="sidebar"] {
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    background-color: oklch(0.965 0.002 264 / 0.92);
+}
+.dark[data-theme="apple"] [data-sidebar="sidebar"] {
+    background-color: oklch(0.105 0 0 / 0.92);
+}
+
+/* Dropdown/popover: Apple vibrancy panel */
+[data-theme="apple"] [data-slot="dropdown-menu-content"],
+[data-theme="apple"] [data-slot="popover-content"] {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background-color: oklch(0.99 0.001 264 / 0.95);
+    border: 0.5px solid oklch(0.89 0.003 260 / 0.5);
+    box-shadow:
+        0 4px 6px oklch(0 0 0 / 0.07),
+        0 10px 40px oklch(0 0 0 / 0.12),
+        0 2px 4px oklch(0 0 0 / 0.06);
+}
+.dark[data-theme="apple"] [data-slot="dropdown-menu-content"],
+.dark[data-theme="apple"] [data-slot="popover-content"] {
+    background-color: oklch(0.17 0 0 / 0.95);
+    border: 0.5px solid oklch(0.35 0 0 / 0.5);
+}
+
 @layer base {
     * {
         @apply border-border;

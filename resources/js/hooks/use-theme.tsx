@@ -1,6 +1,6 @@
 import { useCallback, useSyncExternalStore } from 'react';
 
-export const THEMES = ['default', 'ocean', 'forest', 'sunset', 'rose'] as const;
+export const THEMES = ['default', 'ocean', 'forest', 'sunset', 'rose', 'apple'] as const;
 export type Theme = (typeof THEMES)[number];
 
 export const THEME_LABELS: Record<Theme, string> = {
@@ -9,6 +9,7 @@ export const THEME_LABELS: Record<Theme, string> = {
     forest: 'Forest',
     sunset: 'Sunset',
     rose: 'Rose',
+    apple: 'Apple',
 };
 
 export type UseThemeReturn = {
@@ -42,12 +43,20 @@ const subscribe = (callback: () => void) => {
 
 const notify = (): void => listeners.forEach((listener) => listener());
 
+const isIOSDevice = (): boolean => {
+    if (typeof navigator === 'undefined') return false;
+    if (/iPhone|iPod|iPad/.test(navigator.userAgent)) return true;
+    // iPadOS 13+ uses MacIntel platform with touch points
+    return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+};
+
 export function initializeTheme(): void {
     if (typeof window === 'undefined') return;
 
     if (!localStorage.getItem('theme')) {
-        localStorage.setItem('theme', 'default');
-        setCookie('theme', 'default');
+        const theme = isIOSDevice() ? 'apple' : 'default';
+        localStorage.setItem('theme', theme);
+        setCookie('theme', theme);
     }
 
     currentTheme = getStoredTheme();

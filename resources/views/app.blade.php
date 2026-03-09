@@ -84,6 +84,14 @@
             html.dark {
                 background-color: oklch(0.145 0 0);
             }
+
+            html[data-theme="apple"] {
+                background-color: oklch(0.965 0.002 264);
+            }
+
+            html.dark[data-theme="apple"] {
+                background-color: oklch(0 0 0);
+            }
         </style>
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
