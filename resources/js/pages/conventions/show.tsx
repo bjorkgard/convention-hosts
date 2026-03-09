@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendanceReport } from '@/hooks/use-attendance-report';
 import { useConventionRole } from '@/hooks/use-convention-role';
+import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
 import type { AttendancePeriod, Convention, Floor } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
@@ -47,6 +48,7 @@ function formatDateRange(startDate: string, endDate: string): string {
 }
 
 export default function ConventionsShow({ convention, floors }: ConventionsShowProps) {
+    useFlashToast();
     const { isOwner, isConventionUser } = useConventionRole();
     const { activePeriod, canStart, canStop, reportedCount, totalCount } = useAttendanceReport();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
