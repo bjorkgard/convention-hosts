@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import { renderHook } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -13,7 +14,6 @@ vi.mock('@inertiajs/react', () => ({
     usePage: vi.fn(),
 }));
 
-import { usePage } from '@inertiajs/react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 
 describe('useFlashToast', () => {

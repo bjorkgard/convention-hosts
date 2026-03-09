@@ -2,8 +2,8 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
-import { UpdateNotificationModal } from '@/components/update-notification-modal';
 import { Toaster } from '@/components/ui/sonner';
+import { UpdateNotificationModal } from '@/components/update-notification-modal';
 import type { AppLayoutProps } from '@/types';
 
 export default function AppSidebarLayout({

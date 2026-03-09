@@ -80,6 +80,7 @@ export default [
             'resources/js/components/ui/*',
             'resources/js/routes/**',
             '.claude/**',
+            '.worktrees/**',
         ],
     },
     prettier, // Turn off all rules that might conflict with Prettier
