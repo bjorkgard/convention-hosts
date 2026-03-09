@@ -64,10 +64,16 @@ export type UseCookieConsentReturn = {
     readonly decline: () => void;
 };
 
+// Returns a primitive for stable Object.is comparison in useSyncExternalStore
+function getAcceptedSnapshot(): boolean | null {
+    return getCookieConsent()?.accepted ?? null;
+}
+
 export function useCookieConsent(): UseCookieConsentReturn {
-    const consent = useSyncExternalStore(
+    // null = no decision yet, true = accepted, false = declined
+    const accepted = useSyncExternalStore(
         subscribe,
-        () => getCookieConsent(),
+        getAcceptedSnapshot,
         () => null,
     );
 
@@ -75,8 +81,8 @@ export function useCookieConsent(): UseCookieConsentReturn {
     const decline = useCallback(() => declineCookies(), []);
 
     return {
-        pending: consent === null,
-        accepted: consent?.accepted ?? null,
+        pending: accepted === null,
+        accepted,
         accept,
         decline,
     } as const;
