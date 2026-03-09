@@ -400,6 +400,131 @@
     --sidebar-ring: oklch(0.62 0.23 250);
 }
 
+/* === Android M3 Component Overrides ===
+ * All rules scoped to [data-theme="android"] — isolated from other themes.
+ */
+
+/* Roboto system font stack — canonical Android typeface */
+[data-theme="android"] body {
+    font-family: 'Roboto', 'Google Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Buttons — M3 Full shape (pill) + state layer simulation */
+[data-theme="android"] [data-slot="button"] {
+    border-radius: 9999px;
+    font-weight: 500;
+    letter-spacing: 0.00625em;
+    position: relative;
+    overflow: hidden;
+}
+
+/* M3 state layer — hover (8% overlay) and press (12% overlay) */
+[data-theme="android"] [data-slot="button"]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: currentColor;
+    opacity: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+[data-theme="android"] [data-slot="button"]:hover::after {
+    opacity: 0.08;
+}
+[data-theme="android"] [data-slot="button"]:active::after {
+    opacity: 0.12;
+}
+
+/* Inputs — M3 Filled text field */
+/* Surface-variant background, bottom indicator only, top corners rounded */
+[data-theme="android"] [data-slot="input"] {
+    background-color: var(--muted);
+    border-color: transparent;
+    border-bottom-color: var(--muted-foreground);
+    border-radius: var(--radius) var(--radius) 0 0;
+    height: 3.5rem;
+    transition: border-color 150ms cubic-bezier(0.2, 0, 0, 1),
+                border-bottom-width 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+[data-theme="android"] [data-slot="input"]:focus-visible {
+    border-color: transparent;
+    border-bottom-color: var(--primary);
+    border-bottom-width: 2px;
+    box-shadow: none;
+    outline: none;
+    background-color: var(--muted);
+}
+
+/* Select trigger — same filled style as inputs */
+[data-theme="android"] [data-slot="select-trigger"] {
+    background-color: var(--muted);
+    border-color: transparent;
+    border-bottom-color: var(--muted-foreground);
+    border-radius: var(--radius) var(--radius) 0 0;
+    height: 3.5rem;
+}
+
+/* Cards — M3 Elevated surface (Level 1) */
+[data-theme="android"] [data-slot="card"] {
+    border: none;
+    box-shadow:
+        0 1px 2px oklch(0.155 0.005 295 / 0.3),
+        0 2px 6px oklch(0.155 0.005 295 / 0.15);
+}
+.dark[data-theme="android"] [data-slot="card"] {
+    border: none;
+    box-shadow:
+        0 1px 3px oklch(0 0 0 / 0.5),
+        0 4px 8px oklch(0 0 0 / 0.25);
+}
+
+/* Header / Top App Bar — opaque surface, no frosted glass */
+[data-theme="android"] header {
+    background-color: var(--background);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid var(--border);
+}
+.dark[data-theme="android"] header {
+    background-color: var(--background);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Navigation Drawer (Sidebar) — opaque M3 surface-container */
+[data-theme="android"] [data-sidebar="sidebar"] {
+    background-color: var(--sidebar);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.dark[data-theme="android"] [data-sidebar="sidebar"] {
+    background-color: var(--sidebar);
+}
+
+/* Dropdown menus / Popovers — M3 Level 2 elevation, no blur */
+[data-theme="android"] [data-slot="dropdown-menu-content"],
+[data-theme="android"] [data-slot="popover-content"] {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: var(--popover);
+    border: none;
+    border-radius: var(--radius);
+    box-shadow:
+        0 1px 2px oklch(0.155 0.005 295 / 0.3),
+        0 2px 6px oklch(0.155 0.005 295 / 0.15),
+        0 4px 12px oklch(0.155 0.005 295 / 0.1);
+}
+.dark[data-theme="android"] [data-slot="dropdown-menu-content"],
+.dark[data-theme="android"] [data-slot="popover-content"] {
+    background-color: var(--popover);
+    border: none;
+    box-shadow:
+        0 2px 4px oklch(0 0 0 / 0.5),
+        0 4px 12px oklch(0 0 0 / 0.3);
+}
+
 /* === Apple HIG Component Overrides ===
  * All rules are scoped to [data-theme="apple"] so they are
  * completely isolated from other themes.
