@@ -258,7 +258,18 @@ describe('Occupancy tracking flow', function () {
         ])->assertRedirect();
 
         $section->refresh();
-        $expectedOccupancy = (int) round(100 - (($availableSeats / $totalSeats) * 100));
+        // Mirror the action's snap-to-nearest-dropdown logic (not simple rounding)
+        $rawOccupancy = max(0, min(100, 100 - (($availableSeats / $totalSeats) * 100)));
+        $snapOptions = [0, 10, 25, 50, 75, 100];
+        $expectedOccupancy = $snapOptions[0];
+        $minDiff = abs($rawOccupancy - $snapOptions[0]);
+        foreach ($snapOptions as $option) {
+            $diff = abs($rawOccupancy - $option);
+            if ($diff < $minDiff) {
+                $minDiff = $diff;
+                $expectedOccupancy = $option;
+            }
+        }
         expect($section->occupancy)->toBe($expectedOccupancy)
             ->and($section->available_seats)->toBe($availableSeats)
             ->and($section->last_occupancy_updated_by)->toBe($owner->id);
