@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- install sonner and add Toaster wrapper component
+- share flash success/error messages via Inertia middleware
+- add flash success messages to occupancy update endpoints
+- add useFlashToast hook to fire Sonner toasts from Inertia flash props
+- mount Sonner Toaster in app layout
+- show Sonner toasts for occupancy and attendance actions on section page
+- show Sonner toasts for attendance start/stop on convention page
+- implement Sonner toast feedback for occupancy and attendance actions
+
+### Fixed
+
+- remove unused period_id validation rule from ReportAttendanceRequest
+- use flash error for service exceptions in AttendanceController, align tests
+
 ## [v0.5.1] - 2026-03-09
 
 ## [v0.5.0] - 2026-03-09
