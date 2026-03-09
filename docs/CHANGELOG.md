@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add Android M3 color variables to app.css
 - add Android M3 component overrides to app.css
 - add Android theme with auto-detection for Android devices
+- add use-cookie-consent hook with versioned consent storage
+- add CookieConsentBanner component
+- gate preference cookie writes behind consent
 
 ### Fixed
 
@@ -30,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Merge pull request #1 from bjorkgard/apple-theme
 - add Android Material Design 3 theme design doc and implementation plan
+- Merge pull request #2 from bjorkgard/feature/android-m3-theme
+- add cookie consent banner design
+- add cookie consent banner implementation plan
+- ignore .worktrees directory
 
 ## [v0.4.4] - 2026-03-08
 
