@@ -409,3 +409,18 @@ it('passes myReport as null when user has not reported', function () {
         ->where('myReport', null)
     );
 });
+
+it('passes myReport as null when there is no active period', function () {
+    $structure = ConventionTestHelper::createConventionWithStructure();
+    $owner = $structure['owner'];
+    $section = $structure['sections']->first();
+
+    // No attendance period created — activePeriod will be null
+
+    $response = $this->actingAs($owner)->get(route('sections.show', $section));
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('sections/show')
+        ->where('myReport', null)
+    );
+});
