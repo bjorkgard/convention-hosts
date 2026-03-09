@@ -1,4 +1,5 @@
 import { useCallback, useSyncExternalStore } from 'react';
+import { canSetCookies } from '@/hooks/use-cookie-consent';
 
 export const THEMES = ['default', 'ocean', 'forest', 'sunset', 'rose', 'apple', 'android'] as const;
 export type Theme = (typeof THEMES)[number];
@@ -67,7 +68,7 @@ export function initializeTheme(): void {
             theme = 'apple';
         }
         localStorage.setItem('theme', theme);
-        setCookie('theme', theme);
+        if (canSetCookies()) setCookie('theme', theme);
     }
 
     currentTheme = getStoredTheme();
@@ -85,7 +86,7 @@ export function useTheme(): UseThemeReturn {
         currentTheme = newTheme;
 
         localStorage.setItem('theme', newTheme);
-        setCookie('theme', newTheme);
+        if (canSetCookies()) setCookie('theme', newTheme);
 
         applyTheme(newTheme);
         notify();
