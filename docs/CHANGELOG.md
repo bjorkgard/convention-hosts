@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - remove unused period_id validation rule from ReportAttendanceRequest
 - use flash error for service exceptions in AttendanceController, align tests
+- add .worktrees directory to ESLint config and reorder imports in app-sidebar-layout
 
 ## [v0.5.1] - 2026-03-09
 
