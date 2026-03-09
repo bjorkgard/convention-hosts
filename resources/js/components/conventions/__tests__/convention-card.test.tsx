@@ -29,7 +29,7 @@ import ConventionCard from '../convention-card';
 
 function makeConvention(overrides: Partial<Convention> = {}): Convention {
     return {
-        id: 1,
+        id: '1',
         name: 'Test Convention',
         city: 'Paris',
         country: 'France',
@@ -53,7 +53,7 @@ describe('ConventionCard', () => {
     });
 
     it('renders Link with correct href from show.url(convention.id)', () => {
-        const convention = makeConvention({ id: 42 });
+        const convention = makeConvention({ id: '42' });
         render(<ConventionCard convention={convention} />);
 
         const link = screen.getByTestId('inertia-link');
@@ -64,27 +64,27 @@ describe('ConventionCard', () => {
         const convention = makeConvention({ start_date: '2025-06-15', end_date: '2025-06-15' });
         render(<ConventionCard convention={convention} />);
 
-        expect(screen.getByText('Jun 15, 2025')).toBeInTheDocument();
+        expect(screen.getByText('15 juni 2025')).toBeInTheDocument();
     });
 
     it('formats same-month date range', () => {
         const convention = makeConvention({ start_date: '2025-06-10', end_date: '2025-06-15' });
         render(<ConventionCard convention={convention} />);
 
-        expect(screen.getByText('Jun 10 - 15, 2025')).toBeInTheDocument();
+        expect(screen.getByText('10–15 juni 2025')).toBeInTheDocument();
     });
 
     it('formats cross-month date range within same year', () => {
         const convention = makeConvention({ start_date: '2025-06-10', end_date: '2025-07-15' });
         render(<ConventionCard convention={convention} />);
 
-        expect(screen.getByText('Jun 10 - Jul 15, 2025')).toBeInTheDocument();
+        expect(screen.getByText('10 juni – 15 juli 2025')).toBeInTheDocument();
     });
 
     it('formats cross-year date range', () => {
         const convention = makeConvention({ start_date: '2025-12-28', end_date: '2026-01-03' });
         render(<ConventionCard convention={convention} />);
 
-        expect(screen.getByText('Dec 28, 2025 - Jan 3, 2026')).toBeInTheDocument();
+        expect(screen.getByText('28 december 2025 – 3 januari 2026')).toBeInTheDocument();
     });
 });

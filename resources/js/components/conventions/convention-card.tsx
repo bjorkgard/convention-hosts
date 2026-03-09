@@ -13,18 +13,18 @@ function formatDateRange(startDate: string, endDate: string): string {
     const fmt = (d: Date, opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('sv-SE', opts).format(d);
 
     if (startDate.slice(0, 10) === endDate.slice(0, 10)) {
-        return fmt(start, { day: 'numeric', month: 'long', year: 'numeric' });
+        return fmt(start, { day: 'numeric', month: 'long', year: 'numeric' }); // "15 juni 2025"
     }
 
     if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
-        return `${start.getDate()}–${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+        return `${start.getDate()}–${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`; // "10–15 juni 2025"
     }
 
     if (start.getFullYear() === end.getFullYear()) {
-        return `${fmt(start, { day: 'numeric', month: 'long' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+        return `${fmt(start, { day: 'numeric', month: 'long' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`; // "10 juni – 15 juli 2025"
     }
 
-    return `${fmt(start, { day: 'numeric', month: 'long', year: 'numeric' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+    return `${fmt(start, { day: 'numeric', month: 'long', year: 'numeric' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`; // "28 december 2025 – 3 januari 2026"
 }
 
 export default function ConventionCard({ convention }: { convention: Convention }) {

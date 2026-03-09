@@ -13,7 +13,7 @@
         <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#1a1a2e" />
 
         <!-- ── PWA Web App Manifest ── -->
-        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
 
         <!-- ── Favicons ── -->
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />

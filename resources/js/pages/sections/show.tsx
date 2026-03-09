@@ -87,7 +87,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
         if (!section.last_occupancy_updated_at) return null;
 
         const date = new Date(section.last_occupancy_updated_at);
-        return date.toLocaleString('en-US', {
+        return date.toLocaleString('sv-SE', {
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
