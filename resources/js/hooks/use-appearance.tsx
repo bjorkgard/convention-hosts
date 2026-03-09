@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
+import { canSetCookies } from '@/hooks/use-cookie-consent';
 
 export type ResolvedAppearance = 'light' | 'dark';
 export type Appearance = ResolvedAppearance | 'system';
@@ -64,7 +65,7 @@ export function initializeTheme(): void {
 
     if (!localStorage.getItem('appearance')) {
         localStorage.setItem('appearance', 'system');
-        setCookie('appearance', 'system');
+        if (canSetCookies()) setCookie('appearance', 'system');
     }
 
     currentAppearance = getStoredAppearance();
@@ -93,7 +94,7 @@ export function useAppearance(): UseAppearanceReturn {
         localStorage.setItem('appearance', mode);
 
         // Store in cookie for SSR...
-        setCookie('appearance', mode);
+        if (canSetCookies()) setCookie('appearance', mode);
 
         applyTheme(mode);
         notify();
