@@ -34,7 +34,8 @@ composer ci:check
 npm run build
 
 # Regenerate Wayfinder type-safe routes (run after adding/changing routes)
-php artisan wayfinder:generate
+# --with-form is required — pages use .form() on action exports
+php artisan wayfinder:generate --with-form
 
 # Artisan commands specific to this app
 php artisan app:reset-daily-occupancy

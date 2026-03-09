@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark']) data-theme="{{ $theme ?? 'default' }}">
     <head>
         <!-- ── Primary Charset & Viewport ── -->
         <meta charset="UTF-8" />
@@ -64,6 +64,13 @@
                     if (prefersDark) {
                         document.documentElement.classList.add('dark');
                     }
+                }
+
+                // Restore theme from localStorage in case cookie is not yet set
+                // (first visit before the server sees the cookie)
+                const storedTheme = localStorage.getItem('theme');
+                if (storedTheme && storedTheme !== 'default') {
+                    document.documentElement.setAttribute('data-theme', storedTheme);
                 }
             })();
         </script>
