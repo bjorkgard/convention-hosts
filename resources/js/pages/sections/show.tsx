@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Accessibility, ArrowLeft, Clock, Heart, Send, Trash2, Users } from 'lucide-react';
+import { Accessibility, ArrowLeft, CheckCircle2, Circle, Clock, Heart, Send, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
 import { report } from '@/actions/App/Http/Controllers/AttendanceController';
@@ -21,8 +21,74 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useConventionRole } from '@/hooks/use-convention-role';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
-import type { AttendancePeriod, Convention, Floor, Section } from '@/types/convention';
+import type { AttendancePeriod, AttendanceReport, Convention, Floor, Section } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
+
+function AttendanceCard({
+    activePeriod,
+    section,
+    myReport,
+}: {
+    activePeriod: AttendancePeriod;
+    section: Section;
+    myReport: AttendanceReport | null;
+}) {
+    const [attendanceValue, setAttendanceValue] = useState(myReport ? String(myReport.attendance) : '');
+
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        const attendance = Number(attendanceValue);
+        if (isNaN(attendance) || attendance < 0) return;
+
+        router.post(
+            report.url({ section: section.id, attendancePeriod: activePeriod.id }),
+            { attendance },
+            { preserveScroll: true },
+        );
+    }
+
+    return (
+        <Card className="rounded-xl border border-border shadow-sm">
+            <CardHeader>
+                <CardTitle className="text-lg">Attendance Report</CardTitle>
+            </CardHeader>
+            <CardContent>
+                {/* Status line */}
+                <div className="mb-3 flex items-center gap-1.5 text-sm">
+                    {myReport ? (
+                        <>
+                            <CheckCircle2 className="size-4 text-green-500" />
+                            <span className="text-green-700 dark:text-green-400">Reported: {myReport.attendance}</span>
+                        </>
+                    ) : (
+                        <>
+                            <Circle className="text-muted-foreground size-4" />
+                            <span className="text-muted-foreground">Not yet reported</span>
+                        </>
+                    )}
+                </div>
+                <form onSubmit={handleSubmit} className="space-y-2">
+                    <Label htmlFor="attendance-input">Attendance ({activePeriod.period})</Label>
+                    <div className="flex items-center gap-2">
+                        <Input
+                            id="attendance-input"
+                            type="number"
+                            min={0}
+                            placeholder="Enter attendance count"
+                            value={attendanceValue}
+                            onChange={(e) => setAttendanceValue(e.target.value)}
+                            className="flex-1"
+                        />
+                        <Button type="submit" className="cursor-pointer gap-1.5">
+                            <Send className="size-4" />
+                            {myReport ? 'Update' : 'Send'}
+                        </Button>
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
+    );
+}
 
 interface SectionsShowProps {
     section: Section;
@@ -30,11 +96,11 @@ interface SectionsShowProps {
     convention: Convention;
     userRoles: string[];
     activePeriod: AttendancePeriod | null;
+    myReport: AttendanceReport | null;
 }
 
-export default function SectionsShow({ section, floor, convention, activePeriod }: SectionsShowProps) {
+export default function SectionsShow({ section, floor, convention, activePeriod, myReport }: SectionsShowProps) {
     useFlashToast();
-    const [attendanceValue, setAttendanceValue] = useState('');
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const { isOwner, isConventionUser, isFloorUser, hasFloorAccess } = useConventionRole();
@@ -59,20 +125,6 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
 
     function handleAvailableSeatsUpdate(availableSeats: number) {
         router.patch(updateOccupancy.url(section.id), { available_seats: availableSeats }, { preserveScroll: true });
-    }
-
-    function handleAttendanceSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        if (!activePeriod) return;
-
-        const attendance = Number(attendanceValue);
-        if (isNaN(attendance) || attendance < 0) return;
-
-        router.post(
-            report.url({ section: section.id, attendancePeriod: activePeriod.id }),
-            { attendance },
-            { preserveScroll: true, onSuccess: () => setAttendanceValue('') },
-        );
     }
 
     function handleDeleteSection() {
@@ -205,33 +257,12 @@ export default function SectionsShow({ section, floor, convention, activePeriod 
 
                 {/* Attendance reporting section */}
                 {activePeriod && (
-                    <Card className="rounded-xl border border-border shadow-sm">
-                        <CardHeader>
-                            <CardTitle className="text-lg">Attendance Report</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <form onSubmit={handleAttendanceSubmit} className="space-y-2">
-                                <Label htmlFor="attendance-input">
-                                    Attendance ({activePeriod.period})
-                                </Label>
-                                <div className="flex items-center gap-2">
-                                    <Input
-                                        id="attendance-input"
-                                        type="number"
-                                        min={0}
-                                        placeholder="Enter attendance count"
-                                        value={attendanceValue}
-                                        onChange={(e) => setAttendanceValue(e.target.value)}
-                                        className="flex-1"
-                                    />
-                                    <Button type="submit" className="cursor-pointer gap-1.5">
-                                        <Send className="size-4" />
-                                        Send
-                                    </Button>
-                                </div>
-                            </form>
-                        </CardContent>
-                    </Card>
+                    <AttendanceCard
+                        key={myReport?.id ?? 'none'}
+                        activePeriod={activePeriod}
+                        section={section}
+                        myReport={myReport}
+                    />
                 )}
             </div>
 

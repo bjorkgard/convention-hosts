@@ -3,6 +3,8 @@
 // Feature: section-crud-management, Property 7: Section CRUD authorization enforcement
 // Validates: Requirements 3.5, 4.6, 5.6
 
+use App\Models\AttendancePeriod;
+use App\Models\AttendanceReport;
 use App\Models\Section;
 use Illuminate\Support\Facades\Mail;
 use Tests\Helpers\ConventionTestHelper;
@@ -352,3 +354,73 @@ it('denies SectionUser from deleting any section', function () {
         );
     }
 })->group('property', 'section-crud', 'authorization');
+
+// ──────────────────────────────────────────────────────────────────────────────
+// myReport prop
+// ──────────────────────────────────────────────────────────────────────────────
+
+it('passes myReport to the section show page when user has reported', function () {
+    $structure = ConventionTestHelper::createConventionWithStructure();
+    $convention = $structure['convention'];
+    $owner = $structure['owner'];
+    $section = $structure['sections']->first();
+
+    $period = AttendancePeriod::create([
+        'convention_id' => $convention->id,
+        'date' => now()->toDateString(),
+        'period' => 'morning',
+        'locked' => false,
+    ]);
+
+    AttendanceReport::create([
+        'attendance_period_id' => $period->id,
+        'section_id' => $section->id,
+        'attendance' => 42,
+        'reported_by' => $owner->id,
+        'reported_at' => now(),
+    ]);
+
+    $response = $this->actingAs($owner)->get(route('sections.show', $section));
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('sections/show')
+        ->has('myReport')
+        ->where('myReport.attendance', 42)
+    );
+});
+
+it('passes myReport as null when user has not reported', function () {
+    $structure = ConventionTestHelper::createConventionWithStructure();
+    $convention = $structure['convention'];
+    $owner = $structure['owner'];
+    $section = $structure['sections']->first();
+
+    AttendancePeriod::create([
+        'convention_id' => $convention->id,
+        'date' => now()->toDateString(),
+        'period' => 'morning',
+        'locked' => false,
+    ]);
+
+    $response = $this->actingAs($owner)->get(route('sections.show', $section));
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('sections/show')
+        ->where('myReport', null)
+    );
+});
+
+it('passes myReport as null when there is no active period', function () {
+    $structure = ConventionTestHelper::createConventionWithStructure();
+    $owner = $structure['owner'];
+    $section = $structure['sections']->first();
+
+    // No attendance period created — activePeriod will be null
+
+    $response = $this->actingAs($owner)->get(route('sections.show', $section));
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('sections/show')
+        ->where('myReport', null)
+    );
+});

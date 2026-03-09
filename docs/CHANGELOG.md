@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- include attendance count and period in success flash message
+- pass myReport prop to section show page
+- show attendance report status and pre-fill in section form
+
+### Other
+
+- add attendance report status feedback design
+- add attendance report status implementation plan
+- add missing myReport null branch for no active period
+
 ## [v0.5.2] - 2026-03-09
 
 ### Added
