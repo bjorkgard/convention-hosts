@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - change floor_id and convention_id types from number to string in interfaces
 - update convention ID type to string and adjust date formatting to Swedish locale
+- remove unused favicon links from app layout
+- reorder imports for consistency and clarity across helper files
 
 ### Other
 
