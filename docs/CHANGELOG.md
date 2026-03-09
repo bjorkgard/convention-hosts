@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add V3 Security Overhaul, Swarm Coordination, and Verification & Quality Assurance skills
 - add Apple theme support with iOS design guidelines
 
+### Fixed
+
+- change floor_id and convention_id types from number to string in interfaces
+- update convention ID type to string and adjust date formatting to Swedish locale
+
+### Other
+
+- Merge pull request #1 from bjorkgard/apple-theme
+
 ## [v0.4.4] - 2026-03-08
 
 ## [v0.4.3] - 2026-03-08
