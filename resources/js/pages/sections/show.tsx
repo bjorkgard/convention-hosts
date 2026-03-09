@@ -19,6 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
+import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
 import type { AttendancePeriod, Convention, Floor, Section } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
@@ -32,6 +33,7 @@ interface SectionsShowProps {
 }
 
 export default function SectionsShow({ section, floor, convention, activePeriod }: SectionsShowProps) {
+    useFlashToast();
     const [attendanceValue, setAttendanceValue] = useState('');
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
