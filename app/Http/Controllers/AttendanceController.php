@@ -34,7 +34,7 @@ class AttendanceController extends Controller
 
             return redirect()->back()->with('success', 'Attendance report started for '.$period->period.' period.');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['attendance' => $e->getMessage()]);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ class AttendanceController extends Controller
 
             return redirect()->back()->with('success', 'Attendance reported successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['attendance' => $e->getMessage()]);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

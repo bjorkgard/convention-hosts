@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Convention;
-use App\Models\User;
 use Tests\Helpers\ConventionTestHelper;
 
 it('shares flash error messages as inertia props', function () {
@@ -23,14 +21,13 @@ it('shares flash error messages as inertia props', function () {
         'locked' => true,
     ]);
 
-    // This will fail with an error flash message
+    // This triggers the service exception and should flash an error
     $this->actingAs($owner)
         ->post(route('attendance.start', $convention))
         ->assertRedirect();
 
-    // Flash an error directly to verify middleware shares it
+    // The next page load should have the flash error in Inertia props
     $this->actingAs($owner)
-        ->withSession(['error' => 'Maximum of 2 attendance reports per day has been reached.'])
         ->get(route('conventions.show', $convention))
         ->assertInertia(fn ($page) => $page->whereNotNull('flash.error'));
 });

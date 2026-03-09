@@ -385,7 +385,7 @@ describe('Attendance reporting flow', function () {
         // Third attempt should fail
         $this->actingAs($owner)
             ->post(route('attendance.start', $convention))
-            ->assertSessionHasErrors('attendance');
+            ->assertSessionHas('error');
     });
 
     it('restricts attendance updates to original reporter only', function () {
