@@ -244,6 +244,84 @@
 }
 
 /* ============================================================
+ * Android Theme — Material Design 3 Baseline
+ * Roboto system font · M3 purple tonal palette · elevation surfaces
+ * ============================================================ */
+
+/* Light mode — M3 baseline light scheme */
+:root[data-theme="android"] {
+    --background: oklch(0.9997 0.003 300);         /* Background — near-white + purple tint */
+    --foreground: oklch(0.155 0.005 295);           /* On-background */
+    --card: oklch(0.965 0.006 297);                 /* Surface-container-low */
+    --card-foreground: oklch(0.155 0.005 295);      /* On-surface */
+    --popover: oklch(0.965 0.006 297);              /* Surface-container */
+    --popover-foreground: oklch(0.155 0.005 295);
+    --primary: oklch(0.45 0.18 300);               /* Primary — #6750A4 */
+    --primary-foreground: oklch(1 0 0);             /* On-primary — white */
+    --secondary: oklch(0.90 0.04 295);             /* Secondary-container */
+    --secondary-foreground: oklch(0.20 0.08 295);
+    --muted: oklch(0.91 0.02 295);                 /* Surface-variant */
+    --muted-foreground: oklch(0.40 0.02 295);       /* On-surface-variant */
+    --accent: oklch(0.93 0.06 300);                /* Primary-container — #EADDFF */
+    --accent-foreground: oklch(0.20 0.15 295);      /* On-primary-container */
+    --destructive: oklch(0.49 0.22 27);            /* Error — #B3261E */
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.83 0.015 295);               /* Outline-variant — #CAC4D0 */
+    --input: oklch(0.935 0.015 295);               /* Surface-container-highest (filled inputs) */
+    --ring: oklch(0.45 0.18 300);                  /* Primary — focus indicator */
+    --radius: 0.875rem;                             /* 14px — M3 Medium shape */
+    --chart-1: oklch(0.45 0.18 300);              /* purple — primary */
+    --chart-2: oklch(0.55 0.17 155);              /* green */
+    --chart-3: oklch(0.55 0.22 27);               /* red — error */
+    --chart-4: oklch(0.65 0.19 55);               /* orange */
+    --chart-5: oklch(0.55 0.12 230);              /* blue — tertiary */
+    --sidebar: oklch(0.955 0.008 297);             /* Surface-container */
+    --sidebar-foreground: oklch(0.155 0.005 295);
+    --sidebar-primary: oklch(0.45 0.18 300);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.93 0.06 300);        /* Primary-container for active items */
+    --sidebar-accent-foreground: oklch(0.20 0.15 295);
+    --sidebar-border: oklch(0.83 0.015 295);
+    --sidebar-ring: oklch(0.45 0.18 300);
+}
+
+/* Dark mode — M3 baseline dark scheme */
+.dark[data-theme="android"] {
+    --background: oklch(0.155 0.005 295);          /* Background — #1C1B1F */
+    --foreground: oklch(0.905 0.01 295);            /* On-background — #E6E1E5 */
+    --card: oklch(0.21 0.008 295);                 /* Surface-container-low — #211F26 */
+    --card-foreground: oklch(0.905 0.01 295);
+    --popover: oklch(0.24 0.008 295);              /* Surface-container */
+    --popover-foreground: oklch(0.905 0.01 295);
+    --primary: oklch(0.82 0.10 295);              /* Primary — #D0BCFF lavender */
+    --primary-foreground: oklch(0.29 0.13 295);    /* On-primary — #381E72 */
+    --secondary: oklch(0.35 0.03 295);             /* Secondary-container */
+    --secondary-foreground: oklch(0.87 0.04 295);
+    --muted: oklch(0.35 0.025 295);               /* Surface-variant — #49454F */
+    --muted-foreground: oklch(0.81 0.015 295);     /* On-surface-variant — #CAC4D0 */
+    --accent: oklch(0.38 0.14 295);               /* Primary-container — #4F378B */
+    --accent-foreground: oklch(0.93 0.06 300);     /* On-primary-container */
+    --destructive: oklch(0.79 0.12 27);            /* Error — #F2B8B5 */
+    --destructive-foreground: oklch(0.32 0.15 27);
+    --border: oklch(0.38 0.025 295);              /* Outline-variant — #49454F */
+    --input: oklch(0.28 0.02 295);               /* Surface-container-highest */
+    --ring: oklch(0.82 0.10 295);                 /* Primary */
+    --chart-1: oklch(0.82 0.10 295);             /* lavender — primary */
+    --chart-2: oklch(0.65 0.17 145);             /* green */
+    --chart-3: oklch(0.79 0.12 27);              /* red */
+    --chart-4: oklch(0.68 0.18 55);              /* orange */
+    --chart-5: oklch(0.72 0.12 230);             /* blue */
+    --sidebar: oklch(0.195 0.01 295);             /* Surface-container */
+    --sidebar-foreground: oklch(0.905 0.01 295);
+    --sidebar-primary: oklch(0.82 0.10 295);
+    --sidebar-primary-foreground: oklch(0.29 0.13 295);
+    --sidebar-accent: oklch(0.38 0.14 295);
+    --sidebar-accent-foreground: oklch(0.93 0.06 300);
+    --sidebar-border: oklch(0.38 0.025 295);
+    --sidebar-ring: oklch(0.82 0.10 295);
+}
+
+/* ============================================================
  * Apple Theme — Apple Human Interface Guidelines
  * SF Pro system font · iOS system colors · frosted glass surfaces
  * ============================================================ */
