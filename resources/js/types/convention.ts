@@ -18,7 +18,7 @@ export interface Convention {
 
 export interface Floor {
     id: string;
-    convention_id: number;
+    convention_id: string;
     name: string;
     created_at: string;
     updated_at: string;
@@ -29,7 +29,7 @@ export interface Floor {
 
 export interface Section {
     id: string;
-    floor_id: number;
+    floor_id: string;
     name: string;
     number_of_seats: number;
     occupancy: number;
@@ -49,7 +49,7 @@ export interface Section {
 
 export interface AttendancePeriod {
     id: string;
-    convention_id: number;
+    convention_id: string;
     date: string;
     period: 'morning' | 'afternoon';
     locked: boolean;
@@ -61,10 +61,10 @@ export interface AttendancePeriod {
 
 export interface AttendanceReport {
     id: string;
-    attendance_period_id: number;
-    section_id: number;
+    attendance_period_id: string;
+    section_id: string;
     attendance: number;
-    reported_by: number;
+    reported_by: string | null;
     reported_at: string;
     created_at: string;
     updated_at: string;

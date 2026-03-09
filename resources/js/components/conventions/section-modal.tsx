@@ -31,7 +31,7 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
     const isEdit = !!section;
 
     const form = useForm({
-        floor_id: '' as number | '',
+        floor_id: '' as string | '',
         name: '',
         number_of_seats: '' as number | '',
         elder_friendly: false,
@@ -109,7 +109,7 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                                 <Label htmlFor="section-floor">Floor</Label>
                                 <Select
                                     value={form.data.floor_id ? String(form.data.floor_id) : ''}
-                                    onValueChange={(value) => form.setData('floor_id', Number(value))}
+                                    onValueChange={(value) => form.setData('floor_id', value)}
                                 >
                                     <SelectTrigger id="section-floor" className="w-full">
                                         <SelectValue placeholder="Select a floor" />
