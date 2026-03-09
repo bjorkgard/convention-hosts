@@ -5,8 +5,8 @@ import { COOKIE_CONSENT_VERSION } from '@/hooks/use-cookie-consent';
 
 // We test behaviour, not internal consent detail — mock the hook
 vi.mock('@/hooks/use-cookie-consent', async (importOriginal) => {
-    const actual = await importOriginal<typeof import('@/hooks/use-cookie-consent')>();
-    return { ...actual };
+    const actual = await importOriginal();
+    return { ...(actual as object) };
 });
 
 import CookieConsentBanner from '../cookie-consent-banner';
