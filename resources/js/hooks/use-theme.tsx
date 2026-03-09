@@ -1,6 +1,6 @@
 import { useCallback, useSyncExternalStore } from 'react';
 
-export const THEMES = ['default', 'ocean', 'forest', 'sunset', 'rose', 'apple'] as const;
+export const THEMES = ['default', 'ocean', 'forest', 'sunset', 'rose', 'apple', 'android'] as const;
 export type Theme = (typeof THEMES)[number];
 
 export const THEME_LABELS: Record<Theme, string> = {
@@ -10,6 +10,7 @@ export const THEME_LABELS: Record<Theme, string> = {
     sunset: 'Sunset',
     rose: 'Rose',
     apple: 'Apple',
+    android: 'Android',
 };
 
 export type UseThemeReturn = {
@@ -50,11 +51,21 @@ const isIOSDevice = (): boolean => {
     return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
 };
 
+const isAndroidDevice = (): boolean => {
+    if (typeof navigator === 'undefined') return false;
+    return /Android/i.test(navigator.userAgent);
+};
+
 export function initializeTheme(): void {
     if (typeof window === 'undefined') return;
 
     if (!localStorage.getItem('theme')) {
-        const theme = isIOSDevice() ? 'apple' : 'default';
+        let theme: Theme = 'default';
+        if (isAndroidDevice()) {
+            theme = 'android';
+        } else if (isIOSDevice()) {
+            theme = 'apple';
+        }
         localStorage.setItem('theme', theme);
         setCookie('theme', theme);
     }
