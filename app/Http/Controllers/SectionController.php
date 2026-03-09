@@ -56,12 +56,17 @@ class SectionController extends Controller
             ->latest('created_at')
             ->first();
 
+        $myReport = $activePeriod
+            ? $activePeriod->reports()->where('section_id', $section->id)->where('reported_by', $request->user()->id)->first()
+            : null;
+
         return Inertia::render('sections/show', [
             'section' => $section,
             'floor' => $section->floor,
             'convention' => $convention,
             'userRoles' => $userRoles,
             'activePeriod' => $activePeriod,
+            'myReport' => $myReport,
         ]);
     }
 
