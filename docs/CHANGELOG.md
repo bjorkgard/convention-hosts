@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement theme selection feature with multiple color themes
 - Add V3 Security Overhaul, Swarm Coordination, and Verification & Quality Assurance skills
 - add Apple theme support with iOS design guidelines
+- add Android M3 color variables to app.css
+- add Android M3 component overrides to app.css
+- add Android theme with auto-detection for Android devices
 
 ### Fixed
 
@@ -19,10 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - update convention ID type to string and adjust date formatting to Swedish locale
 - remove unused favicon links from app layout
 - reorder imports for consistency and clarity across helper files
+- fix Android theme section comment and hue consistency in dark mode
+- add Android background-color to inline style block in app.blade.php
+- fix flaky occupancy test by mirroring action's snap-to-dropdown logic
 
 ### Other
 
 - Merge pull request #1 from bjorkgard/apple-theme
+- add Android Material Design 3 theme design doc and implementation plan
 
 ## [v0.4.4] - 2026-03-08
 
