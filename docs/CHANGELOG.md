@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix Android theme section comment and hue consistency in dark mode
 - add Android background-color to inline style block in app.blade.php
 - fix flaky occupancy test by mirroring action's snap-to-dropdown logic
+- use non-generic importOriginal in vi.mock
 
 ### Other
 
