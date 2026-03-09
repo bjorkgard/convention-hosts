@@ -64,16 +64,17 @@ class AttendanceController extends Controller
     public function report(ReportAttendanceRequest $request, Section $section, AttendancePeriod $attendancePeriod): RedirectResponse
     {
         $user = $request->user();
+        $attendance = $request->validated('attendance');
 
         try {
             $this->attendanceReportService->reportAttendance(
                 $section,
                 $attendancePeriod,
-                $request->validated('attendance'),
+                $attendance,
                 $user
             );
 
-            return redirect()->back()->with('success', 'Attendance reported successfully.');
+            return redirect()->back()->with('success', "Attendance of {$attendance} reported for the {$attendancePeriod->period} period.");
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
