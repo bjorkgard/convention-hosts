@@ -64,26 +64,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONS-01 | Unmapped | Pending |
-| CONS-02 | Unmapped | Pending |
-| CONS-03 | Unmapped | Pending |
-| CONS-04 | Unmapped | Pending |
-| STOR-01 | Unmapped | Pending |
-| STOR-02 | Unmapped | Pending |
-| STOR-03 | Unmapped | Pending |
-| STOR-04 | Unmapped | Pending |
-| APPX-01 | Unmapped | Pending |
-| APPX-02 | Unmapped | Pending |
-| APPX-03 | Unmapped | Pending |
-| VERI-01 | Unmapped | Pending |
-| VERI-02 | Unmapped | Pending |
-| VERI-03 | Unmapped | Pending |
+| CONS-01 | Phase 3: Authenticated Prompt Experience | Pending |
+| CONS-02 | Phase 3: Authenticated Prompt Experience | Pending |
+| CONS-03 | Phase 3: Authenticated Prompt Experience | Pending |
+| CONS-04 | Phase 1: Consent State And Delivery Contract | Pending |
+| STOR-01 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| STOR-02 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| STOR-03 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| STOR-04 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| APPX-01 | Phase 3: Authenticated Prompt Experience | Pending |
+| APPX-02 | Phase 3: Authenticated Prompt Experience | Pending |
+| APPX-03 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| VERI-01 | Phase 4: Verification And Regression Coverage | Pending |
+| VERI-02 | Phase 4: Verification And Regression Coverage | Pending |
+| VERI-03 | Phase 4: Verification And Regression Coverage | Pending |
 
 **Coverage:**
 - v1 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14 ⚠️
+- Mapped to phases: 14
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after initial definition*
+*Last updated: 2026-03-12 after roadmap traceability initialization*
