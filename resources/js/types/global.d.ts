@@ -8,6 +8,7 @@ declare module '@inertiajs/core' {
             auth: Auth;
             consent: ConsentContract;
             sidebarOpen: boolean;
+            appVersion?: string | null;
             [key: string]: unknown;
         };
     }

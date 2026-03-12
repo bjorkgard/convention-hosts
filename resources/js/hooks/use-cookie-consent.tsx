@@ -9,7 +9,8 @@ export type ConsentRecord = {
     version: number;
 };
 
-// --- Pure helpers (no React) ---
+// Legacy compatibility surface for the current banner flow and legacy tests.
+// Optional-storage enforcement should read the server-shared consent contract instead.
 
 export function getCookieConsent(): ConsentRecord | null {
     if (typeof window === 'undefined') return null;
@@ -64,7 +65,6 @@ export type UseCookieConsentReturn = {
     readonly decline: () => void;
 };
 
-// Returns a primitive for stable Object.is comparison in useSyncExternalStore
 function getAcceptedSnapshot(): boolean | null {
     return getCookieConsent()?.accepted ?? null;
 }

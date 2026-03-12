@@ -16,6 +16,8 @@ export interface ConsentContract {
     updatedAt: string | null;
 }
 
+export type SharedConsentContract = ConsentContract;
+
 export type Flash = {
     success?: string;
     error?: string;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Consent\OptionalStorageRegistry;
 use App\Support\Consent\UserConsentResolver;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -37,6 +38,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $consentResolver = app(UserConsentResolver::class);
+        $optionalStorage = app(OptionalStorageRegistry::class);
 
         return [
             ...parent::share($request),
@@ -45,7 +47,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'consent' => $consentResolver->resolve($request->user()),
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => $optionalStorage->trustedSidebarOpen($request),
             'appVersion' => $this->getAppVersion(),
             'flash' => [
                 'success' => $request->session()->get('success'),
