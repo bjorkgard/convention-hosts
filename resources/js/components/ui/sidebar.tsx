@@ -21,7 +21,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { canSetCookies } from "@/hooks/use-cookie-consent"
+import { useConsent } from "@/hooks/use-consent"
+import {
+  isOptionalStorageAllowed,
+  removeOptionalCookie,
+  writeOptionalCookie,
+} from "@/lib/consent/optional-storage"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 
@@ -67,6 +72,8 @@ function SidebarProvider({
   onOpenChange?: (open: boolean) => void
 }) {
   const isMobile = useIsMobile()
+  const consent = useConsent()
+  const allowOptionalStorage = isOptionalStorageAllowed(consent)
   const [openMobile, setOpenMobile] = React.useState(false)
 
   // This is the internal state of the sidebar.
@@ -82,12 +89,13 @@ function SidebarProvider({
         _setOpen(openState)
       }
 
-      // This sets the cookie to keep the sidebar state.
-      if (canSetCookies()) {
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      if (allowOptionalStorage) {
+        writeOptionalCookie(SIDEBAR_COOKIE_NAME, String(openState), consent, SIDEBAR_COOKIE_MAX_AGE / (60 * 60 * 24))
+      } else {
+        removeOptionalCookie(SIDEBAR_COOKIE_NAME)
       }
     },
-    [setOpenProp, open]
+    [allowOptionalStorage, consent, setOpenProp, open]
   )
 
   // Helper to toggle the sidebar.
@@ -96,6 +104,12 @@ function SidebarProvider({
   }, [isMobile, setOpen, setOpenMobile])
 
   // Adds a keyboard shortcut to toggle the sidebar.
+  React.useEffect(() => {
+    if (!allowOptionalStorage) {
+      removeOptionalCookie(SIDEBAR_COOKIE_NAME)
+    }
+  }, [allowOptionalStorage])
+
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (

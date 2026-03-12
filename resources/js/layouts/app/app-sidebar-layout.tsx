@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -5,12 +6,22 @@ import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import InstallPrompt from '@/components/install-prompt';
 import { Toaster } from '@/components/ui/sonner';
 import { UpdateNotificationModal } from '@/components/update-notification-modal';
+import { useAllowsOptionalStorage } from '@/hooks/use-consent';
+import { cleanupOptionalStorage } from '@/lib/consent/optional-storage';
 import type { AppLayoutProps } from '@/types';
 
 export default function AppSidebarLayout({
     children,
     breadcrumbs = [],
 }: AppLayoutProps) {
+    const allowsOptionalStorage = useAllowsOptionalStorage();
+
+    useEffect(() => {
+        if (!allowsOptionalStorage) {
+            cleanupOptionalStorage();
+        }
+    }, [allowsOptionalStorage]);
+
     return (
         <AppShell variant="sidebar">
             <AppSidebar />
