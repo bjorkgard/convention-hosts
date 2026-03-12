@@ -29,9 +29,9 @@ Requirements for the cookie consent increment. Each maps to roadmap phases.
 
 ### Verification
 
-- [ ] **VERI-01**: Automated tests cover the immediate post-login consent prompt for undecided authenticated users
-- [ ] **VERI-02**: Automated tests verify that declined consent prevents non-essential cookies or browser storage from being treated as active state
-- [ ] **VERI-03**: Automated tests verify that essential auth/session behavior continues to work when consent is declined
+- [x] **VERI-01**: Automated tests cover the immediate post-login consent prompt for undecided authenticated users
+- [x] **VERI-02**: Automated tests verify that declined consent prevents non-essential cookies or browser storage from being treated as active state
+- [x] **VERI-03**: Automated tests verify that essential auth/session behavior continues to work when consent is declined
 
 ## v2 Requirements
 
@@ -75,9 +75,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | APPX-01 | Phase 3: Authenticated Prompt Experience | Completed |
 | APPX-02 | Phase 3: Authenticated Prompt Experience | Completed |
 | APPX-03 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
-| VERI-01 | Phase 4: Verification And Regression Coverage | Pending |
-| VERI-02 | Phase 4: Verification And Regression Coverage | Pending |
-| VERI-03 | Phase 4: Verification And Regression Coverage | Pending |
+| VERI-01 | Phase 4: Verification And Regression Coverage | Completed |
+| VERI-02 | Phase 4: Verification And Regression Coverage | Completed |
+| VERI-03 | Phase 4: Verification And Regression Coverage | Completed |
 
 **Coverage:**
 - v1 requirements: 14 total
@@ -86,4 +86,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after Phase 3 verification*
+*Last updated: 2026-03-12 after Phase 4 verification*

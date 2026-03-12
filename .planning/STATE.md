@@ -2,10 +2,10 @@
 
 **Project:** Convention Hosts
 **Initialized:** 2026-03-12
-**Current focus:** Phase 4 planning for verification and regression coverage
-**Current phase:** Phase 3 - Authenticated Prompt Experience
-**Next phase:** Phase 4 - Verification And Regression Coverage
-**Status:** In progress
+**Current focus:** Phase 4 verification and project closeout for the cookie consent increment
+**Current phase:** Phase 4 - Verification And Regression Coverage
+**Next phase:** None - v1 cookie consent increment complete
+**Status:** Complete
 
 ## Memory
 
@@ -31,6 +31,10 @@
 - Phase 3 plan `02-authenticated-shell-consent-prompt` is complete: the shared authenticated shell now mounts a server-backed consent prompt for undecided users, uses the generated consent action for `Accept all` and `Decline`, and demotes the legacy localStorage consent banner to compatibility-only status.
 - Targeted Phase 3 frontend verification passed for the authenticated prompt and compatibility wrapper; `npm run lint` still reports a pre-existing warning in `resources/js/components/install-prompt.tsx` outside the prompt plan write scope.
 - Phase 3 verification passed: the authenticated shell prompt, server-owned consent endpoint, and targeted backend/frontend tests now satisfy `CONS-01`, `CONS-02`, `CONS-03`, `APPX-01`, and `APPX-02`.
+- Phase 4 plan `01-post-login-consent-regression` is complete: regression coverage now follows the real Fortify password and two-factor login paths for both authenticated redirect shapes and verifies prompt visibility at the shared shell mount point.
+- Phase 4 plan `02-optional-storage-regression-surface` is complete: the known optional-storage boundaries now have accepted-versus-denied regression proof across backend cookie trust, safe defaults, appearance persistence, sidebar persistence, and install-prompt dismissal.
+- Phase 4 plan `03-declined-session-continuity` is complete: a dedicated feature suite now proves declined consent preserves login continuity, essential session and XSRF cookies, later authenticated navigation, and a later authenticated POST request.
+- Phase 4 verification passed: targeted backend and frontend regression runs now satisfy `VERI-01`, `VERI-02`, and `VERI-03`.
 
 ## References
 
@@ -44,7 +48,7 @@
 - Roadmap exists and has 100% v1 requirement coverage.
 - Traceability in `.planning/REQUIREMENTS.md` now marks completed Phase 1 through Phase 3 requirements as complete.
 - Phases 1, 2, and 3 are complete and verified for `CONS-01` through `CONS-04`, `STOR-01` through `STOR-04`, and `APPX-01` through `APPX-03`.
-- Remaining work is Phase 4 end-to-end verification coverage for the full authenticated consent flow.
+- All four roadmap phases are complete and verified for the v1 cookie consent increment.
 
 ---
-*Last updated: 2026-03-12 after Phase 3 verification*
+*Last updated: 2026-03-12 after Phase 4 verification*
