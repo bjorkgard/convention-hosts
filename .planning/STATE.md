@@ -2,8 +2,8 @@
 
 **Project:** Convention Hosts
 **Initialized:** 2026-03-12
-**Current focus:** Phase 3 planning for the authenticated prompt experience
-**Current phase:** Phase 2 - Storage Enforcement And Safe Defaults
+**Current focus:** Phase 3 execution for the authenticated prompt experience
+**Current phase:** Phase 3 - Authenticated Prompt Experience
 **Next phase:** Phase 3 - Authenticated Prompt Experience
 **Status:** In progress
 
@@ -26,6 +26,8 @@
 - Phase 2 plan `02-server-cookie-trust-and-safe-defaults` is complete: Laravel now ignores or forgets `appearance`, `theme`, and `sidebar_state` when optional storage is not allowed, and server-rendered HTML no longer revives disallowed theme state from `localStorage`.
 - Phase 2 plan `03-client-storage-gating-and-cleanup` is complete: appearance, theme, sidebar persistence, and install-prompt dismissal are consent-aware and clean up known optional keys when storage becomes disallowed.
 - Full targeted verification for Phase 2 passed across Pest and Vitest, including `npm test -- --run`; remaining suite warnings are pre-existing and unrelated to consent enforcement.
+- Phase 3 plan `01-authenticated-consent-write-endpoint` is complete: authenticated users can now record accepted or declined consent through a server-owned POST route backed by `RecordUserConsentAction`, and Wayfinder exports the generated consent action for the shell prompt.
+- Targeted Phase 3 backend verification passed for the consent write endpoint, including accepted writes, declined writes, guest protection, invalid-state validation, and refreshed Inertia consent props after redirect.
 
 ## References
 
@@ -39,7 +41,7 @@
 - Roadmap exists and has 100% v1 requirement coverage.
 - Traceability in `.planning/REQUIREMENTS.md` is initialized with all v1 requirements set to `Pending`.
 - Phases 1 and 2 are complete and verified for `CONS-04`, `STOR-01` through `STOR-04`, and `APPX-03`.
-- Remaining work is Phase 3 prompt integration plus Phase 4 end-to-end verification coverage.
+- Remaining work is Phase 3 shell prompt integration plus Phase 4 end-to-end verification coverage.
 
 ---
-*Last updated: 2026-03-12 after Phase 2 execution*
+*Last updated: 2026-03-12 after Phase 3 plan 01 execution*
