@@ -6,6 +6,16 @@ export type * from './user';
 
 import type { Auth } from './auth';
 
+export type ConsentState = 'accepted' | 'declined' | 'undecided';
+
+export interface ConsentContract {
+    state: ConsentState;
+    version: number;
+    allowOptionalStorage: boolean;
+    decidedAt: string | null;
+    updatedAt: string | null;
+}
+
 export type Flash = {
     success?: string;
     error?: string;
@@ -14,7 +24,9 @@ export type Flash = {
 export type Errors = Record<string, string>;
 
 export interface PageProps {
+    [key: string]: unknown;
     auth: Auth;
+    consent: ConsentContract;
     name: string;
     sidebarOpen: boolean;
     appVersion: string | null;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Consent\UserConsentResolver;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,12 +36,15 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $consentResolver = app(UserConsentResolver::class);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'consent' => $consentResolver->resolve($request->user()),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'appVersion' => $this->getAppVersion(),
             'flash' => [

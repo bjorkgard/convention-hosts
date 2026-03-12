@@ -24,7 +24,7 @@
 - The authenticated app can determine whether a user is `undecided`, `accepted`, or `declined` without relying on browser-only state.
 - Consent state is available to the authenticated frontend through a shared contract suitable for all post-login destinations.
 
-**Initial status:** Pending
+**Initial status:** Completed
 
 ## Phase 2: Storage Enforcement And Safe Defaults
 
