@@ -39,7 +39,7 @@
 - Authenticated preference writes flow through one consent-aware policy instead of direct ad hoc storage writes.
 - The authenticated app remains usable with safe defaults when optional persistence is unavailable.
 
-**Initial status:** Pending
+**Initial status:** Completed
 
 ## Phase 3: Authenticated Prompt Experience
 
@@ -104,4 +104,4 @@
 4. Phase 4: Verification And Regression Coverage
 
 ---
-*Last updated: 2026-03-12 during initial roadmap creation*
+*Last updated: 2026-03-12 after Phase 2 verification*

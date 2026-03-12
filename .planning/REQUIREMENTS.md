@@ -12,20 +12,20 @@ Requirements for the cookie consent increment. Each maps to roadmap phases.
 - [ ] **CONS-01**: Authenticated user who has not made a cookie choice is prompted for consent immediately after login
 - [ ] **CONS-02**: Authenticated user can choose `Accept all` from the consent prompt
 - [ ] **CONS-03**: Authenticated user can choose `Decline` from the consent prompt
-- [ ] **CONS-04**: User's cookie decision persists across future authenticated sessions until the consent version is reset or invalidated
+- [x] **CONS-04**: User's cookie decision persists across future authenticated sessions until the consent version is reset or invalidated
 
 ### Storage Policy
 
-- [ ] **STOR-01**: When consent is declined, the application stores only essential auth/session cookies required for sign-in and security
-- [ ] **STOR-02**: Non-essential cookies are not created before the user accepts consent
-- [ ] **STOR-03**: Existing non-essential cookies and browser storage created before decline are cleared or ignored after the user declines
-- [ ] **STOR-04**: Browser preference writes in the authenticated app obey one centralized consent policy instead of bypassing it
+- [x] **STOR-01**: When consent is declined, the application stores only essential auth/session cookies required for sign-in and security
+- [x] **STOR-02**: Non-essential cookies are not created before the user accepts consent
+- [x] **STOR-03**: Existing non-essential cookies and browser storage created before decline are cleared or ignored after the user declines
+- [x] **STOR-04**: Browser preference writes in the authenticated app obey one centralized consent policy instead of bypassing it
 
 ### App Experience
 
 - [ ] **APPX-01**: The consent prompt is mounted in the shared authenticated app experience so the user sees it on the first post-login destination
 - [ ] **APPX-02**: The consent prompt presents `Accept all` and `Decline` with equal prominence and no granular preference center in v1
-- [ ] **APPX-03**: The authenticated app remains usable with safe defaults when non-essential preference storage is unavailable
+- [x] **APPX-03**: The authenticated app remains usable with safe defaults when non-essential preference storage is unavailable
 
 ### Verification
 
@@ -67,14 +67,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONS-01 | Phase 3: Authenticated Prompt Experience | Pending |
 | CONS-02 | Phase 3: Authenticated Prompt Experience | Pending |
 | CONS-03 | Phase 3: Authenticated Prompt Experience | Pending |
-| CONS-04 | Phase 1: Consent State And Delivery Contract | Pending |
-| STOR-01 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
-| STOR-02 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
-| STOR-03 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
-| STOR-04 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| CONS-04 | Phase 1: Consent State And Delivery Contract | Completed |
+| STOR-01 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
+| STOR-02 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
+| STOR-03 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
+| STOR-04 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
 | APPX-01 | Phase 3: Authenticated Prompt Experience | Pending |
 | APPX-02 | Phase 3: Authenticated Prompt Experience | Pending |
-| APPX-03 | Phase 2: Storage Enforcement And Safe Defaults | Pending |
+| APPX-03 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
 | VERI-01 | Phase 4: Verification And Regression Coverage | Pending |
 | VERI-02 | Phase 4: Verification And Regression Coverage | Pending |
 | VERI-03 | Phase 4: Verification And Regression Coverage | Pending |
@@ -86,4 +86,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after roadmap traceability initialization*
+*Last updated: 2026-03-12 after Phase 2 execution*

@@ -2,9 +2,9 @@
 
 **Project:** Convention Hosts
 **Initialized:** 2026-03-12
-**Current focus:** Phase 2 preparation for the cookie consent increment
-**Current phase:** Phase 1 - Consent State And Delivery Contract
-**Next phase:** Phase 2 - Storage Enforcement And Safe Defaults
+**Current focus:** Phase 3 planning for the authenticated prompt experience
+**Current phase:** Phase 2 - Storage Enforcement And Safe Defaults
+**Next phase:** Phase 3 - Authenticated Prompt Experience
 **Status:** In progress
 
 ## Memory
@@ -22,6 +22,10 @@
 - Plan `02-inertia-consent-delivery` is complete: authenticated Inertia responses now share a top-level server-derived `consent` prop through `HandleInertiaRequests`.
 - Password login and two-factor completion both rely on the existing redirect flow and now land on authenticated Inertia responses that include the shared consent contract on first delivery.
 - `npm run types:check` currently fails due to pre-existing unrelated TypeScript issues outside the consent plan write scope.
+- Phase 2 plan `01-optional-storage-policy-foundation` is complete: one PHP registry and one TypeScript optional-storage policy module now own the known optional cookie/localStorage allowlist and safe defaults.
+- Phase 2 plan `02-server-cookie-trust-and-safe-defaults` is complete: Laravel now ignores or forgets `appearance`, `theme`, and `sidebar_state` when optional storage is not allowed, and server-rendered HTML no longer revives disallowed theme state from `localStorage`.
+- Phase 2 plan `03-client-storage-gating-and-cleanup` is complete: appearance, theme, sidebar persistence, and install-prompt dismissal are consent-aware and clean up known optional keys when storage becomes disallowed.
+- Full targeted verification for Phase 2 passed across Pest and Vitest, including `npm test -- --run`; remaining suite warnings are pre-existing and unrelated to consent enforcement.
 
 ## References
 
@@ -34,8 +38,8 @@
 
 - Roadmap exists and has 100% v1 requirement coverage.
 - Traceability in `.planning/REQUIREMENTS.md` is initialized with all v1 requirements set to `Pending`.
-- Phase 1 plans `01-server-consent-contract` and `02-inertia-consent-delivery` are complete and verified at the PHP feature/unit level.
-- Phase 1 is functionally complete for `CONS-04`; remaining repo-wide TypeScript cleanup is outside the consent plan scope.
+- Phases 1 and 2 are complete and verified for `CONS-04`, `STOR-01` through `STOR-04`, and `APPX-03`.
+- Remaining work is Phase 3 prompt integration plus Phase 4 end-to-end verification coverage.
 
 ---
-*Last updated: 2026-03-12 during Phase 1 plan `02-inertia-consent-delivery` execution*
+*Last updated: 2026-03-12 after Phase 2 execution*
