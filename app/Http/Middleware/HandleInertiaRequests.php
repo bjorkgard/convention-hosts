@@ -39,6 +39,8 @@ class HandleInertiaRequests extends Middleware
     {
         $consentResolver = app(UserConsentResolver::class);
         $optionalStorage = app(OptionalStorageRegistry::class);
+        $consent = $consentResolver->resolve($request->user());
+        $sidebarOpen = $optionalStorage->trustedSidebarOpen($request);
 
         return [
             ...parent::share($request),
@@ -46,8 +48,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'consent' => $consentResolver->resolve($request->user()),
-            'sidebarOpen' => $optionalStorage->trustedSidebarOpen($request),
+            'consent' => $consent,
+            'sidebarOpen' => $sidebarOpen,
             'appVersion' => $this->getAppVersion(),
             'flash' => [
                 'success' => $request->session()->get('success'),

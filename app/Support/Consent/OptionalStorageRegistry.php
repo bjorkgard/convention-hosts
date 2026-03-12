@@ -128,6 +128,15 @@ class OptionalStorageRegistry
         return $request->cookie('sidebar_state') === 'true';
     }
 
+    public function enforceOptionalCookiePolicy(Request $request, Response $response): Response
+    {
+        if ($this->allowsOptionalStorage($request->user())) {
+            return $response;
+        }
+
+        return $this->forgetOptionalCookies($response);
+    }
+
     public function forgetOptionalCookies(Response $response): Response
     {
         foreach ($this->optionalCookieNames() as $cookieName) {

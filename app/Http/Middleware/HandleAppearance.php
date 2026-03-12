@@ -22,6 +22,6 @@ class HandleAppearance
         View::share('appearance', $optionalStorage->trustedAppearance($request));
         View::share('theme', $optionalStorage->trustedTheme($request));
 
-        return $next($request);
+        return $optionalStorage->enforceOptionalCookiePolicy($request, $next($request));
     }
 }
