@@ -10,10 +10,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add V3 Security Overhaul skill for comprehensive security architecture and CVE remediation
+- add optional storage policy foundation
+- enforce safe defaults for optional cookies
+- gate client optional storage
+- add authenticated consent write endpoint
+- mount authenticated consent prompt
 
 ### Changed
 
 - Move InstallPrompt to AppSidebarLayout and remove from AppSidebar
+- reorganize imports and remove obsolete cookie consent documentation
+
+### Other
+
+- capture todo - Cookie consent
+- start work on todo - Cookie consent
+- map existing codebase
+- initialize project
+- add project config
+- add project research
+- define v1 requirements
+- create roadmap (4 phases)
+- gather context for phase 1
+- add validation strategy
+- add execution plans
+- Add server-backed user consent contract
+- Share consent contract through Inertia
+- add verification report
+- gather context for phase 2
+- add research and validation
+- record verification and progress
+- gather context for phase 3
+- gather context for phase 4
+- cover post-login prompt regression
+- lock optional storage regressions
+- prove declined session continuity
+- audit v1.0
 
 ## [v0.5.3] - 2026-03-09
 
