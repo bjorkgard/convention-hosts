@@ -28,6 +28,8 @@
 - Full targeted verification for Phase 2 passed across Pest and Vitest, including `npm test -- --run`; remaining suite warnings are pre-existing and unrelated to consent enforcement.
 - Phase 3 plan `01-authenticated-consent-write-endpoint` is complete: authenticated users can now record accepted or declined consent through a server-owned POST route backed by `RecordUserConsentAction`, and Wayfinder exports the generated consent action for the shell prompt.
 - Targeted Phase 3 backend verification passed for the consent write endpoint, including accepted writes, declined writes, guest protection, invalid-state validation, and refreshed Inertia consent props after redirect.
+- Phase 3 plan `02-authenticated-shell-consent-prompt` is complete: the shared authenticated shell now mounts a server-backed consent prompt for undecided users, uses the generated consent action for `Accept all` and `Decline`, and demotes the legacy localStorage consent banner to compatibility-only status.
+- Targeted Phase 3 frontend verification passed for the authenticated prompt and compatibility wrapper; `npm run lint` still reports a pre-existing warning in `resources/js/components/install-prompt.tsx` outside the prompt plan write scope.
 
 ## References
 
@@ -41,7 +43,7 @@
 - Roadmap exists and has 100% v1 requirement coverage.
 - Traceability in `.planning/REQUIREMENTS.md` is initialized with all v1 requirements set to `Pending`.
 - Phases 1 and 2 are complete and verified for `CONS-04`, `STOR-01` through `STOR-04`, and `APPX-03`.
-- Remaining work is Phase 3 shell prompt integration plus Phase 4 end-to-end verification coverage.
+- Remaining work is Phase 4 end-to-end verification coverage for the full authenticated consent flow.
 
 ---
-*Last updated: 2026-03-12 after Phase 3 plan 01 execution*
+*Last updated: 2026-03-12 after Phase 3 plan 02 execution*

@@ -3,6 +3,7 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
+import AuthenticatedConsentPrompt from '@/components/authenticated-consent-prompt';
 import InstallPrompt from '@/components/install-prompt';
 import { Toaster } from '@/components/ui/sonner';
 import { UpdateNotificationModal } from '@/components/update-notification-modal';
@@ -28,7 +29,8 @@ export default function AppSidebarLayout({
             <AppContent variant="sidebar" className="overflow-x-hidden">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
-                <div className="mt-auto px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] md:hidden">
+                <AuthenticatedConsentPrompt />
+                <div className="mt-auto px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-20 md:hidden">
                     <InstallPrompt />
                 </div>
             </AppContent>

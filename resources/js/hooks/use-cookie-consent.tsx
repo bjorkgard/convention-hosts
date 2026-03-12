@@ -1,7 +1,6 @@
 import { useCallback, useSyncExternalStore } from 'react';
 
 export const COOKIE_CONSENT_VERSION = 1;
-
 const STORAGE_KEY = 'cookie_consent';
 
 export type ConsentRecord = {
@@ -9,8 +8,8 @@ export type ConsentRecord = {
     version: number;
 };
 
-// Legacy compatibility surface for the current banner flow and legacy tests.
-// Optional-storage enforcement should read the server-shared consent contract instead.
+// Legacy compatibility surface only.
+// Authenticated consent reads and writes must use the server-shared contract instead.
 
 export function getCookieConsent(): ConsentRecord | null {
     if (typeof window === 'undefined') return null;
@@ -70,7 +69,7 @@ function getAcceptedSnapshot(): boolean | null {
 }
 
 export function useCookieConsent(): UseCookieConsentReturn {
-    // null = no decision yet, true = accepted, false = declined
+    // Legacy state only. Authenticated UI should read the server-shared contract instead.
     const accepted = useSyncExternalStore(
         subscribe,
         getAcceptedSnapshot,
