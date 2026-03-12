@@ -53,7 +53,7 @@
 - Choosing `Accept all` records acceptance and enables optional persistence behavior governed by the consent contract.
 - Choosing `Decline` records refusal and keeps the app operating under the essential-only storage policy.
 
-**Initial status:** Pending
+**Initial status:** Completed
 
 ## Phase 4: Verification And Regression Coverage
 
@@ -104,4 +104,4 @@
 4. Phase 4: Verification And Regression Coverage
 
 ---
-*Last updated: 2026-03-12 after Phase 2 verification*
+*Last updated: 2026-03-12 after Phase 3 verification*

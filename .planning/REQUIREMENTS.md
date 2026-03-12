@@ -9,9 +9,9 @@ Requirements for the cookie consent increment. Each maps to roadmap phases.
 
 ### Consent
 
-- [ ] **CONS-01**: Authenticated user who has not made a cookie choice is prompted for consent immediately after login
-- [ ] **CONS-02**: Authenticated user can choose `Accept all` from the consent prompt
-- [ ] **CONS-03**: Authenticated user can choose `Decline` from the consent prompt
+- [x] **CONS-01**: Authenticated user who has not made a cookie choice is prompted for consent immediately after login
+- [x] **CONS-02**: Authenticated user can choose `Accept all` from the consent prompt
+- [x] **CONS-03**: Authenticated user can choose `Decline` from the consent prompt
 - [x] **CONS-04**: User's cookie decision persists across future authenticated sessions until the consent version is reset or invalidated
 
 ### Storage Policy
@@ -23,8 +23,8 @@ Requirements for the cookie consent increment. Each maps to roadmap phases.
 
 ### App Experience
 
-- [ ] **APPX-01**: The consent prompt is mounted in the shared authenticated app experience so the user sees it on the first post-login destination
-- [ ] **APPX-02**: The consent prompt presents `Accept all` and `Decline` with equal prominence and no granular preference center in v1
+- [x] **APPX-01**: The consent prompt is mounted in the shared authenticated app experience so the user sees it on the first post-login destination
+- [x] **APPX-02**: The consent prompt presents `Accept all` and `Decline` with equal prominence and no granular preference center in v1
 - [x] **APPX-03**: The authenticated app remains usable with safe defaults when non-essential preference storage is unavailable
 
 ### Verification
@@ -64,16 +64,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONS-01 | Phase 3: Authenticated Prompt Experience | Pending |
-| CONS-02 | Phase 3: Authenticated Prompt Experience | Pending |
-| CONS-03 | Phase 3: Authenticated Prompt Experience | Pending |
+| CONS-01 | Phase 3: Authenticated Prompt Experience | Completed |
+| CONS-02 | Phase 3: Authenticated Prompt Experience | Completed |
+| CONS-03 | Phase 3: Authenticated Prompt Experience | Completed |
 | CONS-04 | Phase 1: Consent State And Delivery Contract | Completed |
 | STOR-01 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
 | STOR-02 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
 | STOR-03 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
 | STOR-04 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
-| APPX-01 | Phase 3: Authenticated Prompt Experience | Pending |
-| APPX-02 | Phase 3: Authenticated Prompt Experience | Pending |
+| APPX-01 | Phase 3: Authenticated Prompt Experience | Completed |
+| APPX-02 | Phase 3: Authenticated Prompt Experience | Completed |
 | APPX-03 | Phase 2: Storage Enforcement And Safe Defaults | Completed |
 | VERI-01 | Phase 4: Verification And Regression Coverage | Pending |
 | VERI-02 | Phase 4: Verification And Regression Coverage | Pending |
@@ -86,4 +86,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-12*
-*Last updated: 2026-03-12 after Phase 2 execution*
+*Last updated: 2026-03-12 after Phase 3 verification*
