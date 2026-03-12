@@ -2,6 +2,7 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
+import InstallPrompt from '@/components/install-prompt';
 import { Toaster } from '@/components/ui/sonner';
 import { UpdateNotificationModal } from '@/components/update-notification-modal';
 import type { AppLayoutProps } from '@/types';
@@ -16,6 +17,9 @@ export default function AppSidebarLayout({
             <AppContent variant="sidebar" className="overflow-x-hidden">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
+                <div className="mt-auto px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] md:hidden">
+                    <InstallPrompt />
+                </div>
             </AppContent>
             <UpdateNotificationModal />
             <Toaster />
