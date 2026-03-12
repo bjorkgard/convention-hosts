@@ -1,10 +1,10 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
     cleanupOptionalStorage,
     readOptionalLocalStorage,
     writeOptionalCookie,
     writeOptionalLocalStorage,
 } from '@/lib/consent/optional-storage';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 describe('optional-storage policy', () => {
     beforeEach(() => {

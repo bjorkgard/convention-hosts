@@ -2,13 +2,6 @@ import { Download, MoreVertical, Plus, Share, Smartphone } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { useConsent } from '@/hooks/use-consent';
-import {
-    isOptionalStorageAllowed,
-    readOptionalLocalStorage,
-    removeOptionalLocalStorage,
-    writeOptionalLocalStorage,
-} from '@/lib/consent/optional-storage';
 import {
     Dialog,
     DialogContent,
@@ -19,6 +12,13 @@ import {
     DialogTrigger,
     DialogClose,
 } from '@/components/ui/dialog';
+import { useConsent } from '@/hooks/use-consent';
+import {
+    isOptionalStorageAllowed,
+    readOptionalLocalStorage,
+    removeOptionalLocalStorage,
+    writeOptionalLocalStorage,
+} from '@/lib/consent/optional-storage';
 
 interface BeforeInstallPromptEvent extends Event {
     prompt(): Promise<void>;
