@@ -73,6 +73,16 @@ describe('sidebar consent gating', () => {
         expect(document.cookie).not.toContain('sidebar_state=true');
     });
 
+    it('writes sidebar_state cookies when storage is allowed', () => {
+        setConsentAllowed(true);
+
+        render(<SidebarHarness />);
+
+        fireEvent.click(screen.getByRole('button', { name: /toggle sidebar/i }));
+
+        expect(document.cookie).toContain('sidebar_state=false');
+    });
+
     it('keeps the shell usable with the default open state', () => {
         render(<SidebarHarness />);
 

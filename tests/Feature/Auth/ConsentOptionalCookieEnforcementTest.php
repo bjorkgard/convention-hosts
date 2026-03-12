@@ -12,13 +12,7 @@ test('accepted consent still trusts known optional cookies', function () {
         'consent_updated_at' => now()->subMinute(),
     ]);
 
-    $response = $this->actingAs($user)
-        ->withUnencryptedCookies([
-            'appearance' => 'dark',
-            'theme' => 'apple',
-            'sidebar_state' => 'false',
-        ])
-        ->get(route('conventions.index'));
+    $response = requestConventionsIndexWithOptionalCookies($this, $user);
 
     $response->assertOk()
         ->assertSee("const appearance = 'dark';", false)
@@ -39,13 +33,7 @@ test('declined consent ignores known optional cookies and forgets them on the re
         'consent_updated_at' => now()->subMinute(),
     ]);
 
-    $response = $this->actingAs($user)
-        ->withUnencryptedCookies([
-            'appearance' => 'dark',
-            'theme' => 'apple',
-            'sidebar_state' => 'false',
-        ])
-        ->get(route('conventions.index'));
+    $response = requestConventionsIndexWithOptionalCookies($this, $user);
 
     $response->assertOk()
         ->assertSee('data-theme="default"', false)
@@ -65,13 +53,7 @@ test('undecided consent behaves the same as declined for optional cookie trust',
 
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)
-        ->withUnencryptedCookies([
-            'appearance' => 'dark',
-            'theme' => 'apple',
-            'sidebar_state' => 'false',
-        ])
-        ->get(route('conventions.index'));
+    $response = requestConventionsIndexWithOptionalCookies($this, $user);
 
     $response->assertOk()
         ->assertSee('data-theme="default"', false)
@@ -136,6 +118,17 @@ function knownOptionalResponseCookieNames(\Illuminate\Testing\TestResponse $resp
         responseCookieNames($response),
         static fn (string $cookieName) => in_array($cookieName, ['appearance', 'theme', 'sidebar_state'], true)
     ));
+}
+
+function requestConventionsIndexWithOptionalCookies(Tests\TestCase $testCase, User $user): \Illuminate\Testing\TestResponse
+{
+    return $testCase->actingAs($user)
+        ->withUnencryptedCookies([
+            'appearance' => 'dark',
+            'theme' => 'apple',
+            'sidebar_state' => 'false',
+        ])
+        ->get(route('conventions.index'));
 }
 
 function rootHtmlTag(\Illuminate\Testing\TestResponse $response): string

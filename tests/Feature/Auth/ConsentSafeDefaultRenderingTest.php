@@ -72,6 +72,28 @@ test('previously supplied optional cookies no longer influence rendered output a
         ->and(safeDefaultRootHtmlTag($response))->toContain('data-theme="default"');
 });
 
+test('undecided consent also renders safe defaults and the default sidebar state', function () {
+    config()->set('consent.current_policy_version', 9);
+
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)
+        ->withUnencryptedCookies([
+            'appearance' => 'dark',
+            'theme' => 'android',
+            'sidebar_state' => 'false',
+        ])
+        ->get(route('conventions.index'));
+
+    $response->assertOk()
+        ->assertSee('data-theme="default"', false)
+        ->assertSee("const appearance = 'system';", false)
+        ->assertInertia(fn (Assert $page) => $page->where('sidebarOpen', true));
+
+    expect(safeDefaultRootHtmlTag($response))->not->toContain('class="dark"')
+        ->and(safeDefaultRootHtmlTag($response))->toContain('data-theme="default"');
+});
+
 function safeDefaultRootHtmlTag(\Illuminate\Testing\TestResponse $response): string
 {
     preg_match('/<html[^>]*>/', $response->getContent(), $matches);

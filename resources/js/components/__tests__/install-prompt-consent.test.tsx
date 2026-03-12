@@ -90,6 +90,17 @@ describe('install prompt consent gating', () => {
 
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
+
+    it('persists dismissal when storage is allowed', () => {
+        setConsentAllowed(true);
+
+        render(<InstallPrompt />);
+
+        actOpenTimer();
+        closeDialog();
+
+        expect(localStorage.getItem('install-prompt-dismissed')).toBe('true');
+    });
 });
 
 function actOpenTimer(): void {

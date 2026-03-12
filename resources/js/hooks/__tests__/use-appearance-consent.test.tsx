@@ -106,4 +106,21 @@ describe('use-appearance consent gating', () => {
         expect(localStorage.getItem('appearance')).toBeNull();
         expect(document.cookie).not.toContain('appearance=');
     });
+
+    it('persists updates when storage is allowed', () => {
+        setConsentAllowed(true);
+        setBootstrappedConsent(true);
+        initializeTheme();
+
+        const { result } = renderHook(() => useAppearance());
+
+        act(() => {
+            result.current.updateAppearance('dark');
+        });
+
+        expect(localStorage.getItem('appearance')).toBe('dark');
+        expect(document.cookie).toContain('appearance=dark');
+        expect(document.documentElement.classList.contains('dark')).toBe(true);
+        expect(document.documentElement.style.colorScheme).toBe('dark');
+    });
 });
