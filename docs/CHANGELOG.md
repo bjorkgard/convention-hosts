@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- add changelog generator skill for automated user-friendly changelogs
+
 ### Changed
 
 - Release automation no longer updates this changelog automatically. Changelog entries are now maintained manually.
