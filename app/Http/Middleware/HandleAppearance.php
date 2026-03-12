@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Consent\OptionalStorageRegistry;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -16,9 +17,11 @@ class HandleAppearance
      */
     public function handle(Request $request, Closure $next): Response
     {
-        View::share('appearance', $request->cookie('appearance') ?? 'system');
-        View::share('theme', $request->cookie('theme') ?? 'default');
+        $optionalStorage = app(OptionalStorageRegistry::class);
 
-        return $next($request);
+        View::share('appearance', $optionalStorage->trustedAppearance($request));
+        View::share('theme', $optionalStorage->trustedTheme($request));
+
+        return $optionalStorage->enforceOptionalCookiePolicy($request, $next($request));
     }
 }

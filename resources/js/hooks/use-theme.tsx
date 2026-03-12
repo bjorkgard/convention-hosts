@@ -1,7 +1,24 @@
-import { useCallback, useSyncExternalStore } from 'react';
-import { canSetCookies } from '@/hooks/use-cookie-consent';
+import { useCallback, useEffect, useSyncExternalStore } from 'react';
+import { useConsent } from '@/hooks/use-consent';
+import {
+    SAFE_THEME,
+    isOptionalStorageAllowed,
+    readOptionalLocalStorage,
+    removeOptionalCookie,
+    removeOptionalLocalStorage,
+    writeOptionalCookie,
+    writeOptionalLocalStorage,
+} from '@/lib/consent/optional-storage';
 
-export const THEMES = ['default', 'ocean', 'forest', 'sunset', 'rose', 'apple', 'android'] as const;
+export const THEMES = [
+    'default',
+    'ocean',
+    'forest',
+    'sunset',
+    'rose',
+    'apple',
+    'android',
+] as const;
 export type Theme = (typeof THEMES)[number];
 
 export const THEME_LABELS: Record<Theme, string> = {
@@ -22,16 +39,31 @@ export type UseThemeReturn = {
 const listeners = new Set<() => void>();
 let currentTheme: Theme = 'default';
 
-const setCookie = (name: string, value: string, days = 365): void => {
-    if (typeof document === 'undefined') return;
-    const maxAge = days * 24 * 60 * 60;
-    document.cookie = `${name}=${value};path=/;max-age=${maxAge};SameSite=Lax`;
-};
+function isTheme(value: string): value is Theme {
+    return THEMES.includes(value as Theme);
+}
 
-const getStoredTheme = (): Theme => {
-    if (typeof window === 'undefined') return 'default';
-    return (localStorage.getItem('theme') as Theme) || 'default';
-};
+function getBootstrapConsentAllowance(): boolean {
+    if (typeof document === 'undefined') {
+        return false;
+    }
+
+    const page = document.getElementById('app')?.dataset.page;
+
+    if (!page) {
+        return false;
+    }
+
+    try {
+        const parsed = JSON.parse(page) as {
+            props?: { consent?: { allowOptionalStorage?: boolean } };
+        };
+
+        return parsed.props?.consent?.allowOptionalStorage === true;
+    } catch {
+        return false;
+    }
+}
 
 const applyTheme = (theme: Theme): void => {
     if (typeof document === 'undefined') return;
@@ -60,41 +92,78 @@ const isAndroidDevice = (): boolean => {
 export function initializeTheme(): void {
     if (typeof window === 'undefined') return;
 
-    if (!localStorage.getItem('theme')) {
+    const allowOptionalStorage = getBootstrapConsentAllowance();
+
+    if (allowOptionalStorage && !window.localStorage.getItem('theme')) {
         let theme: Theme = 'default';
         if (isAndroidDevice()) {
             theme = 'android';
         } else if (isIOSDevice()) {
             theme = 'apple';
         }
-        localStorage.setItem('theme', theme);
-        if (canSetCookies()) setCookie('theme', theme);
+
+        writeOptionalLocalStorage('theme', theme, { allowOptionalStorage });
+        writeOptionalCookie('theme', theme, { allowOptionalStorage });
     }
 
-    currentTheme = getStoredTheme();
+    currentTheme = readOptionalLocalStorage('theme', {
+        allowed: allowOptionalStorage,
+        fallback: SAFE_THEME,
+        validate: isTheme,
+    });
+
+    if (!allowOptionalStorage) {
+        removeOptionalLocalStorage('theme');
+        removeOptionalCookie('theme');
+    }
+
     applyTheme(currentTheme);
 }
 
 export function useTheme(): UseThemeReturn {
+    const consent = useConsent();
+    const allowOptionalStorage = isOptionalStorageAllowed(consent);
     const theme: Theme = useSyncExternalStore(
         subscribe,
         () => currentTheme,
         () => 'default',
     );
 
-    const updateTheme = useCallback((newTheme: Theme): void => {
-        currentTheme = newTheme;
+    useEffect(() => {
+        if (allowOptionalStorage) {
+            return;
+        }
 
-        localStorage.setItem('theme', newTheme);
-        if (canSetCookies()) setCookie('theme', newTheme);
+        removeOptionalLocalStorage('theme');
+        removeOptionalCookie('theme');
 
-        applyTheme(newTheme);
-        notify();
+        if (currentTheme !== SAFE_THEME) {
+            currentTheme = SAFE_THEME;
+            applyTheme(currentTheme);
+            notify();
+        }
+    }, [allowOptionalStorage]);
 
-        // Reload so the server-rendered html data-theme attribute is correct,
-        // preventing any flash on the next hard navigation.
-        window.location.reload();
-    }, []);
+    const updateTheme = useCallback(
+        (newTheme: Theme): void => {
+            currentTheme = newTheme;
+
+            const wroteTheme = writeOptionalLocalStorage(
+                'theme',
+                newTheme,
+                consent,
+            );
+            const wroteCookie = writeOptionalCookie('theme', newTheme, consent);
+
+            applyTheme(newTheme);
+            notify();
+
+            if (wroteTheme && wroteCookie) {
+                window.location.reload();
+            }
+        },
+        [consent],
+    );
 
     return { theme, updateTheme } as const;
 }

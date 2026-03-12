@@ -1,5 +1,9 @@
+@php
+    $serverAppearance = $appearance ?? 'system';
+    $serverTheme = $theme ?? 'default';
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark']) data-theme="{{ $theme ?? 'default' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => $serverAppearance === 'dark']) data-theme="{{ $serverTheme }}">
     <head>
         <!-- ── Primary Charset & Viewport ── -->
         <meta charset="UTF-8" />
@@ -56,7 +60,7 @@
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
-                const appearance = '{{ $appearance ?? "system" }}';
+                const appearance = @js($serverAppearance);
 
                 if (appearance === 'system') {
                     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -64,13 +68,6 @@
                     if (prefersDark) {
                         document.documentElement.classList.add('dark');
                     }
-                }
-
-                // Restore theme from localStorage in case cookie is not yet set
-                // (first visit before the server sees the cookie)
-                const storedTheme = localStorage.getItem('theme');
-                if (storedTheme && storedTheme !== 'default') {
-                    document.documentElement.setAttribute('data-theme', storedTheme);
                 }
             })();
         </script>

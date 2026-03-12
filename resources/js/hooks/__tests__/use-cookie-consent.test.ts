@@ -7,7 +7,7 @@ import {
     declineCookies,
 } from '../use-cookie-consent';
 
-describe('use-cookie-consent', () => {
+describe('use-cookie-consent legacy compatibility surface', () => {
     beforeEach(() => {
         localStorage.clear();
     });
@@ -60,7 +60,7 @@ describe('use-cookie-consent', () => {
     });
 
     describe('acceptCookies', () => {
-        it('stores accepted consent with current version', () => {
+        it('stores the legacy accepted compatibility record with current version', () => {
             acceptCookies();
             const stored = JSON.parse(localStorage.getItem('cookie_consent')!);
             expect(stored).toEqual({ accepted: true, version: COOKIE_CONSENT_VERSION });
@@ -68,7 +68,7 @@ describe('use-cookie-consent', () => {
     });
 
     describe('declineCookies', () => {
-        it('stores declined consent with current version', () => {
+        it('stores the legacy declined compatibility record with current version', () => {
             declineCookies();
             const stored = JSON.parse(localStorage.getItem('cookie_consent')!);
             expect(stored).toEqual({ accepted: false, version: COOKIE_CONSENT_VERSION });

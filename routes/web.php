@@ -3,6 +3,7 @@
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\GuestConventionVerificationController;
 use App\Http\Controllers\Auth\InvitationController;
+use App\Http\Controllers\ConsentController;
 use App\Http\Controllers\ConventionController;
 use App\Http\Controllers\FloorController;
 use App\Http\Controllers\GuestConventionController;
@@ -50,6 +51,8 @@ Route::get('email/confirm/{user}', function (\App\Models\User $user) {
 })->name('email.confirm')->middleware('signed');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('consent', [ConsentController::class, 'store'])->name('consent.store');
+
     // Convention routes
     Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
     Route::get('conventions/create', [ConventionController::class, 'create'])->name('conventions.create');
