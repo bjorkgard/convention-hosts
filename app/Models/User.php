@@ -14,6 +14,12 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasUuids, Notifiable, TwoFactorAuthenticatable;
 
+    public const CONSENT_STATE_ACCEPTED = 'accepted';
+
+    public const CONSENT_STATE_DECLINED = 'declined';
+
+    public const CONSENT_STATE_UNDECIDED = 'undecided';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -51,6 +57,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'email_confirmed' => 'boolean',
             'password' => 'hashed',
+            'consent_version' => 'integer',
+            'consent_decided_at' => 'datetime',
+            'consent_updated_at' => 'datetime',
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
