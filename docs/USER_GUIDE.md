@@ -53,6 +53,22 @@ Sections start with 0% occupancy and 0 available seats.
 
 The floor dropdown shows only floors you have access to based on your role. Owner and Administrator see all floors. URL session users cannot create sections.
 
+## Section Detail View
+
+Clicking a section name (from the floors page or search results) opens the section detail page. This page shows:
+
+- Section name, parent floor, and convention context
+- Occupancy gauge with current percentage
+- Seat capacity and accessibility badges (elder-friendly, handicap-friendly)
+- Additional information text, if any
+- All three occupancy update controls (dropdown, FULL button, available seats input)
+- A help note explaining that occupancy resets automatically every night
+- Last update footer showing who updated occupancy and when
+
+If an attendance report is active, an attendance card appears below the section details where you can enter or update the attendance count for the current period.
+
+Owner and Administrator roles see a **Delete** button in the header to permanently remove the section and all its data.
+
 ## Tracking Occupancy
 
 Each section has three ways to update its occupancy:
@@ -197,6 +213,7 @@ They cannot view floors, manage users, or start/stop attendance reports.
 
 - No login is required — the link opens directly into the convention
 - The interface is simplified: no user menu, profile, or logout options
+- Breadcrumb navigation omits the "Conventions" link since URL session users only have access to a single convention
 - The Apple theme is applied automatically
 - If the browser session expires, the volunteer simply re-opens the link
 
@@ -211,7 +228,7 @@ The Search page is available to all authenticated users regardless of role.
    - Handicap-friendly sections (checkbox)
 3. Results show only sections with less than 90% occupancy
 4. Results are sorted by occupancy (lowest first) so the most available sections appear at the top
-5. Click a result to navigate to the section detail
+5. Click a result to navigate to the section detail page
 
 ## Exporting Convention Data
 
@@ -250,6 +267,17 @@ Once installed, the app opens in full-screen mode without the browser address ba
 
 When a new version of the application is released, a notification modal appears automatically. It shows your current version, the new version number, release name, and release notes. You can click **Reload Now** to update immediately — this clears cached assets and service workers to ensure you get the latest version cleanly. Alternatively, dismiss the modal to continue working — it won't reappear until the next check cycle (every 5 minutes).
 
+## Cookie Consent
+
+When you first visit the application, a consent banner appears at the bottom of the screen asking whether you accept optional cookies (used for theme and appearance preferences).
+
+- **Accept** — preference cookies are stored normally in your browser
+- **Decline** — only essential cookies (session, CSRF) are used; theme preferences fall back to localStorage
+
+Your choice is remembered per device. If the application introduces new cookie functionality, the banner reappears so you can review and decide again.
+
+Authenticated users have their consent decision saved to their account (synced across devices). Anonymous users accessing via a shared URL have their choice stored in the browser session only.
+
 ## Account Settings
 
 Access your settings from the user menu:
@@ -265,7 +293,7 @@ Access your settings from the user menu:
 
 **Can't see floors or sections:** Your role may not have access. Check with your convention manager about your assigned role and scope.
 
-**Occupancy not updating:** Make sure you have permission for the section. Authenticated users with Owner or Administrator roles can update any section. URL session users can update occupancy for sections within their access scope.
+**Occupancy not updating:** Make sure you have permission for the section. Authenticated users with Owner or Administrator roles can update any section. URL session users can update occupancy for sections within their access scope. If you are logged in and also opened a URL access link, the URL session grants you occupancy update permissions regardless of your account's role on the convention.
 
 **Attendance report won't start:** The maximum is 2 reports per day. If both morning and afternoon periods have already been created, you'll need to wait until the next day.
 

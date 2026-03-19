@@ -221,6 +221,28 @@ Returns: binary file download. File is deleted from server after sending.
 
 ---
 
+## Consent
+
+### Record Cookie Consent
+
+```
+POST /consent
+```
+
+No authentication required. Available to both authenticated users and URL-session (anonymous) users.
+
+| Field | Type | Rules |
+|-------|------|-------|
+| state | string | required, one of: `accepted`, `declined` |
+
+**Behavior:**
+- Authenticated users: consent state is persisted via `RecordUserConsentAction`
+- Anonymous users (URL session): consent state is stored in the Laravel session as `consent_state`
+
+On success: redirects back.
+
+---
+
 ## URL Access (Unauthenticated)
 
 ### Access via Floor URL
@@ -321,15 +343,20 @@ Returns Inertia page `sections/index` with sections.
 GET /sections/{section}
 ```
 
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
+
 Returns Inertia page `sections/show` with:
 
 | Prop | Type | Description |
 |------|------|-------------|
-| section | Section | Section with floor, convention, lastUpdatedBy |
+| section | Section | Section with floor, convention, last_updated_by |
 | floor | Floor | Parent floor |
 | convention | Convention | Parent convention |
 | userRoles | string[] | Current user's roles |
 | activePeriod | AttendancePeriod\|null | Current unlocked period, if any |
+| myReport | AttendanceReport\|null | Current user's report for the active period, if any |
+
+The section detail page provides all three occupancy update methods (dropdown, FULL button, available seats input), inline attendance reporting when a period is active, and section deletion for Owner/Administrator roles.
 
 ### Store Section
 
@@ -380,7 +407,7 @@ On success: redirects to `floors.index`.
 PATCH /sections/{section}/occupancy
 ```
 
-Authorization: SectionPolicy `update`
+Authorization: SectionPolicy `update` (skipped when a URL session is active — middleware handles access)
 
 | Field | Type | Rules |
 |-------|------|-------|
@@ -395,7 +422,7 @@ At least one of `occupancy` or `available_seats` must be provided. When `availab
 POST /sections/{section}/full
 ```
 
-Authorization: SectionPolicy `update`
+Authorization: SectionPolicy `update` (skipped when a URL session is active — middleware handles access)
 
 No request body. Sets occupancy to 100% and records the updating user and timestamp.
 

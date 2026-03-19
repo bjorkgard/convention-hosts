@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Move consent route outside auth middleware so URL-session (anonymous) users can submit cookie consent; anonymous consent is stored in the Laravel session
 - Rename ConventionUser role to Administrator
 - Remove FloorUser and SectionUser roles, `floor_user` and `section_user` pivot tables
 - Remove `reported_by` column from attendance reports — any user with section permissions can now create or update reports
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename sidebar navigation: "Floors" → "Administration", "Search" → "Availability"
 - URL sessions use Apple appearance theme
 - Release automation no longer updates this changelog automatically. Changelog entries are now maintained manually.
+- Skip SectionPolicy check for `updateOccupancy` and `setFull` when a URL session is active — middleware already authorizes access, preventing authenticated users with a URL session from being blocked by the policy
 
 ## [v0.5.4] - 2026-03-12
 

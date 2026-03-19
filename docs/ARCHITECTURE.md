@@ -360,6 +360,14 @@ Route::middleware(EnsureConventionOrUrlAccess::class)->group(function () {
 
 This middleware ensures that users can only access conventions they are associated with through either the role-based access control system or a valid URL session token.
 
+#### URL Session and Policy Interaction
+
+When an authenticated user also has an active URL session (e.g., they logged in separately and then opened a floor/section access link), the URL session takes precedence for occupancy-related actions (`updateOccupancy`, `setFull`). The `SectionController` skips the Laravel Policy check when a URL session is present, since the middleware has already authorized access to the convention. This prevents authenticated users who have no role on the convention from being blocked by the policy when they have a valid URL session.
+
+#### URL Session UI Adaptations
+
+The frontend adapts its chrome for URL session users. The `Breadcrumbs` component reads the `urlSession` prop from the Inertia page props and filters out the "Conventions" breadcrumb item, since URL session users only have access to a single convention and cannot navigate to the conventions list.
+
 ## State Management
 
 ### Server State (Inertia)

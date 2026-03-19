@@ -64,7 +64,7 @@ tests/                          # Backend tests (Pest PHP)
 ├── Feature/                   # HTTP-level feature tests
 │   ├── Auth/                 # Authentication flows
 │   ├── Settings/             # Settings flows
-│   ├── Section/              # Section authorization
+│   ├── Section/              # Section authorization and URL session access
 │   ├── Integration/          # End-to-end multi-step flows and performance
 │   ├── GuestConventionVerification/
 │   ├── Properties/           # Feature-level property-based tests

@@ -29,6 +29,11 @@ A comprehensive convention management system built with Laravel and React. Manag
 - Two-factor authentication (TOTP) with recovery codes
 - Type-safe routing via Laravel Wayfinder
 
+### Privacy and Consent
+- Versioned cookie consent with accept/decline options
+- Authenticated users' consent persisted server-side; anonymous URL-session users stored in session
+- Policy version tracking triggers re-prompt when consent policy changes
+
 ### Search and Accessibility
 - Find available sections with elder-friendly and handicap-friendly filters
 - Progressive Web App for native-like mobile experience
