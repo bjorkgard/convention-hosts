@@ -45,6 +45,36 @@ return [
 ];
 ```
 
+### Pluralization
+
+Use Laravel's standard plural syntax in translation files. The API automatically converts it to i18next's plural format when serving translations.
+
+Laravel syntax:
+
+```php
+// lang/en/attendance.php
+return [
+    'sections_reported' => '{1} :count section reported|[2,*] :count sections reported',
+];
+```
+
+The API expands this into two i18next-compatible keys with `_one` / `_other` suffixes and converts `:placeholder` to `{{placeholder}}`:
+
+```json
+{
+    "attendance": {
+        "sections_reported_one": "{{count}} section reported",
+        "sections_reported_other": "{{count}} sections reported"
+    }
+}
+```
+
+In React, use i18next's `count` interpolation to select the correct form:
+
+```tsx
+t('attendance.sections_reported', { count: reportedCount })
+```
+
 ## Adding a New Language
 
 1. Create a new directory under `lang/`, e.g. `lang/de/`

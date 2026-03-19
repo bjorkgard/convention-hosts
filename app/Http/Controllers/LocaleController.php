@@ -43,15 +43,39 @@ class LocaleController extends Controller
     }
 
     /**
-     * Recursively convert Laravel :placeholder to i18next {{placeholder}}.
+     * Recursively convert Laravel syntax to i18next syntax.
+     *
+     * Handles:
+     * - :placeholder → {{placeholder}}
+     * - Laravel plural "{1} one|[2,*] other" → ['_one' => 'one', '_other' => 'other']
      */
     private function convertPlaceholders(mixed $value): mixed
     {
         if (is_array($value)) {
-            return array_map(fn ($v) => $this->convertPlaceholders($v), $value);
+            $result = [];
+            foreach ($value as $key => $v) {
+                $converted = $this->convertPlaceholders($v);
+                if (is_array($converted) && isset($converted['_one'])) {
+                    // Expand plural keys: key → key_one + key_other
+                    $result[$key.'_one'] = $converted['_one'];
+                    $result[$key.'_other'] = $converted['_other'];
+                } else {
+                    $result[$key] = $converted;
+                }
+            }
+
+            return $result;
         }
 
         if (is_string($value)) {
+            // Detect Laravel plural syntax: "{1} ...|[2,*] ..."
+            if (preg_match('/\{1\}\s*(.+?)\|.*\[2,\*\]\s*(.+)/', $value, $matches)) {
+                return [
+                    '_one' => (string) preg_replace('/:([a-zA-Z_]+)/', '{{$1}}', trim($matches[1])),
+                    '_other' => (string) preg_replace('/:([a-zA-Z_]+)/', '{{$1}}', trim($matches[2])),
+                ];
+            }
+
             return (string) preg_replace('/:([a-zA-Z_]+)/', '{{$1}}', $value);
         }
 
