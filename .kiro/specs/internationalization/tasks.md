@@ -28,13 +28,13 @@ This plan implements a complete i18n system where Laravel is the single source o
     - Add `locale: string` to `PageProps` in `resources/js/types/index.ts`
     - _Requirements: 4.1, 4.2, 3.5_
 
-- [ ] 2. Translation file structure
-  - [ ] 2.1 Create English (`en`) translation files for all domains
+- [x] 2. Translation file structure
+  - [x] 2.1 Create English (`en`) translation files for all domains
     - Create `lang/en/` directory with files: `auth.php`, `convention.php`, `floor.php`, `section.php`, `user.php`, `search.php`, `attendance.php`, `settings.php`, `emails.php`, `validation.php`, `public.php`, `notifications.php`, `navigation.php`, `export.php`, `common.php`
     - Scan all existing pages, components, Blade views, controllers, form requests, and email templates to extract every hardcoded string
     - Use dot-notation keys reflecting domain and context (e.g., `convention.create.title`, `auth.login.email_label`)
     - _Requirements: 1.1, 1.2, 1.5_
-  - [ ] 2.2 Create Swedish (`sv`) translation files with translated equivalents
+  - [x] 2.2 Create Swedish (`sv`) translation files with translated equivalents
     - Create `lang/sv/` directory with all 15 domain files mirroring the English locale
     - Provide Swedish translations for all keys present in the English locale
     - Include Laravel's built-in validation messages in Swedish via `lang/sv/validation.php`

@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add internationalization (i18n) system with English and Swedish locales
+- Add translation files for 15 domains: auth, convention, floor, section, user, search, attendance, settings, emails, validation, public, notifications, navigation, export, common
+- Add `locale` column to `users` table (nullable, default null) for user language preference
+- Add `locale` column to `conventions` table (nullable, default 'sv') for convention default language
 - Add `hearing_loop` boolean accessibility flag to sections across the full stack (database, model, validation, section modal, search filter, TypeScript type, and all export formats)
 - add changelog generator skill for automated user-friendly changelogs
 - Simplify role system from four tiers (Owner, ConventionUser, FloorUser, SectionUser) to two tiers (Owner, Administrator)

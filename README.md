@@ -34,6 +34,14 @@ A comprehensive convention management system built with Laravel and React. Manag
 - Authenticated users' consent persisted server-side; anonymous URL-session users stored in session
 - Policy version tracking triggers re-prompt when consent policy changes
 
+### Internationalization (i18n)
+- Full multi-language support with English and Swedish out of the box
+- Laravel as single source of truth for all translations (`lang/{locale}/` directory)
+- Frontend translations served via API and consumed by `react-i18next`
+- Locale resolution chain: user preference → convention default → Swedish fallback
+- Language selector for authenticated users and anonymous URL session visitors
+- Auto-discovery of new locales (add a `lang/{locale}/` directory and it just works)
+
 ### Search and Accessibility
 - Find available sections with elder-friendly, handicap-friendly, and hearing loop filters
 - Progressive Web App for native-like mobile experience
@@ -219,6 +227,7 @@ See [Testing Guide](docs/TESTING.md) for details on writing tests and the proper
 - [Testing Guide](docs/TESTING.md) — Writing and running tests
 - [Deployment](docs/DEPLOYMENT.md) — Production deployment guide
 - [Contributing](docs/CONTRIBUTING.md) — How to contribute
+- [Internationalization](docs/INTERNATIONALIZATION.md) — i18n system and adding new languages
 - [Changelog](docs/CHANGELOG.md) — Version history
 
 ## License

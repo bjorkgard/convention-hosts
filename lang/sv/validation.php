@@ -1,0 +1,203 @@
+<?php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Valideringsmeddelanden
+    |--------------------------------------------------------------------------
+    |
+    | Följande rader innehåller standardmeddelanden som används av
+    | valideringsklassen. Vissa regler har flera versioner, t.ex.
+    | storleksregler. Anpassa gärna dessa meddelanden.
+    |
+    */
+
+    'accepted' => 'Fältet :attribute måste accepteras.',
+    'accepted_if' => 'Fältet :attribute måste accepteras när :other är :value.',
+    'active_url' => 'Fältet :attribute måste vara en giltig URL.',
+    'after' => 'Fältet :attribute måste vara ett datum efter :date.',
+    'after_or_equal' => 'Fältet :attribute måste vara ett datum efter eller lika med :date.',
+    'alpha' => 'Fältet :attribute får bara innehålla bokstäver.',
+    'alpha_dash' => 'Fältet :attribute får bara innehålla bokstäver, siffror, bindestreck och understreck.',
+    'alpha_num' => 'Fältet :attribute får bara innehålla bokstäver och siffror.',
+    'array' => 'Fältet :attribute måste vara en lista.',
+    'ascii' => 'Fältet :attribute får bara innehålla alfanumeriska tecken och symboler med en byte.',
+    'before' => 'Fältet :attribute måste vara ett datum före :date.',
+    'before_or_equal' => 'Fältet :attribute måste vara ett datum före eller lika med :date.',
+    'between' => [
+        'array' => 'Fältet :attribute måste innehålla mellan :min och :max objekt.',
+        'file' => 'Fältet :attribute måste vara mellan :min och :max kilobyte.',
+        'numeric' => 'Fältet :attribute måste vara mellan :min och :max.',
+        'string' => 'Fältet :attribute måste vara mellan :min och :max tecken.',
+    ],
+    'boolean' => 'Fältet :attribute måste vara sant eller falskt.',
+    'can' => 'Fältet :attribute innehåller ett otillåtet värde.',
+    'confirmed' => 'Bekräftelsen av :attribute stämmer inte.',
+    'contains' => 'Fältet :attribute saknar ett obligatoriskt värde.',
+    'current_password' => 'Lösenordet är felaktigt.',
+    'date' => 'Fältet :attribute måste vara ett giltigt datum.',
+    'date_equals' => 'Fältet :attribute måste vara ett datum lika med :date.',
+    'date_format' => 'Fältet :attribute måste matcha formatet :format.',
+    'decimal' => 'Fältet :attribute måste ha :decimal decimaler.',
+    'declined' => 'Fältet :attribute måste avvisas.',
+    'declined_if' => 'Fältet :attribute måste avvisas när :other är :value.',
+    'different' => 'Fältet :attribute och :other måste vara olika.',
+    'digits' => 'Fältet :attribute måste vara :digits siffror.',
+    'digits_between' => 'Fältet :attribute måste vara mellan :min och :max siffror.',
+    'dimensions' => 'Fältet :attribute har ogiltiga bilddimensioner.',
+    'distinct' => 'Fältet :attribute har ett duplicerat värde.',
+    'doesnt_end_with' => 'Fältet :attribute får inte sluta med något av följande: :values.',
+    'doesnt_start_with' => 'Fältet :attribute får inte börja med något av följande: :values.',
+    'email' => 'Fältet :attribute måste vara en giltig e-postadress.',
+    'ends_with' => 'Fältet :attribute måste sluta med något av följande: :values.',
+    'enum' => 'Det valda värdet för :attribute är ogiltigt.',
+    'exists' => 'Det valda värdet för :attribute är ogiltigt.',
+    'extensions' => 'Fältet :attribute måste ha en av följande filändelser: :values.',
+    'file' => 'Fältet :attribute måste vara en fil.',
+    'filled' => 'Fältet :attribute måste ha ett värde.',
+    'gt' => [
+        'array' => 'Fältet :attribute måste ha fler än :value objekt.',
+        'file' => 'Fältet :attribute måste vara större än :value kilobyte.',
+        'numeric' => 'Fältet :attribute måste vara större än :value.',
+        'string' => 'Fältet :attribute måste vara längre än :value tecken.',
+    ],
+    'gte' => [
+        'array' => 'Fältet :attribute måste ha :value objekt eller fler.',
+        'file' => 'Fältet :attribute måste vara minst :value kilobyte.',
+        'numeric' => 'Fältet :attribute måste vara minst :value.',
+        'string' => 'Fältet :attribute måste vara minst :value tecken.',
+    ],
+    'hex_color' => 'Fältet :attribute måste vara en giltig hexadecimal färg.',
+    'image' => 'Fältet :attribute måste vara en bild.',
+    'in' => 'Det valda värdet för :attribute är ogiltigt.',
+    'in_array' => 'Fältet :attribute måste finnas i :other.',
+    'integer' => 'Fältet :attribute måste vara ett heltal.',
+    'ip' => 'Fältet :attribute måste vara en giltig IP-adress.',
+    'ipv4' => 'Fältet :attribute måste vara en giltig IPv4-adress.',
+    'ipv6' => 'Fältet :attribute måste vara en giltig IPv6-adress.',
+    'json' => 'Fältet :attribute måste vara en giltig JSON-sträng.',
+    'list' => 'Fältet :attribute måste vara en lista.',
+    'lowercase' => 'Fältet :attribute måste vara i gemener.',
+    'lt' => [
+        'array' => 'Fältet :attribute måste ha färre än :value objekt.',
+        'file' => 'Fältet :attribute måste vara mindre än :value kilobyte.',
+        'numeric' => 'Fältet :attribute måste vara mindre än :value.',
+        'string' => 'Fältet :attribute måste vara kortare än :value tecken.',
+    ],
+    'lte' => [
+        'array' => 'Fältet :attribute får inte ha fler än :value objekt.',
+        'file' => 'Fältet :attribute får inte vara större än :value kilobyte.',
+        'numeric' => 'Fältet :attribute får inte vara större än :value.',
+        'string' => 'Fältet :attribute får inte vara längre än :value tecken.',
+    ],
+    'mac_address' => 'Fältet :attribute måste vara en giltig MAC-adress.',
+    'max' => [
+        'array' => 'Fältet :attribute får inte ha fler än :max objekt.',
+        'file' => 'Fältet :attribute får inte vara större än :max kilobyte.',
+        'numeric' => 'Fältet :attribute får inte vara större än :max.',
+        'string' => 'Fältet :attribute får inte vara längre än :max tecken.',
+    ],
+    'max_digits' => 'Fältet :attribute får inte ha fler än :max siffror.',
+    'mimes' => 'Fältet :attribute måste vara en fil av typen: :values.',
+    'mimetypes' => 'Fältet :attribute måste vara en fil av typen: :values.',
+    'min' => [
+        'array' => 'Fältet :attribute måste ha minst :min objekt.',
+        'file' => 'Fältet :attribute måste vara minst :min kilobyte.',
+        'numeric' => 'Fältet :attribute måste vara minst :min.',
+        'string' => 'Fältet :attribute måste vara minst :min tecken.',
+    ],
+    'min_digits' => 'Fältet :attribute måste ha minst :min siffror.',
+    'missing' => 'Fältet :attribute måste saknas.',
+    'missing_if' => 'Fältet :attribute måste saknas när :other är :value.',
+    'missing_unless' => 'Fältet :attribute måste saknas om inte :other är :value.',
+    'missing_with' => 'Fältet :attribute måste saknas när :values finns.',
+    'missing_with_all' => 'Fältet :attribute måste saknas när :values finns.',
+    'multiple_of' => 'Fältet :attribute måste vara en multipel av :value.',
+    'not_in' => 'Det valda värdet för :attribute är ogiltigt.',
+    'not_regex' => 'Formatet för :attribute är ogiltigt.',
+    'numeric' => 'Fältet :attribute måste vara ett nummer.',
+    'password' => [
+        'letters' => 'Fältet :attribute måste innehålla minst en bokstav.',
+        'mixed' => 'Fältet :attribute måste innehålla minst en stor och en liten bokstav.',
+        'numbers' => 'Fältet :attribute måste innehålla minst en siffra.',
+        'symbols' => 'Fältet :attribute måste innehålla minst en symbol.',
+        'uncompromised' => 'Det angivna :attribute har förekommit i en dataläcka. Välj ett annat :attribute.',
+    ],
+    'present' => 'Fältet :attribute måste finnas.',
+    'present_if' => 'Fältet :attribute måste finnas när :other är :value.',
+    'present_unless' => 'Fältet :attribute måste finnas om inte :other är :value.',
+    'present_with' => 'Fältet :attribute måste finnas när :values finns.',
+    'present_with_all' => 'Fältet :attribute måste finnas när :values finns.',
+    'prohibited' => 'Fältet :attribute är förbjudet.',
+    'prohibited_if' => 'Fältet :attribute är förbjudet när :other är :value.',
+    'prohibited_unless' => 'Fältet :attribute är förbjudet om inte :other finns i :values.',
+    'prohibits' => 'Fältet :attribute förbjuder :other från att finnas.',
+    'regex' => 'Formatet för :attribute är ogiltigt.',
+    'required' => 'Fältet :attribute är obligatoriskt.',
+    'required_array_keys' => 'Fältet :attribute måste innehålla poster för: :values.',
+    'required_if' => 'Fältet :attribute är obligatoriskt när :other är :value.',
+    'required_if_accepted' => 'Fältet :attribute är obligatoriskt när :other är accepterat.',
+    'required_if_declined' => 'Fältet :attribute är obligatoriskt när :other är avvisat.',
+    'required_unless' => 'Fältet :attribute är obligatoriskt om inte :other finns i :values.',
+    'required_with' => 'Fältet :attribute är obligatoriskt när :values finns.',
+    'required_with_all' => 'Fältet :attribute är obligatoriskt när :values finns.',
+    'required_without' => 'Fältet :attribute är obligatoriskt när :values saknas.',
+    'required_without_all' => 'Fältet :attribute är obligatoriskt när ingen av :values finns.',
+    'same' => 'Fältet :attribute måste matcha :other.',
+    'size' => [
+        'array' => 'Fältet :attribute måste innehålla :size objekt.',
+        'file' => 'Fältet :attribute måste vara :size kilobyte.',
+        'numeric' => 'Fältet :attribute måste vara :size.',
+        'string' => 'Fältet :attribute måste vara :size tecken.',
+    ],
+    'starts_with' => 'Fältet :attribute måste börja med något av följande: :values.',
+    'string' => 'Fältet :attribute måste vara en textsträng.',
+    'timezone' => 'Fältet :attribute måste vara en giltig tidszon.',
+    'unique' => ':attribute har redan tagits.',
+    'uploaded' => ':attribute kunde inte laddas upp.',
+    'uppercase' => 'Fältet :attribute måste vara i versaler.',
+    'url' => 'Fältet :attribute måste vara en giltig URL.',
+    'ulid' => 'Fältet :attribute måste vara ett giltigt ULID.',
+    'uuid' => 'Fältet :attribute måste vara ett giltigt UUID.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Anpassade valideringsmeddelanden
+    |--------------------------------------------------------------------------
+    */
+
+    'convention_overlapping' => 'En sammankomst finns redan på denna plats under dessa datum.',
+    'occupancy_or_seats_required' => 'Antingen beläggning eller lediga platser måste anges.',
+    'password_regex' => 'Lösenordet måste innehålla minst en liten bokstav, en stor bokstav, en siffra och en symbol (@$!%*#?&).',
+    'jwpub_domain' => 'E-postadressen kan inte innehålla domänen jwpub.org.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Anpassade attributnamn
+    |--------------------------------------------------------------------------
+    */
+
+    'attributes' => [
+        'name' => 'namn',
+        'email' => 'e-post',
+        'password' => 'lösenord',
+        'password_confirmation' => 'lösenordsbekräftelse',
+        'current_password' => 'nuvarande lösenord',
+        'first_name' => 'förnamn',
+        'last_name' => 'efternamn',
+        'mobile' => 'mobil',
+        'city' => 'stad',
+        'country' => 'land',
+        'address' => 'adress',
+        'start_date' => 'startdatum',
+        'end_date' => 'slutdatum',
+        'other_info' => 'övrig information',
+        'number_of_seats' => 'antal platser',
+        'occupancy' => 'beläggning',
+        'available_seats' => 'lediga platser',
+        'information' => 'information',
+        'attendance' => 'närvaro',
+        'roles' => 'roller',
+        'floor_id' => 'våning',
+    ],
+];

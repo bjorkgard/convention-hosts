@@ -57,6 +57,10 @@ convention-hosts/
 │   ├── migrations/               # Database Migrations
 │   └── seeders/                  # Database Seeders
 │
+├── lang/                          # Translation Files (i18n)
+│   ├── en/                       # English translations (15 domain files)
+│   └── sv/                       # Swedish translations (15 domain files)
+│
 ├── public/                        # Public Assets
 │   ├── build/                    # Compiled Assets (generated)
 │   ├── icons/                    # PWA icons
