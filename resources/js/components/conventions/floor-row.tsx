@@ -16,6 +16,7 @@ interface FloorRowProps {
     floor: Floor;
     sections: Section[];
     userRole: Role | null;
+    defaultOpen?: boolean;
     onEdit?: (floor: Floor) => void;
     onDelete?: (floor: Floor) => void;
     onEditSection?: (section: Section) => void;
@@ -44,8 +45,8 @@ function canDeleteSection(role: Role | null): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-export default function FloorRow({ floor, sections, userRole, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
-    const [isOpen, setIsOpen] = useState(false);
+export default function FloorRow({ floor, sections, userRole, defaultOpen = false, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
+    const [isOpen, setIsOpen] = useState(defaultOpen);
     const averageOccupancy = getAverageOccupancy(sections);
 
     return (

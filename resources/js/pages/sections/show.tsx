@@ -111,7 +111,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
         { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
         { title: 'Floors', href: floorsIndex.url(convention.id) },
-        { title: floor.name, href: floorsIndex.url(convention.id) },
+        { title: floor.name, href: `${floorsIndex.url(convention.id)}?open=${floor.id}` },
         { title: section.name, href: sectionShow.url(section.id) },
     ];
 

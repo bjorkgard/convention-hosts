@@ -1,4 +1,4 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -38,6 +38,8 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
     const { isOwner, isAdministrator, isManager } = useConventionRole();
     const canAddSection = isManager;
     const userRole: Role | null = isOwner ? 'Owner' : isAdministrator ? 'Administrator' : null;
+
+    const openFloorId = new URLSearchParams(usePage().url.split('?')[1] ?? '').get('open');
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingFloor, setEditingFloor] = useState<Floor | null>(null);
@@ -189,6 +191,7 @@ export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
                                 floor={floor}
                                 sections={floor.sections ?? []}
                                 userRole={userRole}
+                                defaultOpen={openFloorId === String(floor.id)}
                                 onEdit={openEditDialog}
                                 onDelete={(f) => setDeletingFloor(f)}
                                 onEditSection={openSectionEdit}

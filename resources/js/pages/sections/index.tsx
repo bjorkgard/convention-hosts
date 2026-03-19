@@ -54,7 +54,7 @@ export default function SectionsIndex({ convention, floor, sections }: SectionsI
         { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
         { title: 'Floors', href: floorsIndex.url(convention.id) },
-        { title: floor.name, href: sectionsIndex.url({ convention: convention.id, floor: floor.id }) },
+        { title: floor.name, href: `${floorsIndex.url(convention.id)}?open=${floor.id}` },
     ];
 
     function handleAdd(e: React.FormEvent) {
