@@ -24,6 +24,8 @@ interface ConventionsShowProps {
     floors: Floor[];
     attendancePeriods: AttendancePeriod[];
     users: ConventionUser[];
+    floor_url?: string;
+    section_url?: string;
 }
 
 function formatDateRange(startDate: string, endDate: string): string {
@@ -48,7 +50,7 @@ function formatDateRange(startDate: string, endDate: string): string {
     return `${fmt(start, { day: 'numeric', month: 'long', year: 'numeric' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
 }
 
-export default function ConventionsShow({ convention, floors }: ConventionsShowProps) {
+export default function ConventionsShow({ convention, floors, floor_url, section_url }: ConventionsShowProps) {
     useFlashToast();
     const { isOwner, isManager } = useConventionRole();
     const { activePeriod, canStart, canStop, reportedCount, totalCount } = useAttendanceReport();
@@ -135,21 +137,21 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
                 </div>
 
                 {/* URL Access Links */}
-                {isManager && convention.floor_url && convention.section_url && (
+                {isManager && floor_url && section_url && (
                     <div className="flex flex-col gap-3 rounded-xl border border-border p-4">
                         <h2 className="text-sm font-medium">Access URLs</h2>
                         <div className="flex flex-col gap-2">
                             <UrlCopyRow
                                 label="Floor Access URL"
-                                url={convention.floor_url}
-                                copied={copiedUrl === convention.floor_url}
-                                onCopy={() => copyToClipboard(convention.floor_url!)}
+                                url={floor_url}
+                                copied={copiedUrl === floor_url}
+                                onCopy={() => copyToClipboard(floor_url)}
                             />
                             <UrlCopyRow
                                 label="Section Access URL"
-                                url={convention.section_url}
-                                copied={copiedUrl === convention.section_url}
-                                onCopy={() => copyToClipboard(convention.section_url!)}
+                                url={section_url}
+                                copied={copiedUrl === section_url}
+                                onCopy={() => copyToClipboard(section_url)}
                             />
                         </div>
                     </div>
