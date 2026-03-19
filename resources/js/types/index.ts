@@ -34,6 +34,7 @@ export interface PageProps {
     [key: string]: unknown;
     auth: Auth;
     consent: ConsentContract;
+    locale: string;
     name: string;
     sidebarOpen: boolean;
     appVersion: string | null;

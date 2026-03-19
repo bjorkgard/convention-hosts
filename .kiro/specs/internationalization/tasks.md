@@ -6,23 +6,23 @@ This plan implements a complete i18n system where Laravel is the single source o
 
 ## Tasks
 
-- [ ] 1. Database schema and model updates
-  - [ ] 1.1 Create migration to add `locale` column to `users` table
+- [x] 1. Database schema and model updates
+  - [x] 1.1 Create migration to add `locale` column to `users` table
     - Add `locale` column: string, nullable, default `null`, after `email_confirmed`
     - _Requirements: 4.1, 4.3_
-  - [ ] 1.2 Create migration to add `locale` column to `conventions` table
+  - [x] 1.2 Create migration to add `locale` column to `conventions` table
     - Add `locale` column: string, nullable, default `'sv'`, after `section_url_token`
     - _Requirements: 4.2_
-  - [ ] 1.3 Update User model to include `locale` in `$fillable`
+  - [x] 1.3 Update User model to include `locale` in `$fillable`
     - Add `'locale'` to the `$fillable` array in `app/Models/User.php`
     - _Requirements: 4.1_
-  - [ ] 1.4 Update Convention model to include `locale` in `$fillable`
+  - [x] 1.4 Update Convention model to include `locale` in `$fillable`
     - Add `'locale'` to the `$fillable` array in `app/Models/Convention.php`
     - _Requirements: 4.2_
-  - [ ] 1.5 Update User and Convention factories to support `locale` attribute
+  - [x] 1.5 Update User and Convention factories to support `locale` attribute
     - Add `locale` to `UserFactory` and `ConventionFactory` definitions
     - _Requirements: 4.1, 4.2_
-  - [ ] 1.6 Update TypeScript types for `locale` fields
+  - [x] 1.6 Update TypeScript types for `locale` fields
     - Add `locale: string | null` to `User` type in `resources/js/types/user.ts`
     - Add `locale: string` to `Convention` type in `resources/js/types/convention.ts`
     - Add `locale: string` to `PageProps` in `resources/js/types/index.ts`

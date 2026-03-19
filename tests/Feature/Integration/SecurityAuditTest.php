@@ -541,7 +541,7 @@ describe('Common vulnerabilities', function () {
         $convention = new Convention;
         expect($convention->getFillable())->toBe([
             'name', 'city', 'country', 'address', 'start_date', 'end_date', 'other_info',
-            'floor_url_token', 'section_url_token',
+            'floor_url_token', 'section_url_token', 'locale',
         ]);
 
         // Floor model
