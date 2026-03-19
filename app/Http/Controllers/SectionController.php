@@ -107,8 +107,8 @@ class SectionController extends Controller
     {
         $user = $request->user();
 
-        // URL sessions are authorized by middleware; authenticated users need policy check
-        if ($user) {
+        // URL sessions (floor or section) are authorized by middleware; authenticated users need policy check
+        if ($user && ! session('url_session')) {
             $this->authorize('update', $section);
         }
 
@@ -124,8 +124,8 @@ class SectionController extends Controller
     {
         $user = $request->user();
 
-        // URL sessions are authorized by middleware; authenticated users need policy check
-        if ($user) {
+        // URL sessions (floor or section) are authorized by middleware; authenticated users need policy check
+        if ($user && ! session('url_session')) {
             $this->authorize('update', $section);
         }
 
