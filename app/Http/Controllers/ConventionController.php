@@ -105,7 +105,6 @@ class ConventionController extends Controller
         // Expose access URLs to Owner/Administrator only
         $isManager = $user && $user->hasAnyRole($convention, ['Owner', 'Administrator']);
         if ($isManager) {
-            $props['floor_url'] = $convention->floorAccessUrl();
             $props['section_url'] = $convention->sectionAccessUrl();
         }
 

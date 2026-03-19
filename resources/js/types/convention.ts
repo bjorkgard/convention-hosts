@@ -11,7 +11,6 @@ export interface Convention {
     other_info: string | null;
     created_at: string;
     updated_at: string;
-    floor_url?: string;
     section_url?: string;
     floors?: Floor[];
     users?: User[];

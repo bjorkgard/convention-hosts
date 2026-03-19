@@ -181,7 +181,6 @@ Returns Inertia page `conventions/show` with:
 | users | User[] | Convention users with roles (authenticated users only) |
 | userRoles | string[] | Current user's roles for this convention |
 | urlSession | UrlSession\|null | URL session data (type, convention_id) or null |
-| floor_url | string | Floor access URL (Owner/Administrator only) |
 | section_url | string | Section access URL (Owner/Administrator only) |
 
 ### Update Convention
