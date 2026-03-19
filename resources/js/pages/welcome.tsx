@@ -22,6 +22,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UpdateNotificationModal } from '@/components/update-notification-modal';
 import { VersionBadge } from '@/components/version-badge';
+import { localeLabel } from '@/lib/locale-labels';
 import { login } from '@/routes';
 
 const featureIcons = [LayoutGrid, BarChart3, Users, CalendarDays, Search, Smartphone];
@@ -32,6 +33,7 @@ export default function Welcome() {
     const [showForm, setShowForm] = useState(false);
     const formRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
+    const [locales, setLocales] = useState<string[]>(['sv', 'en']);
 
     const features = featureKeys.map((key, i) => ({
         icon: featureIcons[i],
@@ -53,6 +55,15 @@ export default function Welcome() {
             });
         }
     }, [showForm]);
+
+    useEffect(() => {
+        fetch('/api/locales')
+            .then((res) => res.json())
+            .then((data: string[]) => {
+                if (data.length > 0) setLocales(data);
+            })
+            .catch(() => {});
+    }, []);
 
     return (
         <>
@@ -456,12 +467,11 @@ export default function Welcome() {
                                                         defaultValue="sv"
                                                         className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                                                     >
-                                                        <option value="sv">
-                                                            Svenska
-                                                        </option>
-                                                        <option value="en">
-                                                            English
-                                                        </option>
+                                                        {locales.map((code) => (
+                                                            <option key={code} value={code}>
+                                                                {localeLabel(code)}
+                                                            </option>
+                                                        ))}
                                                     </select>
                                                     <InputError
                                                         message={

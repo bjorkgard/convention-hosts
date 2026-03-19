@@ -80,8 +80,9 @@ t('attendance.sections_reported', { count: reportedCount })
 1. Create a new directory under `lang/`, e.g. `lang/de/`
 2. Copy all 15 PHP files from `lang/en/` into the new directory
 3. Translate the values (keep the keys identical)
+4. Add a display label in `resources/js/lib/locale-labels.ts` (e.g. `de: 'Deutsch'`)
 
-The API auto-discovers new locales from the `lang/` directory — no code changes needed. This behavior is verified by `tests/Feature/LocaleAutoDiscoveryTest.php`.
+The API auto-discovers new locales from the `lang/` directory — no code changes needed. Step 4 is optional but recommended; without it the UI falls back to showing the uppercase locale code (e.g. "DE"). This behavior is verified by `tests/Feature/LocaleAutoDiscoveryTest.php`.
 
 ## Locale Resolution
 
@@ -126,6 +127,8 @@ The i18n system is initialized in `resources/js/lib/i18n.ts` and imported as a s
 - No static JSON translation files in the frontend source
 
 A `useLocaleSync` hook (in `resources/js/hooks/use-locale-sync.ts`) keeps `react-i18next` in sync with the locale shared via Inertia props on every navigation. For URL-session users, the hook checks `localStorage` for a per-convention preference (`locale_{conventionId}`) before falling back to the server-provided locale. This prevents Inertia navigations from resetting a language choice made via the `LocaleSelector` component.
+
+Human-readable locale labels (e.g. `en` → "English", `sv` → "Svenska") are defined in `resources/js/lib/locale-labels.ts`. The `localeLabel()` helper is used by both the `LocaleSelector` dropdown and the profile settings page. When adding a new language, add its label to the `LOCALE_LABELS` map in that file so the UI displays a friendly name instead of the raw locale code.
 
 ## Frontend Usage
 

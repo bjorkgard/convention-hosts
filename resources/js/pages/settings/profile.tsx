@@ -16,6 +16,8 @@ import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
 
+import { localeLabel } from '@/lib/locale-labels';
+
 const LOCALE_OPTIONS: { value: string; label: string }[] = [
     { value: 'sv', label: 'Svenska' },
     { value: 'en', label: 'English' },
@@ -48,7 +50,7 @@ export default function Profile({
                     const existing = LOCALE_OPTIONS.find(
                         (o) => o.value === c,
                     );
-                    return existing ?? { value: c, label: c.toUpperCase() };
+                    return existing ?? { value: c, label: localeLabel(c) };
                 });
                 setLocales(mapped);
             })

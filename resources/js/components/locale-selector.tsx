@@ -12,16 +12,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { localeLabel } from '@/lib/locale-labels';
 import type { PageProps } from '@/types';
-
-const LOCALE_LABELS: Record<string, string> = {
-    en: 'English',
-    sv: 'Svenska',
-};
-
-function localeLabel(code: string): string {
-    return LOCALE_LABELS[code] ?? code.toUpperCase();
-}
 
 let cachedLocales: string[] | null = null;
 
