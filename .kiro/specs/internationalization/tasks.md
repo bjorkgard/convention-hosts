@@ -103,25 +103,25 @@ This plan implements a complete i18n system where Laravel is the single source o
     - Test fallback to `'sv'` when user locale is null
     - _Requirements: 10.1, 10.2, 10.3_
 
-- [ ] 7. Frontend i18n bootstrap
-  - [ ] 7.1 Install `react-i18next`, `i18next`, and `i18next-http-backend` npm packages
+- [x] 7. Frontend i18n bootstrap
+  - [x] 7.1 Install `react-i18next`, `i18next`, and `i18next-http-backend` npm packages
     - Run `npm install react-i18next i18next i18next-http-backend`
     - _Requirements: 5.1, 5.2_
-  - [ ] 7.2 Create `resources/js/lib/i18n.ts` bootstrap file
+  - [x] 7.2 Create `resources/js/lib/i18n.ts` bootstrap file
     - Configure `i18next` with `HttpBackend` loading from `/api/translations/{{lng}}`
     - Set fallback language to `'sv'`
     - Set `interpolation.escapeValue` to `false` (React handles escaping)
     - Do NOT use static local JSON translation files
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
-  - [ ] 7.3 Import i18n bootstrap in `app.tsx`
+  - [x] 7.3 Import i18n bootstrap in `app.tsx`
     - Add `import './lib/i18n'` to `resources/js/app.tsx` so i18n initializes as a side effect
     - _Requirements: 5.1_
-  - [ ] 7.4 Create `useLocaleSync` hook
+  - [x] 7.4 Create `useLocaleSync` hook
     - Create `resources/js/hooks/use-locale-sync.ts`
     - Read `locale` from Inertia page props via `usePage<PageProps>()`
     - Call `i18n.changeLanguage(locale)` when the prop changes
     - _Requirements: 5.2_
-  - [ ] 7.5 Integrate `useLocaleSync` in layout components
+  - [x] 7.5 Integrate `useLocaleSync` in layout components
     - Call `useLocaleSync()` in `AppLayout` and `AuthLayout` to keep locale in sync on every Inertia navigation
     - _Requirements: 5.2_
 

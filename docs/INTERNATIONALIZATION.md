@@ -80,9 +80,19 @@ __('convention.created_success')
 @lang('emails.invitation.greeting', ['name' => $userName])
 ```
 
+## Frontend Bootstrap
+
+The i18n system is initialized in `resources/js/lib/i18n.ts` and imported as a side effect in `app.tsx`. It uses `i18next-http-backend` to fetch translations from the Laravel API at runtime:
+
+- Backend: `i18next-http-backend` loads from `/api/translations/{{lng}}`
+- Fallback language: Swedish (`sv`)
+- No static JSON translation files in the frontend source
+
+A `useLocaleSync` hook (in `resources/js/hooks/use-locale-sync.ts`) keeps `react-i18next` in sync with the locale shared via Inertia props on every navigation.
+
 ## Frontend Usage
 
-The React frontend uses `react-i18next`. Translations are fetched from `/api/translations/{locale}` — no static JSON files in the frontend source.
+Use the `useTranslation` hook from `react-i18next` in any component:
 
 ```tsx
 import { useTranslation } from 'react-i18next';
