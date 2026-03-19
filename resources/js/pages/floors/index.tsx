@@ -37,10 +37,9 @@ interface FloorsIndexProps {
 }
 
 export default function FloorsIndex({ convention, floors, userFloorIds = [], userSectionIds = [] }: FloorsIndexProps) {
-    const { isOwner, isConventionUser, isFloorUser } = useConventionRole();
-    const isManager = isOwner || isConventionUser;
-    const canAddSection = isOwner || isConventionUser || isFloorUser;
-    const userRole: Role = isOwner ? 'Owner' : isConventionUser ? 'ConventionUser' : isFloorUser ? 'FloorUser' : 'SectionUser';
+    const { isOwner, isAdministrator, isManager } = useConventionRole();
+    const canAddSection = isManager;
+    const userRole: Role = isOwner ? 'Owner' : 'Administrator';
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingFloor, setEditingFloor] = useState<Floor | null>(null);
@@ -53,9 +52,8 @@ export default function FloorsIndex({ convention, floors, userFloorIds = [], use
 
     // Filter floors for the section modal based on user role
     const sectionModalFloors = useMemo(() => {
-        if (isOwner || isConventionUser) return floors;
-        return floors.filter((f) => userFloorIds.includes(f.id));
-    }, [floors, isOwner, isConventionUser, userFloorIds]);
+        return floors;
+    }, [floors]);
 
     const addForm = useForm({ name: '' });
     const editForm = useForm({ name: '' });

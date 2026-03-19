@@ -150,25 +150,25 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
 - [x] 5. Checkpoint - Ensure all backend tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Frontend type and hook updates
-  - [ ] 6.1 Update TypeScript types
+- [x] 6. Frontend type and hook updates
+  - [x] 6.1 Update TypeScript types
     - **`types/user.ts`**: Change `Role` type to `'Owner' | 'Administrator'`; remove `floor_ids` and `section_ids` from `ConventionUser` interface
     - **`types/convention.ts`**: Add `floor_url?: string` and `section_url?: string` to `Convention` interface; remove `reported_by` and `reported_by_user` from `AttendanceReport` interface
     - **`types/index.ts`**: Add `UrlSession` interface (`convention_id: string`, `type: 'floor' | 'section'`); add `urlSession` to shared `PageProps`
     - _Requirements: 1.1, 2.5, 5.1, 8.6_
 
-  - [ ] 6.2 Update `use-convention-role` hook
+  - [x] 6.2 Update `use-convention-role` hook
     - Add `isAdministrator`, `isUrlSession`, `isFloorUrlSession`, `isSectionUrlSession`, `isManager` computed properties
     - Remove `isConventionUser`, `isFloorUser`, `isSectionUser` (or whatever the current equivalents are)
     - Remove `hasFloorAccess()` and `hasSectionAccess()` if they exist
     - Read `urlSession` from page props
     - _Requirements: 1.1, 3.1, 4.1_
 
-  - [ ] 6.3 Update `use-appearance` hook
+  - [x] 6.3 Update `use-appearance` hook
     - Check for `urlSession` prop and force `apple` theme when URL session is active
     - _Requirements: 9.4, 9.5_
 
-  - [ ] 6.4 Write property tests for frontend hooks (Vitest + fast-check)
+  - [x] 6.4 Write property tests for frontend hooks (Vitest + fast-check)
     - **Property 1: Role system invariant** — generate random role arrays, verify hook only recognizes Owner/Administrator
     - **Validates: Requirements 1.1, 1.5, 1.6**
     - **Property 11: URL session Apple theme** — generate random URL session states, verify theme is always "apple" when URL session active

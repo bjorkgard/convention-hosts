@@ -111,10 +111,10 @@ describe('useAttendanceReport', () => {
             expect(result.current.canStart).toBe(true);
         });
 
-        it('is true when user is ConventionUser, no active period, and fewer than 2 periods today', () => {
+        it('is true when user is Administrator, no active period, and fewer than 2 periods today', () => {
             setPageProps({
                 attendancePeriods: [],
-                userRoles: ['ConventionUser'],
+                userRoles: ['Administrator'],
             });
 
             const { result } = renderHook(() => useAttendanceReport());
@@ -189,10 +189,10 @@ describe('useAttendanceReport', () => {
             expect(result.current.canStop).toBe(true);
         });
 
-        it('is true for ConventionUser when active period exists', () => {
+        it('is true for Administrator when active period exists', () => {
             setPageProps({
                 attendancePeriods: [makePeriod({ locked: false })],
-                userRoles: ['ConventionUser'],
+                userRoles: ['Administrator'],
             });
 
             const { result } = renderHook(() => useAttendanceReport());

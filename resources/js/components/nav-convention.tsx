@@ -24,19 +24,17 @@ interface ConventionPageProps {
 
 export function NavConvention() {
     const { convention } = usePage<ConventionPageProps>().props;
-    const { isOwner, isConventionUser, isFloorUser } = useConventionRole();
+    const { isManager, isUrlSession, isSectionUrlSession } = useConventionRole();
     const { isCurrentUrl } = useCurrentUrl();
 
     if (!convention) return null;
 
     const conventionId = convention.id;
-    const canSeeFloors = isOwner || isConventionUser || isFloorUser;
-    const canSeeUsers = isOwner || isConventionUser || isFloorUser;
 
     const items: NavItem[] = [];
 
-    // Floors: visible to Owner, ConventionUser, FloorUser
-    if (canSeeFloors) {
+    // Floors: visible to managers and floor URL sessions (not section URL sessions)
+    if (isManager || (isUrlSession && !isSectionUrlSession)) {
         items.push({
             title: 'Floors',
             href: floorsIndex.url(conventionId),
@@ -44,15 +42,15 @@ export function NavConvention() {
         });
     }
 
-    // Sections: visible to ALL roles — points to convention detail which shows floors/sections
+    // Sections: visible to ALL roles and URL sessions
     items.push({
         title: 'Sections',
         href: conventionShow.url(conventionId),
         icon: Grid3X3,
     });
 
-    // Users: visible to Owner, ConventionUser, FloorUser
-    if (canSeeUsers) {
+    // Users: visible to managers only (not URL sessions)
+    if (isManager && !isUrlSession) {
         items.push({
             title: 'Users',
             href: usersIndex.url(conventionId),
@@ -60,7 +58,7 @@ export function NavConvention() {
         });
     }
 
-    // Search: visible to ALL roles
+    // Search: visible to ALL roles and URL sessions
     items.push({
         title: 'Search',
         href: searchIndex.url(conventionId),

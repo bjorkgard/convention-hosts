@@ -11,6 +11,8 @@ export interface Convention {
     other_info: string | null;
     created_at: string;
     updated_at: string;
+    floor_url?: string;
+    section_url?: string;
     floors?: Floor[];
     users?: User[];
     attendance_periods?: AttendancePeriod[];
@@ -64,11 +66,9 @@ export interface AttendanceReport {
     attendance_period_id: string;
     section_id: string;
     attendance: number;
-    reported_by: string | null;
     reported_at: string;
     created_at: string;
     updated_at: string;
     period?: AttendancePeriod;
     section?: Section;
-    reported_by_user?: User | null;
 }

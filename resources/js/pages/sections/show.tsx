@@ -103,9 +103,9 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
     useFlashToast();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const { isOwner, isConventionUser, isFloorUser, hasFloorAccess } = useConventionRole();
+    const { isManager } = useConventionRole();
 
-    const canDeleteSection = isOwner || isConventionUser || (isFloorUser && hasFloorAccess(floor.id));
+    const canDeleteSection = isManager;
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Conventions', href: conventionsIndex.url() },

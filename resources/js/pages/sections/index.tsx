@@ -36,8 +36,8 @@ interface SectionsIndexProps {
 }
 
 export default function SectionsIndex({ convention, floor, sections }: SectionsIndexProps) {
-    const { isOwner, isConventionUser, isFloorUser, hasFloorAccess } = useConventionRole();
-    const canAddSection = isOwner || isConventionUser || (isFloorUser && hasFloorAccess(floor.id));
+    const { isManager } = useConventionRole();
+    const canAddSection = isManager;
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [deletingSection, setDeletingSection] = useState<Section | null>(null);

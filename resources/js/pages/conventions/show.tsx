@@ -49,12 +49,10 @@ function formatDateRange(startDate: string, endDate: string): string {
 
 export default function ConventionsShow({ convention, floors }: ConventionsShowProps) {
     useFlashToast();
-    const { isOwner, isConventionUser } = useConventionRole();
+    const { isOwner, isManager } = useConventionRole();
     const { activePeriod, canStart, canStop, reportedCount, totalCount } = useAttendanceReport();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
-
-    const isManager = isOwner || isConventionUser;
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Conventions', href: index.url() },
@@ -79,7 +77,7 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
     const totalAttendance = activePeriod?.reports?.reduce((sum, r) => sum + r.attendance, 0) ?? 0;
 
     // Determine the primary user role for FloorRow
-    const userRole = isOwner ? 'Owner' : isConventionUser ? 'ConventionUser' : 'FloorUser';
+    const userRole = isOwner ? 'Owner' : 'Administrator';
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

@@ -27,7 +27,7 @@ export function useAttendanceReport(): UseAttendanceReportReturn {
 
     return useMemo(() => {
         const roles = new Set<string>(userRoles);
-        const isManager = roles.has('Owner') || roles.has('ConventionUser');
+        const isManager = roles.has('Owner') || roles.has('Administrator');
 
         // Find the active (unlocked) period
         const activePeriod =

@@ -31,23 +31,19 @@ function getAverageOccupancy(sections: Section[]): number {
 }
 
 function canEdit(role: Role): boolean {
-    return role === 'Owner' || role === 'ConventionUser' || role === 'FloorUser';
+    return role === 'Owner' || role === 'Administrator';
 }
 
 function canDelete(role: Role): boolean {
-    return role === 'Owner' || role === 'ConventionUser';
+    return role === 'Owner' || role === 'Administrator';
 }
 
-function canEditSection(role: Role, floor: Floor, userFloorIds?: number[]): boolean {
-    if (role === 'Owner' || role === 'ConventionUser') return true;
-    if (role === 'FloorUser' && userFloorIds?.includes(floor.id)) return true;
-    return false;
+function canEditSection(role: Role, _floor: Floor, _userFloorIds?: number[]): boolean {
+    return role === 'Owner' || role === 'Administrator';
 }
 
-function canDeleteSection(role: Role, floor: Floor, userFloorIds?: number[]): boolean {
-    if (role === 'Owner' || role === 'ConventionUser') return true;
-    if (role === 'FloorUser' && userFloorIds?.includes(floor.id)) return true;
-    return false;
+function canDeleteSection(role: Role, _floor: Floor, _userFloorIds?: number[]): boolean {
+    return role === 'Owner' || role === 'Administrator';
 }
 
 export default function FloorRow({ floor, sections, userRole, userFloorIds, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
