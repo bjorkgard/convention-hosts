@@ -49,6 +49,14 @@ export function NavConvention() {
         icon: Grid3X3,
     });
 
+    // Search: visible to ALL roles and URL sessions
+    items.push({
+        title: 'Availability',
+        href: searchIndex.url(conventionId),
+        icon: Search,
+    });
+
+
     // Users: visible to managers only (not URL sessions)
     if (isManager && !isUrlSession) {
         items.push({
@@ -57,14 +65,6 @@ export function NavConvention() {
             icon: Users,
         });
     }
-
-    // Search: visible to ALL roles and URL sessions
-    items.push({
-        title: 'Availability',
-        href: searchIndex.url(conventionId),
-        icon: Search,
-    });
-
     return (
         <SidebarGroup className="px-2 py-0">
             <SidebarGroupLabel>{convention.name}</SidebarGroupLabel>
