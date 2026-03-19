@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
-import { destroy, index as sectionsIndex, store } from '@/actions/App/Http/Controllers/SectionController';
+import { destroy, store } from '@/actions/App/Http/Controllers/SectionController';
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import SectionCard from '@/components/conventions/section-card';
 import InputError from '@/components/input-error';

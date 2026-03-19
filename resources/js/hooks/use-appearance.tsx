@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { usePage } from '@inertiajs/react';
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { useConsent } from '@/hooks/use-consent';
 import {
     SAFE_APPEARANCE,

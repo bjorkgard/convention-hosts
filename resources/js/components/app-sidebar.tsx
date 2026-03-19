@@ -6,7 +6,6 @@ import AppLogo from '@/components/app-logo';
 import { NavConvention } from '@/components/nav-convention';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { useConventionRole } from '@/hooks/use-convention-role';
 import {
     Sidebar,
     SidebarContent,
@@ -17,6 +16,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { VersionBadge } from '@/components/version-badge';
+import { useConventionRole } from '@/hooks/use-convention-role';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [

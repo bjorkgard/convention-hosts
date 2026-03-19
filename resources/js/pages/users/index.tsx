@@ -51,8 +51,8 @@ interface UsersIndexProps {
     userRoles: Role[];
 }
 
-export default function UsersIndex({ convention, users, floors }: UsersIndexProps) {
-    const { isOwner, isManager } = useConventionRole();
+export default function UsersIndex({ convention, users }: UsersIndexProps) {
+    const { isManager } = useConventionRole();
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingUser, setEditingUser] = useState<ConventionUser | null>(null);
