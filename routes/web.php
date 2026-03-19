@@ -9,11 +9,11 @@ use App\Http\Controllers\FloorController;
 use App\Http\Controllers\GuestConventionController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\UrlAccessController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VersionController;
-use App\Http\Middleware\EnsureConventionAccess;
+use App\Http\Middleware\EnsureConventionOrUrlAccess;
 use App\Http\Middleware\EnsureOwnerRole;
-use App\Http\Middleware\ScopeByRole;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -50,48 +50,65 @@ Route::get('email/confirm/{user}', function (\App\Models\User $user) {
     return redirect()->route('home')->with('status', 'Email confirmed successfully.');
 })->name('email.confirm')->middleware('signed');
 
+// URL access routes (public, no auth required)
+Route::get('url-access/floor/{token}', [UrlAccessController::class, 'floor'])->name('url-access.floor');
+Route::get('url-access/section/{token}', [UrlAccessController::class, 'section'])->name('url-access.section');
+
+// Routes accessible by both authenticated users AND URL sessions
+Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
+    Route::get('conventions/{convention}', [ConventionController::class, 'show'])->name('conventions.show');
+
+    // Floor index (viewable by floor URL sessions)
+    Route::get('conventions/{convention}/floors', [FloorController::class, 'index'])->name('floors.index');
+
+    // Section index and detail (viewable by both URL session types)
+    Route::get('conventions/{convention}/floors/{floor}/sections', [SectionController::class, 'index'])->name('sections.index');
+    Route::get('sections/{section}', [SectionController::class, 'show'])->name('sections.show');
+
+    // Occupancy updates (allowed for URL sessions)
+    Route::patch('sections/{section}/occupancy', [SectionController::class, 'updateOccupancy'])->name('sections.updateOccupancy');
+    Route::post('sections/{section}/full', [SectionController::class, 'setFull'])->name('sections.setFull');
+
+    // Attendance reporting (allowed for URL sessions)
+    Route::post('sections/{section}/attendance/{attendancePeriod}/report', [AttendanceController::class, 'report'])->name('attendance.report');
+
+    // Search (accessible to all with convention access)
+    Route::get('conventions/{convention}/search', [SearchController::class, 'index'])->name('search.index');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('consent', [ConsentController::class, 'store'])->name('consent.store');
 
-    // Convention routes
+    // Convention routes (auth-only)
     Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
     Route::get('conventions/create', [ConventionController::class, 'create'])->name('conventions.create');
     Route::post('conventions', [ConventionController::class, 'store'])->name('conventions.store');
 
-    Route::middleware([EnsureConventionAccess::class, ScopeByRole::class])->group(function () {
-        Route::get('conventions/{convention}', [ConventionController::class, 'show'])->name('conventions.show');
+    Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::put('conventions/{convention}', [ConventionController::class, 'update'])->name('conventions.update');
     });
 
-    Route::middleware([EnsureConventionAccess::class, EnsureOwnerRole::class])->group(function () {
+    Route::middleware([EnsureConventionOrUrlAccess::class, EnsureOwnerRole::class])->group(function () {
         Route::delete('conventions/{convention}', [ConventionController::class, 'destroy'])->name('conventions.destroy');
         Route::get('conventions/{convention}/export', [ConventionController::class, 'export'])->name('conventions.export');
     });
 
-    // Floor routes (nested under conventions)
-    Route::middleware([EnsureConventionAccess::class, ScopeByRole::class])->group(function () {
-        Route::get('conventions/{convention}/floors', [FloorController::class, 'index'])->name('floors.index');
+    // Floor management (auth-only: create, update, delete)
+    Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::post('conventions/{convention}/floors', [FloorController::class, 'store'])->name('floors.store');
     });
-
     Route::put('floors/{floor}', [FloorController::class, 'update'])->name('floors.update');
     Route::delete('floors/{floor}', [FloorController::class, 'destroy'])->name('floors.destroy');
 
-    // Section routes (nested under conventions/floors for index and store)
-    Route::middleware([EnsureConventionAccess::class, ScopeByRole::class])->group(function () {
-        Route::get('conventions/{convention}/floors/{floor}/sections', [SectionController::class, 'index'])->name('sections.index');
+    // Section management (auth-only: create, update, delete)
+    Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::post('conventions/{convention}/floors/{floor}/sections', [SectionController::class, 'store'])->name('sections.store');
     });
-
-    // Section routes (standalone by section ID)
-    Route::get('sections/{section}', [SectionController::class, 'show'])->name('sections.show');
     Route::put('sections/{section}', [SectionController::class, 'update'])->name('sections.update');
-    Route::patch('sections/{section}/occupancy', [SectionController::class, 'updateOccupancy'])->name('sections.updateOccupancy');
-    Route::post('sections/{section}/full', [SectionController::class, 'setFull'])->name('sections.setFull');
     Route::delete('sections/{section}', [SectionController::class, 'destroy'])->name('sections.destroy');
 
-    // User routes (nested under conventions)
-    Route::middleware([EnsureConventionAccess::class, ScopeByRole::class])->group(function () {
+    // User routes (auth-only, nested under conventions)
+    Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::get('conventions/{convention}/users', [UserController::class, 'index'])->name('users.index');
         Route::post('conventions/{convention}/users', [UserController::class, 'store'])->name('users.store');
         Route::put('conventions/{convention}/users/{user}', [UserController::class, 'update'])->name('users.update');
@@ -99,21 +116,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Resend invitation with throttle (3 per 60 minutes)
-    Route::middleware([EnsureConventionAccess::class, 'throttle:3,60'])->group(function () {
+    Route::middleware([EnsureConventionOrUrlAccess::class, 'throttle:3,60'])->group(function () {
         Route::post('conventions/{convention}/users/{user}/resend-invitation', [UserController::class, 'resendInvitation'])->name('users.resendInvitation');
     });
 
-    // Attendance routes
-    Route::middleware([EnsureConventionAccess::class])->group(function () {
+    // Attendance start/stop (auth-only, Owner/Administrator)
+    Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::post('conventions/{convention}/attendance/start', [AttendanceController::class, 'start'])->name('attendance.start');
         Route::post('conventions/{convention}/attendance/{attendancePeriod}/stop', [AttendanceController::class, 'stop'])->name('attendance.stop');
-    });
-
-    Route::post('sections/{section}/attendance/{attendancePeriod}/report', [AttendanceController::class, 'report'])->name('attendance.report');
-
-    // Search routes (accessible to all authenticated users with convention access, no role-based filtering)
-    Route::middleware([EnsureConventionAccess::class])->group(function () {
-        Route::get('conventions/{convention}/search', [SearchController::class, 'index'])->name('search.index');
     });
 });
 

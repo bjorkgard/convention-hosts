@@ -19,13 +19,13 @@ class AttendanceController extends Controller
     /**
      * Start a new attendance report period for the convention.
      *
-     * Only ConventionUser or Owner roles can start attendance reports.
+     * Only Administrator or Owner roles can start attendance reports.
      */
     public function start(Request $request, Convention $convention): RedirectResponse
     {
         $user = $request->user();
 
-        if (! $user->hasAnyRole($convention, ['Owner', 'ConventionUser'])) {
+        if (! $user->hasAnyRole($convention, ['Owner', 'Administrator'])) {
             abort(403, 'Only convention managers can start attendance reports.');
         }
 
@@ -41,13 +41,13 @@ class AttendanceController extends Controller
     /**
      * Stop (lock) an attendance period.
      *
-     * Only ConventionUser or Owner roles can stop attendance reports.
+     * Only Administrator or Owner roles can stop attendance reports.
      */
     public function stop(Request $request, Convention $convention, AttendancePeriod $attendancePeriod): RedirectResponse
     {
         $user = $request->user();
 
-        if (! $user->hasAnyRole($convention, ['Owner', 'ConventionUser'])) {
+        if (! $user->hasAnyRole($convention, ['Owner', 'Administrator'])) {
             abort(403, 'Only convention managers can stop attendance reports.');
         }
 

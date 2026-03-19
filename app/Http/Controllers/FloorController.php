@@ -17,34 +17,14 @@ class FloorController extends Controller
      */
     public function index(Request $request, Convention $convention): Response
     {
-        $query = $convention->floors()->with(['sections.users:id,first_name,last_name', 'users:id,first_name,last_name']);
+        $floors = $convention->floors()->with('sections')->get();
 
-        // Apply role-based scoping from ScopeByRole middleware
-        if ($scopedFloorIds = $request->get('scoped_floor_ids')) {
-            $query->whereIn('id', $scopedFloorIds);
-        }
-
-        if ($scopedSectionIds = $request->get('scoped_section_ids')) {
-            $query->whereHas('sections', function ($q) use ($scopedSectionIds) {
-                $q->whereIn('id', $scopedSectionIds);
-            });
-            $query->with(['sections' => function ($q) use ($scopedSectionIds) {
-                $q->whereIn('id', $scopedSectionIds)->with('users:id,first_name,last_name');
-            }]);
-        }
-
-        $floors = $query->get();
-
-        $userRoles = $request->user()->rolesForConvention($convention);
-        $userFloorIds = $request->user()->floors()->pluck('floors.id')->toArray();
-        $userSectionIds = $request->user()->sections()->pluck('sections.id')->toArray();
+        $userRoles = $request->user()?->rolesForConvention($convention) ?? collect();
 
         return Inertia::render('floors/index', [
             'convention' => $convention,
             'floors' => $floors,
             'userRoles' => $userRoles,
-            'userFloorIds' => $userFloorIds,
-            'userSectionIds' => $userSectionIds,
         ]);
     }
 

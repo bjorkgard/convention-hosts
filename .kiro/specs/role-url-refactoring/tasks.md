@@ -55,37 +55,37 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
 - [x] 2. Checkpoint - Ensure migration and model tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. Backend middleware, controller, and routing
-  - [ ] 3.1 Create UrlAccessController
+- [x] 3. Backend middleware, controller, and routing
+  - [x] 3.1 Create UrlAccessController
     - `floor(string $token)` method: look up convention by `floor_url_token`, store URL session in Laravel session (`convention_id`, `type: floor`, `token`), redirect to `conventions.show`
     - `section(string $token)` method: same pattern with `section_url_token` and `type: section`
     - Return 404 for invalid/non-existent tokens
     - _Requirements: 3.1, 4.1_
 
-  - [ ] 3.2 Create EnsureConventionOrUrlAccess middleware
+  - [x] 3.2 Create EnsureConventionOrUrlAccess middleware
     - Replace `EnsureConventionAccess` middleware
     - Check if user is authenticated with a convention role → allow
     - Check if session has `url_session` with matching `convention_id` → allow
     - Otherwise abort 403
     - _Requirements: 3.1, 4.1_
 
-  - [ ] 3.3 Update route definitions in `routes/web.php`
+  - [x] 3.3 Update route definitions in `routes/web.php`
     - Add public routes: `GET url-access/floor/{token}` and `GET url-access/section/{token}` pointing to `UrlAccessController`
     - Replace `EnsureConventionAccess` middleware references with `EnsureConventionOrUrlAccess`
     - Remove `ScopeByRole` middleware from all route groups
     - Ensure auth-only routes (user management, convention CRUD, attendance start/stop) remain behind `auth` middleware
     - _Requirements: 3.1, 4.1_
 
-  - [ ] 3.4 Remove ScopeByRole middleware
+  - [x] 3.4 Remove ScopeByRole middleware
     - Delete `app/Http/Middleware/ScopeByRole.php`
     - Remove registration from kernel/bootstrap if applicable
     - _Requirements: 1.5, 1.6_
 
-  - [ ] 3.5 Regenerate Wayfinder routes
+  - [x] 3.5 Regenerate Wayfinder routes
     - Run `php artisan wayfinder:generate --with-form` to regenerate type-safe frontend routes after route changes
     - _Requirements: 3.1, 4.1_
 
-  - [ ] 3.6 Write property tests for URL access flow (backend)
+  - [x] 3.6 Write property tests for URL access flow (backend)
     - **Property 5: Floor URL session grants correct positive permissions** — verify floor token creates session allowing view floors/sections, update occupancy, report attendance
     - **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
     - **Property 6: Floor URL session denies administrative actions** — verify floor session cannot create/edit/delete floors, create/delete sections, manage users, start/stop reports, lock periods

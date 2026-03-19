@@ -6,7 +6,6 @@ use App\Actions\InviteUserAction;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Convention;
-use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,34 +18,13 @@ use Inertia\Response;
 class UserController extends Controller
 {
     /**
-     * Display a listing of users for the convention, scoped by role.
+     * Display a listing of users for the convention.
      */
     public function index(Request $request, Convention $convention): Response
     {
         $users = $convention->users()->get();
 
-        // Apply role-based scoping from ScopeByRole middleware
-        if ($scopedFloorIds = $request->get('scoped_floor_ids')) {
-            // FloorUser: show users connected to assigned floors
-            $userIdsOnFloors = DB::table('floor_user')
-                ->whereIn('floor_id', $scopedFloorIds)
-                ->pluck('user_id')
-                ->unique();
-
-            $users = $users->filter(fn (User $user) => $userIdsOnFloors->contains($user->id));
-        }
-
-        if ($scopedSectionIds = $request->get('scoped_section_ids')) {
-            // SectionUser: show users connected to assigned sections
-            $userIdsOnSections = DB::table('section_user')
-                ->whereIn('section_id', $scopedSectionIds)
-                ->pluck('user_id')
-                ->unique();
-
-            $users = $users->filter(fn (User $user) => $userIdsOnSections->contains($user->id));
-        }
-
-        // Batch-load roles and assignments for all users (avoid N+1)
+        // Batch-load roles for all users (avoid N+1)
         $userIds = $users->pluck('id');
 
         $allRoles = DB::table('convention_user_roles')
@@ -55,39 +33,17 @@ class UserController extends Controller
             ->get()
             ->groupBy('user_id');
 
-        $conventionFloorIds = $convention->floors()->pluck('id');
-
-        $allFloorAssignments = DB::table('floor_user')
-            ->whereIn('user_id', $userIds)
-            ->whereIn('floor_id', $conventionFloorIds)
-            ->get()
-            ->groupBy('user_id');
-
-        $conventionSectionIds = Section::whereIn('floor_id', $conventionFloorIds)->pluck('id');
-
-        $allSectionAssignments = DB::table('section_user')
-            ->whereIn('user_id', $userIds)
-            ->whereIn('section_id', $conventionSectionIds)
-            ->get()
-            ->groupBy('user_id');
-
-        $users = $users->values()->map(function (User $user) use ($allRoles, $allFloorAssignments, $allSectionAssignments) {
+        $users = $users->values()->map(function (User $user) use ($allRoles) {
             $user->roles = ($allRoles[$user->id] ?? collect())->pluck('role');
-            $user->floor_ids = ($allFloorAssignments[$user->id] ?? collect())->pluck('floor_id')->values()->toArray();
-            $user->section_ids = ($allSectionAssignments[$user->id] ?? collect())->pluck('section_id')->values()->toArray();
 
             return $user;
         });
 
         $userRoles = $request->user()->rolesForConvention($convention);
 
-        // Load floors with sections for the add/edit user form
-        $floors = $convention->floors()->with('sections')->get();
-
         return Inertia::render('users/index', [
             'convention' => $convention,
             'users' => $users,
-            'floors' => $floors,
             'userRoles' => $userRoles,
         ]);
     }
@@ -134,43 +90,6 @@ class UserController extends Controller
                     'created_at' => now(),
                 ]);
             }
-
-            // Sync floor assignments
-            DB::table('floor_user')
-                ->where('user_id', $user->id)
-                ->whereIn('floor_id', $convention->floors()->pluck('id'))
-                ->delete();
-
-            if (in_array('FloorUser', $data['roles']) && ! empty($data['floor_ids'])) {
-                foreach ($data['floor_ids'] as $floorId) {
-                    DB::table('floor_user')->insert([
-                        'floor_id' => $floorId,
-                        'user_id' => $user->id,
-                        'created_at' => now(),
-                    ]);
-                }
-            }
-
-            // Sync section assignments
-            $conventionSectionIds = $convention->floors()
-                ->with('sections')
-                ->get()
-                ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
-
-            DB::table('section_user')
-                ->where('user_id', $user->id)
-                ->whereIn('section_id', $conventionSectionIds)
-                ->delete();
-
-            if (in_array('SectionUser', $data['roles']) && ! empty($data['section_ids'])) {
-                foreach ($data['section_ids'] as $sectionId) {
-                    DB::table('section_user')->insert([
-                        'section_id' => $sectionId,
-                        'user_id' => $user->id,
-                        'created_at' => now(),
-                    ]);
-                }
-            }
         });
 
         return redirect()->back();
@@ -193,28 +112,10 @@ class UserController extends Controller
                 ->where('user_id', $user->id)
                 ->delete();
 
-            // Remove floor assignments for this convention's floors
-            $conventionFloorIds = $convention->floors()->pluck('id');
-            DB::table('floor_user')
-                ->where('user_id', $user->id)
-                ->whereIn('floor_id', $conventionFloorIds)
-                ->delete();
-
-            // Remove section assignments for this convention's sections
-            $conventionSectionIds = $convention->floors()
-                ->with('sections')
-                ->get()
-                ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
-
-            DB::table('section_user')
-                ->where('user_id', $user->id)
-                ->whereIn('section_id', $conventionSectionIds)
-                ->delete();
-
             // Remove from convention_user pivot
             $convention->users()->detach($user->id);
 
-            // If user has no remaining conventions, delete user entirely (Req 17.2)
+            // If user has no remaining conventions, delete user entirely
             $remainingConventions = DB::table('convention_user')
                 ->where('user_id', $user->id)
                 ->count();

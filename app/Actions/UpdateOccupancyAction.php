@@ -12,7 +12,7 @@ class UpdateOccupancyAction
      *
      * @param  array<string, mixed>  $data
      */
-    public function execute(Section $section, array $data, User $user): Section
+    public function execute(Section $section, array $data, ?User $user): Section
     {
         // Calculate occupancy percentage if available_seats provided
         if (isset($data['available_seats'])) {
@@ -52,7 +52,7 @@ class UpdateOccupancyAction
         }
 
         // Record metadata
-        $section->last_occupancy_updated_by = $user->id;
+        $section->last_occupancy_updated_by = $user?->id;
         $section->last_occupancy_updated_at = now();
 
         // Save the section
