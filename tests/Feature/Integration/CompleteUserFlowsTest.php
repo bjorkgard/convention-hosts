@@ -62,7 +62,7 @@ describe('Convention creation to deletion flow', function () {
         // Step 4: Add floors and sections
         $this->actingAs($owner)->post(route('floors.store', $convention), [
             'name' => 'Ground Floor',
-        ])->assertRedirect(route('conventions.show', $convention));
+        ])->assertRedirect(route('floors.index', $convention));
 
         $floor = Floor::where('convention_id', $convention->id)->first();
         expect($floor)->not->toBeNull();
