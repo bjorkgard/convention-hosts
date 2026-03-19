@@ -200,6 +200,22 @@ Same fields as Store Convention, plus:
 
 Excludes current convention from overlap check.
 
+### Update Convention Locale
+
+```
+PATCH /conventions/{convention}/locale
+```
+
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
+
+Dedicated endpoint for updating only the convention's default locale. Used by the `LocaleSelector` component to persist a convention-level language preference without submitting the full convention update form.
+
+| Field | Type | Rules |
+|-------|------|-------|
+| locale | string | required, max:10, must match an existing `lang/` directory |
+
+On success: redirects to `conventions.show`.
+
 ### Delete Convention
 
 ```

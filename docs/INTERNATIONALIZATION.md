@@ -106,6 +106,10 @@ Step 1 is evaluated entirely on the client by `useLocaleSync`. When a URL-sessio
 
 When updating a convention or creating a guest convention, the `locale` field is validated against the `lang/` directory. Only locale codes that have a corresponding `lang/{locale}/` directory are accepted (max 10 characters). This ensures conventions can only be set to locales that have translation files available.
 
+### Convention Locale Update
+
+A dedicated endpoint (`PATCH /conventions/{convention}/locale`) allows updating only the convention's locale without submitting the full convention update form. The `LocaleSelector` component uses this endpoint when a `conventionId` prop is provided. The same `lang/` directory validation applies.
+
 ## Backend Usage
 
 Use Laravel's `__()` helper or `@lang()` Blade directive:

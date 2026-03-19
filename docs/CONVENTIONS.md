@@ -766,6 +766,7 @@ The `ConventionController` handles all convention CRUD operations, role-scoped d
 | `store()` | POST | Create convention via `CreateConventionAction` | Authenticated |
 | `show()` | GET | Display convention with role-scoped floors, sections, attendance, users | Convention access |
 | `update()` | PUT | Update convention details | Convention access |
+| `updateLocale()` | PATCH | Update only the convention locale | Convention access |
 | `destroy()` | DELETE | Delete convention | Owner only (policy) |
 | `export()` | GET | Export convention data in specified format | Owner only (policy) |
 

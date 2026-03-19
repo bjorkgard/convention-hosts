@@ -122,6 +122,24 @@ class ConventionController extends Controller
     }
 
     /**
+     * Update only the convention locale.
+     */
+    public function updateLocale(Request $request, Convention $convention): \Illuminate\Http\RedirectResponse
+    {
+        $validated = $request->validate([
+            'locale' => ['required', 'string', 'max:10', function (string $attribute, mixed $value, \Closure $fail) {
+                if (! is_dir(lang_path($value))) {
+                    $fail(__('validation.locale_not_available'));
+                }
+            }],
+        ]);
+
+        $convention->update($validated);
+
+        return redirect()->route('conventions.show', $convention);
+    }
+
+    /**
      * Remove the specified convention.
      */
     public function destroy(Convention $convention): \Illuminate\Http\RedirectResponse

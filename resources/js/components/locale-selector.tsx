@@ -3,7 +3,7 @@ import { Globe } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { update as updateConvention } from '@/actions/App/Http/Controllers/ConventionController';
+import { updateLocale as updateConventionLocale } from '@/actions/App/Http/Controllers/ConventionController';
 import { update as updateProfile } from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import { Button } from '@/components/ui/button';
 import {
@@ -66,8 +66,8 @@ export function LocaleSelector({
                 localStorage.setItem(`locale_${conventionId}`, locale);
             } else if (conventionId) {
                 // Persist to convention locale
-                router.put(
-                    updateConvention.url(conventionId),
+                router.patch(
+                    updateConventionLocale.url(conventionId),
                     { locale } as Record<string, string>,
                     { preserveScroll: true, preserveState: true },
                 );

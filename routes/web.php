@@ -90,6 +90,7 @@ Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::put('conventions/{convention}', [ConventionController::class, 'update'])->name('conventions.update');
+        Route::patch('conventions/{convention}/locale', [ConventionController::class, 'updateLocale'])->name('conventions.updateLocale');
     });
 
     Route::middleware([EnsureConventionOrUrlAccess::class, EnsureOwnerRole::class])->group(function () {
