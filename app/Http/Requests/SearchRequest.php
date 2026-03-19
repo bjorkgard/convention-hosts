@@ -28,6 +28,7 @@ class SearchRequest extends FormRequest
             'floor_id' => ['nullable', 'uuid', 'exists:floors,id'],
             'elder_friendly' => ['nullable', 'boolean'],
             'handicap_friendly' => ['nullable', 'boolean'],
+            'hearing_loop' => ['nullable', 'boolean'],
         ];
     }
 }

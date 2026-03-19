@@ -26,6 +26,7 @@ class Section extends Model
         'available_seats',
         'elder_friendly',
         'handicap_friendly',
+        'hearing_loop',
         'information',
         'last_occupancy_updated_by',
         'last_occupancy_updated_at',
@@ -44,6 +45,7 @@ class Section extends Model
             'number_of_seats' => 'integer',
             'elder_friendly' => 'boolean',
             'handicap_friendly' => 'boolean',
+            'hearing_loop' => 'boolean',
             'last_occupancy_updated_at' => 'datetime',
         ];
     }

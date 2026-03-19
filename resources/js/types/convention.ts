@@ -37,6 +37,7 @@ export interface Section {
     available_seats: number;
     elder_friendly: boolean;
     handicap_friendly: boolean;
+    hearing_loop: boolean;
     information: string | null;
     last_occupancy_updated_by: number | null;
     last_occupancy_updated_at: string | null;

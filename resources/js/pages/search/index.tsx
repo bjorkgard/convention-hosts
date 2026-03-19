@@ -28,6 +28,7 @@ interface SearchFilters {
     floor_id?: string;
     elder_friendly?: string;
     handicap_friendly?: string;
+    hearing_loop?: string;
 }
 
 interface SearchIndexProps {
@@ -53,6 +54,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
             if (merged.floor_id) query.floor_id = merged.floor_id;
             if (merged.elder_friendly === '1' || merged.elder_friendly === 'true') query.elder_friendly = '1';
             if (merged.handicap_friendly === '1' || merged.handicap_friendly === 'true') query.handicap_friendly = '1';
+            if (merged.hearing_loop === '1' || merged.hearing_loop === 'true') query.hearing_loop = '1';
 
             router.get(searchIndex.url(convention.id), query, {
                 preserveState: true,
@@ -76,6 +78,10 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
     function handleHandicapFriendlyChange(checked: boolean | 'indeterminate') {
         applyFilters({ handicap_friendly: checked === true ? '1' : undefined });
+    }
+
+    function handleHearingLoopChange(checked: boolean | 'indeterminate') {
+        applyFilters({ hearing_loop: checked === true ? '1' : undefined });
     }
 
     return (
@@ -132,6 +138,17 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                         />
                         <Label htmlFor="handicap-friendly" className="cursor-pointer">
                             Handicap-friendly
+                        </Label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Checkbox
+                            id="hearing-loop"
+                            checked={filters.hearing_loop === '1' || filters.hearing_loop === 'true'}
+                            onCheckedChange={handleHearingLoopChange}
+                        />
+                        <Label htmlFor="hearing-loop" className="cursor-pointer">
+                            Hearing loop
                         </Label>
                     </div>
                 </div>

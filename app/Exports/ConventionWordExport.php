@@ -106,6 +106,7 @@ class ConventionWordExport
             $table->addCell(1500)->addText('Available', ['bold' => true]);
             $table->addCell(1500)->addText('Elder Friendly', ['bold' => true]);
             $table->addCell(1500)->addText('Handicap Friendly', ['bold' => true]);
+            $table->addCell(1500)->addText('Hearing Loop', ['bold' => true]);
 
             // Data rows
             foreach ($floor->sections as $section_item) {
@@ -116,6 +117,7 @@ class ConventionWordExport
                 $table->addCell(1500)->addText((string) $section_item->available_seats);
                 $table->addCell(1500)->addText($section_item->elder_friendly ? 'Yes' : 'No');
                 $table->addCell(1500)->addText($section_item->handicap_friendly ? 'Yes' : 'No');
+                $table->addCell(1500)->addText($section_item->hearing_loop ? 'Yes' : 'No');
             }
 
             $section->addTextBreak(1);
