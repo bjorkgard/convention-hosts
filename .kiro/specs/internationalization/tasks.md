@@ -80,23 +80,23 @@ This plan implements a complete i18n system where Laravel is the single source o
 - [x] 5. Checkpoint - Verify backend locale infrastructure
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Email locale resolution
-  - [ ] 6.1 Update `UserInvitation` mailable for locale-aware rendering
+- [x] 6. Email locale resolution
+  - [x] 6.1 Update `UserInvitation` mailable for locale-aware rendering
     - Resolve locale from `$this->user->locale ?? 'sv'` before rendering
     - Call `App::setLocale($locale)` in the `build()` method
     - Replace hardcoded subject with `__('emails.invitation_subject', ['convention' => $this->convention->name])`
     - _Requirements: 10.1, 10.3, 10.4_
-  - [ ] 6.2 Update `EmailConfirmation` mailable for locale-aware rendering
+  - [x] 6.2 Update `EmailConfirmation` mailable for locale-aware rendering
     - Resolve locale from `$this->user->locale ?? 'sv'` before rendering
     - Call `App::setLocale($locale)` before rendering
     - Replace hardcoded subject with translated equivalent
     - _Requirements: 10.1, 10.3, 10.4_
-  - [ ] 6.3 Update `GuestConventionVerification` mailable for locale-aware rendering
+  - [x] 6.3 Update `GuestConventionVerification` mailable for locale-aware rendering
     - Resolve locale from `$this->user->locale ?? 'sv'` (the sending/creating user's locale)
     - Call `App::setLocale($locale)` before rendering
     - Replace hardcoded subject with translated equivalent
     - _Requirements: 10.2, 10.3, 10.4_
-  - [ ] 6.4 Write Pest tests for email locale resolution
+  - [x] 6.4 Write Pest tests for email locale resolution
     - Test UserInvitation renders in user's locale
     - Test EmailConfirmation renders in user's locale
     - Test GuestConventionVerification renders in sending user's locale
