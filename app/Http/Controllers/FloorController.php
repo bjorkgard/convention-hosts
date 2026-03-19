@@ -39,7 +39,7 @@ class FloorController extends Controller
 
         $convention->floors()->create($request->validated());
 
-        return redirect()->route('conventions.show', $convention);
+        return redirect()->route('floors.index', $convention);
     }
 
     /**
@@ -53,7 +53,7 @@ class FloorController extends Controller
 
         $floor->update($request->validated());
 
-        return redirect()->route('conventions.show', $floor->convention);
+        return redirect()->route('floors.index', $floor->convention);
     }
 
     /**
@@ -69,6 +69,6 @@ class FloorController extends Controller
 
         $floor->delete();
 
-        return redirect()->route('conventions.show', $convention);
+        return redirect()->route('floors.index', $convention);
     }
 }
