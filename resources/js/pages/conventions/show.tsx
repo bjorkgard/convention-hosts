@@ -51,7 +51,7 @@ function formatDateRange(startDate: string, endDate: string): string {
 
 export default function ConventionsShow({ convention, floors, section_url }: ConventionsShowProps) {
     useFlashToast();
-    const { isOwner, isManager } = useConventionRole();
+    const { isOwner, isManager, isAdministrator } = useConventionRole();
     const { activePeriod, canStart, canStop, reportedCount, totalCount } = useAttendanceReport();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -80,7 +80,7 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
     const totalAttendance = activePeriod?.reports?.reduce((sum, r) => sum + r.attendance, 0) ?? 0;
 
     // Determine the primary user role for FloorRow
-    const userRole = isOwner ? 'Owner' : 'Administrator';
+    const userRole = isOwner ? 'Owner' : isAdministrator ? 'Administrator' : null;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

@@ -37,7 +37,7 @@ interface FloorsIndexProps {
 export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
     const { isOwner, isAdministrator, isManager } = useConventionRole();
     const canAddSection = isManager;
-    const userRole: Role = isOwner ? 'Owner' : 'Administrator';
+    const userRole: Role | null = isOwner ? 'Owner' : isAdministrator ? 'Administrator' : null;
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingFloor, setEditingFloor] = useState<Floor | null>(null);

@@ -15,7 +15,7 @@ import type { Role } from '@/types/user';
 interface FloorRowProps {
     floor: Floor;
     sections: Section[];
-    userRole: Role;
+    userRole: Role | null;
     onEdit?: (floor: Floor) => void;
     onDelete?: (floor: Floor) => void;
     onEditSection?: (section: Section) => void;
@@ -28,19 +28,19 @@ function getAverageOccupancy(sections: Section[]): number {
     return Math.round(total / sections.length);
 }
 
-function canEdit(role: Role): boolean {
+function canEdit(role: Role | null): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-function canDelete(role: Role): boolean {
+function canDelete(role: Role | null): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-function canEditSection(role: Role): boolean {
+function canEditSection(role: Role | null): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-function canDeleteSection(role: Role): boolean {
+function canDeleteSection(role: Role | null): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
