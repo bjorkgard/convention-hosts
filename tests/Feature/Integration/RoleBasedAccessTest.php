@@ -100,7 +100,7 @@ describe('Owner access - full control', function () {
     it('can create floors', function () {
         $this->actingAs($this->owner)
             ->post(route('floors.store', $this->convention), ['name' => 'New Floor'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Floor::where('convention_id', $this->convention->id)->where('name', 'New Floor')->exists())->toBeTrue();
     });
@@ -108,7 +108,7 @@ describe('Owner access - full control', function () {
     it('can update any floor', function () {
         $this->actingAs($this->owner)
             ->put(route('floors.update', $this->floor1), ['name' => 'Renamed Floor'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect($this->floor1->fresh()->name)->toBe('Renamed Floor');
     });
@@ -118,7 +118,7 @@ describe('Owner access - full control', function () {
 
         $this->actingAs($this->owner)
             ->delete(route('floors.destroy', $this->floor2))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Floor::find($floorId))->toBeNull();
     });
@@ -257,13 +257,13 @@ describe('Administrator access - convention-wide read/write', function () {
     it('can create floors', function () {
         $this->actingAs($this->administrator)
             ->post(route('floors.store', $this->convention), ['name' => 'Admin Floor'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can update any floor', function () {
         $this->actingAs($this->administrator)
             ->put(route('floors.update', $this->floor2), ['name' => 'Admin Renamed'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can delete any floor', function () {
@@ -271,7 +271,7 @@ describe('Administrator access - convention-wide read/write', function () {
 
         $this->actingAs($this->administrator)
             ->delete(route('floors.destroy', $this->floor2))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Floor::find($floorId))->toBeNull();
     });

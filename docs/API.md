@@ -299,7 +299,7 @@ Authorization: FloorPolicy `create` (Owner or Administrator only)
 |-------|------|-------|
 | name | string | required, max:255 |
 
-On success: redirects to `conventions.show`.
+On success: redirects to `floors.index`.
 
 ### Update Floor
 
@@ -313,6 +313,8 @@ Authorization: FloorPolicy `update` (Owner or Administrator)
 |-------|------|-------|
 | name | string | required, max:255 |
 
+On success: redirects to `floors.index`.
+
 ### Delete Floor
 
 ```
@@ -322,6 +324,8 @@ DELETE /floors/{floor}
 Authorization: FloorPolicy `delete` (Owner or Administrator only)
 
 Cascades: deletes all sections on the floor via database foreign key.
+
+On success: redirects to `floors.index`.
 
 ---
 
