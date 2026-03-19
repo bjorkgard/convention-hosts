@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, Calendar, ClipboardList, MapPin, Trash2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Check, ClipboardList, Copy, MapPin, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { start } from '@/actions/App/Http/Controllers/AttendanceController';
@@ -11,6 +11,7 @@ import FloorRow from '@/components/conventions/floor-row';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendanceReport } from '@/hooks/use-attendance-report';
+import { useClipboard } from '@/hooks/use-clipboard';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
@@ -53,6 +54,7 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
     const { activePeriod, canStart, canStop, reportedCount, totalCount } = useAttendanceReport();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [copiedUrl, copyToClipboard] = useClipboard();
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Conventions', href: index.url() },
@@ -132,6 +134,27 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
                     )}
                 </div>
 
+                {/* URL Access Links */}
+                {isManager && convention.floor_url && convention.section_url && (
+                    <div className="flex flex-col gap-3 rounded-xl border border-border p-4">
+                        <h2 className="text-sm font-medium">Access URLs</h2>
+                        <div className="flex flex-col gap-2">
+                            <UrlCopyRow
+                                label="Floor Access URL"
+                                url={convention.floor_url}
+                                copied={copiedUrl === convention.floor_url}
+                                onCopy={() => copyToClipboard(convention.floor_url!)}
+                            />
+                            <UrlCopyRow
+                                label="Section Access URL"
+                                url={convention.section_url}
+                                copied={copiedUrl === convention.section_url}
+                                onCopy={() => copyToClipboard(convention.section_url!)}
+                            />
+                        </div>
+                    </div>
+                )}
+
                 {/* Attendance report banner or start button */}
                 {isManager && activePeriod && canStop && (
                     <AttendanceReportBanner
@@ -196,5 +219,24 @@ export default function ConventionsShow({ convention, floors }: ConventionsShowP
                 onConfirm={handleDelete}
             />
         </AppLayout>
+    );
+}
+
+function UrlCopyRow({ label, url, copied, onCopy }: { label: string; url: string; copied: boolean; onCopy: () => void }) {
+    return (
+        <div className="flex flex-col gap-1">
+            <span className="text-muted-foreground text-xs font-medium">{label}</span>
+            <div className="flex items-center gap-2">
+                <code className="bg-muted flex-1 truncate rounded px-2 py-1 text-xs">{url}</code>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-7 shrink-0 cursor-pointer" onClick={onCopy} aria-label={`Copy ${label}`}>
+                            {copied ? <Check className="size-3.5 text-green-500" /> : <Copy className="size-3.5" />}
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{copied ? 'Copied' : 'Copy to clipboard'}</TooltipContent>
+                </Tooltip>
+            </div>
+        </div>
     );
 }

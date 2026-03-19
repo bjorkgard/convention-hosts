@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { AlertTriangle, ChevronRight, Pencil, Trash2, Users } from 'lucide-react';
+import { ChevronRight, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { show } from '@/actions/App/Http/Controllers/SectionController';
@@ -16,8 +16,6 @@ interface FloorRowProps {
     floor: Floor;
     sections: Section[];
     userRole: Role;
-    userFloorIds?: number[];
-    userSectionIds?: number[];
     onEdit?: (floor: Floor) => void;
     onDelete?: (floor: Floor) => void;
     onEditSection?: (section: Section) => void;
@@ -38,15 +36,15 @@ function canDelete(role: Role): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-function canEditSection(role: Role, _floor: Floor, _userFloorIds?: number[]): boolean {
+function canEditSection(role: Role): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-function canDeleteSection(role: Role, _floor: Floor, _userFloorIds?: number[]): boolean {
+function canDeleteSection(role: Role): boolean {
     return role === 'Owner' || role === 'Administrator';
 }
 
-export default function FloorRow({ floor, sections, userRole, userFloorIds, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
+export default function FloorRow({ floor, sections, userRole, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
     const [isOpen, setIsOpen] = useState(false);
     const averageOccupancy = getAverageOccupancy(sections);
 
@@ -63,20 +61,6 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                         {sections.length} {sections.length === 1 ? 'section' : 'sections'}
                     </span>
                 </CollapsibleTrigger>
-
-                {(floor.users?.length ?? 0) > 0 && (
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <span className="text-muted-foreground flex shrink-0 cursor-default items-center gap-1 text-sm">
-                                <Users className="size-3.5" />
-                                {floor.users!.length}
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            {floor.users!.map((u) => `${u.first_name} ${u.last_name}`).join(', ')}
-                        </TooltipContent>
-                    </Tooltip>
-                )}
 
                 {(canEdit(userRole) || canDelete(userRole)) && (
                     <div className="flex items-center gap-1">
@@ -126,8 +110,8 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                 ) : (
                     <ul className="border-t">
                         {sections.map((section) => {
-                            const showEditSection = canEditSection(userRole, floor, userFloorIds) && !!onEditSection;
-                            const showDeleteSection = canDeleteSection(userRole, floor, userFloorIds) && !!onDeleteSection;
+                            const showEditSection = canEditSection(userRole) && !!onEditSection;
+                            const showDeleteSection = canDeleteSection(userRole) && !!onDeleteSection;
 
                             return (
                                 <li key={section.id} className="border-b last:border-b-0">
@@ -137,33 +121,11 @@ export default function FloorRow({ floor, sections, userRole, userFloorIds, onEd
                                             className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-4 py-2.5 sm:px-6"
                                         >
                                             <OccupancyGauge occupancy={section.occupancy} size={32} />
-                                            <span className={cn('flex-1 truncate text-sm font-medium', (section.users?.length ?? 0) === 0 && 'text-red-600 dark:text-red-400')}>{section.name}</span>
+                                            <span className="flex-1 truncate text-sm font-medium">{section.name}</span>
                                             <span className="text-muted-foreground shrink-0 text-xs">
                                                 {section.available_seats}/{section.number_of_seats} seats
                                             </span>
                                         </Link>
-                                        {(section.users?.length ?? 0) > 0 ? (
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <span className="text-muted-foreground flex shrink-0 cursor-default items-center gap-1 text-xs">
-                                                        <Users className="size-3" />
-                                                        {section.users!.length}
-                                                    </span>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    {section.users!.map((u) => `${u.first_name} ${u.last_name}`).join(', ')}
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        ) : (
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <span className="flex shrink-0 cursor-default items-center gap-1 text-xs text-red-600 dark:text-red-400">
-                                                        <AlertTriangle className="size-3" />
-                                                    </span>
-                                                </TooltipTrigger>
-                                                <TooltipContent>No section manager assigned</TooltipContent>
-                                            </Tooltip>
-                                        )}
                                         {(showEditSection || showDeleteSection) && (
                                             <div className="flex shrink-0 items-center gap-0.5 pr-2 sm:pr-3">
                                                 {showEditSection && (

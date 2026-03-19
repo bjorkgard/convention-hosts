@@ -6,6 +6,7 @@ import AppLogo from '@/components/app-logo';
 import { NavConvention } from '@/components/nav-convention';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
+import { useConventionRole } from '@/hooks/use-convention-role';
 import {
     Sidebar,
     SidebarContent,
@@ -27,6 +28,8 @@ const mainNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { isUrlSession } = useConventionRole();
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -42,12 +45,12 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                {!isUrlSession && <NavMain items={mainNavItems} />}
                 <NavConvention />
             </SidebarContent>
 
             <SidebarFooter>
-                <NavUser />
+                {!isUrlSession && <NavUser />}
                 <VersionBadge className="px-2 pb-1 text-left group-data-[collapsible=icon]:hidden" />
             </SidebarFooter>
         </Sidebar>

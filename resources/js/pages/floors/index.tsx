@@ -32,11 +32,9 @@ interface FloorsIndexProps {
     convention: Convention;
     floors: Floor[];
     userRoles: Role[];
-    userFloorIds: number[];
-    userSectionIds: number[];
 }
 
-export default function FloorsIndex({ convention, floors, userFloorIds = [], userSectionIds = [] }: FloorsIndexProps) {
+export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
     const { isOwner, isAdministrator, isManager } = useConventionRole();
     const canAddSection = isManager;
     const userRole: Role = isOwner ? 'Owner' : 'Administrator';
@@ -191,8 +189,6 @@ export default function FloorsIndex({ convention, floors, userFloorIds = [], use
                                 floor={floor}
                                 sections={floor.sections ?? []}
                                 userRole={userRole}
-                                userFloorIds={userFloorIds}
-                                userSectionIds={userSectionIds}
                                 onEdit={openEditDialog}
                                 onDelete={(f) => setDeletingFloor(f)}
                                 onEditSection={openSectionEdit}

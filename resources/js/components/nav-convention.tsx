@@ -36,7 +36,7 @@ export function NavConvention() {
     // Floors: visible to managers and floor URL sessions (not section URL sessions)
     if (isManager || (isUrlSession && !isSectionUrlSession)) {
         items.push({
-            title: 'Floors',
+            title: 'Administration',
             href: floorsIndex.url(conventionId),
             icon: Building2,
         });
@@ -60,7 +60,7 @@ export function NavConvention() {
 
     // Search: visible to ALL roles and URL sessions
     items.push({
-        title: 'Search',
+        title: 'Availability',
         href: searchIndex.url(conventionId),
         icon: Search,
     });

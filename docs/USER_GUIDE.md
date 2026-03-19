@@ -38,7 +38,7 @@ Only Owner and Administrator roles can add or delete floors.
 
 Sections can be managed directly from the Floors page:
 
-1. Navigate to **Floors** within your convention
+1. Navigate to **Administration** within your convention
 2. Click **Add Section** in the page header
 3. Select a floor from the dropdown (auto-selected if you only have access to one floor)
 4. Fill in:
@@ -204,7 +204,7 @@ They cannot view floors, manage users, or start/stop attendance reports.
 
 The Search page is available to all authenticated users regardless of role.
 
-1. Go to **Search** within a convention
+1. Go to **Availability** within a convention
 2. Optionally filter by:
    - Floor (dropdown)
    - Elder-friendly sections (checkbox)

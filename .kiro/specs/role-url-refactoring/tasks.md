@@ -174,38 +174,38 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - **Property 11: URL session Apple theme** — generate random URL session states, verify theme is always "apple" when URL session active
     - **Validates: Requirements 9.4, 9.5**
 
-- [ ] 7. Frontend component updates
-  - [ ] 7.1 Update sidebar navigation (`nav-convention.tsx`)
+- [x] 7. Frontend component updates
+  - [x] 7.1 Update sidebar navigation (`nav-convention.tsx`)
     - Rename "Floors" label → "Administration"
     - Rename "Search" label → "Availability"
     - Hide "Users" navigation item for URL sessions (`isUrlSession`)
     - Hide "Administration" for section URL sessions (`isSectionUrlSession`)
     - _Requirements: 7.1, 7.2, 9.1_
 
-  - [ ] 7.2 Update user menu (`nav-user.tsx` / `app-sidebar.tsx`)
+  - [x] 7.2 Update user menu (`nav-user.tsx` / `app-sidebar.tsx`)
     - Hide user dropdown when `isUrlSession` is true
     - Hide profile and logout options for URL sessions
     - _Requirements: 9.1, 9.2, 9.3_
 
-  - [ ] 7.3 Update convention show page with URL display
+  - [x] 7.3 Update convention show page with URL display
     - Add URL display section showing Floor Access URL and Section Access URL for Owner/Administrator
     - Add copy buttons next to each URL using `use-clipboard` hook
     - Show visual confirmation on successful copy
     - Display clear labels: "Floor Access URL", "Section Access URL"
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9_
 
-  - [ ] 7.4 Update `role-badge.tsx`
+  - [x] 7.4 Update `role-badge.tsx`
     - Remove FloorUser and SectionUser badge variants
     - Add/rename Administrator badge variant (replacing ConventionUser)
     - _Requirements: 1.1, 1.9_
 
-  - [ ] 7.5 Update `user-row.tsx` and users index page
+  - [x] 7.5 Update `user-row.tsx` and users index page
     - Remove FloorUser/SectionUser role options from role selector
     - Remove `floor_ids` and `section_ids` assignment UI
     - Only show Owner and Administrator as available roles
     - _Requirements: 1.9_
 
-  - [ ] 7.6 Update `floor-row.tsx` and `section-card.tsx`
+  - [x] 7.6 Update `floor-row.tsx` and `section-card.tsx`
     - Remove user assignment icons/indicators from floor rows
     - Remove user assignment icons/indicators from section cards
     - Remove "reported by" user display from attendance metadata on section cards
