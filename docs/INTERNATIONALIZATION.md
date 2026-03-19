@@ -87,9 +87,12 @@ The API auto-discovers new locales from the `lang/` directory — no code change
 
 The active locale is resolved per-request in this priority order:
 
-1. Authenticated user's `users.locale` column (if set)
-2. Convention's `conventions.locale` column (for URL session visitors)
-3. Fallback: Swedish (`sv`)
+1. URL-session `localStorage` preference (`locale_{conventionId}`) — client-side only
+2. Authenticated user's `users.locale` column (if set)
+3. Convention's `conventions.locale` column (for URL session visitors)
+4. Fallback: Swedish (`sv`)
+
+Step 1 is evaluated entirely on the client by `useLocaleSync`. When a URL-session visitor picks a language via the `LocaleSelector`, the choice is written to `localStorage` so it survives page navigations without a backend round-trip.
 
 ## Database Columns
 
@@ -122,7 +125,7 @@ The i18n system is initialized in `resources/js/lib/i18n.ts` and imported as a s
 - Fallback language: Swedish (`sv`)
 - No static JSON translation files in the frontend source
 
-A `useLocaleSync` hook (in `resources/js/hooks/use-locale-sync.ts`) keeps `react-i18next` in sync with the locale shared via Inertia props on every navigation.
+A `useLocaleSync` hook (in `resources/js/hooks/use-locale-sync.ts`) keeps `react-i18next` in sync with the locale shared via Inertia props on every navigation. For URL-session users, the hook checks `localStorage` for a per-convention preference (`locale_{conventionId}`) before falling back to the server-provided locale. This prevents Inertia navigations from resetting a language choice made via the `LocaleSelector` component.
 
 ## Frontend Usage
 
