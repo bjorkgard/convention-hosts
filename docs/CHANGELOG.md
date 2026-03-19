@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - URL sessions use Apple appearance theme
 - Release automation no longer updates this changelog automatically. Changelog entries are now maintained manually.
 - Skip SectionPolicy check for `updateOccupancy` and `setFull` when a URL session is active — middleware already authorizes access, preventing authenticated users with a URL session from being blocked by the policy
+- organize imports and remove unused code
+
+### Other
+
+- update floor operation redirects to floors.index
 
 ## [v0.5.4] - 2026-03-12
 
