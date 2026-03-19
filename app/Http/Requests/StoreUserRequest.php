@@ -42,35 +42,7 @@ class StoreUserRequest extends FormRequest
             ],
             'mobile' => ['required', 'string', 'max:255'],
             'roles' => ['required', 'array', 'min:1'],
-            'roles.*' => ['required', 'string', Rule::in(['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'])],
-            'floor_ids' => ['nullable', 'array'],
-            'floor_ids.*' => ['uuid', 'exists:floors,id'],
-            'section_ids' => ['nullable', 'array'],
-            'section_ids.*' => ['uuid', 'exists:sections,id'],
+            'roles.*' => ['required', 'string', Rule::in(['Owner', 'Administrator'])],
         ];
-    }
-
-    /**
-     * Configure the validator instance.
-     */
-    public function withValidator($validator): void
-    {
-        $validator->after(function ($validator) {
-            // Require floor_ids if FloorUser role is assigned
-            if (in_array('FloorUser', $this->roles ?? []) && empty($this->floor_ids)) {
-                $validator->errors()->add(
-                    'floor_ids',
-                    'Floor IDs are required when FloorUser role is assigned.'
-                );
-            }
-
-            // Require section_ids if SectionUser role is assigned
-            if (in_array('SectionUser', $this->roles ?? []) && empty($this->section_ids)) {
-                $validator->errors()->add(
-                    'section_ids',
-                    'Section IDs are required when SectionUser role is assigned.'
-                );
-            }
-        });
     }
 }

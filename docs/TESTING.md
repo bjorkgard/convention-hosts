@@ -640,7 +640,7 @@ php artisan test --group=property
 | `Property/AttendanceCalculationsTest` | Attendance arithmetic invariants |
 | `Property/InvitationEmailDeliveryTest` | Invitation email delivery via signed URL |
 | `Property/EmailUpdateConfirmationTest` | Email update triggers re-confirmation |
-| `Property/RoleBasedDataScopingTest` | Role-based query scoping across all four roles |
+| `Property/RoleBasedDataScopingTest` | Role-based query scoping (Owner, Administrator, URL sessions) |
 | `Property/FloorUserPermissionsTest` | FloorUser permission enforcement (legacy — to be updated for URL sessions) |
 | `Property/SectionUserRestrictionsTest` | SectionUser edit and scope restrictions (legacy — to be updated for URL sessions) |
 | `Property/SectionCrudPropertyTest` | Section create/update/delete persistence |

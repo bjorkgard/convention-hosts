@@ -9,7 +9,7 @@ This system provides a mobile-first Progressive Web App experience optimized for
 - Manage convention venues with hierarchical organization (Convention → Floor → Section)
 - Track real-time section occupancy with visual indicators
 - Collect attendance data in morning/afternoon periods
-- Control access through four-tier role-based permissions
+- Control access through two-tier role-based permissions with URL-based anonymous access
 - Invite users via secure email with account activation
 - Export complete convention data in multiple formats
 - Search for available sections with accessibility filters

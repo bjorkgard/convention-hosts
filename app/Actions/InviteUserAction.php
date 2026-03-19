@@ -14,6 +14,8 @@ class InviteUserAction
     /**
      * Invite a user to a convention or create a new user.
      *
+     * Only handles Owner and Administrator role assignments.
+     *
      * @param  array<string, mixed>  $data
      */
     public function execute(array $data, Convention $convention): User
@@ -38,7 +40,7 @@ class InviteUserAction
                 $convention->users()->attach($user->id);
             }
 
-            // Attach roles via convention_user_roles
+            // Attach roles via convention_user_roles (only Owner and Administrator)
             foreach ($data['roles'] as $role) {
                 DB::table('convention_user_roles')->insertOrIgnore([
                     'convention_id' => $convention->id,
@@ -46,28 +48,6 @@ class InviteUserAction
                     'role' => $role,
                     'created_at' => now(),
                 ]);
-            }
-
-            // Attach to floors if FloorUser role
-            if (in_array('FloorUser', $data['roles']) && isset($data['floor_ids'])) {
-                foreach ($data['floor_ids'] as $floorId) {
-                    DB::table('floor_user')->insertOrIgnore([
-                        'floor_id' => $floorId,
-                        'user_id' => $user->id,
-                        'created_at' => now(),
-                    ]);
-                }
-            }
-
-            // Attach to sections if SectionUser role
-            if (in_array('SectionUser', $data['roles']) && isset($data['section_ids'])) {
-                foreach ($data['section_ids'] as $sectionId) {
-                    DB::table('section_user')->insertOrIgnore([
-                        'section_id' => $sectionId,
-                        'user_id' => $user->id,
-                        'created_at' => now(),
-                    ]);
-                }
             }
 
             // Generate signed invitation URL (24h expiration)

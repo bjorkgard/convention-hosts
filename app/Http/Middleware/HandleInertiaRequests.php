@@ -42,7 +42,14 @@ class HandleInertiaRequests extends Middleware
         $consent = $consentResolver->resolve($request->user());
         $sidebarOpen = $optionalStorage->trustedSidebarOpen($request);
 
-        return [
+        // Check for active URL session
+        $urlSession = $request->session()->get('url_session');
+        $urlSessionProp = $urlSession ? [
+            'convention_id' => $urlSession['convention_id'],
+            'type' => $urlSession['type'],
+        ] : null;
+
+        $shared = [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
@@ -55,7 +62,15 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
             ],
+            'urlSession' => $urlSessionProp,
         ];
+
+        // Force Apple appearance when URL session is active
+        if ($urlSessionProp) {
+            $shared['appearance'] = 'apple';
+        }
+
+        return $shared;
     }
 
     /**

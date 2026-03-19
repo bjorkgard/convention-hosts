@@ -20,11 +20,11 @@ class ConventionPolicy
     /**
      * Determine whether the user can update the convention.
      *
-     * User must have Owner or ConventionUser role.
+     * User must have Owner or Administrator role.
      */
     public function update(User $user, Convention $convention): bool
     {
-        return $user->hasAnyRole($convention, ['Owner', 'ConventionUser']);
+        return $user->hasAnyRole($convention, ['Owner', 'Administrator']);
     }
 
     /**
