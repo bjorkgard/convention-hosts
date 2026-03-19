@@ -39,7 +39,7 @@ it('validates export data includes all required entities for random convention s
 
         // Attach random users with roles
         $users = User::factory()->count($userCount)->create();
-        $roles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
+        $roles = ['Owner', 'Administrator'];
         foreach ($users as $user) {
             $role = fake()->randomElement($roles);
             ConventionTestHelper::attachUserToConvention($user, $convention, [$role]);
@@ -64,7 +64,6 @@ it('validates export data includes all required entities for random convention s
                     'attendance_period_id' => $period->id,
                     'section_id' => $section->id,
                     'attendance' => fake()->numberBetween(0, $section->number_of_seats),
-                    'reported_by' => $users->random()->id,
                     'reported_at' => now(),
                 ]);
                 $allReports->push($report);
@@ -206,7 +205,7 @@ it('verifies data completeness by counting entities in export output', function 
         // Attach users with different roles
         $userCount = fake()->numberBetween(1, 4);
         $users = User::factory()->count($userCount)->create();
-        $roleOptions = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
+        $roleOptions = ['Owner', 'Administrator'];
         foreach ($users as $user) {
             ConventionTestHelper::attachUserToConvention(
                 $user, $convention, [fake()->randomElement($roleOptions)]

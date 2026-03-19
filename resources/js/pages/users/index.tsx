@@ -26,7 +26,7 @@ import type { Convention, Floor } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
 import type { ConventionUser, Role } from '@/types/user';
 
-const ALL_ROLES: Role[] = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
+const ALL_ROLES: Role[] = ['Owner', 'Administrator'];
 
 interface UserFormData {
     first_name: string;
@@ -34,8 +34,6 @@ interface UserFormData {
     email: string;
     mobile: string;
     roles: Role[];
-    floor_ids: number[];
-    section_ids: number[];
 }
 
 const emptyForm: UserFormData = {
@@ -44,8 +42,6 @@ const emptyForm: UserFormData = {
     email: '',
     mobile: '',
     roles: [],
-    floor_ids: [],
-    section_ids: [],
 };
 
 interface UsersIndexProps {
@@ -55,9 +51,8 @@ interface UsersIndexProps {
     userRoles: Role[];
 }
 
-export default function UsersIndex({ convention, users, floors }: UsersIndexProps) {
-    const { isOwner, isConventionUser } = useConventionRole();
-    const isManager = isOwner || isConventionUser;
+export default function UsersIndex({ convention, users }: UsersIndexProps) {
+    const { isManager } = useConventionRole();
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingUser, setEditingUser] = useState<ConventionUser | null>(null);
@@ -75,28 +70,8 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
         const current = form.data.roles;
         if (current.includes(role)) {
             form.setData('roles', current.filter((r) => r !== role));
-            if (role === 'FloorUser') form.setData('floor_ids', []);
-            if (role === 'SectionUser') form.setData('section_ids', []);
         } else {
             form.setData('roles', [...current, role]);
-        }
-    }
-
-    function toggleFloorId(form: ReturnType<typeof useForm<UserFormData>>, floorId: number) {
-        const current = form.data.floor_ids;
-        if (current.includes(floorId)) {
-            form.setData('floor_ids', current.filter((id) => id !== floorId));
-        } else {
-            form.setData('floor_ids', [...current, floorId]);
-        }
-    }
-
-    function toggleSectionId(form: ReturnType<typeof useForm<UserFormData>>, sectionId: number) {
-        const current = form.data.section_ids;
-        if (current.includes(sectionId)) {
-            form.setData('section_ids', current.filter((id) => id !== sectionId));
-        } else {
-            form.setData('section_ids', [...current, sectionId]);
         }
     }
 
@@ -128,8 +103,6 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
             email: user.email,
             mobile: user.mobile ?? '',
             roles: user.roles ?? [],
-            floor_ids: user.floor_ids ?? [],
-            section_ids: user.section_ids ?? [],
         });
         setEditingUser(user);
     }
@@ -208,13 +181,10 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
                 title="Add User"
                 description={`Invite a new user to ${convention.name}.`}
                 form={addForm}
-                floors={floors}
                 onSubmit={handleAdd}
                 submitLabel="Invite User"
                 submittingLabel="Inviting..."
                 onToggleRole={(role) => toggleRole(addForm, role)}
-                onToggleFloorId={(id) => toggleFloorId(addForm, id)}
-                onToggleSectionId={(id) => toggleSectionId(addForm, id)}
             />
 
             {/* Edit user dialog */}
@@ -224,13 +194,10 @@ export default function UsersIndex({ convention, users, floors }: UsersIndexProp
                 title="Edit User"
                 description="Update user details and roles."
                 form={editForm}
-                floors={floors}
                 onSubmit={handleEdit}
                 submitLabel="Save"
                 submittingLabel="Saving..."
                 onToggleRole={(role) => toggleRole(editForm, role)}
-                onToggleFloorId={(id) => toggleFloorId(editForm, id)}
-                onToggleSectionId={(id) => toggleSectionId(editForm, id)}
             />
         </AppLayout>
     );
@@ -242,13 +209,10 @@ interface UserFormDialogProps {
     title: string;
     description: string;
     form: ReturnType<typeof useForm<UserFormData>>;
-    floors: Floor[];
     onSubmit: (e: React.FormEvent) => void;
     submitLabel: string;
     submittingLabel: string;
     onToggleRole: (role: Role) => void;
-    onToggleFloorId: (id: number) => void;
-    onToggleSectionId: (id: number) => void;
 }
 
 function UserFormDialog({
@@ -257,21 +221,11 @@ function UserFormDialog({
     title,
     description,
     form,
-    floors,
     onSubmit,
     submitLabel,
     submittingLabel,
     onToggleRole,
-    onToggleFloorId,
-    onToggleSectionId,
 }: UserFormDialogProps) {
-    const showFloorSelect = form.data.roles.includes('FloorUser');
-    const showSectionSelect = form.data.roles.includes('SectionUser');
-
-    // Flatten all sections from all floors for section selection
-    const allSections = floors.flatMap(
-        (floor) => (floor.sections ?? []).map((section) => ({ ...section, floorName: floor.name })),
-    );
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -351,65 +305,6 @@ function UserFormDialog({
                             </div>
                             <InputError message={form.errors.roles} />
                         </div>
-
-                        {/* Floor selection (when FloorUser role is selected) */}
-                        {showFloorSelect && (
-                            <div className="grid gap-2">
-                                <Label>Assign Floors</Label>
-                                <div className="max-h-32 space-y-1 overflow-y-auto rounded-md border p-2">
-                                    {floors.map((floor) => (
-                                        <label
-                                            key={floor.id}
-                                            className="flex cursor-pointer items-center gap-2 text-sm"
-                                        >
-                                            <Checkbox
-                                                checked={form.data.floor_ids.includes(floor.id)}
-                                                onCheckedChange={() => onToggleFloorId(floor.id)}
-                                            />
-                                            {floor.name}
-                                        </label>
-                                    ))}
-                                    {floors.length === 0 && (
-                                        <p className="text-muted-foreground text-xs">
-                                            No floors available.
-                                        </p>
-                                    )}
-                                </div>
-                                <InputError message={form.errors.floor_ids} />
-                            </div>
-                        )}
-
-                        {/* Section selection (when SectionUser role is selected) */}
-                        {showSectionSelect && (
-                            <div className="grid gap-2">
-                                <Label>Assign Sections</Label>
-                                <div className="max-h-40 space-y-1 overflow-y-auto rounded-md border p-2">
-                                    {allSections.map((section) => (
-                                        <label
-                                            key={section.id}
-                                            className="flex cursor-pointer items-center gap-2 text-sm"
-                                        >
-                                            <Checkbox
-                                                checked={form.data.section_ids.includes(section.id)}
-                                                onCheckedChange={() => onToggleSectionId(section.id)}
-                                            />
-                                            <span>
-                                                {section.name}
-                                                <span className="text-muted-foreground ml-1 text-xs">
-                                                    ({section.floorName})
-                                                </span>
-                                            </span>
-                                        </label>
-                                    ))}
-                                    {allSections.length === 0 && (
-                                        <p className="text-muted-foreground text-xs">
-                                            No sections available.
-                                        </p>
-                                    )}
-                                </div>
-                                <InputError message={form.errors.section_ids} />
-                            </div>
-                        )}
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>

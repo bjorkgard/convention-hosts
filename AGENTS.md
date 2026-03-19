@@ -46,18 +46,17 @@ php artisan app:cleanup-unconfirmed-guest-conventions
 
 ### Role-Based Access Control
 
-Four-tier role system implemented via pivot tables (not a package like Spatie):
+Two-tier authenticated role system supplemented by URL-based anonymous access, implemented via pivot tables (not a package like Spatie):
 - **Owner** — full control including export and delete
-- **ConventionUser** — manage convention, floors, sections, users; lock attendance periods
-- **FloorUser** — manage sections on assigned floors
-- **SectionUser** — update occupancy and report attendance for assigned sections
+- **Administrator** — manage convention, floors, sections, users; lock attendance periods
+- **Floor URL session** — view floors/sections, update occupancy, report attendance (anonymous)
+- **Section URL session** — view sections, update occupancy, report attendance (anonymous)
 
-Three middleware layers enforce access:
-1. `EnsureConventionAccess` — verifies user has any role for the convention
+Two middleware layers enforce access:
+1. `EnsureConventionOrUrlAccess` — verifies user has a role or valid URL session for the convention
 2. `EnsureOwnerRole` — restricts owner-only actions
-3. `ScopeByRole` — filters data returned based on role scope
 
-Laravel Policies (`ConventionPolicy`, `FloorPolicy`, `SectionPolicy`, `UserPolicy`) handle action-level authorization. Users can hold multiple roles simultaneously.
+Laravel Policies (`ConventionPolicy`, `FloorPolicy`, `SectionPolicy`, `UserPolicy`) handle action-level authorization.
 
 ### Data Model
 
@@ -69,11 +68,13 @@ Convention
 │                             last_occupancy_updated_by, last_occupancy_updated_at
 ├── users (User) — via convention_user pivot; roles in convention_user_roles pivot
 │                  User fields: first_name, last_name, email, mobile, email_confirmed
+│                  Roles: Owner, Administrator
+├── url tokens — floor_url_token, section_url_token (64-char random, auto-generated)
 └── attendancePeriods (AttendancePeriod) — max 2 per day (morning/afternoon)
     └── reports (AttendanceReport) — one per section per period
 ```
 
-Users also have `floor_user` and `section_user` pivots for FloorUser/SectionUser scoping. Note: User has `first_name`/`last_name` separately, not a combined `name` field.
+Note: User has `first_name`/`last_name` separately, not a combined `name` field. The `floor_user` and `section_user` pivot tables have been removed.
 
 ### Occupancy Tracking
 
@@ -137,7 +138,7 @@ Use `tests/Helpers/ConventionTestHelper.php` for shared convention/user/role set
 
 ### Routes
 
-Defined in `routes/web.php` and `routes/settings.php`. Convention-scoped routes use nested middleware groups (`EnsureConventionAccess` → `ScopeByRole`). Public routes: home, guest convention creation, email verification, invitation activation, `api/version/latest`.
+Defined in `routes/web.php` and `routes/settings.php`. Convention-scoped routes use `EnsureConventionOrUrlAccess` middleware. Public routes: home, guest convention creation, email verification, invitation activation, URL access (`url-access/floor/{token}`, `url-access/section/{token}`), `api/version/latest`.
 
 ### PWA
 

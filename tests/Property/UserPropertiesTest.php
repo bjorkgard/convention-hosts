@@ -39,7 +39,7 @@ it('connects existing user instead of creating duplicate when email exists', fun
             'last_name' => $existingUser->last_name,
             'email' => $existingUser->email,
             'mobile' => $existingUser->mobile,
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ];
         $invitedUser1 = $action->execute($userData1, $convention1);
 
@@ -54,8 +54,7 @@ it('connects existing user instead of creating duplicate when email exists', fun
             'last_name' => fake()->lastName(),
             'email' => $existingUser->email, // Same email
             'mobile' => fake()->phoneNumber(),
-            'roles' => ['FloorUser'],
-            'floor_ids' => [],
+            'roles' => ['Owner'],
         ];
         $invitedUser2 = $action->execute($userData2, $convention2);
 
@@ -71,8 +70,8 @@ it('connects existing user instead of creating duplicate when email exists', fun
             ->and($convention2->users->contains($existingUser->id))->toBeTrue();
 
         // Verify user has different roles in each convention
-        expect($existingUser->rolesForConvention($convention1)->contains('ConventionUser'))->toBeTrue()
-            ->and($existingUser->rolesForConvention($convention2)->contains('FloorUser'))->toBeTrue();
+        expect($existingUser->rolesForConvention($convention1)->contains('Administrator'))->toBeTrue()
+            ->and($existingUser->rolesForConvention($convention2)->contains('Owner'))->toBeTrue();
 
         // Cleanup for next iteration
         $convention1->delete();

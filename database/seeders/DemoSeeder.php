@@ -28,30 +28,12 @@ class DemoSeeder extends Seeder
             'email_confirmed' => true,
         ]);
 
-        // Convention users
-        $conventionUser = User::factory()->create([
+        // Administrator user
+        $administrator = User::factory()->create([
             'first_name' => 'Convention',
             'last_name' => 'Manager',
             'email' => 'manager@example.com',
             'mobile' => '+1-555-0101',
-            'password' => Hash::make('Password1!'),
-            'email_confirmed' => true,
-        ]);
-
-        $floorUser = User::factory()->create([
-            'first_name' => 'Floor',
-            'last_name' => 'Supervisor',
-            'email' => 'floor@example.com',
-            'mobile' => '+1-555-0102',
-            'password' => Hash::make('Password1!'),
-            'email_confirmed' => true,
-        ]);
-
-        $sectionUser = User::factory()->create([
-            'first_name' => 'Section',
-            'last_name' => 'Attendant',
-            'email' => 'section@example.com',
-            'mobile' => '+1-555-0103',
             'password' => Hash::make('Password1!'),
             'email_confirmed' => true,
         ]);
@@ -68,7 +50,7 @@ class DemoSeeder extends Seeder
         ]);
 
         // Attach all users to convention
-        $allUsers = [$owner, $conventionUser, $floorUser, $sectionUser];
+        $allUsers = [$owner, $administrator];
         foreach ($allUsers as $user) {
             $convention->users()->attach($user->id);
         }
@@ -76,10 +58,8 @@ class DemoSeeder extends Seeder
         // Assign roles
         $roles = [
             [$owner->id, 'Owner'],
-            [$owner->id, 'ConventionUser'],
-            [$conventionUser->id, 'ConventionUser'],
-            [$floorUser->id, 'FloorUser'],
-            [$sectionUser->id, 'SectionUser'],
+            [$owner->id, 'Administrator'],
+            [$administrator->id, 'Administrator'],
         ];
 
         foreach ($roles as [$userId, $role]) {
@@ -95,9 +75,6 @@ class DemoSeeder extends Seeder
         $mainHall = Floor::create(['convention_id' => $convention->id, 'name' => 'Main Hall']);
         $upperLevel = Floor::create(['convention_id' => $convention->id, 'name' => 'Upper Level']);
         $balcony = Floor::create(['convention_id' => $convention->id, 'name' => 'Balcony']);
-
-        // Assign floor user to Main Hall and Upper Level
-        $floorUser->floors()->attach([$mainHall->id, $upperLevel->id]);
 
         // Create sections for Main Hall
         $sectionA = Section::create([
@@ -154,9 +131,6 @@ class DemoSeeder extends Seeder
             'information' => 'Stairs only, no elevator access.',
         ]);
 
-        // Assign section user to Section A
-        $sectionUser->sections()->attach([$sectionA->id]);
-
         // Create a locked attendance period with sample reports
         $lockedPeriod = AttendancePeriod::create([
             'convention_id' => $convention->id,
@@ -166,10 +140,10 @@ class DemoSeeder extends Seeder
         ]);
 
         $lockedPeriod->reports()->createMany([
-            ['section_id' => $sectionA->id, 'attendance' => 180, 'reported_by' => $sectionUser->id, 'reported_at' => now()],
-            ['section_id' => $sectionB->id, 'attendance' => 95, 'reported_by' => $conventionUser->id, 'reported_at' => now()],
-            ['section_id' => $sectionC->id, 'attendance' => 72, 'reported_by' => $conventionUser->id, 'reported_at' => now()],
-            ['section_id' => $sectionD->id, 'attendance' => 110, 'reported_by' => $floorUser->id, 'reported_at' => now()],
+            ['section_id' => $sectionA->id, 'attendance' => 180, 'reported_at' => now()],
+            ['section_id' => $sectionB->id, 'attendance' => 95, 'reported_at' => now()],
+            ['section_id' => $sectionC->id, 'attendance' => 72, 'reported_at' => now()],
+            ['section_id' => $sectionD->id, 'attendance' => 110, 'reported_at' => now()],
         ]);
     }
 }

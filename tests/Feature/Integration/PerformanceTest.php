@@ -27,7 +27,7 @@ describe('Convention show page eager loading', function () {
 
         // Add extra users with roles
         for ($i = 0; $i < 5; $i++) {
-            ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
+            ConventionTestHelper::createUserWithRole($convention, 'Administrator');
         }
 
         // Add attendance periods with reports
@@ -43,7 +43,6 @@ describe('Convention show page eager loading', function () {
                 'attendance_period_id' => $period->id,
                 'section_id' => $section->id,
                 'attendance' => rand(10, 100),
-                'reported_by' => $owner->id,
                 'reported_at' => now(),
             ]);
         }
@@ -71,7 +70,7 @@ describe('Convention show page eager loading', function () {
         // Create multiple conventions
         for ($i = 0; $i < 5; $i++) {
             $convention = Convention::factory()->create();
-            ConventionTestHelper::attachUserToConvention($owner, $convention, ['Owner', 'ConventionUser']);
+            ConventionTestHelper::attachUserToConvention($owner, $convention, ['Owner', 'Administrator']);
             Floor::factory()->count(2)->create(['convention_id' => $convention->id]);
         }
 
@@ -101,12 +100,7 @@ describe('User index page query optimization', function () {
 
         // Add multiple users with different roles
         for ($i = 0; $i < 5; $i++) {
-            ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
-        }
-        foreach ($structure['floors'] as $floor) {
-            ConventionTestHelper::createUserWithRole($convention, 'FloorUser', [
-                'floor_ids' => [$floor->id],
-            ]);
+            ConventionTestHelper::createUserWithRole($convention, 'Administrator');
         }
 
         DB::enableQueryLog();
@@ -195,7 +189,6 @@ describe('Export performance', function () {
                 'attendance_period_id' => $period->id,
                 'section_id' => $section->id,
                 'attendance' => rand(10, 200),
-                'reported_by' => $owner->id,
                 'reported_at' => now(),
             ]);
         }

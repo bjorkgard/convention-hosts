@@ -64,28 +64,14 @@ class ConventionController extends Controller
     public function show(Request $request, Convention $convention): Response
     {
         $user = $request->user();
+        $urlSession = session('url_session');
 
-        // Load floors with sections, scoped by user role
-        $floorsQuery = $convention->floors()->with('sections.users:id,first_name,last_name', 'users:id,first_name,last_name');
-
-        if ($scopedFloorIds = $request->get('scoped_floor_ids')) {
-            $floorsQuery->whereIn('id', $scopedFloorIds);
-        }
-
-        if ($scopedSectionIds = $request->get('scoped_section_ids')) {
-            $floorsQuery->whereHas('sections', function ($query) use ($scopedSectionIds) {
-                $query->whereIn('id', $scopedSectionIds);
-            });
-            $floorsQuery->with(['sections' => function ($query) use ($scopedSectionIds) {
-                $query->whereIn('id', $scopedSectionIds)->with('users:id,first_name,last_name');
-            }]);
-        }
-
-        $floors = $floorsQuery->get();
+        // Load floors with sections (no role-based scoping — all users see everything)
+        $floors = $convention->floors()->with('sections')->get();
 
         // Load attendance periods (locked ones for display)
         $attendancePeriods = $convention->attendancePeriods()
-            ->with('reports.section', 'reports.reportedBy')
+            ->with('reports.section')
             ->orderBy('date', 'desc')
             ->orderBy('period', 'desc')
             ->get();
@@ -98,26 +84,31 @@ class ConventionController extends Controller
             ->get()
             ->groupBy('user_id');
 
-        $users = $users->map(function ($user) use ($allRoles) {
-            $user->roles = ($allRoles[$user->id] ?? collect())->pluck('role');
+        $users = $users->map(function ($u) use ($allRoles) {
+            $u->roles = ($allRoles[$u->id] ?? collect())->pluck('role');
 
-            return $user;
+            return $u;
         });
 
-        // Get current user's roles for this convention
-        $userRoles = $user->rolesForConvention($convention);
-        $userFloorIds = $user->floors()->pluck('floors.id')->toArray();
-        $userSectionIds = $user->sections()->pluck('sections.id')->toArray();
+        // Get current user's roles (empty for URL sessions)
+        $userRoles = $user?->rolesForConvention($convention) ?? collect();
 
-        return Inertia::render('conventions/show', [
+        // Build props
+        $props = [
             'convention' => $convention,
             'floors' => $floors,
             'attendancePeriods' => $attendancePeriods,
             'users' => $users,
             'userRoles' => $userRoles,
-            'userFloorIds' => $userFloorIds,
-            'userSectionIds' => $userSectionIds,
-        ]);
+        ];
+
+        // Expose access URLs to Owner/Administrator only
+        $isManager = $user && $user->hasAnyRole($convention, ['Owner', 'Administrator']);
+        if ($isManager) {
+            $props['section_url'] = $convention->sectionAccessUrl();
+        }
+
+        return Inertia::render('conventions/show', $props);
     }
 
     /**

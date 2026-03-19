@@ -18,22 +18,6 @@ function deleteUserFromConvention(User $user, Convention $convention): void
             ->where('user_id', $user->id)
             ->delete();
 
-        $conventionFloorIds = $convention->floors()->pluck('id');
-        DB::table('floor_user')
-            ->where('user_id', $user->id)
-            ->whereIn('floor_id', $conventionFloorIds)
-            ->delete();
-
-        $conventionSectionIds = $convention->floors()
-            ->with('sections')
-            ->get()
-            ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
-
-        DB::table('section_user')
-            ->where('user_id', $user->id)
-            ->whereIn('section_id', $conventionSectionIds)
-            ->delete();
-
         $convention->users()->detach($user->id);
 
         $remainingConventions = DB::table('convention_user')
@@ -92,7 +76,7 @@ it('rejects duplicate emails via StoreUserRequest validation', function () {
                 'last_name' => fake()->lastName(),
                 'email' => $email,
                 'mobile' => fake()->phoneNumber(),
-                'roles' => ['ConventionUser'],
+                'roles' => ['Administrator'],
             ]
         );
 
@@ -121,7 +105,7 @@ it('requires first_name, last_name, email, and mobile for user creation', functi
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'mobile' => fake()->phoneNumber(),
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ];
 
         // Pick a random required field to omit
@@ -149,7 +133,7 @@ it('accepts valid user data with all required fields present', function () {
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'mobile' => fake()->phoneNumber(),
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ];
 
         $response = $this->actingAs($owner)->post(
@@ -171,8 +155,8 @@ it('accepts valid user data with all required fields present', function () {
  * Property 45: User Deletion Cascade
  *
  * When a user is removed from a convention, all role and pivot records
- * for that convention are cleaned up: convention_user, convention_user_roles,
- * floor_user, and section_user records are removed.
+ * for that convention are cleaned up: convention_user and convention_user_roles
+ * records are removed.
  *
  * Tests the deletion logic directly (the same transaction logic used by
  * UserController::destroy) to validate data cleanup independently of
@@ -181,7 +165,7 @@ it('accepts valid user data with all required fields present', function () {
  * **Validates: Requirements 17.1**
  */
 it('removes all role and pivot records when user is deleted from a convention', function () {
-    $allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
+    $allRoles = ['Owner', 'Administrator'];
 
     for ($i = 0; $i < 3; $i++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
@@ -189,21 +173,11 @@ it('removes all role and pivot records when user is deleted from a convention', 
             'sections_per_floor' => fake()->numberBetween(1, 3),
         ]);
         $convention = $structure['convention'];
-        $floors = $structure['floors'];
-        $sections = $structure['sections'];
 
         // Pick a random role for the target user
         $role = fake()->randomElement($allRoles);
-        $options = [];
 
-        if ($role === 'FloorUser') {
-            $options['floor_ids'] = $floors->pluck('id')->toArray();
-        }
-        if ($role === 'SectionUser') {
-            $options['section_ids'] = $sections->pluck('id')->toArray();
-        }
-
-        $targetUser = ConventionTestHelper::createUserWithRole($convention, $role, $options);
+        $targetUser = ConventionTestHelper::createUserWithRole($convention, $role);
 
         // Verify records exist before deletion
         $this->assertDatabaseHas('convention_user', [
@@ -216,39 +190,8 @@ it('removes all role and pivot records when user is deleted from a convention', 
             'role' => $role,
         ]);
 
-        // Execute the same deletion logic as UserController::destroy
-        DB::transaction(function () use ($targetUser, $convention) {
-            DB::table('convention_user_roles')
-                ->where('convention_id', $convention->id)
-                ->where('user_id', $targetUser->id)
-                ->delete();
-
-            $conventionFloorIds = $convention->floors()->pluck('id');
-            DB::table('floor_user')
-                ->where('user_id', $targetUser->id)
-                ->whereIn('floor_id', $conventionFloorIds)
-                ->delete();
-
-            $conventionSectionIds = $convention->floors()
-                ->with('sections')
-                ->get()
-                ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
-
-            DB::table('section_user')
-                ->where('user_id', $targetUser->id)
-                ->whereIn('section_id', $conventionSectionIds)
-                ->delete();
-
-            $convention->users()->detach($targetUser->id);
-
-            $remainingConventions = DB::table('convention_user')
-                ->where('user_id', $targetUser->id)
-                ->count();
-
-            if ($remainingConventions === 0) {
-                $targetUser->delete();
-            }
-        });
+        // Execute the deletion logic
+        deleteUserFromConvention($targetUser, $convention);
 
         // Verify all pivot records are removed
         $this->assertDatabaseMissing('convention_user', [
@@ -259,114 +202,6 @@ it('removes all role and pivot records when user is deleted from a convention', 
             'convention_id' => $convention->id,
             'user_id' => $targetUser->id,
         ]);
-
-        if ($role === 'FloorUser') {
-            foreach ($floors as $floor) {
-                $this->assertDatabaseMissing('floor_user', [
-                    'floor_id' => $floor->id,
-                    'user_id' => $targetUser->id,
-                ]);
-            }
-        }
-
-        if ($role === 'SectionUser') {
-            foreach ($sections as $section) {
-                $this->assertDatabaseMissing('section_user', [
-                    'section_id' => $section->id,
-                    'user_id' => $targetUser->id,
-                ]);
-            }
-        }
-    }
-})->group('property', 'user-management');
-
-it('cleans up floor and section assignments for users with multiple roles', function () {
-    for ($i = 0; $i < 3; $i++) {
-        $structure = ConventionTestHelper::createConventionWithStructure([
-            'floors' => 2,
-            'sections_per_floor' => 2,
-        ]);
-        $convention = $structure['convention'];
-        $floors = $structure['floors'];
-        $sections = $structure['sections'];
-
-        // Create user with both FloorUser and SectionUser roles
-        $targetUser = User::factory()->create();
-        ConventionTestHelper::attachUserToConvention($targetUser, $convention, ['FloorUser', 'SectionUser']);
-
-        // Attach floor and section assignments
-        foreach ($floors as $floor) {
-            DB::table('floor_user')->insertOrIgnore([
-                'floor_id' => $floor->id,
-                'user_id' => $targetUser->id,
-                'created_at' => now(),
-            ]);
-        }
-        foreach ($sections as $section) {
-            DB::table('section_user')->insertOrIgnore([
-                'section_id' => $section->id,
-                'user_id' => $targetUser->id,
-                'created_at' => now(),
-            ]);
-        }
-
-        // Execute the same deletion logic as UserController::destroy
-        DB::transaction(function () use ($targetUser, $convention) {
-            DB::table('convention_user_roles')
-                ->where('convention_id', $convention->id)
-                ->where('user_id', $targetUser->id)
-                ->delete();
-
-            $conventionFloorIds = $convention->floors()->pluck('id');
-            DB::table('floor_user')
-                ->where('user_id', $targetUser->id)
-                ->whereIn('floor_id', $conventionFloorIds)
-                ->delete();
-
-            $conventionSectionIds = $convention->floors()
-                ->with('sections')
-                ->get()
-                ->flatMap(fn ($floor) => $floor->sections->pluck('id'));
-
-            DB::table('section_user')
-                ->where('user_id', $targetUser->id)
-                ->whereIn('section_id', $conventionSectionIds)
-                ->delete();
-
-            $convention->users()->detach($targetUser->id);
-
-            $remainingConventions = DB::table('convention_user')
-                ->where('user_id', $targetUser->id)
-                ->count();
-
-            if ($remainingConventions === 0) {
-                $targetUser->delete();
-            }
-        });
-
-        // Verify all records are cleaned up
-        $this->assertDatabaseMissing('convention_user', [
-            'convention_id' => $convention->id,
-            'user_id' => $targetUser->id,
-        ]);
-
-        $roleCount = DB::table('convention_user_roles')
-            ->where('convention_id', $convention->id)
-            ->where('user_id', $targetUser->id)
-            ->count();
-        expect($roleCount)->toBe(0, "Iteration {$i}: all roles should be removed");
-
-        $floorCount = DB::table('floor_user')
-            ->where('user_id', $targetUser->id)
-            ->whereIn('floor_id', $floors->pluck('id'))
-            ->count();
-        expect($floorCount)->toBe(0, "Iteration {$i}: all floor assignments should be removed");
-
-        $sectionCount = DB::table('section_user')
-            ->where('user_id', $targetUser->id)
-            ->whereIn('section_id', $sections->pluck('id'))
-            ->count();
-        expect($sectionCount)->toBe(0, "Iteration {$i}: all section assignments should be removed");
     }
 })->group('property', 'user-management');
 
@@ -384,16 +219,9 @@ it('deletes user record when disconnected from their last convention', function 
         $structure = ConventionTestHelper::createConventionWithStructure();
         $convention = $structure['convention'];
 
-        $role = fake()->randomElement(['ConventionUser', 'FloorUser', 'SectionUser']);
-        $options = [];
-        if ($role === 'FloorUser') {
-            $options['floor_ids'] = $structure['floors']->pluck('id')->toArray();
-        }
-        if ($role === 'SectionUser') {
-            $options['section_ids'] = $structure['sections']->pluck('id')->toArray();
-        }
+        $role = fake()->randomElement(['Owner', 'Administrator']);
 
-        $targetUser = ConventionTestHelper::createUserWithRole($convention, $role, $options);
+        $targetUser = ConventionTestHelper::createUserWithRole($convention, $role);
         $targetUserId = $targetUser->id;
 
         // Verify user exists
@@ -420,7 +248,7 @@ it('keeps user record when still connected to other conventions', function () {
         $targetUser = User::factory()->create();
 
         foreach ($structures as $s) {
-            ConventionTestHelper::attachUserToConvention($targetUser, $s['convention'], ['ConventionUser']);
+            ConventionTestHelper::attachUserToConvention($targetUser, $s['convention'], ['Administrator']);
         }
 
         $targetUserId = $targetUser->id;
@@ -461,7 +289,7 @@ it('deletes user record only after removal from the very last convention', funct
         $targetUserId = $targetUser->id;
 
         foreach ($structures as $s) {
-            ConventionTestHelper::attachUserToConvention($targetUser, $s['convention'], ['ConventionUser']);
+            ConventionTestHelper::attachUserToConvention($targetUser, $s['convention'], ['Administrator']);
         }
 
         // Remove from all conventions except the last

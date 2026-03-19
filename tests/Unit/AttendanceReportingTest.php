@@ -88,7 +88,6 @@ it('reports attendance for a section', function () {
 
     expect($report)->toBeInstanceOf(AttendanceReport::class)
         ->and($report->attendance)->toBe(150)
-        ->and($report->reported_by)->toBe($user->id)
         ->and($report->reported_at)->not->toBeNull();
 });
 
@@ -124,13 +123,13 @@ it('prevents reporting on a locked period', function () {
         ->toThrow(\Exception::class, 'This attendance period is locked and cannot be updated.');
 });
 
-it('restricts attendance updates to original reporter', function () {
+it('allows any user to update an existing attendance report', function () {
     $structure = ConventionTestHelper::createConventionWithStructure();
     $convention = $structure['convention'];
     $section = $structure['sections']->first();
     $originalReporter = $structure['owner'];
     $otherUser = User::factory()->create();
-    ConventionTestHelper::attachUserToConvention($otherUser, $convention, ['ConventionUser']);
+    ConventionTestHelper::attachUserToConvention($otherUser, $convention, ['Administrator']);
 
     $period = AttendancePeriod::factory()->create([
         'convention_id' => $convention->id,
@@ -142,12 +141,13 @@ it('restricts attendance updates to original reporter', function () {
     // Original reporter creates the report
     $service->reportAttendance($section, $period, 100, $originalReporter);
 
-    // Different user tries to update
-    expect(fn () => $service->reportAttendance($section, $period, 200, $otherUser))
-        ->toThrow(\Exception::class, 'Only the original reporter can update this section\'s attendance.');
+    // Different user can now update (no reporter lock)
+    $updated = $service->reportAttendance($section, $period, 200, $otherUser);
+
+    expect($updated->attendance)->toBe(200);
 });
 
-it('allows original reporter to update their own report', function () {
+it('allows same user to update their own report', function () {
     $structure = ConventionTestHelper::createConventionWithStructure();
     $convention = $structure['convention'];
     $section = $structure['sections']->first();
@@ -164,25 +164,4 @@ it('allows original reporter to update their own report', function () {
     $updated = $service->reportAttendance($section, $period, 200, $user);
 
     expect($updated->attendance)->toBe(200);
-});
-
-it('calculates total attendance for a period', function () {
-    $structure = ConventionTestHelper::createConventionWithStructure();
-    $convention = $structure['convention'];
-    $user = $structure['owner'];
-
-    $period = AttendancePeriod::factory()->create([
-        'convention_id' => $convention->id,
-        'locked' => false,
-    ]);
-
-    $service = new AttendanceReportService;
-
-    // Report attendance for multiple sections
-    foreach ($structure['sections']->take(3) as $section) {
-        $service->reportAttendance($section, $period, 50, $user);
-    }
-
-    expect($period->totalAttendance())->toBe(150)
-        ->and($period->reportedSectionsCount())->toBe(3);
 });

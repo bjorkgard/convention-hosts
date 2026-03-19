@@ -23,14 +23,14 @@ Users can create a convention without registering first. The flow differs depend
 **Existing user:**
 1. Guest submits convention form with name, email, and convention details at `POST /conventions/guest`
 2. System finds the existing user by email
-3. Convention created with user as Owner and ConventionUser
+3. Convention created with user as Owner and Administrator
 4. User logged in via `Auth::login()`
 5. Redirected to convention detail page
 
 **New user:**
 1. Guest submits convention form at `POST /conventions/guest`
 2. System creates a new user account with a random password and `email_confirmed` = false
-3. Convention created with user as Owner and ConventionUser
+3. Convention created with user as Owner and Administrator
 4. A verification email is sent containing a signed URL (24h expiry) to set a password
 5. User is redirected to a confirmation page (not logged in) showing the convention name and instructions to check their email
 6. User clicks the email link, sets a password on the set-password page
@@ -529,6 +529,39 @@ Customize views in `app/Providers/FortifyServiceProvider.php`:
 Fortify::loginView(fn () => inertia('auth/login'));
 // No registerView — registration is invitation-only (no public register page)
 ```
+
+## Cookie Consent
+
+The application tracks cookie consent decisions with versioned policy support.
+
+### How It Works
+
+- A consent banner prompts users to accept or decline optional cookies
+- Accepting enables preference cookies (theme, appearance); declining restricts the app to essential cookies only (session, CSRF)
+- Consent decisions are versioned — bumping the policy version in `config/consent.php` triggers a re-prompt
+
+### Storage
+
+- **Authenticated users**: consent state is persisted server-side on the User model (`consent_state`, `consent_version`, `consent_decided_at`, `consent_updated_at`) via `RecordUserConsentAction`
+- **Anonymous URL-session users**: consent state is stored in the Laravel session as `consent_state`
+
+### Endpoint
+
+```
+POST /consent
+```
+
+Accepts `state` (`accepted` or `declined`). Available to both authenticated and URL-session users. See [API Reference](API.md#consent) for details.
+
+### Configuration
+
+Set the current policy version in `.env`:
+
+```env
+CONSENT_CURRENT_POLICY_VERSION=1
+```
+
+Or directly in `config/consent.php`. When the version is bumped, users who consented under an older version will be re-prompted.
 
 ## Security Best Practices
 

@@ -14,10 +14,13 @@ class ConsentController extends Controller
 
     public function store(RecordConsentRequest $request): RedirectResponse
     {
-        $this->recordUserConsentAction->execute(
-            $request->user(),
-            $request->validated('state'),
-        );
+        $state = $request->validated('state');
+
+        if ($request->user()) {
+            $this->recordUserConsentAction->execute($request->user(), $state);
+        } else {
+            $request->session()->put('consent_state', $state);
+        }
 
         return back();
     }

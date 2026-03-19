@@ -14,14 +14,13 @@ use Tests\Helpers\ConventionTestHelper;
 |--------------------------------------------------------------------------
 |
 | Verifies role-based access control across ALL pages and endpoints.
-| Requirements: 5.4, 5.5, 5.6, 5.7, 12.1, 12.2, 12.3
+| Two-tier system: Owner (full control) and Administrator (manage, no delete/export).
 |
 */
 
 beforeEach(function () {
     Mail::fake();
 
-    // Create a convention with 2 floors, 2 sections per floor
     $this->structure = ConventionTestHelper::createConventionWithStructure([
         'floors' => 2,
         'sections_per_floor' => 2,
@@ -31,31 +30,17 @@ beforeEach(function () {
     $this->owner = $this->structure['owner'];
     $this->floor1 = $this->structure['floors'][0];
     $this->floor2 = $this->structure['floors'][1];
-    $this->section1 = $this->structure['sections'][0]; // floor1
-    $this->section2 = $this->structure['sections'][1]; // floor1
-    $this->section3 = $this->structure['sections'][2]; // floor2
-    $this->section4 = $this->structure['sections'][3]; // floor2
+    $this->section1 = $this->structure['sections'][0];
+    $this->section2 = $this->structure['sections'][1];
+    $this->section3 = $this->structure['sections'][2];
+    $this->section4 = $this->structure['sections'][3];
 
-    // Create users for each role
-    $this->conventionUser = ConventionTestHelper::createUserWithRole(
-        $this->convention, 'ConventionUser'
-    );
-
-    $this->floorUser = ConventionTestHelper::createUserWithRole(
-        $this->convention, 'FloorUser', [
-            'floor_ids' => [$this->floor1->id],
-        ]
-    );
-
-    $this->sectionUser = ConventionTestHelper::createUserWithRole(
-        $this->convention, 'SectionUser', [
-            'section_ids' => [$this->section1->id],
-        ]
+    $this->administrator = ConventionTestHelper::createUserWithRole(
+        $this->convention, 'Administrator'
     );
 
     $this->outsider = User::factory()->create();
 
-    // Ensure export directory exists
     $dir = storage_path('app/private/exports');
     if (! is_dir($dir)) {
         mkdir($dir, 0755, true);
@@ -73,7 +58,7 @@ afterEach(function () {
 
 /*
 |--------------------------------------------------------------------------
-| 1. Owner Access — Full Control (Req 5.4, 12.1, 12.4, 12.5)
+| 1. Owner Access — Full Control
 |--------------------------------------------------------------------------
 */
 
@@ -115,7 +100,7 @@ describe('Owner access - full control', function () {
     it('can create floors', function () {
         $this->actingAs($this->owner)
             ->post(route('floors.store', $this->convention), ['name' => 'New Floor'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Floor::where('convention_id', $this->convention->id)->where('name', 'New Floor')->exists())->toBeTrue();
     });
@@ -123,7 +108,7 @@ describe('Owner access - full control', function () {
     it('can update any floor', function () {
         $this->actingAs($this->owner)
             ->put(route('floors.update', $this->floor1), ['name' => 'Renamed Floor'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect($this->floor1->fresh()->name)->toBe('Renamed Floor');
     });
@@ -133,7 +118,7 @@ describe('Owner access - full control', function () {
 
         $this->actingAs($this->owner)
             ->delete(route('floors.destroy', $this->floor2))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Floor::find($floorId))->toBeNull();
     });
@@ -218,7 +203,7 @@ describe('Owner access - full control', function () {
                 'last_name' => 'User',
                 'email' => 'newuser-owner-test@example.com',
                 'mobile' => '+1234567890',
-                'roles' => ['ConventionUser'],
+                'roles' => ['Administrator'],
             ])
             ->assertRedirect();
 
@@ -234,21 +219,21 @@ describe('Owner access - full control', function () {
 
 /*
 |--------------------------------------------------------------------------
-| 2. ConventionUser Access — Convention-wide, no delete/export (Req 5.5, 12.1)
+| 2. Administrator Access — Convention-wide, no delete/export
 |--------------------------------------------------------------------------
 */
 
-describe('ConventionUser access - convention-wide read/write', function () {
+describe('Administrator access - convention-wide read/write', function () {
     it('can view convention show page', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->get(route('conventions.show', $this->convention))
             ->assertOk();
     });
 
     it('can update convention details', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->put(route('conventions.update', $this->convention), [
-                'name' => 'CU Updated',
+                'name' => 'Admin Updated',
                 'city' => $this->convention->city,
                 'country' => $this->convention->country,
                 'start_date' => $this->convention->start_date->toDateString(),
@@ -258,52 +243,52 @@ describe('ConventionUser access - convention-wide read/write', function () {
     });
 
     it('CANNOT delete convention', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->delete(route('conventions.destroy', $this->convention))
             ->assertForbidden();
     });
 
     it('CANNOT export convention data', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->get(route('conventions.export', ['convention' => $this->convention, 'format' => 'md']))
             ->assertForbidden();
     });
 
     it('can create floors', function () {
-        $this->actingAs($this->conventionUser)
-            ->post(route('floors.store', $this->convention), ['name' => 'CU Floor'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+        $this->actingAs($this->administrator)
+            ->post(route('floors.store', $this->convention), ['name' => 'Admin Floor'])
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can update any floor', function () {
-        $this->actingAs($this->conventionUser)
-            ->put(route('floors.update', $this->floor2), ['name' => 'CU Renamed'])
-            ->assertRedirect(route('conventions.show', $this->convention));
+        $this->actingAs($this->administrator)
+            ->put(route('floors.update', $this->floor2), ['name' => 'Admin Renamed'])
+            ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can delete any floor', function () {
         $floorId = $this->floor2->id;
 
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->delete(route('floors.destroy', $this->floor2))
-            ->assertRedirect(route('conventions.show', $this->convention));
+            ->assertRedirect(route('floors.index', $this->convention));
 
         expect(Floor::find($floorId))->toBeNull();
     });
 
     it('can create sections on any floor', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->post(route('sections.store', [$this->convention, $this->floor1]), [
-                'name' => 'CU Section',
+                'name' => 'Admin Section',
                 'number_of_seats' => 80,
             ])
             ->assertRedirect(route('floors.index', $this->convention));
     });
 
     it('can update any section', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->put(route('sections.update', $this->section4), [
-                'name' => 'CU Updated Section',
+                'name' => 'Admin Updated Section',
                 'number_of_seats' => 120,
             ])
             ->assertRedirect(route('floors.index', $this->convention));
@@ -312,7 +297,7 @@ describe('ConventionUser access - convention-wide read/write', function () {
     it('can delete any section', function () {
         $sectionId = $this->section4->id;
 
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->delete(route('sections.destroy', $this->section4))
             ->assertRedirect(route('floors.index', $this->convention));
 
@@ -320,7 +305,7 @@ describe('ConventionUser access - convention-wide read/write', function () {
     });
 
     it('can update occupancy on any section', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->patch(route('sections.updateOccupancy', $this->section3), ['occupancy' => 50])
             ->assertRedirect();
 
@@ -328,14 +313,14 @@ describe('ConventionUser access - convention-wide read/write', function () {
     });
 
     it('can start and stop attendance reports', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->post(route('attendance.start', $this->convention))
             ->assertRedirect();
 
         $period = AttendancePeriod::where('convention_id', $this->convention->id)
             ->where('locked', false)->first();
 
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->post(route('attendance.stop', [$this->convention, $period]))
             ->assertRedirect();
 
@@ -343,30 +328,29 @@ describe('ConventionUser access - convention-wide read/write', function () {
     });
 
     it('can access search page', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->get(route('search.index', $this->convention))
             ->assertOk();
     });
 
     it('can view users index and invite users', function () {
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->get(route('users.index', $this->convention))
             ->assertOk();
 
-        $this->actingAs($this->conventionUser)
+        $this->actingAs($this->administrator)
             ->post(route('users.store', $this->convention), [
-                'first_name' => 'CU',
+                'first_name' => 'Admin',
                 'last_name' => 'Invited',
-                'email' => 'cu-invited@example.com',
+                'email' => 'admin-invited@example.com',
                 'mobile' => '+1234567890',
-                'roles' => ['SectionUser'],
-                'section_ids' => [$this->section1->id],
+                'roles' => ['Administrator'],
             ])
             ->assertRedirect();
     });
 
     it('can view floors index with all floors', function () {
-        $response = $this->actingAs($this->conventionUser)
+        $response = $this->actingAs($this->administrator)
             ->get(route('floors.index', $this->convention));
 
         $response->assertOk();
@@ -378,275 +362,7 @@ describe('ConventionUser access - convention-wide read/write', function () {
 
 /*
 |--------------------------------------------------------------------------
-| 3. FloorUser Scoping — Assigned floors only (Req 5.6, 12.2, 13.1, 13.2, 13.3)
-|--------------------------------------------------------------------------
-*/
-
-describe('FloorUser scoping - assigned floors only', function () {
-    it('can view convention show page', function () {
-        $this->actingAs($this->floorUser)
-            ->get(route('conventions.show', $this->convention))
-            ->assertOk();
-    });
-
-    it('sees only assigned floors on floors index', function () {
-        $response = $this->actingAs($this->floorUser)
-            ->get(route('floors.index', $this->convention));
-
-        $response->assertOk();
-
-        $floors = $response->original->getData()['page']['props']['floors'];
-        $floorIds = collect($floors)->pluck('id')->toArray();
-
-        expect($floorIds)->toContain($this->floor1->id)
-            ->not->toContain($this->floor2->id);
-    });
-
-    it('CANNOT create floors', function () {
-        $this->actingAs($this->floorUser)
-            ->post(route('floors.store', $this->convention), ['name' => 'FU Floor'])
-            ->assertForbidden();
-    });
-
-    it('can update assigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->put(route('floors.update', $this->floor1), ['name' => 'FU Renamed'])
-            ->assertRedirect(route('conventions.show', $this->convention));
-
-        expect($this->floor1->fresh()->name)->toBe('FU Renamed');
-    });
-
-    it('CANNOT update unassigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->put(route('floors.update', $this->floor2), ['name' => 'Should Fail'])
-            ->assertForbidden();
-    });
-
-    it('CANNOT delete any floor', function () {
-        $this->actingAs($this->floorUser)
-            ->delete(route('floors.destroy', $this->floor1))
-            ->assertForbidden();
-
-        $this->actingAs($this->floorUser)
-            ->delete(route('floors.destroy', $this->floor2))
-            ->assertForbidden();
-    });
-
-    it('can create sections on assigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->post(route('sections.store', [$this->convention, $this->floor1]), [
-                'name' => 'FU Section',
-                'number_of_seats' => 60,
-            ])
-            ->assertRedirect(route('floors.index', $this->convention));
-    });
-
-    it('CANNOT create sections on unassigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->post(route('sections.store', [$this->convention, $this->floor2]), [
-                'name' => 'Should Fail',
-                'number_of_seats' => 60,
-            ])
-            ->assertForbidden();
-    });
-
-    it('can update sections on assigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->put(route('sections.update', $this->section1), [
-                'name' => 'FU Updated',
-                'number_of_seats' => 90,
-            ])
-            ->assertRedirect(route('floors.index', $this->convention));
-    });
-
-    it('CANNOT update sections on unassigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->put(route('sections.update', $this->section3), [
-                'name' => 'Should Fail',
-                'number_of_seats' => 90,
-            ])
-            ->assertForbidden();
-    });
-
-    it('can delete sections on assigned floor', function () {
-        $sectionId = $this->section2->id;
-
-        $this->actingAs($this->floorUser)
-            ->delete(route('sections.destroy', $this->section2))
-            ->assertRedirect(route('floors.index', $this->convention));
-
-        expect(Section::find($sectionId))->toBeNull();
-    });
-
-    it('CANNOT delete sections on unassigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->delete(route('sections.destroy', $this->section3))
-            ->assertForbidden();
-    });
-
-    it('can update occupancy on sections of assigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->patch(route('sections.updateOccupancy', $this->section1), ['occupancy' => 25])
-            ->assertRedirect();
-
-        expect($this->section1->fresh()->occupancy)->toBe(25);
-    });
-
-    it('CANNOT update occupancy on sections of unassigned floor', function () {
-        $this->actingAs($this->floorUser)
-            ->patch(route('sections.updateOccupancy', $this->section3), ['occupancy' => 25])
-            ->assertForbidden();
-    });
-
-    it('CANNOT delete convention', function () {
-        $this->actingAs($this->floorUser)
-            ->delete(route('conventions.destroy', $this->convention))
-            ->assertForbidden();
-    });
-
-    it('CANNOT export convention data', function () {
-        $this->actingAs($this->floorUser)
-            ->get(route('conventions.export', ['convention' => $this->convention, 'format' => 'md']))
-            ->assertForbidden();
-    });
-
-    it('CANNOT start attendance reports', function () {
-        $this->actingAs($this->floorUser)
-            ->post(route('attendance.start', $this->convention))
-            ->assertForbidden();
-    });
-
-    it('can access search page', function () {
-        $this->actingAs($this->floorUser)
-            ->get(route('search.index', $this->convention))
-            ->assertOk();
-    });
-});
-
-/*
-|--------------------------------------------------------------------------
-| 4. SectionUser Scoping — Assigned sections only (Req 5.7, 12.3, 14.1, 14.2)
-|--------------------------------------------------------------------------
-*/
-
-describe('SectionUser scoping - assigned sections only', function () {
-    it('can view convention show page', function () {
-        $this->actingAs($this->sectionUser)
-            ->get(route('conventions.show', $this->convention))
-            ->assertOk();
-    });
-
-    it('CANNOT create floors', function () {
-        $this->actingAs($this->sectionUser)
-            ->post(route('floors.store', $this->convention), ['name' => 'SU Floor'])
-            ->assertForbidden();
-    });
-
-    it('CANNOT update any floor', function () {
-        $this->actingAs($this->sectionUser)
-            ->put(route('floors.update', $this->floor1), ['name' => 'Should Fail'])
-            ->assertForbidden();
-    });
-
-    it('CANNOT delete any floor', function () {
-        $this->actingAs($this->sectionUser)
-            ->delete(route('floors.destroy', $this->floor1))
-            ->assertForbidden();
-    });
-
-    it('CANNOT create sections', function () {
-        $this->actingAs($this->sectionUser)
-            ->post(route('sections.store', [$this->convention, $this->floor1]), [
-                'name' => 'Should Fail',
-                'number_of_seats' => 50,
-            ])
-            ->assertForbidden();
-    });
-
-    it('can update assigned section', function () {
-        $this->actingAs($this->sectionUser)
-            ->put(route('sections.update', $this->section1), [
-                'name' => 'SU Updated',
-                'number_of_seats' => $this->section1->number_of_seats,
-            ])
-            ->assertRedirect(route('floors.index', $this->convention));
-    });
-
-    it('CANNOT update unassigned section', function () {
-        $this->actingAs($this->sectionUser)
-            ->put(route('sections.update', $this->section2), [
-                'name' => 'Should Fail',
-                'number_of_seats' => $this->section2->number_of_seats,
-            ])
-            ->assertForbidden();
-    });
-
-    it('CANNOT delete any section', function () {
-        $this->actingAs($this->sectionUser)
-            ->delete(route('sections.destroy', $this->section1))
-            ->assertForbidden();
-
-        $this->actingAs($this->sectionUser)
-            ->delete(route('sections.destroy', $this->section3))
-            ->assertForbidden();
-    });
-
-    it('can update occupancy on assigned section', function () {
-        $this->actingAs($this->sectionUser)
-            ->patch(route('sections.updateOccupancy', $this->section1), ['occupancy' => 50])
-            ->assertRedirect();
-
-        expect($this->section1->fresh()->occupancy)->toBe(50);
-    });
-
-    it('can set assigned section to full', function () {
-        $this->actingAs($this->sectionUser)
-            ->post(route('sections.setFull', $this->section1))
-            ->assertRedirect();
-
-        expect($this->section1->fresh()->occupancy)->toBe(100);
-    });
-
-    it('CANNOT update occupancy on unassigned section', function () {
-        $this->actingAs($this->sectionUser)
-            ->patch(route('sections.updateOccupancy', $this->section2), ['occupancy' => 50])
-            ->assertForbidden();
-    });
-
-    it('CANNOT set unassigned section to full', function () {
-        $this->actingAs($this->sectionUser)
-            ->post(route('sections.setFull', $this->section2))
-            ->assertForbidden();
-    });
-
-    it('CANNOT delete convention', function () {
-        $this->actingAs($this->sectionUser)
-            ->delete(route('conventions.destroy', $this->convention))
-            ->assertForbidden();
-    });
-
-    it('CANNOT export convention data', function () {
-        $this->actingAs($this->sectionUser)
-            ->get(route('conventions.export', ['convention' => $this->convention, 'format' => 'md']))
-            ->assertForbidden();
-    });
-
-    it('CANNOT start attendance reports', function () {
-        $this->actingAs($this->sectionUser)
-            ->post(route('attendance.start', $this->convention))
-            ->assertForbidden();
-    });
-
-    it('can access search page', function () {
-        $this->actingAs($this->sectionUser)
-            ->get(route('search.index', $this->convention))
-            ->assertOk();
-    });
-});
-
-/*
-|--------------------------------------------------------------------------
-| 5. Outsider / No Access — Denied everywhere (Req 5.2)
+| 3. Outsider / No Access — Denied everywhere
 |--------------------------------------------------------------------------
 */
 
@@ -708,28 +424,35 @@ describe('Outsider - no convention access', function () {
 
 /*
 |--------------------------------------------------------------------------
-| 6. Unauthenticated — Redirected to login
+| 4. Unauthenticated — Redirected to login or 403
 |--------------------------------------------------------------------------
 */
 
 describe('Unauthenticated access', function () {
-    it('redirects to login for all convention routes', function () {
+    it('redirects to login for auth-required routes', function () {
         $this->get(route('conventions.index'))->assertRedirect(route('login'));
-        $this->get(route('conventions.show', $this->convention))->assertRedirect(route('login'));
-        $this->get(route('floors.index', $this->convention))->assertRedirect(route('login'));
+    });
+
+    it('returns 403 for convention-access routes without session', function () {
+        // These routes use EnsureConventionOrUrlAccess without auth middleware
+        $this->get(route('conventions.show', $this->convention))->assertForbidden();
+        $this->get(route('floors.index', $this->convention))->assertForbidden();
+        $this->get(route('search.index', $this->convention))->assertForbidden();
+    });
+
+    it('redirects to login for auth-only convention routes', function () {
         $this->get(route('users.index', $this->convention))->assertRedirect(route('login'));
-        $this->get(route('search.index', $this->convention))->assertRedirect(route('login'));
     });
 });
 
 /*
 |--------------------------------------------------------------------------
-| 7. Cross-role attendance report access
+| 5. Cross-role attendance report access
 |--------------------------------------------------------------------------
 */
 
 describe('Attendance report access by role', function () {
-    it('allows Owner and ConventionUser to start/stop, denies FloorUser and SectionUser', function () {
+    it('allows Owner and Administrator to start/stop attendance', function () {
         // Owner starts
         $this->actingAs($this->owner)
             ->post(route('attendance.start', $this->convention))
@@ -740,37 +463,11 @@ describe('Attendance report access by role', function () {
 
         expect($period)->not->toBeNull();
 
-        // FloorUser cannot stop
-        $this->actingAs($this->floorUser)
-            ->post(route('attendance.stop', [$this->convention, $period]))
-            ->assertForbidden();
-
-        // SectionUser cannot stop
-        $this->actingAs($this->sectionUser)
-            ->post(route('attendance.stop', [$this->convention, $period]))
-            ->assertForbidden();
-
-        // ConventionUser can stop
-        $this->actingAs($this->conventionUser)
+        // Administrator can stop
+        $this->actingAs($this->administrator)
             ->post(route('attendance.stop', [$this->convention, $period]))
             ->assertRedirect();
 
         expect($period->fresh()->locked)->toBeTrue();
-    });
-
-    it('allows any convention member to report attendance for accessible sections', function () {
-        $this->actingAs($this->owner)
-            ->post(route('attendance.start', $this->convention));
-
-        $period = AttendancePeriod::where('convention_id', $this->convention->id)
-            ->where('locked', false)->first();
-
-        // SectionUser can report on assigned section
-        $this->actingAs($this->sectionUser)
-            ->post(route('attendance.report', [$this->section1, $period]), [
-                'attendance' => 42,
-                'period_id' => $period->id,
-            ])
-            ->assertRedirect();
     });
 });

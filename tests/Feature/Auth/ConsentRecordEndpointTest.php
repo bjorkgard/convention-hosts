@@ -97,5 +97,5 @@ test('guests cannot record consent decisions', function () {
         'state' => User::CONSENT_STATE_ACCEPTED,
     ]);
 
-    $response->assertRedirect(route('login'));
+    $response->assertForbidden();
 });

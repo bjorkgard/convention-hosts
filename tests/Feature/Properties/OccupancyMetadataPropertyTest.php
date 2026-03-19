@@ -23,7 +23,7 @@ beforeEach(function () {
     $this->convention->users()->attach($this->owner->id);
     DB::table('convention_user_roles')->insert([
         ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'Owner', 'created_at' => now()],
-        ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'ConventionUser', 'created_at' => now()],
+        ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'Administrator', 'created_at' => now()],
     ]);
 
     $this->floor = Floor::factory()->create([
@@ -121,7 +121,7 @@ it('updates metadata to reflect the most recent updating user', function () {
     // Attach userB to the convention
     $this->convention->users()->attach($userB->id);
     DB::table('convention_user_roles')->insert([
-        ['convention_id' => $this->convention->id, 'user_id' => $userB->id, 'role' => 'ConventionUser', 'created_at' => now()],
+        ['convention_id' => $this->convention->id, 'user_id' => $userB->id, 'role' => 'Administrator', 'created_at' => now()],
     ]);
 
     for ($i = 0; $i < 3; $i++) {

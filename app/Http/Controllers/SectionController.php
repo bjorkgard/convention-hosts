@@ -21,16 +21,9 @@ class SectionController extends Controller
      */
     public function index(Request $request, Convention $convention, Floor $floor): Response
     {
-        $query = $floor->sections()->with('floor');
+        $sections = $floor->sections()->with('floor')->get();
 
-        // Apply role-based scoping from ScopeByRole middleware
-        if ($scopedSectionIds = $request->get('scoped_section_ids')) {
-            $query->whereIn('id', $scopedSectionIds);
-        }
-
-        $sections = $query->get();
-
-        $userRoles = $request->user()->rolesForConvention($convention);
+        $userRoles = $request->user()?->rolesForConvention($convention) ?? collect();
 
         return Inertia::render('sections/index', [
             'convention' => $convention,
@@ -48,7 +41,8 @@ class SectionController extends Controller
         $section->load(['floor.convention', 'lastUpdatedBy']);
 
         $convention = $section->floor->convention;
-        $userRoles = $request->user()->rolesForConvention($convention);
+        $user = $request->user();
+        $userRoles = $user?->rolesForConvention($convention) ?? collect();
 
         // Find active (unlocked) attendance period for this convention
         $activePeriod = $convention->attendancePeriods()
@@ -57,7 +51,7 @@ class SectionController extends Controller
             ->first();
 
         $myReport = $activePeriod
-            ? $activePeriod->reports()->where('section_id', $section->id)->where('reported_by', $request->user()->id)->first()
+            ? $activePeriod->reports()->where('section_id', $section->id)->first()
             : null;
 
         return Inertia::render('sections/show', [
@@ -111,9 +105,14 @@ class SectionController extends Controller
      */
     public function updateOccupancy(UpdateOccupancyRequest $request, Section $section, UpdateOccupancyAction $action): RedirectResponse
     {
-        $this->authorize('update', $section);
+        $user = $request->user();
 
-        $action->execute($section, $request->validated(), $request->user());
+        // URL sessions (floor or section) are authorized by middleware; authenticated users need policy check
+        if ($user && ! session('url_session')) {
+            $this->authorize('update', $section);
+        }
+
+        $action->execute($section, $request->validated(), $user);
 
         return redirect()->back()->with('success', 'Occupancy updated.');
     }
@@ -123,9 +122,14 @@ class SectionController extends Controller
      */
     public function setFull(Request $request, Section $section, UpdateOccupancyAction $action): RedirectResponse
     {
-        $this->authorize('update', $section);
+        $user = $request->user();
 
-        $action->execute($section, ['occupancy' => 100], $request->user());
+        // URL sessions (floor or section) are authorized by middleware; authenticated users need policy check
+        if ($user && ! session('url_session')) {
+            $this->authorize('update', $section);
+        }
+
+        $action->execute($section, ['occupancy' => 100], $user);
 
         return redirect()->back()->with('success', 'Section marked as full.');
     }

@@ -24,49 +24,47 @@ interface ConventionPageProps {
 
 export function NavConvention() {
     const { convention } = usePage<ConventionPageProps>().props;
-    const { isOwner, isConventionUser, isFloorUser } = useConventionRole();
+    const { isManager, isUrlSession, isSectionUrlSession } = useConventionRole();
     const { isCurrentUrl } = useCurrentUrl();
 
     if (!convention) return null;
 
     const conventionId = convention.id;
-    const canSeeFloors = isOwner || isConventionUser || isFloorUser;
-    const canSeeUsers = isOwner || isConventionUser || isFloorUser;
 
     const items: NavItem[] = [];
 
-    // Floors: visible to Owner, ConventionUser, FloorUser
-    if (canSeeFloors) {
+    // Floors: visible to managers and floor URL sessions (not section URL sessions)
+    if (isManager || (isUrlSession && !isSectionUrlSession)) {
         items.push({
-            title: 'Floors',
+            title: 'Administration',
             href: floorsIndex.url(conventionId),
             icon: Building2,
         });
     }
 
-    // Sections: visible to ALL roles — points to convention detail which shows floors/sections
+    // Sections: visible to ALL roles and URL sessions
     items.push({
         title: 'Sections',
         href: conventionShow.url(conventionId),
         icon: Grid3X3,
     });
 
-    // Users: visible to Owner, ConventionUser, FloorUser
-    if (canSeeUsers) {
+    // Search: visible to ALL roles and URL sessions
+    items.push({
+        title: 'Availability',
+        href: searchIndex.url(conventionId),
+        icon: Search,
+    });
+
+
+    // Users: visible to managers only (not URL sessions)
+    if (isManager && !isUrlSession) {
         items.push({
             title: 'Users',
             href: usersIndex.url(conventionId),
             icon: Users,
         });
     }
-
-    // Search: visible to ALL roles
-    items.push({
-        title: 'Search',
-        href: searchIndex.url(conventionId),
-        icon: Search,
-    });
-
     return (
         <SidebarGroup className="px-2 py-0">
             <SidebarGroupLabel>{convention.name}</SidebarGroupLabel>

@@ -25,7 +25,6 @@ class AttendanceHistorySheet implements FromCollection, WithHeadings, WithTitle
                     $report->section->floor->name,
                     $report->section->name,
                     $report->attendance,
-                    $report->reportedBy->first_name.' '.$report->reportedBy->last_name,
                     $report->reported_at->format('Y-m-d H:i:s'),
                 ]);
             }
@@ -43,7 +42,6 @@ class AttendanceHistorySheet implements FromCollection, WithHeadings, WithTitle
             'Floor',
             'Section',
             'Attendance',
-            'Reported By',
             'Reported At',
         ];
     }

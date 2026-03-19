@@ -318,42 +318,55 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 ### Custom Middleware
 
-#### EnsureConventionAccess
+#### EnsureConventionOrUrlAccess
 
-Verifies that the authenticated user has access to a convention before allowing the request to proceed:
+Verifies that the request has access to a convention — either via an authenticated user with a role, or via a URL session token:
 
 ```php
-// app/Http/Middleware/EnsureConventionAccess.php
-class EnsureConventionAccess
+// app/Http/Middleware/EnsureConventionOrUrlAccess.php
+class EnsureConventionOrUrlAccess
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
         $convention = $request->route('convention');
 
-        // Skip if no convention in route
         if (! $convention instanceof Convention) {
             return $next($request);
         }
 
-        // Check if user has any role for this convention
-        if (! $user->conventions->contains($convention)) {
-            abort(403, 'No access to this convention');
+        // Check authenticated user with convention role
+        $user = $request->user();
+        if ($user && $user->conventions->contains($convention)) {
+            return $next($request);
         }
 
-        return $next($request);
+        // Check URL session
+        $urlSession = session('url_session');
+        if ($urlSession && $urlSession['convention_id'] === $convention->id) {
+            return $next($request);
+        }
+
+        abort(403, 'No access to this convention');
     }
 }
 ```
 
 **Usage:**
 ```php
-Route::middleware(['auth', EnsureConventionAccess::class])->group(function () {
+Route::middleware(EnsureConventionOrUrlAccess::class)->group(function () {
     Route::get('/conventions/{convention}', [ConventionController::class, 'show']);
 });
 ```
 
-This middleware ensures that users can only access conventions they are associated with through the role-based access control system.
+This middleware ensures that users can only access conventions they are associated with through either the role-based access control system or a valid URL session token.
+
+#### URL Session and Policy Interaction
+
+When an authenticated user also has an active URL session (e.g., they logged in separately and then opened a floor/section access link), the URL session takes precedence for occupancy-related actions (`updateOccupancy`, `setFull`). The `SectionController` skips the Laravel Policy check when a URL session is present, since the middleware has already authorized access to the convention. This prevents authenticated users who have no role on the convention from being blocked by the policy when they have a valid URL session.
+
+#### URL Session UI Adaptations
+
+The frontend adapts its chrome for URL session users. The `Breadcrumbs` component reads the `urlSession` prop from the Inertia page props and filters out the "Conventions" breadcrumb item, since URL session users only have access to a single convention and cannot navigate to the conventions list.
 
 ## State Management
 
@@ -529,18 +542,21 @@ This section documents the key design decisions made for the Convention Manageme
 
 ### ADR-1: Role-Based Access Control Design
 
-**Context:** The system needs to support multiple permission levels within a single convention, from full administrative control down to single-section management.
+**Context:** The system needs to support multiple permission levels within a single convention, from full administrative control down to anonymous volunteer access for floor and section management.
 
-**Decision:** Implement a four-tier role system (Owner, ConventionUser, FloorUser, SectionUser) using pivot tables rather than a general-purpose permissions library like Spatie.
+**Decision:** Implement a two-tier authenticated role system (Owner, Administrator) supplemented by URL-based anonymous access tokens for floor and section volunteers. This replaces the previous four-tier system (Owner, ConventionUser, FloorUser, SectionUser).
 
 **Implementation:**
 - `convention_user` pivot links users to conventions
-- `convention_user_roles` pivot stores per-convention roles with a unique constraint on (convention_id, user_id, role)
-- `floor_user` and `section_user` pivots scope FloorUser and SectionUser access
-- Three middleware layers enforce access: `EnsureConventionAccess` (any role), `EnsureOwnerRole` (owner only), `ScopeByRole` (filters queries by role scope)
+- `convention_user_roles` pivot stores per-convention roles with a unique constraint on (convention_id, user_id, role) — only `Owner` and `Administrator` roles exist
+- `floor_url_token` and `section_url_token` columns on the `conventions` table provide shareable anonymous access URLs
+- URL sessions are stored in the Laravel session (convention_id, type, token) — no pseudo-user records created
+- `EnsureConventionOrUrlAccess` middleware handles both authenticated users and URL sessions
+- `EnsureOwnerRole` middleware restricts owner-only actions
+- `ScopeByRole` middleware removed — no longer needed since Owner/Administrator see everything and URL sessions have fixed permission sets
 - Laravel Policies provide fine-grained action-level authorization on Convention, Floor, Section, and User models
 
-**Rationale:** A dedicated pivot-based approach is simpler and more performant than a generic permissions system for this fixed set of four roles. The middleware stack provides defense-in-depth: first verifying convention membership, then scoping data visibility, then checking action-level permissions via policies. Users can hold multiple roles simultaneously (e.g., Owner + ConventionUser), and the hierarchy is implicit rather than stored — Owner inherits all ConventionUser capabilities by convention in the policy logic.
+**Rationale:** The previous four-tier system required creating user accounts for every volunteer, which added friction for convention organizers. URL-based access lets organizers share a link with volunteers who can immediately start managing floors or sections without registration. The two authenticated roles (Owner, Administrator) cover all administrative needs, while URL tokens handle the common case of temporary volunteer access. Session-based URL tokens avoid creating pseudo-user records and keep the auth layer clean.
 
 ### ADR-2: Occupancy Tracking Approach
 
@@ -568,10 +584,10 @@ This section documents the key design decisions made for the Convention Manageme
 - `AttendancePeriod` model with `locked` boolean and unique constraint on (convention_id, date, period)
 - `AttendanceReport` model with unique constraint on (attendance_period_id, section_id) — one report per section per period
 - `AttendanceReportService` manages the lifecycle: `startReport()` creates/retrieves a period (max 2 per day), `reportAttendance()` creates/updates individual reports, `stopReport()` locks the period
-- Before locking, only the original reporter can update their section's attendance. After locking, no updates are allowed
-- ConventionUser role can lock periods even when not all sections have reported
+- Before locking, any user with section permissions can update reports. After locking, no updates are allowed
+- Owner or Administrator role can lock periods even when not all sections have reported
 
-**Rationale:** Explicit start/stop boundaries give convention managers clear control over data collection windows. The max-2-per-day limit maps naturally to morning and afternoon sessions. Locking provides data integrity for historical reporting — once a period is locked, the attendance numbers are final. The reporter-only update restriction prevents accidental overwrites during active collection, while the ConventionUser override ensures periods can always be finalized.
+**Rationale:** Explicit start/stop boundaries give convention managers clear control over data collection windows. The max-2-per-day limit maps naturally to morning and afternoon sessions. Locking provides data integrity for historical reporting — once a period is locked, the attendance numbers are final. Removing the reporter-only restriction allows multiple volunteers to collaborate on attendance collection, which is essential for URL-based anonymous access.
 
 ### ADR-4: Progressive Web App Implementation
 

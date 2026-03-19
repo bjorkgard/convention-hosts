@@ -79,22 +79,21 @@ it('enforces maximum of 2 attendance reports per day', function () {
 })->group('property', 'attendance');
 
 /**
- * Property 36: Section User Attendance Update Restriction
+ * Property 36: Open Attendance Reporting
  *
- * For any attendance report in an unlocked period, only the user who originally
- * reported the attendance for that section should be able to update it, unless
- * a ConventionUser locks the period.
+ * Any user with section permissions can create or update attendance reports
+ * for unlocked periods. Locked periods are immutable.
  *
  * Validates: Requirements 11.5, 11.6
  */
-it('restricts attendance updates to original reporter before lock', function () {
+it('allows any user to report attendance and enforces lock immutability', function () {
     for ($i = 0; $i < 3; $i++) {
         $convention = Convention::factory()->create();
         $floor = \App\Models\Floor::factory()->create(['convention_id' => $convention->id]);
         $section = \App\Models\Section::factory()->create(['floor_id' => $floor->id]);
 
-        $originalReporter = \App\Models\User::factory()->create();
-        $otherUser = \App\Models\User::factory()->create();
+        $user1 = \App\Models\User::factory()->create();
+        $user2 = \App\Models\User::factory()->create();
 
         $service = new AttendanceReportService;
 
@@ -106,49 +105,29 @@ it('restricts attendance updates to original reporter before lock', function () 
             'locked' => false,
         ]);
 
-        // Act: Original reporter submits attendance
+        // User 1 submits attendance
         $initialAttendance = fake()->numberBetween(50, 150);
-        $report = $service->reportAttendance($section, $period, $initialAttendance, $originalReporter);
+        $report = $service->reportAttendance($section, $period, $initialAttendance, $user1);
 
-        // Assert: Report should be created successfully
         expect($report)->toBeInstanceOf(\App\Models\AttendanceReport::class)
             ->and($report->attendance)->toBe($initialAttendance)
-            ->and($report->reported_by)->toBe($originalReporter->id)
             ->and($report->section_id)->toBe($section->id)
             ->and($report->attendance_period_id)->toBe($period->id);
 
-        // Act: Original reporter updates their own report
+        // User 2 can update the same report (open access)
         $updatedAttendance = fake()->numberBetween(50, 150);
-        $updatedReport = $service->reportAttendance($section, $period, $updatedAttendance, $originalReporter);
+        $updatedReport = $service->reportAttendance($section, $period, $updatedAttendance, $user2);
 
-        // Assert: Update should succeed
         expect($updatedReport->attendance)->toBe($updatedAttendance)
-            ->and($updatedReport->reported_by)->toBe($originalReporter->id)
             ->and($updatedReport->id)->toBe($report->id); // Same report, updated
 
-        // Act: Different user attempts to update the report
-        $exceptionThrown = false;
-        try {
-            $service->reportAttendance($section, $period, 999, $otherUser);
-        } catch (\Exception $e) {
-            $exceptionThrown = true;
-            expect($e->getMessage())->toContain('Only the original reporter can update');
-        }
-
-        // Assert: Update by different user should be rejected
-        expect($exceptionThrown)->toBeTrue();
-
-        // Verify the attendance value hasn't changed
-        $report->refresh();
-        expect($report->attendance)->toBe($updatedAttendance)
-            ->and($report->reported_by)->toBe($originalReporter->id);
-
-        // Test locked period restriction
+        // Lock the period
         $service->stopReport($period);
         $period->refresh();
         expect($period->locked)->toBeTrue();
 
-        expect(fn () => $service->reportAttendance($section, $period, 888, $originalReporter))
+        // Locked period should reject updates
+        expect(fn () => $service->reportAttendance($section, $period, 888, $user1))
             ->toThrow(\Exception::class, 'locked and cannot be updated');
 
         $report->refresh();
@@ -156,7 +135,7 @@ it('restricts attendance updates to original reporter before lock', function () 
 
         // Cleanup for next iteration
         $convention->delete();
-        $originalReporter->delete();
-        $otherUser->delete();
+        $user1->delete();
+        $user2->delete();
     }
 })->group('property', 'attendance');

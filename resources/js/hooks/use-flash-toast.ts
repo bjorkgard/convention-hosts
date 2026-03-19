@@ -2,15 +2,10 @@ import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
-interface FlashProps {
-    flash?: {
-        success?: string | null;
-        error?: string | null;
-    };
-}
+import type { PageProps } from '@/types';
 
 export function useFlashToast(): void {
-    const { flash } = usePage<FlashProps>().props;
+    const { flash } = usePage<PageProps>().props;
 
     useEffect(() => {
         if (flash?.success) toast.success(flash.success);

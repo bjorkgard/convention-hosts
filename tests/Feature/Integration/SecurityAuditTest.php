@@ -52,79 +52,36 @@ describe('Authorization checks', function () {
     });
 
     it('returns 403 for non-owner convention deletion', function () {
-        $cu = ConventionTestHelper::createUserWithRole($this->convention, 'ConventionUser');
+        $admin = ConventionTestHelper::createUserWithRole($this->convention, 'Administrator');
 
-        $this->actingAs($cu)
+        $this->actingAs($admin)
             ->delete(route('conventions.destroy', $this->convention))
             ->assertForbidden();
     });
 
     it('returns 403 for non-owner export', function () {
-        $cu = ConventionTestHelper::createUserWithRole($this->convention, 'ConventionUser');
+        $admin = ConventionTestHelper::createUserWithRole($this->convention, 'Administrator');
 
-        $this->actingAs($cu)
+        $this->actingAs($admin)
             ->get(route('conventions.export', ['convention' => $this->convention, 'format' => 'md']))
             ->assertForbidden();
     });
 
-    it('redirects unauthenticated users to login for all protected routes', function () {
+    it('redirects unauthenticated users to login for auth-required routes', function () {
         $this->get(route('conventions.index'))->assertRedirect(route('login'));
-        $this->get(route('conventions.show', $this->convention))->assertRedirect(route('login'));
         $this->post(route('conventions.store'))->assertRedirect(route('login'));
-        $this->get(route('floors.index', $this->convention))->assertRedirect(route('login'));
         $this->get(route('users.index', $this->convention))->assertRedirect(route('login'));
-        $this->get(route('search.index', $this->convention))->assertRedirect(route('login'));
-        $this->post(route('attendance.start', $this->convention))->assertRedirect(route('login'));
     });
 
-    it('enforces FloorUser cannot create or delete floors', function () {
-        $fu = ConventionTestHelper::createUserWithRole($this->convention, 'FloorUser', [
-            'floor_ids' => [$this->floor->id],
-        ]);
-
-        $this->actingAs($fu)
-            ->post(route('floors.store', $this->convention), ['name' => 'Hack Floor'])
-            ->assertForbidden();
-
-        $this->actingAs($fu)
-            ->delete(route('floors.destroy', $this->floor))
-            ->assertForbidden();
+    it('returns 403 for unauthenticated access to convention-access routes', function () {
+        // These routes use EnsureConventionOrUrlAccess without auth middleware
+        $this->get(route('conventions.show', $this->convention))->assertForbidden();
+        $this->get(route('floors.index', $this->convention))->assertForbidden();
+        $this->get(route('search.index', $this->convention))->assertForbidden();
     });
 
-    it('enforces SectionUser cannot modify unassigned sections', function () {
-        $su = ConventionTestHelper::createUserWithRole($this->convention, 'SectionUser', [
-            'section_ids' => [$this->section->id],
-        ]);
-
-        // Create another section the user does NOT have access to
-        $otherSection = Section::factory()->create(['floor_id' => $this->floor->id]);
-
-        $this->actingAs($su)
-            ->put(route('sections.update', $otherSection), [
-                'name' => 'Hacked',
-                'number_of_seats' => 999,
-            ])
-            ->assertForbidden();
-
-        $this->actingAs($su)
-            ->patch(route('sections.updateOccupancy', $otherSection), ['occupancy' => 100])
-            ->assertForbidden();
-    });
-
-    it('enforces only Owner/ConventionUser can start attendance reports', function () {
-        $fu = ConventionTestHelper::createUserWithRole($this->convention, 'FloorUser', [
-            'floor_ids' => [$this->floor->id],
-        ]);
-
-        $this->actingAs($fu)
-            ->post(route('attendance.start', $this->convention))
-            ->assertForbidden();
-
-        $su = ConventionTestHelper::createUserWithRole($this->convention, 'SectionUser', [
-            'section_ids' => [$this->section->id],
-        ]);
-
-        $this->actingAs($su)
+    it('enforces outsider cannot start attendance reports', function () {
+        $this->actingAs($this->outsider)
             ->post(route('attendance.start', $this->convention))
             ->assertForbidden();
     });
@@ -263,7 +220,7 @@ describe('Input validation', function () {
                 'last_name' => 'User',
                 'email' => 'user@jwpub.org',
                 'mobile' => '+1234567890',
-                'roles' => ['ConventionUser'],
+                'roles' => ['Administrator'],
             ])
             ->assertSessionHasErrors('email');
     });
@@ -275,14 +232,14 @@ describe('Input validation', function () {
                 'last_name' => 'User',
                 'email' => 'user@mail.jwpub.org',
                 'mobile' => '+1234567890',
-                'roles' => ['ConventionUser'],
+                'roles' => ['Administrator'],
             ])
             ->assertSessionHasErrors('email');
     });
 
     it('enforces password criteria — rejects weak passwords', function () {
         $user = User::factory()->create(['password' => null, 'email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['Administrator']);
 
         $signedUrl = URL::temporarySignedRoute(
             'invitation.show',
@@ -323,7 +280,7 @@ describe('Input validation', function () {
 
     it('accepts valid strong passwords', function () {
         $user = User::factory()->create(['password' => null, 'email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['Administrator']);
 
         $this->post(route('invitation.store', ['user' => $user->id, 'convention' => $this->convention->id]), [
             'password' => 'SecureP@ss1',
@@ -366,6 +323,7 @@ describe('Input validation', function () {
     });
 
     it('requires floor_ids when FloorUser role is assigned', function () {
+        // FloorUser is no longer a valid role, so this should fail on role validation
         $this->actingAs($this->owner)
             ->post(route('users.store', $this->convention), [
                 'first_name' => 'Test',
@@ -374,7 +332,7 @@ describe('Input validation', function () {
                 'mobile' => '+1234567890',
                 'roles' => ['FloorUser'],
             ])
-            ->assertSessionHasErrors('floor_ids');
+            ->assertSessionHasErrors('roles.0');
     });
 });
 
@@ -414,7 +372,7 @@ describe('Rate limiting', function () {
 
     it('rate limits invitation resend to 3 per 60 minutes', function () {
         $invitedUser = User::factory()->create(['email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($invitedUser, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($invitedUser, $this->convention, ['Administrator']);
 
         // Make 3 resend requests
         for ($i = 0; $i < 3; $i++) {
@@ -446,7 +404,7 @@ describe('Signed URLs', function () {
 
     it('requires valid signature for invitation links', function () {
         $user = User::factory()->create(['password' => null, 'email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['Administrator']);
 
         // Access without signature
         $this->get(route('invitation.show', [
@@ -457,7 +415,7 @@ describe('Signed URLs', function () {
 
     it('rejects expired invitation links', function () {
         $user = User::factory()->create(['password' => null, 'email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['Administrator']);
 
         // Generate a URL that expired 1 hour ago
         $expiredUrl = URL::temporarySignedRoute(
@@ -472,7 +430,7 @@ describe('Signed URLs', function () {
     it('rejects tampered invitation links', function () {
         $user = User::factory()->create(['password' => null, 'email_confirmed' => false]);
         $otherUser = User::factory()->create(['password' => null, 'email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['Administrator']);
 
         $signedUrl = URL::temporarySignedRoute(
             'invitation.show',
@@ -493,7 +451,7 @@ describe('Signed URLs', function () {
 
     it('accepts valid signed invitation links', function () {
         $user = User::factory()->create(['password' => null, 'email_confirmed' => false]);
-        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($user, $this->convention, ['Administrator']);
 
         $signedUrl = URL::temporarySignedRoute(
             'invitation.show',
@@ -583,6 +541,7 @@ describe('Common vulnerabilities', function () {
         $convention = new Convention;
         expect($convention->getFillable())->toBe([
             'name', 'city', 'country', 'address', 'start_date', 'end_date', 'other_info',
+            'floor_url_token', 'section_url_token',
         ]);
 
         // Floor model
@@ -647,7 +606,7 @@ describe('Common vulnerabilities', function () {
     });
 
     it('does not expose password hashes in convention user listings', function () {
-        $cu = ConventionTestHelper::createUserWithRole($this->convention, 'ConventionUser');
+        $cu = ConventionTestHelper::createUserWithRole($this->convention, 'Administrator');
 
         $response = $this->actingAs($this->owner)
             ->get(route('users.index', $this->convention));

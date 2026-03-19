@@ -1,10 +1,11 @@
 import { usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 
+import type { PageProps } from '@/types';
 import type { AttendancePeriod, Floor } from '@/types/convention';
 import type { Role } from '@/types/user';
 
-interface AttendancePageProps {
+interface AttendancePageProps extends PageProps {
     attendancePeriods?: AttendancePeriod[];
     floors?: Floor[];
     userRoles?: Role[];
@@ -27,7 +28,7 @@ export function useAttendanceReport(): UseAttendanceReportReturn {
 
     return useMemo(() => {
         const roles = new Set<string>(userRoles);
-        const isManager = roles.has('Owner') || roles.has('ConventionUser');
+        const isManager = roles.has('Owner') || roles.has('Administrator');
 
         // Find the active (unlocked) period
         const activePeriod =

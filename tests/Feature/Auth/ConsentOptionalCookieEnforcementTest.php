@@ -42,10 +42,10 @@ test('declined consent ignores known optional cookies and forgets them on the re
     expect(rootHtmlTag($response))->not->toContain('class="dark"')
         ->and(rootHtmlTag($response))->toContain('data-theme="default"')
         ->and(knownOptionalResponseCookieNames($response))->toBe([
-        'appearance',
-        'theme',
-        'sidebar_state',
-    ]);
+            'appearance',
+            'theme',
+            'sidebar_state',
+        ]);
 });
 
 test('undecided consent behaves the same as declined for optional cookie trust', function () {
@@ -62,10 +62,10 @@ test('undecided consent behaves the same as declined for optional cookie trust',
     expect(rootHtmlTag($response))->not->toContain('class="dark"')
         ->and(rootHtmlTag($response))->toContain('data-theme="default"')
         ->and(knownOptionalResponseCookieNames($response))->toBe([
-        'appearance',
-        'theme',
-        'sidebar_state',
-    ]);
+            'appearance',
+            'theme',
+            'sidebar_state',
+        ]);
 });
 
 test('essential auth and session behavior continues while optional cookies are denied', function () {

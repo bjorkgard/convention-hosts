@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
-import { destroy, index as sectionsIndex, store } from '@/actions/App/Http/Controllers/SectionController';
+import { destroy, store } from '@/actions/App/Http/Controllers/SectionController';
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import SectionCard from '@/components/conventions/section-card';
 import InputError from '@/components/input-error';
@@ -36,8 +36,8 @@ interface SectionsIndexProps {
 }
 
 export default function SectionsIndex({ convention, floor, sections }: SectionsIndexProps) {
-    const { isOwner, isConventionUser, isFloorUser, hasFloorAccess } = useConventionRole();
-    const canAddSection = isOwner || isConventionUser || (isFloorUser && hasFloorAccess(floor.id));
+    const { isManager } = useConventionRole();
+    const canAddSection = isManager;
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [deletingSection, setDeletingSection] = useState<Section | null>(null);
@@ -54,7 +54,7 @@ export default function SectionsIndex({ convention, floor, sections }: SectionsI
         { title: 'Conventions', href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
         { title: 'Floors', href: floorsIndex.url(convention.id) },
-        { title: floor.name, href: sectionsIndex.url({ convention: convention.id, floor: floor.id }) },
+        { title: floor.name, href: `${floorsIndex.url(convention.id)}?open=${floor.id}` },
     ];
 
     function handleAdd(e: React.FormEvent) {

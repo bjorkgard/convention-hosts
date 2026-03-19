@@ -58,50 +58,33 @@ class AttendanceReportService
     /**
      * Report attendance for a section in a period.
      *
-     * @throws \Exception if user doesn't have permission or period is locked
+     * Any user with section permissions can create or update reports.
+     * The $user parameter is optional (null for URL sessions).
+     *
+     * @throws \Exception if period is locked
      */
     public function reportAttendance(
         Section $section,
         AttendancePeriod $period,
         int $attendance,
-        User $user
+        ?User $user = null
     ): AttendanceReport {
         // Check if period is locked
         if ($period->locked) {
             throw new \Exception('This attendance period is locked and cannot be updated.');
         }
 
-        // Validate user has permission for section
-        // This will be enforced by policies in the controller layer
-        // For now, we'll allow the operation
-
-        // Check if report already exists
-        $existingReport = AttendanceReport::where('attendance_period_id', $period->id)
-            ->where('section_id', $section->id)
-            ->first();
-
-        if ($existingReport) {
-            // Enforce update restriction: only original reporter can update
-            if ($existingReport->reported_by !== $user->id) {
-                throw new \Exception('Only the original reporter can update this section\'s attendance.');
-            }
-
-            // Update existing report
-            $existingReport->attendance = $attendance;
-            $existingReport->reported_at = now();
-            $existingReport->save();
-
-            return $existingReport;
-        }
-
-        // Create new attendance report
-        $report = AttendanceReport::create([
-            'attendance_period_id' => $period->id,
-            'section_id' => $section->id,
-            'attendance' => $attendance,
-            'reported_by' => $user->id,
-            'reported_at' => now(),
-        ]);
+        // Create or update attendance report (any user with permissions can update)
+        $report = AttendanceReport::updateOrCreate(
+            [
+                'attendance_period_id' => $period->id,
+                'section_id' => $section->id,
+            ],
+            [
+                'attendance' => $attendance,
+                'reported_at' => now(),
+            ]
+        );
 
         return $report;
     }

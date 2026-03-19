@@ -37,7 +37,7 @@ it('sends exactly one invitation email to the correct recipient for any valid us
             'last_name' => fake()->lastName(),
             'email' => 'invite-test-'.$i.'-'.fake()->unique()->numberBetween(1000, 99999).'@example.com',
             'mobile' => fake()->phoneNumber(),
-            'roles' => [fake()->randomElement(['ConventionUser', 'Owner'])],
+            'roles' => [fake()->randomElement(['Administrator', 'Owner'])],
         ];
 
         // Act: invoke the action

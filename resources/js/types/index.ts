@@ -25,6 +25,11 @@ export type Flash = {
 
 export type Errors = Record<string, string>;
 
+export interface UrlSession {
+    convention_id: string;
+    type: 'floor' | 'section';
+}
+
 export interface PageProps {
     [key: string]: unknown;
     auth: Auth;
@@ -32,6 +37,7 @@ export interface PageProps {
     name: string;
     sidebarOpen: boolean;
     appVersion: string | null;
+    urlSession?: UrlSession | null;
     flash?: Flash;
     errors?: Errors;
 }

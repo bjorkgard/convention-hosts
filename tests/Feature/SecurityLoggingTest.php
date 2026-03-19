@@ -74,12 +74,12 @@ test('it logs authorization failure when non-owner attempts owner action', funct
 
     $convention = Convention::factory()->create();
 
-    // Attach user as ConventionUser (not Owner)
+    // Attach user as Administrator (not Owner)
     $convention->users()->attach($user->id);
     \Illuminate\Support\Facades\DB::table('convention_user_roles')->insert([
         'convention_id' => $convention->id,
         'user_id' => $user->id,
-        'role' => 'ConventionUser',
+        'role' => 'Administrator',
         'created_at' => now(),
     ]);
 

@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 import { useConsent } from '@/hooks/use-consent';
 import {
@@ -9,6 +10,8 @@ import {
     writeOptionalCookie,
     writeOptionalLocalStorage,
 } from '@/lib/consent/optional-storage';
+
+import type { UrlSession } from '@/types';
 
 export type ResolvedAppearance = 'light' | 'dark';
 export type Appearance = ResolvedAppearance | 'system';
@@ -105,18 +108,26 @@ export function initializeTheme(): void {
 export function useAppearance(): UseAppearanceReturn {
     const consent = useConsent();
     const allowOptionalStorage = isOptionalStorageAllowed(consent);
+    const { urlSession } = usePage<{ urlSession?: UrlSession | null }>().props;
+    const isUrlSession = !!urlSession;
+
     const appearance: Appearance = useSyncExternalStore(
         subscribe,
-        () => currentAppearance,
+        () => (isUrlSession ? ('light' as Appearance) : currentAppearance),
         () => 'system',
     );
 
     const resolvedAppearance: ResolvedAppearance = useMemo(
-        () => (isDarkMode(appearance) ? 'dark' : 'light'),
-        [appearance],
+        () => (isUrlSession ? 'light' : isDarkMode(appearance) ? 'dark' : 'light'),
+        [appearance, isUrlSession],
     );
 
     useEffect(() => {
+        if (isUrlSession) {
+            applyTheme('light');
+            return;
+        }
+
         if (allowOptionalStorage) {
             return;
         }
@@ -129,10 +140,12 @@ export function useAppearance(): UseAppearanceReturn {
             applyTheme(currentAppearance);
             notify();
         }
-    }, [allowOptionalStorage]);
+    }, [allowOptionalStorage, isUrlSession]);
 
     const updateAppearance = useCallback(
         (mode: Appearance): void => {
+            if (isUrlSession) return;
+
             currentAppearance = mode;
             writeOptionalLocalStorage('appearance', mode, consent);
             writeOptionalCookie('appearance', mode, consent);
@@ -140,7 +153,7 @@ export function useAppearance(): UseAppearanceReturn {
             applyTheme(mode);
             notify();
         },
-        [consent],
+        [consent, isUrlSession],
     );
 
     return { appearance, resolvedAppearance, updateAppearance } as const;

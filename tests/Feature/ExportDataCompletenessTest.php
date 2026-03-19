@@ -53,7 +53,7 @@ it('validates export data completeness across all formats', function () {
         foreach ($users as $user) {
             $convention->users()->attach($user);
             // Assign random role
-            $roles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
+            $roles = ['Owner', 'Administrator'];
             DB::table('convention_user_roles')->insert([
                 'convention_id' => $convention->id,
                 'user_id' => $user->id,
@@ -82,7 +82,6 @@ it('validates export data completeness across all formats', function () {
                     'attendance_period_id' => $period->id,
                     'section_id' => $section->id,
                     'attendance' => rand(0, $section->number_of_seats),
-                    'reported_by' => $users->random()->id,
                     'reported_at' => now(),
                 ]);
                 $allReports->push($report);
@@ -217,14 +216,12 @@ it('exports convention with complete attendance history', function () {
         'attendance_period_id' => $period1->id,
         'section_id' => $section->id,
         'attendance' => 50,
-        'reported_by' => $user->id,
     ]);
 
     $report2 = AttendanceReport::factory()->create([
         'attendance_period_id' => $period2->id,
         'section_id' => $section->id,
         'attendance' => 75,
-        'reported_by' => $user->id,
     ]);
 
     // Test Markdown format

@@ -1,55 +1,43 @@
 import { usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 
+import type { PageProps, UrlSession } from '@/types';
 import type { Role } from '@/types/user';
 
-interface ConventionRolePageProps {
+interface ConventionRolePageProps extends PageProps {
     userRoles?: Role[];
-    userFloorIds?: number[];
-    userSectionIds?: number[];
+    urlSession?: UrlSession | null;
 }
 
 interface UseConventionRoleReturn {
     readonly isOwner: boolean;
-    readonly isConventionUser: boolean;
-    readonly isFloorUser: boolean;
-    readonly isSectionUser: boolean;
-    readonly hasFloorAccess: (floorId: number) => boolean;
-    readonly hasSectionAccess: (sectionId: number) => boolean;
+    readonly isAdministrator: boolean;
+    readonly isManager: boolean;
+    readonly isUrlSession: boolean;
+    readonly isFloorUrlSession: boolean;
+    readonly isSectionUrlSession: boolean;
 }
 
 export function useConventionRole(): UseConventionRoleReturn {
-    const { userRoles = [], userFloorIds = [], userSectionIds = [] } =
-        usePage<ConventionRolePageProps>().props;
+    const { userRoles = [], urlSession } = usePage<ConventionRolePageProps>().props;
 
     return useMemo(() => {
         const roles = new Set<string>(userRoles);
 
         const isOwner = roles.has('Owner');
-        const isConventionUser = roles.has('ConventionUser');
-        const isFloorUser = roles.has('FloorUser');
-        const isSectionUser = roles.has('SectionUser');
-
-        const floorIdSet = new Set(userFloorIds);
-        const sectionIdSet = new Set(userSectionIds);
-
-        const hasFloorAccess = (floorId: number): boolean => {
-            if (isOwner || isConventionUser) return true;
-            return floorIdSet.has(floorId);
-        };
-
-        const hasSectionAccess = (sectionId: number): boolean => {
-            if (isOwner || isConventionUser) return true;
-            return sectionIdSet.has(sectionId);
-        };
+        const isAdministrator = roles.has('Administrator');
+        const isManager = isOwner || isAdministrator;
+        const isUrlSession = !!urlSession;
+        const isFloorUrlSession = urlSession?.type === 'floor';
+        const isSectionUrlSession = urlSession?.type === 'section';
 
         return {
             isOwner,
-            isConventionUser,
-            isFloorUser,
-            isSectionUser,
-            hasFloorAccess,
-            hasSectionAccess,
+            isAdministrator,
+            isManager,
+            isUrlSession,
+            isFloorUrlSession,
+            isSectionUrlSession,
         } as const;
-    }, [userRoles, userFloorIds, userSectionIds]);
+    }, [userRoles, urlSession]);
 }

@@ -14,7 +14,6 @@ class ConventionWordExport
             'floors.sections',
             'users',
             'attendancePeriods.reports.section.floor',
-            'attendancePeriods.reports.reportedBy',
         ]);
     }
 
@@ -148,7 +147,6 @@ class ConventionWordExport
         $table->addCell(1500)->addText('Floor', ['bold' => true]);
         $table->addCell(1500)->addText('Section', ['bold' => true]);
         $table->addCell(1200)->addText('Attendance', ['bold' => true]);
-        $table->addCell(2000)->addText('Reported By', ['bold' => true]);
         $table->addCell(2000)->addText('Reported At', ['bold' => true]);
 
         // Data rows
@@ -161,7 +159,6 @@ class ConventionWordExport
                 $table->addCell(1500)->addText($report->section->floor->name);
                 $table->addCell(1500)->addText($report->section->name);
                 $table->addCell(1200)->addText((string) $report->attendance);
-                $table->addCell(2000)->addText($report->reportedBy->first_name.' '.$report->reportedBy->last_name);
                 $table->addCell(2000)->addText($report->reported_at->format('Y-m-d H:i:s'));
             }
         }

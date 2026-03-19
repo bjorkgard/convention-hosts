@@ -15,11 +15,22 @@ class UserConsentResolver
      *     updatedAt: string|null
      * }
      */
-    public function resolve(?User $user): array
+    public function resolve(?User $user, ?string $sessionConsentState = null): array
     {
         $currentPolicyVersion = (int) config('consent.current_policy_version');
 
         if (! $user instanceof User) {
+            // For anonymous URL-session users, use session-stored consent
+            if (in_array($sessionConsentState, [User::CONSENT_STATE_ACCEPTED, User::CONSENT_STATE_DECLINED], true)) {
+                return [
+                    'state' => $sessionConsentState,
+                    'version' => $currentPolicyVersion,
+                    'allowOptionalStorage' => $sessionConsentState === User::CONSENT_STATE_ACCEPTED,
+                    'decidedAt' => null,
+                    'updatedAt' => null,
+                ];
+            }
+
             return $this->undecidedContract($currentPolicyVersion);
         }
 

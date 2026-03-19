@@ -10,7 +10,8 @@ class RecordConsentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user() !== null;
+        // Allow both authenticated users and URL-session (anonymous) users
+        return $this->user() !== null || $this->session()->has('url_session');
     }
 
     /**

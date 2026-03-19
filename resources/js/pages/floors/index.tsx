@@ -1,4 +1,4 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -32,15 +32,14 @@ interface FloorsIndexProps {
     convention: Convention;
     floors: Floor[];
     userRoles: Role[];
-    userFloorIds: number[];
-    userSectionIds: number[];
 }
 
-export default function FloorsIndex({ convention, floors, userFloorIds = [], userSectionIds = [] }: FloorsIndexProps) {
-    const { isOwner, isConventionUser, isFloorUser } = useConventionRole();
-    const isManager = isOwner || isConventionUser;
-    const canAddSection = isOwner || isConventionUser || isFloorUser;
-    const userRole: Role = isOwner ? 'Owner' : isConventionUser ? 'ConventionUser' : isFloorUser ? 'FloorUser' : 'SectionUser';
+export default function FloorsIndex({ convention, floors }: FloorsIndexProps) {
+    const { isOwner, isAdministrator, isManager } = useConventionRole();
+    const canAddSection = isManager;
+    const userRole: Role | null = isOwner ? 'Owner' : isAdministrator ? 'Administrator' : null;
+
+    const openFloorId = new URLSearchParams(usePage().url.split('?')[1] ?? '').get('open');
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingFloor, setEditingFloor] = useState<Floor | null>(null);
@@ -53,9 +52,8 @@ export default function FloorsIndex({ convention, floors, userFloorIds = [], use
 
     // Filter floors for the section modal based on user role
     const sectionModalFloors = useMemo(() => {
-        if (isOwner || isConventionUser) return floors;
-        return floors.filter((f) => userFloorIds.includes(f.id));
-    }, [floors, isOwner, isConventionUser, userFloorIds]);
+        return floors;
+    }, [floors]);
 
     const addForm = useForm({ name: '' });
     const editForm = useForm({ name: '' });
@@ -193,8 +191,7 @@ export default function FloorsIndex({ convention, floors, userFloorIds = [], use
                                 floor={floor}
                                 sections={floor.sections ?? []}
                                 userRole={userRole}
-                                userFloorIds={userFloorIds}
-                                userSectionIds={userSectionIds}
+                                defaultOpen={openFloorId === String(floor.id)}
                                 onEdit={openEditDialog}
                                 onDelete={(f) => setDeletingFloor(f)}
                                 onEditSection={openSectionEdit}

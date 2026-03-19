@@ -5,7 +5,6 @@ use App\Models\AttendanceReport;
 use App\Models\Convention;
 use App\Models\Floor;
 use App\Models\Section;
-use App\Models\User;
 
 /**
  * Property 33: Attendance Total Calculation
@@ -33,8 +32,6 @@ it('calculates total attendance as sum of all section reports', function () {
             'locked' => false,
         ]);
 
-        $reporter = User::factory()->create();
-
         // Act: Submit random attendance for a random subset of sections
         $reportCount = fake()->numberBetween(1, $sectionCount);
         $reportedSections = $sections->random($reportCount);
@@ -48,7 +45,6 @@ it('calculates total attendance as sum of all section reports', function () {
                 'attendance_period_id' => $period->id,
                 'section_id' => $section->id,
                 'attendance' => $attendance,
-                'reported_by' => $reporter->id,
                 'reported_at' => now(),
             ]);
         }
@@ -61,7 +57,6 @@ it('calculates total attendance as sum of all section reports', function () {
 
         // Cleanup
         $convention->delete();
-        $reporter->delete();
     }
 })->group('property', 'attendance');
 
@@ -109,8 +104,6 @@ it('counts reported sections accurately', function () {
             'locked' => false,
         ]);
 
-        $reporter = User::factory()->create();
-
         // Act: Report attendance for a random subset
         $reportedCount = fake()->numberBetween(0, $totalSections);
         $reportedSections = $reportedCount > 0
@@ -122,7 +115,6 @@ it('counts reported sections accurately', function () {
                 'attendance_period_id' => $period->id,
                 'section_id' => $section->id,
                 'attendance' => fake()->numberBetween(10, 300),
-                'reported_by' => $reporter->id,
                 'reported_at' => now(),
             ]);
         }
@@ -138,6 +130,5 @@ it('counts reported sections accurately', function () {
 
         // Cleanup
         $convention->delete();
-        $reporter->delete();
     }
 })->group('property', 'attendance');

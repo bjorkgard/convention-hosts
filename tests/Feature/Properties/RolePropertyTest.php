@@ -9,19 +9,17 @@ use Tests\Helpers\ConventionTestHelper;
  * Property 16: Multiple Role Assignment
  *
  * For any user within a convention, they should be able to hold multiple
- * roles simultaneously (e.g., both FloorUser and SectionUser).
+ * roles simultaneously (e.g., both Owner and Administrator).
  * All assigned roles should be stored correctly and queryable.
  *
  * **Validates: Requirements 5.3**
  */
-$allRoles = ['Owner', 'ConventionUser', 'FloorUser', 'SectionUser'];
+$allRoles = ['Owner', 'Administrator'];
 
 it('allows a user to hold multiple roles simultaneously within a convention', function () use ($allRoles) {
     for ($iteration = 0; $iteration < 3; $iteration++) {
-        // Pick a random non-empty subset of roles
-        $shuffled = collect($allRoles)->shuffle();
-        $count = fake()->numberBetween(2, count($allRoles));
-        $selectedRoles = $shuffled->take($count)->values()->all();
+        // With only 2 roles, always assign both
+        $selectedRoles = $allRoles;
 
         $structure = ConventionTestHelper::createConventionWithStructure([
             'with_owner' => false,
@@ -66,10 +64,8 @@ it('stores all role combinations correctly in the database', function () use ($a
         }
     }
 
-    // Test a random sample of combinations
-    $sampled = collect($multiRoleCombinations)->shuffle()->take(6)->all();
-
-    foreach ($sampled as $roles) {
+    // Test all combinations (with 2 roles, there's only 1 combination: both)
+    foreach ($multiRoleCombinations as $roles) {
         $convention = Convention::factory()->create();
         $user = User::factory()->create();
 
@@ -96,10 +92,10 @@ it('stores all role combinations correctly in the database', function () use ($a
 
 it('does not report roles that were not assigned', function () use ($allRoles) {
     for ($iteration = 0; $iteration < 3; $iteration++) {
-        $shuffled = collect($allRoles)->shuffle();
-        $splitAt = fake()->numberBetween(1, count($allRoles) - 1);
-        $assignedRoles = $shuffled->take($splitAt)->values()->all();
-        $unassignedRoles = $shuffled->skip($splitAt)->values()->all();
+        // Assign only one role, verify the other is not reported
+        $assignedRole = fake()->randomElement($allRoles);
+        $assignedRoles = [$assignedRole];
+        $unassignedRoles = array_values(array_diff($allRoles, $assignedRoles));
 
         $convention = Convention::factory()->create();
         $user = User::factory()->create();
@@ -121,14 +117,14 @@ it('does not report roles that were not assigned', function () use ($allRoles) {
 })->group('property', 'roles');
 
 /**
- * Property 17: Owner Role Inherits ConventionUser Permissions
+ * Property 17: Owner Role Inherits Administrator Permissions
  *
  * For any user with Owner role in a convention, they should have access
- * to all ConventionUser capabilities plus deletion and export privileges.
+ * to all Administrator capabilities plus deletion and export privileges.
  *
  * **Validates: Requirements 5.4**
  */
-it('grants Owner all ConventionUser capabilities via ConventionPolicy', function () {
+it('grants Owner all Administrator capabilities via ConventionPolicy', function () {
     $structure = ConventionTestHelper::createConventionWithStructure([
         'with_owner' => false,
     ]);
@@ -136,21 +132,21 @@ it('grants Owner all ConventionUser capabilities via ConventionPolicy', function
 
     for ($iteration = 0; $iteration < 3; $iteration++) {
         $owner = ConventionTestHelper::createUserWithRole($convention, 'Owner');
-        // Also attach ConventionUser since Owner inherits those capabilities
-        ConventionTestHelper::attachUserToConvention($owner, $convention, ['ConventionUser']);
+        // Also attach Administrator since Owner inherits those capabilities
+        ConventionTestHelper::attachUserToConvention($owner, $convention, ['Administrator']);
 
-        $conventionUser = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
+        $administrator = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
 
         $policy = new \App\Policies\ConventionPolicy;
 
-        // ConventionUser capabilities - Owner should have all of these
+        // Administrator capabilities - Owner should have all of these
         expect($policy->update($owner, $convention))->toBeTrue(
             "Iteration {$iteration}: Owner should be able to update convention"
         );
 
-        // ConventionUser should also be able to update
-        expect($policy->update($conventionUser, $convention))->toBeTrue(
-            "Iteration {$iteration}: ConventionUser should be able to update convention"
+        // Administrator should also be able to update
+        expect($policy->update($administrator, $convention))->toBeTrue(
+            "Iteration {$iteration}: Administrator should be able to update convention"
         );
 
         // Owner-exclusive capabilities: delete and export
@@ -161,17 +157,17 @@ it('grants Owner all ConventionUser capabilities via ConventionPolicy', function
             "Iteration {$iteration}: Owner should be able to export convention"
         );
 
-        // ConventionUser should NOT have delete or export
-        expect($policy->delete($conventionUser, $convention))->toBeFalse(
-            "Iteration {$iteration}: ConventionUser should NOT be able to delete convention"
+        // Administrator should NOT have delete or export
+        expect($policy->delete($administrator, $convention))->toBeFalse(
+            "Iteration {$iteration}: Administrator should NOT be able to delete convention"
         );
-        expect($policy->export($conventionUser, $convention))->toBeFalse(
-            "Iteration {$iteration}: ConventionUser should NOT be able to export convention"
+        expect($policy->export($administrator, $convention))->toBeFalse(
+            "Iteration {$iteration}: Administrator should NOT be able to export convention"
         );
     }
 })->group('property', 'roles');
 
-it('grants Owner all ConventionUser capabilities on floors and sections', function () {
+it('grants Owner all Administrator capabilities on floors and sections', function () {
     for ($iteration = 0; $iteration < 3; $iteration++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => fake()->numberBetween(1, 3),
@@ -183,17 +179,16 @@ it('grants Owner all ConventionUser capabilities on floors and sections', functi
         $sections = $structure['sections'];
 
         $owner = ConventionTestHelper::createUserWithRole($convention, 'Owner');
-        ConventionTestHelper::attachUserToConvention($owner, $convention, ['ConventionUser']);
-        // Load relationships for policy checks
-        $owner->load('floors', 'sections', 'conventions');
+        ConventionTestHelper::attachUserToConvention($owner, $convention, ['Administrator']);
+        $owner->load('conventions');
 
-        $conventionUser = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
-        $conventionUser->load('floors', 'sections', 'conventions');
+        $administrator = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
+        $administrator->load('conventions');
 
         $floorPolicy = new \App\Policies\FloorPolicy;
         $sectionPolicy = new \App\Policies\SectionPolicy;
 
-        // Owner should be able to do everything ConventionUser can on floors
+        // Owner should be able to do everything Administrator can on floors
         foreach ($floors as $floor) {
             expect($floorPolicy->view($owner, $floor))->toBeTrue(
                 "Iteration {$iteration}: Owner should view floor {$floor->name}"
@@ -208,14 +203,14 @@ it('grants Owner all ConventionUser capabilities on floors and sections', functi
                 "Iteration {$iteration}: Owner should create floors"
             );
 
-            // ConventionUser should also have these capabilities
-            expect($floorPolicy->view($conventionUser, $floor))->toBeTrue();
-            expect($floorPolicy->update($conventionUser, $floor))->toBeTrue();
-            expect($floorPolicy->delete($conventionUser, $floor))->toBeTrue();
-            expect($floorPolicy->create($conventionUser, $convention))->toBeTrue();
+            // Administrator should also have these capabilities
+            expect($floorPolicy->view($administrator, $floor))->toBeTrue();
+            expect($floorPolicy->update($administrator, $floor))->toBeTrue();
+            expect($floorPolicy->delete($administrator, $floor))->toBeTrue();
+            expect($floorPolicy->create($administrator, $convention))->toBeTrue();
         }
 
-        // Owner should be able to do everything ConventionUser can on sections
+        // Owner should be able to do everything Administrator can on sections
         foreach ($sections as $section) {
             expect($sectionPolicy->view($owner, $section))->toBeTrue(
                 "Iteration {$iteration}: Owner should view section {$section->name}"
@@ -227,14 +222,14 @@ it('grants Owner all ConventionUser capabilities on floors and sections', functi
                 "Iteration {$iteration}: Owner should delete section {$section->name}"
             );
 
-            expect($sectionPolicy->view($conventionUser, $section))->toBeTrue();
-            expect($sectionPolicy->update($conventionUser, $section))->toBeTrue();
-            expect($sectionPolicy->delete($conventionUser, $section))->toBeTrue();
+            expect($sectionPolicy->view($administrator, $section))->toBeTrue();
+            expect($sectionPolicy->update($administrator, $section))->toBeTrue();
+            expect($sectionPolicy->delete($administrator, $section))->toBeTrue();
         }
     }
 })->group('property', 'roles');
 
-it('grants Owner user management capabilities that ConventionUser also has', function () {
+it('grants Owner user management capabilities that Administrator also has', function () {
     for ($iteration = 0; $iteration < 3; $iteration++) {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'with_owner' => false,
@@ -242,17 +237,15 @@ it('grants Owner user management capabilities that ConventionUser also has', fun
         $convention = $structure['convention'];
 
         $owner = ConventionTestHelper::createUserWithRole($convention, 'Owner');
-        ConventionTestHelper::attachUserToConvention($owner, $convention, ['ConventionUser']);
-        $owner->load('floors', 'sections', 'conventions');
+        ConventionTestHelper::attachUserToConvention($owner, $convention, ['Administrator']);
+        $owner->load('conventions');
 
-        $conventionUser = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
-        $conventionUser->load('floors', 'sections', 'conventions');
+        $administrator = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
+        $administrator->load('conventions');
 
         // Create a target user in the convention
-        $targetUser = ConventionTestHelper::createUserWithRole($convention, 'SectionUser', [
-            'section_ids' => $structure['sections']->pluck('id')->toArray(),
-        ]);
-        $targetUser->load('floors', 'sections', 'conventions');
+        $targetUser = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
+        $targetUser->load('conventions');
 
         $userPolicy = new \App\Policies\UserPolicy;
 
@@ -267,9 +260,9 @@ it('grants Owner user management capabilities that ConventionUser also has', fun
             "Iteration {$iteration}: Owner should delete users"
         );
 
-        // ConventionUser should also have these capabilities
-        expect($userPolicy->view($conventionUser, $targetUser, $convention))->toBeTrue();
-        expect($userPolicy->update($conventionUser, $targetUser, $convention))->toBeTrue();
-        expect($userPolicy->delete($conventionUser, $targetUser, $convention))->toBeTrue();
+        // Administrator should also have these capabilities
+        expect($userPolicy->view($administrator, $targetUser, $convention))->toBeTrue();
+        expect($userPolicy->update($administrator, $targetUser, $convention))->toBeTrue();
+        expect($userPolicy->delete($administrator, $targetUser, $convention))->toBeTrue();
     }
 })->group('property', 'roles');

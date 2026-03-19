@@ -26,7 +26,7 @@ it('validates email domain restriction for jwpub.org', function () {
             'last_name' => 'Doe',
             'email' => $email,
             'mobile' => '+1234567890',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ], (new StoreUserRequest)->rules());
 
         expect($validator->fails())
@@ -37,11 +37,9 @@ it('validates email domain restriction for jwpub.org', function () {
 });
 
 it('validates email domain allows other domains', function () {
-    // Run property test with multiple random valid emails
     for ($i = 0; $i < 3; $i++) {
         $email = fake()->unique()->safeEmail();
 
-        // Skip if by chance it contains jwpub.org
         if (stripos($email, 'jwpub.org') !== false) {
             continue;
         }
@@ -51,7 +49,7 @@ it('validates email domain allows other domains', function () {
             'last_name' => fake()->lastName(),
             'email' => $email,
             'mobile' => fake()->phoneNumber(),
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ], (new StoreUserRequest)->rules());
 
         expect($validator->passes())
@@ -84,7 +82,7 @@ it('validates roles array must contain at least one role', function () {
 });
 
 it('validates roles must be valid role types', function () {
-    $invalidRoles = ['Admin', 'SuperUser', 'Guest', 'InvalidRole'];
+    $invalidRoles = ['Admin', 'SuperUser', 'Guest', 'InvalidRole', 'FloorUser', 'SectionUser', 'ConventionUser'];
 
     foreach ($invalidRoles as $role) {
         $validator = Validator::make([
@@ -98,48 +96,4 @@ it('validates roles must be valid role types', function () {
         expect($validator->fails())
             ->toBeTrue("Expected validation to fail for invalid role: {$role}");
     }
-});
-
-it('validates FloorUser role requires floor_ids', function () {
-    $data = [
-        'first_name' => 'John',
-        'last_name' => 'Doe',
-        'email' => 'john@example.com',
-        'mobile' => '+1234567890',
-        'roles' => ['FloorUser'],
-    ];
-
-    $validator = Validator::make($data, (new StoreUserRequest)->rules());
-
-    $request = new StoreUserRequest;
-    $request->merge($data);
-    $request->setContainer(app());
-    $request->withValidator($validator);
-
-    $validationFailed = $validator->fails();
-
-    expect($validationFailed)->toBeTrue('Expected validation to fail when FloorUser has no floor_ids');
-    expect($validator->errors()->has('floor_ids'))->toBeTrue('Expected floor_ids field error');
-});
-
-it('validates SectionUser role requires section_ids', function () {
-    $data = [
-        'first_name' => 'John',
-        'last_name' => 'Doe',
-        'email' => 'john@example.com',
-        'mobile' => '+1234567890',
-        'roles' => ['SectionUser'],
-    ];
-
-    $validator = Validator::make($data, (new StoreUserRequest)->rules());
-
-    $request = new StoreUserRequest;
-    $request->merge($data);
-    $request->setContainer(app());
-    $request->withValidator($validator);
-
-    $validationFailed = $validator->fails();
-
-    expect($validationFailed)->toBeTrue('Expected validation to fail when SectionUser has no section_ids');
-    expect($validator->errors()->has('section_ids'))->toBeTrue('Expected section_ids field error');
 });
