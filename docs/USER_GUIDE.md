@@ -44,7 +44,7 @@ Sections can be managed directly from the Floors page:
 4. Fill in:
    - Section name
    - Number of seats (capacity)
-   - Optionally: elder-friendly, handicap-friendly, additional information
+   - Optionally: elder-friendly, handicap-friendly, hearing loop, additional information
 5. Click **Add Section**
 
 To edit a section, expand a floor row and click the pencil icon next to the section. To delete, click the trash icon and confirm.
@@ -59,7 +59,7 @@ Clicking a section name (from the floors page or search results) opens the secti
 
 - Section name, parent floor, and convention context
 - Occupancy gauge with current percentage
-- Seat capacity and accessibility badges (elder-friendly, handicap-friendly)
+- Seat capacity and accessibility badges (elder-friendly, handicap-friendly, hearing loop)
 - Additional information text, if any
 - All three occupancy update controls (dropdown, FULL button, available seats input)
 - A help note explaining that occupancy resets automatically every night
@@ -226,6 +226,7 @@ The Search page is available to all authenticated users regardless of role.
    - Floor (dropdown)
    - Elder-friendly sections (checkbox)
    - Handicap-friendly sections (checkbox)
+   - Hearing loop sections (checkbox)
 3. Results show only sections with less than 90% occupancy
 4. Results are sorted by occupancy (lowest first) so the most available sections appear at the top
 5. Click a result to navigate to the section detail page

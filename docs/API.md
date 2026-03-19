@@ -377,6 +377,7 @@ Authorization: SectionPolicy `create`
 | number_of_seats | integer | required, min:1 |
 | elder_friendly | boolean | nullable |
 | handicap_friendly | boolean | nullable |
+| hearing_loop | boolean | nullable |
 | information | string | nullable |
 
 Defaults: `occupancy` = 0, `available_seats` = `number_of_seats` (starts fully available).
@@ -401,6 +402,7 @@ Uses `UpdateSectionRequest` (no `floor_id` — sections don't change floors on e
 | number_of_seats | integer | required, min:1 |
 | elder_friendly | boolean | nullable |
 | handicap_friendly | boolean | nullable |
+| hearing_loop | boolean | nullable |
 | information | string | nullable |
 
 On success: redirects to `floors.index`.
@@ -567,6 +569,7 @@ No role-based filtering — accessible to all users with convention access (auth
 | floor_id | integer | optional, must exist in floors table |
 | elder_friendly | boolean | optional |
 | handicap_friendly | boolean | optional |
+| hearing_loop | boolean | optional |
 
 Always filters to sections with `occupancy < 90%`. Results sorted by occupancy ascending, paginated (20 per page).
 

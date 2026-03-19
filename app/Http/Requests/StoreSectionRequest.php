@@ -40,6 +40,7 @@ class StoreSectionRequest extends FormRequest
             'number_of_seats' => ['required', 'integer', 'min:1'],
             'elder_friendly' => ['nullable', 'boolean'],
             'handicap_friendly' => ['nullable', 'boolean'],
+            'hearing_loop' => ['nullable', 'boolean'],
             'information' => ['nullable', 'string'],
         ];
     }

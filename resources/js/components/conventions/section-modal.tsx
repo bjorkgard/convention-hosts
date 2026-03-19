@@ -36,6 +36,7 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
         number_of_seats: '' as number | '',
         elder_friendly: false,
         handicap_friendly: false,
+        hearing_loop: false,
         information: '',
     });
 
@@ -49,6 +50,7 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                 number_of_seats: section.number_of_seats,
                 elder_friendly: section.elder_friendly,
                 handicap_friendly: section.handicap_friendly,
+                hearing_loop: section.hearing_loop,
                 information: section.information ?? '',
             });
         } else {
@@ -177,6 +179,16 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                                 />
                                 <Label htmlFor="section-handicap" className="cursor-pointer text-sm font-normal">
                                     Handicap friendly
+                                </Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="section-hearing-loop"
+                                    checked={form.data.hearing_loop}
+                                    onCheckedChange={(checked) => form.setData('hearing_loop', checked === true)}
+                                />
+                                <Label htmlFor="section-hearing-loop" className="cursor-pointer text-sm font-normal">
+                                    Hearing loop
                                 </Label>
                             </div>
                         </div>

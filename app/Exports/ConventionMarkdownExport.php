@@ -63,14 +63,15 @@ class ConventionMarkdownExport
                     continue;
                 }
 
-                $markdown .= "| Section | Total Seats | Occupancy | Available Seats | Elder Friendly | Handicap Friendly |\n";
-                $markdown .= "|---------|-------------|-----------|-----------------|----------------|-------------------|\n";
+                $markdown .= "| Section | Total Seats | Occupancy | Available Seats | Elder Friendly | Handicap Friendly | Hearing Loop |\n";
+                $markdown .= "|---------|-------------|-----------|-----------------|----------------|-------------------|--------------|\n";
 
                 foreach ($floor->sections as $section) {
                     $markdown .= "| {$section->name} | {$section->number_of_seats} | ";
                     $markdown .= "{$section->occupancy}% | {$section->available_seats} | ";
                     $markdown .= ($section->elder_friendly ? 'Yes' : 'No').' | ';
-                    $markdown .= ($section->handicap_friendly ? 'Yes' : 'No')." |\n";
+                    $markdown .= ($section->handicap_friendly ? 'Yes' : 'No').' | ';
+                    $markdown .= ($section->hearing_loop ? 'Yes' : 'No')." |\n";
                 }
                 $markdown .= "\n";
             }

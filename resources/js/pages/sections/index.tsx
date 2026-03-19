@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Accessibility, ArrowLeft, Heart, Plus } from 'lucide-react';
+import { Accessibility, ArrowLeft, Ear, Heart, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
@@ -47,6 +47,7 @@ export default function SectionsIndex({ convention, floor, sections }: SectionsI
         number_of_seats: '',
         elder_friendly: false,
         handicap_friendly: false,
+        hearing_loop: false,
         information: '',
     });
 
@@ -175,6 +176,14 @@ export default function SectionsIndex({ convention, floor, sections }: SectionsI
                                     />
                                     <Accessibility className="text-muted-foreground size-4" />
                                     Handicap-friendly
+                                </label>
+                                <label className="flex items-center gap-2 text-sm">
+                                    <Checkbox
+                                        checked={addForm.data.hearing_loop}
+                                        onCheckedChange={(checked) => addForm.setData('hearing_loop', !!checked)}
+                                    />
+                                    <Ear className="text-muted-foreground size-4" />
+                                    Hearing loop
                                 </label>
                             </div>
                             <div className="grid gap-2">

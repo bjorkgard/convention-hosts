@@ -80,6 +80,7 @@ CREATE TABLE sections (
     available_seats INTEGER DEFAULT 0 CHECK (available_seats >= 0),
     elder_friendly BOOLEAN DEFAULT FALSE,
     handicap_friendly BOOLEAN DEFAULT FALSE,
+    hearing_loop BOOLEAN DEFAULT FALSE,
     information TEXT,
     last_occupancy_updated_by INTEGER,
     last_occupancy_updated_at TIMESTAMP,
@@ -91,13 +92,14 @@ CREATE TABLE sections (
 
 CREATE INDEX idx_sections_floor ON sections(floor_id);
 CREATE INDEX idx_sections_occupancy ON sections(occupancy);
-CREATE INDEX idx_sections_accessibility ON sections(elder_friendly, handicap_friendly);
+CREATE INDEX idx_sections_accessibility ON sections(elder_friendly, handicap_friendly, hearing_loop);
+CREATE INDEX idx_sections_hearing_loop ON sections(hearing_loop);
 ```
 
 **Key Features:**
 - Real-time occupancy tracking (0-100%)
 - Available seats counter
-- Accessibility flags for elder-friendly and handicap-friendly sections
+- Accessibility flags for elder-friendly, handicap-friendly, and hearing loop sections
 - Audit trail for occupancy updates
 
 ### Pivot Tables
@@ -416,6 +418,7 @@ public function export(Convention $convention, string $format)
 - Floor selection (optional)
 - Elder-friendly sections
 - Handicap-friendly sections
+- Hearing loop sections
 - Occupancy < 90% (automatic)
 
 **Results:**
@@ -818,7 +821,7 @@ The frontend data models are defined in `resources/js/types/convention.ts` and m
 |-----------|-------------|------------|
 | `Convention` | Convention event | name, city, country, start_date, end_date |
 | `Floor` | Venue level | convention_id, name |
-| `Section` | Seating area | floor_id, number_of_seats, occupancy, available_seats, elder_friendly, handicap_friendly |
+| `Section` | Seating area | floor_id, number_of_seats, occupancy, available_seats, elder_friendly, handicap_friendly, hearing_loop |
 | `AttendancePeriod` | Reporting period | convention_id, date, period (`'morning'` \| `'afternoon'`), locked |
 | `AttendanceReport` | Section attendance | attendance_period_id, section_id, attendance, reported_at |
 

@@ -118,8 +118,8 @@ it('restores schema structure after rollback and re-migration', function () {
     expect(Schema::hasTable('section_user'))->toBeFalse();
     expect(Schema::hasColumn('attendance_reports', 'reported_by'))->toBeFalse();
 
-    // Roll back the specific migration
-    Artisan::call('migrate:rollback', ['--step' => 1]);
+    // Roll back the role-url-refactoring migration (step 2 because hearing_loop migration is now the latest)
+    Artisan::call('migrate:rollback', ['--step' => 2]);
 
     // After rollback: old schema should be restored
     expect(Schema::hasTable('floor_user'))->toBeTrue('floor_user table should be restored after rollback');

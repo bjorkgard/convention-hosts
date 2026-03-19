@@ -28,6 +28,7 @@ class SectionFactory extends Factory
             'available_seats' => 0,
             'elder_friendly' => $this->faker->boolean(30),
             'handicap_friendly' => $this->faker->boolean(25),
+            'hearing_loop' => $this->faker->boolean(20),
             'information' => $this->faker->optional(0.4)->sentence(),
         ];
     }
@@ -49,6 +50,16 @@ class SectionFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'handicap_friendly' => true,
+        ]);
+    }
+
+    /**
+     * Mark the section as having a hearing loop.
+     */
+    public function hearingLoop(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'hearing_loop' => true,
         ]);
     }
 

@@ -35,7 +35,7 @@ A comprehensive convention management system built with Laravel and React. Manag
 - Policy version tracking triggers re-prompt when consent policy changes
 
 ### Search and Accessibility
-- Find available sections with elder-friendly and handicap-friendly filters
+- Find available sections with elder-friendly, handicap-friendly, and hearing loop filters
 - Progressive Web App for native-like mobile experience
 - Light/dark mode theme support
 - Mobile-first responsive design

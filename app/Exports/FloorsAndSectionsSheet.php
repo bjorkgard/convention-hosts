@@ -26,6 +26,7 @@ class FloorsAndSectionsSheet implements FromCollection, WithHeadings, WithTitle
                     $section->available_seats,
                     $section->elder_friendly ? 'Yes' : 'No',
                     $section->handicap_friendly ? 'Yes' : 'No',
+                    $section->hearing_loop ? 'Yes' : 'No',
                     $section->information ?? '',
                 ]);
             }
@@ -44,6 +45,7 @@ class FloorsAndSectionsSheet implements FromCollection, WithHeadings, WithTitle
             'Available Seats',
             'Elder Friendly',
             'Handicap Friendly',
+            'Hearing Loop',
             'Information',
         ];
     }
