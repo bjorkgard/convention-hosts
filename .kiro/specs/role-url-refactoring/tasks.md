@@ -40,7 +40,7 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Add `floor_url_token` and `section_url_token` generation to factory definition
     - _Requirements: 2.1, 2.2_
 
-  - [ ] 1.6 Write property tests for migration and token generation (backend)
+  - [x] 1.6 Write property tests for migration and token generation (backend)
     - **Property 3: Token generation and validity on convention creation** — verify both tokens are non-null strings of at least 32 characters for any newly created convention
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4**
     - **Property 4: Token uniqueness across conventions** — verify floor_url_token and section_url_token differ across any two distinct conventions
@@ -52,7 +52,7 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - **Property 14: Migration reversibility** — verify up+down restores schema structure
     - **Validates: Requirements 10.8**
 
-- [ ] 2. Checkpoint - Ensure migration and model tests pass
+- [x] 2. Checkpoint - Ensure migration and model tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 3. Backend middleware, controller, and routing

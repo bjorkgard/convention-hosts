@@ -648,6 +648,7 @@ php artisan test --group=property
 | `Property/OccupancyColorCodingTest` | Color coding thresholds across full occupancy range |
 | `Property/DailyOccupancyResetTest` | Reset command restores seats and clears metadata |
 | `Property/SectionValidationPropertyTest` | Section field validation rules |
+| `Feature/Properties/RoleUrlRefactoring/*` | Token generation validity (P3), token uniqueness (P4), migration correctness (P12-P14), URL session permissions (P5-P8), role invariants (P1-P2, P10) |
 | `Feature/Properties/*` | Feature-level property tests (CSRF, role access, guest convention) |
 | `Feature/Integration/*` | End-to-end flows (complete user flows, mobile responsiveness, performance, security audit) |
 
