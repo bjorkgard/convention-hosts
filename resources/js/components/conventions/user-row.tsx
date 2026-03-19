@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { AlertTriangle, CheckCircle2, Mail, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { destroy, resendInvitation } from '@/actions/App/Http/Controllers/UserController';
 import ConfirmationDialog from '@/components/confirmation-dialog';
@@ -18,8 +19,10 @@ interface UserRowProps {
 }
 
 export default function UserRow({ user, convention, canManage = false, onEdit }: UserRowProps) {
+    const { t } = useTranslation();
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [resending, setResending] = useState(false);
+    const fullName = `${user.first_name} ${user.last_name}`;
 
     function handleResend() {
         setResending(true);
@@ -42,27 +45,27 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             <span className="truncate text-sm font-medium">
-                                {user.first_name} {user.last_name}
+                                {fullName}
                             </span>
                             {user.email_confirmed ? (
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <CheckCircle2
                                             className="size-4 shrink-0 text-green-500"
-                                            aria-label="Email confirmed"
+                                            aria-label={t('user.row.email_confirmed')}
                                         />
                                     </TooltipTrigger>
-                                    <TooltipContent>Email confirmed</TooltipContent>
+                                    <TooltipContent>{t('user.row.email_confirmed')}</TooltipContent>
                                 </Tooltip>
                             ) : (
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <AlertTriangle
                                             className="size-4 shrink-0 text-amber-500"
-                                            aria-label="Email not confirmed"
+                                            aria-label={t('user.row.email_not_confirmed')}
                                         />
                                     </TooltipTrigger>
-                                    <TooltipContent>Email not yet confirmed</TooltipContent>
+                                    <TooltipContent>{t('user.row.email_not_confirmed')}</TooltipContent>
                                 </Tooltip>
                             )}
                         </div>
@@ -89,14 +92,14 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                                         size="icon"
                                         disabled={user.email_confirmed || resending}
                                         onClick={handleResend}
-                                        aria-label="Resend invitation"
+                                        aria-label={t('user.row.resend_label')}
                                         className="cursor-pointer"
                                     >
                                         <Mail className="size-4" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    {user.email_confirmed ? 'Email already confirmed' : 'Resend invitation email'}
+                                    {user.email_confirmed ? t('user.row.email_already_confirmed') : t('user.row.resend_invitation')}
                                 </TooltipContent>
                             </Tooltip>
                             {onEdit && (
@@ -106,12 +109,12 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => onEdit(user)}
-                                            aria-label={`Edit ${user.first_name} ${user.last_name}`}
+                                            aria-label={t('user.row.edit_label', { name: fullName })}
                                         >
                                             <Pencil className="size-4" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent>Edit user details and roles</TooltipContent>
+                                    <TooltipContent>{t('user.row.edit_tooltip')}</TooltipContent>
                                 </Tooltip>
                             )}
                             <Tooltip>
@@ -120,12 +123,12 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => setShowDeleteConfirm(true)}
-                                        aria-label={`Delete ${user.first_name} ${user.last_name}`}
+                                        aria-label={t('user.row.delete_label', { name: fullName })}
                                     >
                                         <Trash2 className="size-4" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Remove user from this convention</TooltipContent>
+                                <TooltipContent>{t('user.row.delete_tooltip')}</TooltipContent>
                             </Tooltip>
                         </>
                     )}
@@ -135,9 +138,9 @@ export default function UserRow({ user, convention, canManage = false, onEdit }:
             <ConfirmationDialog
                 open={showDeleteConfirm}
                 onOpenChange={setShowDeleteConfirm}
-                title="Remove User"
-                description={`Are you sure you want to remove ${user.first_name} ${user.last_name} from this convention? This action cannot be undone.`}
-                confirmLabel="Remove"
+                title={t('user.delete_dialog.title')}
+                description={t('user.delete_dialog.description', { name: fullName })}
+                confirmLabel={t('user.delete_dialog.confirm')}
                 variant="destructive"
                 onConfirm={handleDelete}
             />

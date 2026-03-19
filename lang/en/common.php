@@ -36,6 +36,8 @@ return [
         'description' => 'A new version (:version) is available.',
         'update_button' => 'Update Now',
         'dismiss_button' => 'Later',
+        'current_version' => 'Current version',
+        'new_version' => 'New version',
     ],
     'confirmation_dialog' => [
         'default_confirm' => 'Confirm',
@@ -45,5 +47,15 @@ return [
         'light' => 'Light',
         'dark' => 'Dark',
         'system' => 'System',
+    ],
+    'version_badge_aria' => 'Application version :version',
+    'cookie_consent' => [
+        'aria_label' => 'Cookie consent',
+        'title' => 'We use cookies',
+        'essential' => 'Essential cookies stay on because they keep you signed in and protect account security.',
+        'optional' => 'Optional preference storage remembers your theme, appearance, and sidebar state between visits.',
+        'decline' => 'Decline',
+        'accept_all' => 'Accept all',
+        'saving' => 'Saving...',
     ],
 ];

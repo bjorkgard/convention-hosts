@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getOccupancyLevel } from '@/hooks/use-occupancy-color';
 
@@ -9,12 +11,12 @@ const colorMap = {
     red: { stroke: '#ef4444', track: '#fef2f2' },
 };
 
-const levelLabels = {
-    green: 'Low occupancy',
-    'dark-green': 'Moderate occupancy',
-    yellow: 'High occupancy',
-    orange: 'Very high occupancy',
-    red: 'At capacity',
+const levelKeys = {
+    green: 'section.occupancy.gauge_low',
+    'dark-green': 'section.occupancy.gauge_moderate',
+    yellow: 'section.occupancy.gauge_high',
+    orange: 'section.occupancy.gauge_very_high',
+    red: 'section.occupancy.gauge_at_capacity',
 };
 
 interface OccupancyGaugeProps {
@@ -23,9 +25,10 @@ interface OccupancyGaugeProps {
 }
 
 export default function OccupancyGauge({ occupancy, size = 32 }: OccupancyGaugeProps) {
+    const { t } = useTranslation();
     const level = getOccupancyLevel(occupancy);
     const { stroke, track } = colorMap[level];
-    const label = levelLabels[level];
+    const label = t(levelKeys[level]);
 
     const strokeWidth = size * 0.15;
     const radius = (size - strokeWidth) / 2;
@@ -44,7 +47,7 @@ export default function OccupancyGauge({ occupancy, size = 32 }: OccupancyGaugeP
                     width={size}
                     height={size / 2 + strokeWidth}
                     viewBox={`0 0 ${size} ${size / 2 + strokeWidth}`}
-                    aria-label={`Occupancy ${occupancy}% — ${label}`}
+                    aria-label={`${label} ${occupancy}%`}
                     role="img"
                     className="shrink-0 cursor-default"
                 >
@@ -65,7 +68,7 @@ export default function OccupancyGauge({ occupancy, size = 32 }: OccupancyGaugeP
             </TooltipTrigger>
             <TooltipContent>
                 <p className="font-medium">{label}</p>
-                <p className="text-xs text-muted-foreground">Occupancy: {occupancy}%</p>
+                <p className="text-xs text-muted-foreground">{t('section.occupancy.gauge_occupancy', { percent: occupancy })}</p>
             </TooltipContent>
         </Tooltip>
     );

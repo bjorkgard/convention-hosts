@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'heading' => 'Settings',
+    'description' => 'Manage your profile and account settings',
+    'nav_label' => 'Settings',
     'profile' => [
         'title' => 'Profile settings',
         'breadcrumb' => 'Profile settings',
@@ -12,6 +15,7 @@ return [
         'last_name_placeholder' => 'Last name',
         'email_label' => 'Email address',
         'email_placeholder' => 'Email address',
+        'language_label' => 'Language',
         'email_unverified' => 'Your email address is unverified.',
         'resend_verification' => 'Click here to resend the verification email.',
         'verification_sent' => 'A new verification link has been sent to your email address.',
@@ -47,7 +51,9 @@ return [
         'recovery_codes_heading' => 'Recovery Codes',
         'recovery_codes_description' => 'Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two-factor authentication device is lost.',
         'show_codes' => 'Show Recovery Codes',
+        'hide_codes' => 'Hide Recovery Codes',
         'regenerate_codes' => 'Regenerate Recovery Codes',
+        'regenerate_warning' => 'Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate codes above.',
     ],
     'two_factor_setup' => [
         'title' => 'Set Up Two-Factor Authentication',
@@ -58,12 +64,25 @@ return [
         'cancel' => 'Cancel',
         'confirm' => 'Confirm & Enable',
         'confirming' => 'Confirming...',
+        'continue' => 'Continue',
+        'enabled_title' => 'Two-factor authentication enabled',
+        'enabled_description' => 'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
+        'verify_title' => 'Verify authentication code',
+        'verify_description' => 'Enter the 6-digit code from your authenticator app',
     ],
     'appearance' => [
         'title' => 'Appearance settings',
         'breadcrumb' => 'Appearance settings',
         'heading' => 'Appearance settings',
         'description' => 'Update your account\'s appearance settings',
+    ],
+    'theme' => [
+        'title' => 'Theme settings',
+        'breadcrumb' => 'Theme settings',
+        'heading' => 'Theme',
+        'description' => 'Choose a color theme for the application',
+        'color_theme_label' => 'Color theme',
+        'reload_notice' => 'The page will reload when you select a new theme.',
     ],
     'delete_account' => [
         'heading' => 'Delete account',
@@ -83,5 +102,6 @@ return [
         'password' => 'Password',
         'two_factor' => 'Two-Factor',
         'appearance' => 'Appearance',
+        'theme' => 'Theme',
     ],
 ];

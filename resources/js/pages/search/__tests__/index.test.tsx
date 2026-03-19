@@ -199,11 +199,11 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('Floor')).toBeInTheDocument();
+            expect(screen.getByText('search.floor_label')).toBeInTheDocument();
 
             const options = screen.getAllByRole('option');
             expect(options).toHaveLength(3); // All floors + 2 floors
-            expect(options[0]).toHaveTextContent('All floors');
+            expect(options[0]).toHaveTextContent('search.all_floors');
             expect(options[1]).toHaveTextContent('Ground Floor');
             expect(options[2]).toHaveTextContent('First Floor');
         });
@@ -218,8 +218,8 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('Elder-friendly')).toBeInTheDocument();
-            expect(screen.getByLabelText('Elder-friendly')).not.toBeChecked();
+            expect(screen.getByLabelText('search.elder_friendly')).toBeInTheDocument();
+            expect(screen.getByLabelText('search.elder_friendly')).not.toBeChecked();
         });
 
         it('renders handicap-friendly checkbox', () => {
@@ -232,8 +232,8 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('Handicap-friendly')).toBeInTheDocument();
-            expect(screen.getByLabelText('Handicap-friendly')).not.toBeChecked();
+            expect(screen.getByLabelText('search.handicap_friendly')).toBeInTheDocument();
+            expect(screen.getByLabelText('search.handicap_friendly')).not.toBeChecked();
         });
 
         it('checks elder-friendly when filter is active', () => {
@@ -246,7 +246,7 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('Elder-friendly')).toBeChecked();
+            expect(screen.getByLabelText('search.elder_friendly')).toBeChecked();
         });
 
         it('checks handicap-friendly when filter is active', () => {
@@ -259,7 +259,7 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('Handicap-friendly')).toBeChecked();
+            expect(screen.getByLabelText('search.handicap_friendly')).toBeChecked();
         });
     });
 
@@ -320,7 +320,7 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('3 sections available')).toBeInTheDocument();
+            expect(screen.getByText('search.results_count')).toBeInTheDocument();
         });
 
         it('shows singular "section" when total is 1', () => {
@@ -335,7 +335,7 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('1 section available')).toBeInTheDocument();
+            expect(screen.getByText('search.results_count')).toBeInTheDocument();
         });
     });
 
@@ -350,7 +350,7 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('No available sections found matching your filters.')).toBeInTheDocument();
+            expect(screen.getByText('search.no_results')).toBeInTheDocument();
         });
 
         it('does not show total count text when empty', () => {
@@ -363,7 +363,7 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.queryByText(/sections? available/)).not.toBeInTheDocument();
+            expect(screen.queryByText('search.results_count')).not.toBeInTheDocument();
         });
     });
 

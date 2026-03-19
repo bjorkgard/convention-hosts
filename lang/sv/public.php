@@ -70,13 +70,15 @@ return [
             'end_date_label' => 'Slutdatum *',
             'other_info_label' => 'Övrig information',
             'other_info_placeholder' => 'Ytterligare detaljer om din sammankomst (valfritt)',
+            'language_label' => 'Språk',
             'submit' => 'Skapa sammankomst',
             'submitting' => 'Skapar sammankomst...',
         ],
         'cta' => [
             'heading' => 'Redo att hantera din nästa sammankomst?',
-            'description' => 'Gå med sammankomstarrangörer som litar på vår plattform för smidig evenemangshantering.',
-            'button' => 'Kom igång gratis',
+            'description' => 'Börja gratis. Inget kreditkort krävs.',
+            'button' => 'Kom igång nu',
+            'login' => 'Logga in på ditt konto',
         ],
         'footer' => [
             'copyright' => '© :year :app. Alla rättigheter förbehållna.',

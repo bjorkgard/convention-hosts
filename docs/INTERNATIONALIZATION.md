@@ -51,7 +51,7 @@ return [
 2. Copy all 15 PHP files from `lang/en/` into the new directory
 3. Translate the values (keep the keys identical)
 
-The API auto-discovers new locales from the `lang/` directory — no code changes needed.
+The API auto-discovers new locales from the `lang/` directory — no code changes needed. This behavior is verified by `tests/Feature/LocaleAutoDiscoveryTest.php`.
 
 ## Locale Resolution
 

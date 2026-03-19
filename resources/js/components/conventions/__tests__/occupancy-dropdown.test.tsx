@@ -78,7 +78,7 @@ describe('OccupancyDropdown', () => {
     it('renders the "Occupancy" label', () => {
         render(<OccupancyDropdown currentOccupancy={0} onUpdate={vi.fn()} />);
 
-        expect(screen.getByText('Occupancy')).toBeInTheDocument();
+        expect(screen.getByText('section.occupancy.label')).toBeInTheDocument();
     });
 
     it('renders all 6 occupancy options (0%, 10%, 25%, 50%, 75%, 100%)', () => {

@@ -21,13 +21,6 @@ const LOCALE_OPTIONS: { value: string; label: string }[] = [
     { value: 'en', label: 'English' },
 ];
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Profile settings',
-        href: edit(),
-    },
-];
-
 export default function Profile({
     mustVerifyEmail,
     status,
@@ -35,15 +28,18 @@ export default function Profile({
     mustVerifyEmail: boolean;
     status?: string;
 }) {
+    const { t, i18n } = useTranslation();
     const { auth } = usePage().props;
-    const { i18n } = useTranslation();
     const [locales, setLocales] = useState(LOCALE_OPTIONS);
     const [selectedLocale, setSelectedLocale] = useState(
         auth.user.locale ?? 'sv',
     );
     const selectRef = useRef<HTMLSelectElement>(null);
 
-    // Fetch available locales on mount to stay in sync with backend
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('settings.profile.breadcrumb'), href: edit() },
+    ];
+
     useEffect(() => {
         fetch('/api/locales')
             .then((res) => res.json())
@@ -61,16 +57,16 @@ export default function Profile({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Profile settings" />
+            <Head title={t('settings.profile.title')} />
 
-            <h1 className="sr-only">Profile settings</h1>
+            <h1 className="sr-only">{t('settings.profile.title')}</h1>
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <Heading
                         variant="small"
-                        title="Profile information"
-                        description="Update your name and email address"
+                        title={t('settings.profile.heading')}
+                        description={t('settings.profile.description')}
                     />
 
                     <Form
@@ -83,7 +79,7 @@ export default function Profile({
                         {({ processing, recentlySuccessful, errors }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="first_name">First name</Label>
+                                    <Label htmlFor="first_name">{t('settings.profile.first_name_label')}</Label>
 
                                     <Input
                                         id="first_name"
@@ -92,7 +88,7 @@ export default function Profile({
                                         name="first_name"
                                         required
                                         autoComplete="given-name"
-                                        placeholder="First name"
+                                        placeholder={t('settings.profile.first_name_placeholder')}
                                     />
 
                                     <InputError
@@ -102,7 +98,7 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="last_name">Last name</Label>
+                                    <Label htmlFor="last_name">{t('settings.profile.last_name_label')}</Label>
 
                                     <Input
                                         id="last_name"
@@ -111,7 +107,7 @@ export default function Profile({
                                         name="last_name"
                                         required
                                         autoComplete="family-name"
-                                        placeholder="Last name"
+                                        placeholder={t('settings.profile.last_name_placeholder')}
                                     />
 
                                     <InputError
@@ -121,7 +117,7 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Email address</Label>
+                                    <Label htmlFor="email">{t('settings.profile.email_label')}</Label>
 
                                     <Input
                                         id="email"
@@ -131,7 +127,7 @@ export default function Profile({
                                         name="email"
                                         required
                                         autoComplete="username"
-                                        placeholder="Email address"
+                                        placeholder={t('settings.profile.email_placeholder')}
                                     />
 
                                     <InputError
@@ -141,7 +137,7 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="locale">Language</Label>
+                                    <Label htmlFor="locale">{t('settings.profile.language_label')}</Label>
 
                                     <select
                                         ref={selectRef}
@@ -174,24 +170,20 @@ export default function Profile({
                                     auth.user.email_verified_at === null && (
                                         <div>
                                             <p className="-mt-4 text-sm text-muted-foreground">
-                                                Your email address is
-                                                unverified.{' '}
+                                                {t('settings.profile.email_unverified')}{' '}
                                                 <Link
                                                     href={send()}
                                                     as="button"
                                                     className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                                 >
-                                                    Click here to resend the
-                                                    verification email.
+                                                    {t('settings.profile.resend_verification')}
                                                 </Link>
                                             </p>
 
                                             {status ===
                                                 'verification-link-sent' && (
                                                 <div className="mt-2 text-sm font-medium text-green-600">
-                                                    A new verification link has
-                                                    been sent to your email
-                                                    address.
+                                                    {t('settings.profile.verification_sent')}
                                                 </div>
                                             )}
                                         </div>
@@ -202,7 +194,7 @@ export default function Profile({
                                         disabled={processing}
                                         data-test="update-profile-button"
                                     >
-                                        Save
+                                        {t('settings.profile.save')}
                                     </Button>
 
                                     <Transition
@@ -213,7 +205,7 @@ export default function Profile({
                                         leaveTo="opacity-0"
                                     >
                                         <p className="text-sm text-neutral-600">
-                                            Saved
+                                            {t('settings.profile.saved')}
                                         </p>
                                     </Transition>
                                 </div>

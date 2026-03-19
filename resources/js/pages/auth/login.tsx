@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -20,12 +21,14 @@ export default function Login({
     status,
     canResetPassword,
 }: Props) {
+    const { t } = useTranslation();
+
     return (
         <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
+            title={t('auth.login.heading')}
+            description={t('auth.login.description')}
         >
-            <Head title="Log in" />
+            <Head title={t('auth.login.title')} />
 
             <Form
                 {...store.form()}
@@ -36,7 +39,7 @@ export default function Login({
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">{t('auth.login.email_label')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -45,21 +48,21 @@ export default function Login({
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder={t('auth.login.email_placeholder')}
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">{t('auth.login.password_label')}</Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
                                             className="ml-auto text-sm"
                                             tabIndex={5}
                                         >
-                                            Forgot password?
+                                            {t('auth.login.forgot_password')}
                                         </TextLink>
                                     )}
                                 </div>
@@ -70,7 +73,7 @@ export default function Login({
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder={t('auth.login.password_placeholder')}
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -81,7 +84,7 @@ export default function Login({
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label htmlFor="remember">{t('auth.login.remember_me')}</Label>
                             </div>
 
                             <Button
@@ -92,7 +95,7 @@ export default function Login({
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
-                                Log in
+                                {t('auth.login.submit')}
                             </Button>
                         </div>
                     </>

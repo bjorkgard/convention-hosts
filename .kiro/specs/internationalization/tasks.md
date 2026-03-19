@@ -184,41 +184,41 @@ This plan implements a complete i18n system where Laravel is the single source o
     - Verify `lang/sv/validation.php` has Swedish equivalents
     - _Requirements: 11.4_
 
-- [ ] 11. Frontend string localization
-  - [ ] 11.1 Replace hardcoded strings in auth page components
+- [x] 11. Frontend string localization
+  - [x] 11.1 Replace hardcoded strings in auth page components
     - Replace strings in: login, confirm-password, forgot-password, reset-password, two-factor-challenge, verify-email, invitation, invitation-invalid, guest-convention-confirmation, guest-convention-invalid, guest-convention-set-password
     - Use `const { t } = useTranslation()` and `t('key')` calls
     - _Requirements: 12.1_
-  - [ ] 11.2 Replace hardcoded strings in convention, floor, section, and search pages
+  - [x] 11.2 Replace hardcoded strings in convention, floor, section, and search pages
     - Replace strings in: conventions/index, conventions/create, conventions/show, floors/index, sections/index, sections/show, search/index
     - _Requirements: 12.1_
-  - [ ] 11.3 Replace hardcoded strings in settings pages
+  - [x] 11.3 Replace hardcoded strings in settings pages
     - Replace strings in: settings/profile, settings/password, settings/two-factor, settings/appearance
     - _Requirements: 12.1_
-  - [ ] 11.4 Replace hardcoded strings in layout components
+  - [x] 11.4 Replace hardcoded strings in layout components
     - Replace strings in: app-layout, auth-layout, app-sidebar-layout, app-header-layout, settings layout, auth card/simple/split layouts
     - _Requirements: 12.2_
-  - [ ] 11.5 Replace hardcoded strings in feature components
+  - [x] 11.5 Replace hardcoded strings in feature components
     - Replace strings in convention components: attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-gauge, occupancy-indicator, role-badge, section-card, section-modal, user-row
     - _Requirements: 12.3_
-  - [ ] 11.6 Replace hardcoded strings in general components
+  - [x] 11.6 Replace hardcoded strings in general components
     - Replace strings in: breadcrumbs, heading, nav-convention, nav-footer, nav-main, nav-user, user-info, user-menu-content, confirmation-dialog, delete-user, install-prompt, update-notification-modal, version-badge, two-factor-setup-modal, two-factor-recovery-codes
     - _Requirements: 12.3_
-  - [ ] 11.7 Replace hardcoded strings in welcome page
+  - [x] 11.7 Replace hardcoded strings in welcome page
     - Replace all strings in `resources/js/pages/welcome.tsx`
     - _Requirements: 12.1_
-  - [ ] 11.8 Ensure all accessibility attributes use translated strings
+  - [x] 11.8 Ensure all accessibility attributes use translated strings
     - Audit and replace all `aria-label`, `placeholder`, `title`, and `alt` attributes across all components and pages with `t()` calls
     - _Requirements: 12.4_
 
-- [ ] 12. Checkpoint - Verify all string replacements
+- [x] 12. Checkpoint - Verify all string replacements
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 13. Auto-discovery and Kiro translation scanner hook
-  - [ ] 13.1 Verify locale auto-discovery works for new locales
+- [x] 13. Auto-discovery and Kiro translation scanner hook
+  - [x] 13.1 Verify locale auto-discovery works for new locales
     - Confirm that adding a new `lang/{new_locale}/` directory causes `GET /api/locales` to include the new locale without code changes
     - _Requirements: 1.4_
-  - [ ] 13.2 Create Kiro translation scanner hook
+  - [x] 13.2 Create Kiro translation scanner hook
     - Create `.kiro/hooks/translation-scanner.md`
     - Configure hook to trigger on file creation and modification events
     - Scan changed files for `t('key')` and `__('key')` calls using regex
@@ -226,7 +226,7 @@ This plan implements a complete i18n system where Laravel is the single source o
     - For new keys added to `en/`, add placeholder entries to all other locale directories
     - _Requirements: 13.1, 13.2, 13.3, 13.4_
 
-- [ ] 14. Final checkpoint - Full integration verification
+- [x] 14. Final checkpoint - Full integration verification
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

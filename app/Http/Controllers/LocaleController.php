@@ -21,6 +21,7 @@ class LocaleController extends Controller
 
     /**
      * Return merged translations from all domain files for the given locale.
+     * Converts Laravel :placeholder syntax to i18next {{placeholder}} syntax.
      */
     public function show(string $locale): JsonResponse
     {
@@ -34,10 +35,26 @@ class LocaleController extends Controller
         foreach (File::files($path) as $file) {
             if ($file->getExtension() === 'php') {
                 $domain = $file->getFilenameWithoutExtension();
-                $translations[$domain] = require $file->getPathname();
+                $translations[$domain] = $this->convertPlaceholders(require $file->getPathname());
             }
         }
 
         return response()->json($translations);
+    }
+
+    /**
+     * Recursively convert Laravel :placeholder to i18next {{placeholder}}.
+     */
+    private function convertPlaceholders(mixed $value): mixed
+    {
+        if (is_array($value)) {
+            return array_map(fn ($v) => $this->convertPlaceholders($v), $value);
+        }
+
+        if (is_string($value)) {
+            return (string) preg_replace('/:([a-zA-Z_]+)/', '{{$1}}', $value);
+        }
+
+        return $value;
     }
 }

@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { AlertTriangle, Square, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { stop } from '@/actions/App/Http/Controllers/AttendanceController';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -32,6 +33,7 @@ export default function AttendanceReportBanner({
     reportedCount,
     totalCount,
 }: AttendanceReportBannerProps) {
+    const { t } = useTranslation();
     const [showConfirm, setShowConfirm] = useState(false);
     const allReported = reportedCount >= totalCount;
 
@@ -55,10 +57,10 @@ export default function AttendanceReportBanner({
                     <div className="flex flex-col gap-1">
                         <span className="flex items-center gap-1.5 text-sm font-medium text-blue-900 dark:text-blue-200">
                             <Users className="size-4" />
-                            {reportedCount} of {totalCount} sections reported
+                            {t('attendance.banner.sections_reported', { reported: reportedCount, total: totalCount })}
                         </span>
                         <span className="text-sm text-blue-700 dark:text-blue-300">
-                            Total attendance: {totalAttendance}
+                            {t('attendance.banner.total_attendance', { count: totalAttendance })}
                         </span>
                     </div>
                     <Tooltip>
@@ -70,10 +72,10 @@ export default function AttendanceReportBanner({
                                 onClick={handleStop}
                             >
                                 <Square className="size-3.5 fill-current" />
-                                Stop attendance report
+                                {t('attendance.banner.stop_button')}
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent>Lock this period and stop collecting attendance</TooltipContent>
+                        <TooltipContent>{t('attendance.banner.stop_tooltip')}</TooltipContent>
                     </Tooltip>
                 </AlertDescription>
             </Alert>
@@ -83,19 +85,18 @@ export default function AttendanceReportBanner({
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <AlertTriangle className="size-5 text-amber-500" />
-                            Incomplete Report
+                            {t('attendance.incomplete_dialog.title')}
                         </DialogTitle>
                         <DialogDescription>
-                            Only {reportedCount} of {totalCount} sections have reported attendance.
-                            Stopping now will lock this period and no further updates can be made.
+                            {t('attendance.incomplete_dialog.description', { reported: reportedCount, total: totalCount })}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" className="cursor-pointer">Cancel</Button>
+                            <Button variant="outline" className="cursor-pointer">{t('attendance.incomplete_dialog.cancel')}</Button>
                         </DialogClose>
                         <Button variant="destructive" className="cursor-pointer" onClick={submitStop}>
-                            Stop anyway
+                            {t('attendance.incomplete_dialog.confirm')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

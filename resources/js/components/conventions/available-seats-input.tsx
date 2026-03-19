@@ -1,5 +1,6 @@
 import { Send } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +14,7 @@ interface AvailableSeatsInputProps {
 }
 
 export default function AvailableSeatsInput({ section, onUpdate }: AvailableSeatsInputProps) {
+    const { t } = useTranslation();
     const [localValue, setLocalValue] = useState<string | null>(null);
 
     const displayValue = localValue ?? String(section.available_seats);
@@ -33,7 +35,7 @@ export default function AvailableSeatsInput({ section, onUpdate }: AvailableSeat
 
     return (
         <form onSubmit={handleSubmit} className="space-y-2">
-            <Label htmlFor="available-seats">Available Seats</Label>
+            <Label htmlFor="available-seats">{t('section.available_seats.label')}</Label>
             <div className="flex items-center gap-2">
                 <Input
                     id="available-seats"
@@ -48,10 +50,10 @@ export default function AvailableSeatsInput({ section, onUpdate }: AvailableSeat
                     <TooltipTrigger asChild>
                         <Button type="submit" size="default" className="cursor-pointer gap-1.5">
                             <Send className="size-4" />
-                            Send
+                            {t('section.available_seats.send')}
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Update occupancy based on available seats</TooltipContent>
+                    <TooltipContent>{t('section.available_seats.tooltip')}</TooltipContent>
                 </Tooltip>
             </div>
         </form>

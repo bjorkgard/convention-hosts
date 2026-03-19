@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus, CalendarDays } from 'lucide-react';
+import { CalendarDays, Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { create, index } from '@/actions/App/Http/Controllers/ConventionController';
 import ConventionCard from '@/components/conventions/convention-card';
@@ -8,28 +9,27 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, Convention } from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Conventions',
-        href: index.url(),
-    },
-];
-
 interface ConventionsIndexProps {
     conventions: Convention[];
     canCreateConvention: boolean;
 }
 
 export default function ConventionsIndex({ conventions, canCreateConvention }: ConventionsIndexProps) {
+    const { t } = useTranslation();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('convention.index.heading'), href: index.url() },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Conventions" />
+            <Head title={t('convention.index.title')} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center justify-between gap-2">
                     <div>
-                        <h1 className="text-2xl font-semibold tracking-tight">Conventions</h1>
+                        <h1 className="text-2xl font-semibold tracking-tight">{t('convention.index.heading')}</h1>
                         <p className="text-muted-foreground text-sm">
-                            View and manage your conventions. Tap a convention to see its floors, sections, and occupancy details.
+                            {t('convention.index.description')}
                         </p>
                     </div>
                     {canCreateConvention && (
@@ -38,12 +38,12 @@ export default function ConventionsIndex({ conventions, canCreateConvention }: C
                                 <Button asChild className="cursor-pointer">
                                     <Link href={create.url()}>
                                         <Plus />
-                                        <span className="hidden sm:inline">Create Convention</span>
-                                        <span className="sm:hidden">Create</span>
+                                        <span className="hidden sm:inline">{t('convention.index.create_button')}</span>
+                                        <span className="sm:hidden">{t('convention.index.create_short')}</span>
                                     </Link>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Create a new convention with venue details and dates</TooltipContent>
+                            <TooltipContent>{t('convention.index.create_tooltip')}</TooltipContent>
                         </Tooltip>
                     )}
                 </div>
@@ -53,10 +53,10 @@ export default function ConventionsIndex({ conventions, canCreateConvention }: C
                         <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                             <CalendarDays className="size-6" />
                         </div>
-                        <p className="text-muted-foreground">No conventions yet.</p>
+                        <p className="text-muted-foreground">{t('convention.index.empty')}</p>
                         {canCreateConvention && (
                             <Button asChild variant="link" className="mt-2 cursor-pointer">
-                                <Link href={create.url()}>Create your first convention</Link>
+                                <Link href={create.url()}>{t('convention.index.empty_create')}</Link>
                             </Button>
                         )}
                     </div>

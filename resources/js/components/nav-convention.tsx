@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Building2, Grid3X3, Search, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
@@ -26,6 +27,7 @@ export function NavConvention() {
     const { convention } = usePage<ConventionPageProps>().props;
     const { isManager, isUrlSession, isSectionUrlSession } = useConventionRole();
     const { isCurrentUrl } = useCurrentUrl();
+    const { t } = useTranslation();
 
     if (!convention) return null;
 
@@ -36,7 +38,7 @@ export function NavConvention() {
     // Floors: visible to managers and floor URL sessions (not section URL sessions)
     if (isManager || (isUrlSession && !isSectionUrlSession)) {
         items.push({
-            title: 'Administration',
+            title: t('navigation.administration'),
             href: floorsIndex.url(conventionId),
             icon: Building2,
         });
@@ -44,14 +46,14 @@ export function NavConvention() {
 
     // Sections: visible to ALL roles and URL sessions
     items.push({
-        title: 'Sections',
+        title: t('navigation.sections'),
         href: conventionShow.url(conventionId),
         icon: Grid3X3,
     });
 
     // Search: visible to ALL roles and URL sessions
     items.push({
-        title: 'Availability',
+        title: t('navigation.availability'),
         href: searchIndex.url(conventionId),
         icon: Search,
     });
@@ -60,7 +62,7 @@ export function NavConvention() {
     // Users: visible to managers only (not URL sessions)
     if (isManager && !isUrlSession) {
         items.push({
-            title: 'Users',
+            title: t('navigation.users'),
             href: usersIndex.url(conventionId),
             icon: Users,
         });

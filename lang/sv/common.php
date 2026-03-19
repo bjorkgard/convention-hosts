@@ -36,6 +36,8 @@ return [
         'description' => 'En ny version (:version) är tillgänglig.',
         'update_button' => 'Uppdatera nu',
         'dismiss_button' => 'Senare',
+        'current_version' => 'Nuvarande version',
+        'new_version' => 'Ny version',
     ],
     'confirmation_dialog' => [
         'default_confirm' => 'Bekräfta',
@@ -45,5 +47,15 @@ return [
         'light' => 'Ljust',
         'dark' => 'Mörkt',
         'system' => 'System',
+    ],
+    'version_badge_aria' => 'Applikationsversion :version',
+    'cookie_consent' => [
+        'aria_label' => 'Cookiemedgivande',
+        'title' => 'Vi använder cookies',
+        'essential' => 'Nödvändiga cookies är alltid aktiva eftersom de håller dig inloggad och skyddar kontosäkerheten.',
+        'optional' => 'Valfri inställningslagring kommer ihåg ditt tema, utseende och sidofältets tillstånd mellan besök.',
+        'decline' => 'Avböj',
+        'accept_all' => 'Acceptera alla',
+        'saving' => 'Sparar...',
     ],
 ];

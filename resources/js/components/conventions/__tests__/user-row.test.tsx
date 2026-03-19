@@ -93,16 +93,16 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: true });
         render(<UserRow user={user} convention={makeConvention()} />);
 
-        expect(screen.getByLabelText('Email confirmed')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Email not confirmed')).not.toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.email_confirmed')).toBeInTheDocument();
+        expect(screen.queryByLabelText('user.row.email_not_confirmed')).not.toBeInTheDocument();
     });
 
     it('shows warning icon when email_confirmed is false', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} />);
 
-        expect(screen.getByLabelText('Email not confirmed')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Email confirmed')).not.toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.email_not_confirmed')).toBeInTheDocument();
+        expect(screen.queryByLabelText('user.row.email_confirmed')).not.toBeInTheDocument();
     });
 
     it('renders role badges for each role', () => {
@@ -124,14 +124,14 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
 
-        expect(screen.getByLabelText('Resend invitation')).toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.resend_label')).toBeInTheDocument();
     });
 
     it('disables resend invitation button when email_confirmed=true even with canManage=true', () => {
         const user = makeUser({ email_confirmed: true });
         render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
 
-        const resendButton = screen.getByLabelText('Resend invitation');
+        const resendButton = screen.getByLabelText('user.row.resend_label');
         expect(resendButton).toBeDisabled();
     });
 
@@ -139,9 +139,9 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} canManage={false} />);
 
-        expect(screen.queryByLabelText('Resend invitation')).not.toBeInTheDocument();
-        expect(screen.queryByLabelText(/^Edit /)).not.toBeInTheDocument();
-        expect(screen.queryByLabelText(/^Delete /)).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('user.row.resend_label')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/^user\.row\.edit_label/)).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/^user\.row\.delete_label/)).not.toBeInTheDocument();
     });
 
     it('shows edit and delete buttons when canManage=true', () => {
@@ -149,7 +149,7 @@ describe('UserRow', () => {
         const onEdit = vi.fn();
         render(<UserRow user={user} convention={makeConvention()} canManage={true} onEdit={onEdit} />);
 
-        expect(screen.getByLabelText('Edit John Doe')).toBeInTheDocument();
-        expect(screen.getByLabelText('Delete John Doe')).toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.edit_label')).toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.delete_label')).toBeInTheDocument();
     });
 });

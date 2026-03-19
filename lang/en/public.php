@@ -70,13 +70,15 @@ return [
             'end_date_label' => 'End Date *',
             'other_info_label' => 'Other Information',
             'other_info_placeholder' => 'Additional details about your convention (optional)',
+            'language_label' => 'Language',
             'submit' => 'Create Convention',
             'submitting' => 'Creating Convention...',
         ],
         'cta' => [
             'heading' => 'Ready to Manage Your Next Convention?',
-            'description' => 'Join convention organizers who trust our platform for seamless event management.',
-            'button' => 'Get Started Free',
+            'description' => 'Start for free. No credit card required.',
+            'button' => 'Get Started Now',
+            'login' => 'Log in to Your Account',
         ],
         'footer' => [
             'copyright' => '© :year :app. All rights reserved.',

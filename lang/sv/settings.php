@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'heading' => 'Inställningar',
+    'description' => 'Hantera din profil och kontoinställningar',
+    'nav_label' => 'Inställningar',
     'profile' => [
         'title' => 'Profilinställningar',
         'breadcrumb' => 'Profilinställningar',
@@ -12,6 +15,7 @@ return [
         'last_name_placeholder' => 'Efternamn',
         'email_label' => 'E-postadress',
         'email_placeholder' => 'E-postadress',
+        'language_label' => 'Språk',
         'email_unverified' => 'Din e-postadress är inte verifierad.',
         'resend_verification' => 'Klicka här för att skicka verifieringsmailet igen.',
         'verification_sent' => 'En ny verifieringslänk har skickats till din e-postadress.',
@@ -47,7 +51,9 @@ return [
         'recovery_codes_heading' => 'Återställningskoder',
         'recovery_codes_description' => 'Spara dessa återställningskoder i en säker lösenordshanterare. De kan användas för att återfå åtkomst till ditt konto om din tvåfaktorsautentiseringsenhet går förlorad.',
         'show_codes' => 'Visa återställningskoder',
+        'hide_codes' => 'Dölj återställningskoder',
         'regenerate_codes' => 'Generera nya återställningskoder',
+        'regenerate_warning' => 'Varje återställningskod kan användas en gång för att komma åt ditt konto och tas bort efter användning. Om du behöver fler, klicka på Generera nya koder ovan.',
     ],
     'two_factor_setup' => [
         'title' => 'Konfigurera tvåfaktorsautentisering',
@@ -58,12 +64,25 @@ return [
         'cancel' => 'Avbryt',
         'confirm' => 'Bekräfta & aktivera',
         'confirming' => 'Bekräftar...',
+        'continue' => 'Fortsätt',
+        'enabled_title' => 'Tvåfaktorsautentisering aktiverad',
+        'enabled_description' => 'Tvåfaktorsautentisering är nu aktiverad. Skanna QR-koden eller ange konfigurationsnyckeln i din autentiseringsapp.',
+        'verify_title' => 'Verifiera autentiseringskod',
+        'verify_description' => 'Ange den 6-siffriga koden från din autentiseringsapp',
     ],
     'appearance' => [
         'title' => 'Utseendeinställningar',
         'breadcrumb' => 'Utseendeinställningar',
         'heading' => 'Utseendeinställningar',
         'description' => 'Uppdatera ditt kontos utseendeinställningar',
+    ],
+    'theme' => [
+        'title' => 'Temainställningar',
+        'breadcrumb' => 'Temainställningar',
+        'heading' => 'Tema',
+        'description' => 'Välj ett färgtema för applikationen',
+        'color_theme_label' => 'Färgtema',
+        'reload_notice' => 'Sidan laddas om när du väljer ett nytt tema.',
     ],
     'delete_account' => [
         'heading' => 'Radera konto',
@@ -83,5 +102,6 @@ return [
         'password' => 'Lösenord',
         'two_factor' => 'Tvåfaktor',
         'appearance' => 'Utseende',
+        'theme' => 'Tema',
     ],
 ];

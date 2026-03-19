@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import { ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ConsentController from '@/actions/App/Http/Controllers/ConsentController';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ type PendingDecision = 'accepted' | 'declined' | null;
 
 export default function AuthenticatedConsentPrompt() {
     const consent = useConsent();
+    const { t } = useTranslation();
     const [pendingDecision, setPendingDecision] = useState<PendingDecision>(null);
 
     if (consent.state !== 'undecided') {
@@ -38,7 +40,7 @@ export default function AuthenticatedConsentPrompt() {
         <div className="fixed inset-x-4 bottom-4 z-40 md:left-[calc(var(--sidebar-width)+1rem)] md:right-4">
             <section
                 role="region"
-                aria-label="Cookie consent"
+                aria-label={t('common.cookie_consent.aria_label')}
                 aria-busy={pendingDecision !== null}
                 className="pointer-events-auto overflow-hidden rounded-2xl border border-border/70 bg-card/95 shadow-lg backdrop-blur-sm"
             >
@@ -46,17 +48,11 @@ export default function AuthenticatedConsentPrompt() {
                     <div className="space-y-3">
                         <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
                             <ShieldCheck className="size-4" />
-                            We use cookies
+                            {t('common.cookie_consent.title')}
                         </p>
                         <div className="space-y-2 text-sm text-muted-foreground">
-                            <p>
-                                Essential cookies stay on because they keep you signed in and
-                                protect account security.
-                            </p>
-                            <p>
-                                Optional preference storage remembers your theme, appearance, and
-                                sidebar state between visits.
-                            </p>
+                            <p>{t('common.cookie_consent.essential')}</p>
+                            <p>{t('common.cookie_consent.optional')}</p>
                         </div>
                     </div>
                     <div className="grid w-full shrink-0 grid-cols-2 gap-2 md:w-auto md:min-w-72">
@@ -71,8 +67,8 @@ export default function AuthenticatedConsentPrompt() {
                             onClick={() => submitDecision('declined')}
                         >
                             {pendingDecision === 'declined'
-                                ? 'Saving...'
-                                : 'Decline'}
+                                ? t('common.cookie_consent.saving')
+                                : t('common.cookie_consent.decline')}
                         </Button>
                         <Button
                             type="button"
@@ -85,8 +81,8 @@ export default function AuthenticatedConsentPrompt() {
                             onClick={() => submitDecision('accepted')}
                         >
                             {pendingDecision === 'accepted'
-                                ? 'Saving...'
-                                : 'Accept all'}
+                                ? t('common.cookie_consent.saving')
+                                : t('common.cookie_consent.accept_all')}
                         </Button>
                     </div>
                 </div>

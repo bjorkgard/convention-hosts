@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'index' => [
+        'title' => 'Sections — :floor',
+        'heading' => 'Sections',
+        'description' => ':floor · Manage seating sections and their capacity on this floor.',
+        'add_button' => 'Add Section',
+        'add_short' => 'Add',
+        'add_tooltip' => 'Add a new seating section to this floor',
+        'empty' => 'No sections yet.',
+        'empty_add' => 'Add your first section',
+    ],
     'show' => [
         'title' => ':section — :convention',
         'delete_button' => 'Delete',
@@ -15,6 +25,13 @@ return [
         'last_updated' => 'Last updated',
         'last_updated_by' => 'by :name',
         'last_updated_at' => 'at :time',
+    ],
+    'card' => [
+        'seats' => ':available/:total seats',
+        'elder_label' => 'Elder friendly',
+        'elder_short' => 'Elder',
+        'handicap_label' => 'Handicap friendly',
+        'handicap_short' => 'Accessible',
     ],
     'delete_dialog' => [
         'title' => 'Delete Section',
@@ -48,6 +65,12 @@ return [
         'placeholder' => 'Select occupancy',
         'updated' => 'Occupancy updated.',
         'marked_full' => 'Section marked as full.',
+        'gauge_low' => 'Low occupancy',
+        'gauge_moderate' => 'Moderate occupancy',
+        'gauge_high' => 'High occupancy',
+        'gauge_very_high' => 'Very high occupancy',
+        'gauge_at_capacity' => 'At capacity',
+        'gauge_occupancy' => 'Occupancy: :percent%',
     ],
     'full_button' => [
         'label' => 'Full',

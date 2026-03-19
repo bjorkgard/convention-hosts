@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'index' => [
+        'title' => 'Sektioner — :floor',
+        'heading' => 'Sektioner',
+        'description' => ':floor · Hantera sittplatssektioner och deras kapacitet på denna våning.',
+        'add_button' => 'Lägg till sektion',
+        'add_short' => 'Lägg till',
+        'add_tooltip' => 'Lägg till en ny sittplatssektion på denna våning',
+        'empty' => 'Inga sektioner ännu.',
+        'empty_add' => 'Lägg till din första sektion',
+    ],
     'show' => [
         'title' => ':section — :convention',
         'delete_button' => 'Radera',
@@ -15,6 +25,13 @@ return [
         'last_updated' => 'Senast uppdaterad',
         'last_updated_by' => 'av :name',
         'last_updated_at' => 'kl :time',
+    ],
+    'card' => [
+        'seats' => ':available/:total platser',
+        'elder_label' => 'Äldrevänlig',
+        'elder_short' => 'Äldre',
+        'handicap_label' => 'Handikappvänlig',
+        'handicap_short' => 'Tillgänglig',
     ],
     'delete_dialog' => [
         'title' => 'Radera sektion',
@@ -48,6 +65,12 @@ return [
         'placeholder' => 'Välj beläggning',
         'updated' => 'Beläggning uppdaterad.',
         'marked_full' => 'Sektionen markerad som full.',
+        'gauge_low' => 'Låg beläggning',
+        'gauge_moderate' => 'Måttlig beläggning',
+        'gauge_high' => 'Hög beläggning',
+        'gauge_very_high' => 'Mycket hög beläggning',
+        'gauge_at_capacity' => 'Full kapacitet',
+        'gauge_occupancy' => 'Beläggning: :percent%',
     ],
     'full_button' => [
         'label' => 'Full',

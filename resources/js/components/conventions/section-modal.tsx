@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { store, update } from '@/actions/App/Http/Controllers/SectionController';
 import InputError from '@/components/input-error';
@@ -28,6 +29,7 @@ interface SectionModalProps {
 }
 
 export default function SectionModal({ open, onOpenChange, convention, floors, section }: SectionModalProps) {
+    const { t } = useTranslation();
     const isEdit = !!section;
 
     const form = useForm({
@@ -55,7 +57,6 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
             });
         } else {
             form.reset();
-            // Auto-select floor when only one is available
             if (floors.length === 1) {
                 form.setData('floor_id', floors[0].id);
             }
@@ -88,19 +89,18 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
-                        <DialogTitle>{isEdit ? 'Edit Section' : 'Add Section'}</DialogTitle>
+                        <DialogTitle>{isEdit ? t('section.modal.edit_title') : t('section.modal.add_title')}</DialogTitle>
                         <DialogDescription>
                             {isEdit
-                                ? 'Update the section details.'
-                                : `Add a new section to ${convention.name}.`}
+                                ? t('section.modal.edit_description')
+                                : t('section.modal.add_description', { convention: convention.name })}
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="grid gap-4 py-4">
-                        {/* Floor selector — shown in create mode, read-only display in edit mode */}
                         {isEdit ? (
                             <div className="grid gap-2">
-                                <Label>Floor</Label>
+                                <Label>{t('section.modal.floor_label')}</Label>
                                 <Input
                                     value={floors.find((f) => f.id === section?.floor_id)?.name ?? ''}
                                     disabled
@@ -108,13 +108,13 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                             </div>
                         ) : (
                             <div className="grid gap-2">
-                                <Label htmlFor="section-floor">Floor</Label>
+                                <Label htmlFor="section-floor">{t('section.modal.floor_label')}</Label>
                                 <Select
                                     value={form.data.floor_id ? String(form.data.floor_id) : ''}
                                     onValueChange={(value) => form.setData('floor_id', value)}
                                 >
                                     <SelectTrigger id="section-floor" className="w-full">
-                                        <SelectValue placeholder="Select a floor" />
+                                        <SelectValue placeholder={t('section.modal.floor_placeholder')} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {floors.map((floor) => (
@@ -128,23 +128,21 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                             </div>
                         )}
 
-                        {/* Name */}
                         <div className="grid gap-2">
-                            <Label htmlFor="section-name">Name</Label>
+                            <Label htmlFor="section-name">{t('section.modal.name_label')}</Label>
                             <Input
                                 id="section-name"
                                 value={form.data.name}
                                 onChange={(e) => form.setData('name', e.target.value)}
-                                placeholder="e.g. Section A"
+                                placeholder={t('section.modal.name_placeholder')}
                                 autoFocus
                                 required
                             />
                             <InputError message={form.errors.name} />
                         </div>
 
-                        {/* Number of seats */}
                         <div className="grid gap-2">
-                            <Label htmlFor="section-seats">Number of Seats</Label>
+                            <Label htmlFor="section-seats">{t('section.modal.seats_label')}</Label>
                             <Input
                                 id="section-seats"
                                 type="number"
@@ -153,13 +151,12 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                                 onChange={(e) =>
                                     form.setData('number_of_seats', e.target.value === '' ? '' : Number(e.target.value))
                                 }
-                                placeholder="e.g. 100"
+                                placeholder={t('section.modal.seats_placeholder')}
                                 required
                             />
                             <InputError message={form.errors.number_of_seats} />
                         </div>
 
-                        {/* Accessibility checkboxes */}
                         <div className="flex flex-wrap gap-6">
                             <div className="flex items-center gap-2">
                                 <Checkbox
@@ -168,7 +165,7 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                                     onCheckedChange={(checked) => form.setData('elder_friendly', checked === true)}
                                 />
                                 <Label htmlFor="section-elder" className="cursor-pointer text-sm font-normal">
-                                    Elder friendly
+                                    {t('section.modal.elder_friendly_label')}
                                 </Label>
                             </div>
                             <div className="flex items-center gap-2">
@@ -178,7 +175,7 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                                     onCheckedChange={(checked) => form.setData('handicap_friendly', checked === true)}
                                 />
                                 <Label htmlFor="section-handicap" className="cursor-pointer text-sm font-normal">
-                                    Handicap friendly
+                                    {t('section.modal.handicap_friendly_label')}
                                 </Label>
                             </div>
                             <div className="flex items-center gap-2">
@@ -188,20 +185,19 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                                     onCheckedChange={(checked) => form.setData('hearing_loop', checked === true)}
                                 />
                                 <Label htmlFor="section-hearing-loop" className="cursor-pointer text-sm font-normal">
-                                    Hearing loop
+                                    {t('section.modal.hearing_loop_label')}
                                 </Label>
                             </div>
                         </div>
 
-                        {/* Information */}
                         <div className="grid gap-2">
-                            <Label htmlFor="section-info">Information (optional)</Label>
+                            <Label htmlFor="section-info">{t('section.modal.info_label')}</Label>
                             <textarea
                                 id="section-info"
                                 className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 flex min-h-[80px] w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                 value={form.data.information}
                                 onChange={(e) => form.setData('information', e.target.value)}
-                                placeholder="Additional notes about this section"
+                                placeholder={t('section.modal.info_placeholder')}
                                 rows={3}
                             />
                             <InputError message={form.errors.information} />
@@ -211,17 +207,17 @@ export default function SectionModal({ open, onOpenChange, convention, floors, s
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="outline" className="cursor-pointer">
-                                Cancel
+                                {t('section.modal.cancel')}
                             </Button>
                         </DialogClose>
                         <Button type="submit" disabled={form.processing} className="cursor-pointer">
                             {form.processing
                                 ? isEdit
-                                    ? 'Saving...'
-                                    : 'Adding...'
+                                    ? t('section.modal.saving')
+                                    : t('section.modal.adding')
                                 : isEdit
-                                  ? 'Save'
-                                  : 'Add Section'}
+                                  ? t('section.modal.edit_submit')
+                                  : t('section.modal.add_submit')}
                         </Button>
                     </DialogFooter>
                 </form>
