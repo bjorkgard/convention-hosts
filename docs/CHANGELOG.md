@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto-generate `floor_url_token` and `section_url_token` on convention creation
 - Add `EnsureConventionOrUrlAccess` middleware supporting both authenticated users and URL sessions
 - Add `UrlAccessController` for URL token entry points
+- implement backend locale infrastructure with API and middleware
+- implement locale-aware email rendering for mailables
+- bootstrap frontend i18n with react-i18next and locale sync
+- add locale selector component and integrate into UI
+- localize backend strings in controllers, requests, and emails
+- add translation scanner hooks and localize remaining UI strings
+- add Laravel plural syntax conversion to locale API
 
 ### Changed
 
@@ -37,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Other
 
 - update floor operation redirects to floors.index
+- update user-row test fixtures to use string IDs and add locale
 
 ## [v0.5.4] - 2026-03-12
 
