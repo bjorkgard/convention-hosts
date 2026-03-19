@@ -6,6 +6,7 @@ use App\Models\Convention;
 use App\Models\User;
 use App\Services\AttendanceReportService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Tests\Helpers\ConventionTestHelper;
 
 /**
@@ -283,6 +284,7 @@ it('sets locked to true when stopReport is called', function () {
 })->group('property', 'attendance');
 
 it('prevents attendance updates on locked periods', function () {
+    App::setLocale('en');
     $structure = ConventionTestHelper::createConventionWithStructure([
         'floors' => 1,
         'sections_per_floor' => 1,

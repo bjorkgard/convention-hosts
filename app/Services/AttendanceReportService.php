@@ -25,7 +25,7 @@ class AttendanceReportService
             ->count();
 
         if ($reportsToday >= 2) {
-            throw new \Exception('Maximum of 2 attendance reports per day has been reached.');
+            throw new \Exception(__('attendance.max_reports_reached'));
         }
 
         // Determine current period (morning/afternoon based on time)
@@ -71,7 +71,7 @@ class AttendanceReportService
     ): AttendanceReport {
         // Check if period is locked
         if ($period->locked) {
-            throw new \Exception('This attendance period is locked and cannot be updated.');
+            throw new \Exception(__('attendance.period_locked'));
         }
 
         // Create or update attendance report (any user with permissions can update)

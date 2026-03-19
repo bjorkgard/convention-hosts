@@ -46,7 +46,7 @@ class SetPasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.regex' => 'The password must contain at least one lowercase letter, one uppercase letter, one number, and one symbol (@$!%*#?&).',
+            'password.regex' => __('validation.password_regex'),
         ];
     }
 }

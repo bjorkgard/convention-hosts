@@ -114,7 +114,7 @@ class SectionController extends Controller
 
         $action->execute($section, $request->validated(), $user);
 
-        return redirect()->back()->with('success', 'Occupancy updated.');
+        return redirect()->back()->with('success', __('section.occupancy.updated'));
     }
 
     /**
@@ -131,7 +131,7 @@ class SectionController extends Controller
 
         $action->execute($section, ['occupancy' => 100], $user);
 
-        return redirect()->back()->with('success', 'Section marked as full.');
+        return redirect()->back()->with('success', __('section.occupancy.marked_full'));
     }
 
     /**

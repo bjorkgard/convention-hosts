@@ -3,6 +3,7 @@
 use App\Models\AttendancePeriod;
 use App\Models\Convention;
 use App\Services\AttendanceReportService;
+use Illuminate\Support\Facades\App;
 
 /**
  * Property 32: Maximum Two Reports Per Day
@@ -13,6 +14,7 @@ use App\Services\AttendanceReportService;
  * Validates: Requirements 10.6
  */
 it('enforces maximum of 2 attendance reports per day', function () {
+    App::setLocale('en');
     for ($i = 0; $i < 3; $i++) {
         $convention = Convention::factory()->create();
         $service = new AttendanceReportService;
@@ -87,6 +89,7 @@ it('enforces maximum of 2 attendance reports per day', function () {
  * Validates: Requirements 11.5, 11.6
  */
 it('allows any user to report attendance and enforces lock immutability', function () {
+    App::setLocale('en');
     for ($i = 0; $i < 3; $i++) {
         $convention = Convention::factory()->create();
         $floor = \App\Models\Floor::factory()->create(['convention_id' => $convention->id]);

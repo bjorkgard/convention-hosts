@@ -5,6 +5,7 @@ use App\Models\AttendanceReport;
 use App\Models\User;
 use App\Services\AttendanceReportService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Tests\Helpers\ConventionTestHelper;
 
 it('starts an attendance report for a convention', function () {
@@ -49,6 +50,7 @@ it('determines afternoon period after noon', function () {
 });
 
 it('enforces max 2 reports per day', function () {
+    App::setLocale('en');
     $structure = ConventionTestHelper::createConventionWithStructure();
     $convention = $structure['convention'];
 
@@ -108,6 +110,7 @@ it('locks an attendance period', function () {
 });
 
 it('prevents reporting on a locked period', function () {
+    App::setLocale('en');
     $structure = ConventionTestHelper::createConventionWithStructure();
     $section = $structure['sections']->first();
     $user = $structure['owner'];

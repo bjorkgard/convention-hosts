@@ -170,6 +170,7 @@ return [
     'occupancy_or_seats_required' => 'Antingen beläggning eller lediga platser måste anges.',
     'password_regex' => 'Lösenordet måste innehålla minst en liten bokstav, en stor bokstav, en siffra och en symbol (@$!%*#?&).',
     'jwpub_domain' => 'E-postadressen kan inte innehålla domänen jwpub.org.',
+    'locale_not_available' => 'Det valda språket är inte tillgängligt.',
 
     /*
     |--------------------------------------------------------------------------

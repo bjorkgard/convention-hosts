@@ -12,6 +12,8 @@ return [
     'report' => [
         'success' => 'Närvaro på :attendance rapporterad för :period-perioden.',
     ],
+    'max_reports_reached' => 'Maximalt 2 närvarorapporter per dag har uppnåtts.',
+    'period_locked' => 'Denna närvaroperiod är låst och kan inte uppdateras.',
     'banner' => [
         'sections_reported' => ':reported av :total sektioner rapporterade',
         'total_attendance' => 'Total närvaro: :count',

@@ -12,6 +12,8 @@ return [
     'report' => [
         'success' => 'Attendance of :attendance reported for the :period period.',
     ],
+    'max_reports_reached' => 'Maximum of 2 attendance reports per day has been reached.',
+    'period_locked' => 'This attendance period is locked and cannot be updated.',
     'banner' => [
         'sections_reported' => ':reported of :total sections reported',
         'total_attendance' => 'Total attendance: :count',

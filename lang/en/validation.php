@@ -15,4 +15,5 @@ return [
     'occupancy_or_seats_required' => 'Either occupancy or available_seats must be provided.',
     'password_regex' => 'The password must contain at least one lowercase letter, one uppercase letter, one number, and one symbol (@$!%*#?&).',
     'jwpub_domain' => 'The email address cannot contain jwpub.org domain.',
+    'locale_not_available' => 'The selected locale is not available.',
 ];

@@ -36,7 +36,7 @@ class StoreUserRequest extends FormRequest
                 Rule::unique('users', 'email'),
                 function ($attribute, $value, $fail) {
                     if (stripos($value, 'jwpub.org') !== false) {
-                        $fail('The email address cannot contain jwpub.org domain.');
+                        $fail(__('validation.jwpub_domain'));
                     }
                 },
             ],

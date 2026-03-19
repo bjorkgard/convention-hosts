@@ -1,16 +1,16 @@
 @component('mail::message')
-# Hello {{ $userName }},
+# {{ __('emails.invitation.greeting', ['name' => $userName]) }}
 
-You have been invited to join **{{ $conventionName }}**.
+{{ __('emails.invitation.body', ['convention' => $conventionName]) }}
 
-Please click the button below to set your password and activate your account.
+{{ __('emails.invitation.action_description') }}
 
 @component('mail::button', ['url' => $invitationUrl])
-Accept Invitation
+{{ __('emails.invitation.button') }}
 @endcomponent
 
-This invitation link will expire on **{{ $expiresAt }}**.
+{{ __('emails.invitation.expiry', ['date' => $expiresAt]) }}
 
-Thanks,<br>
+{{ __('emails.invitation.thanks') }}<br>
 {{ config('app.name') }}
 @endcomponent

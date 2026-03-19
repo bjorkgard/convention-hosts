@@ -165,21 +165,21 @@ This plan implements a complete i18n system where Laravel is the single source o
 - [x] 9. Checkpoint - Verify frontend i18n and locale selector
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 10. Backend string localization
-  - [ ] 10.1 Replace hardcoded strings in controllers with `__()` calls
+- [x] 10. Backend string localization
+  - [x] 10.1 Replace hardcoded strings in controllers with `__()` calls
     - Replace all flash messages (success, error) with translated equivalents
     - Replace any user-facing strings in controller responses
     - Cover: ConventionController, FloorController, SectionController, UserController, SearchController, AttendanceController, GuestConventionController, Auth controllers
     - _Requirements: 11.1, 11.3_
-  - [ ] 10.2 Replace hardcoded strings in actions and form requests
+  - [x] 10.2 Replace hardcoded strings in actions and form requests
     - Replace strings in CreateConventionAction, ExportConventionAction, InviteUserAction, UpdateOccupancyAction
     - Replace custom validation messages in all form request `messages()` methods
     - _Requirements: 11.1_
-  - [ ] 10.3 Replace hardcoded strings in Blade email templates
+  - [x] 10.3 Replace hardcoded strings in Blade email templates
     - Replace all hardcoded strings in `resources/views/emails/` with `@lang()` or `{{ __() }}` directives
     - Cover: user-invitation, email-confirmation, guest-convention-verification templates
     - _Requirements: 11.2_
-  - [ ] 10.4 Ensure Laravel validation messages are available in both locales
+  - [x] 10.4 Ensure Laravel validation messages are available in both locales
     - Verify `lang/en/validation.php` covers all custom validation messages used in form requests
     - Verify `lang/sv/validation.php` has Swedish equivalents
     - _Requirements: 11.4_

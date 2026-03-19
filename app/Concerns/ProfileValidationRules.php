@@ -20,7 +20,7 @@ trait ProfileValidationRules
             'email' => $this->emailRules($userId),
             'locale' => ['nullable', 'string', 'max:10', function (string $attribute, mixed $value, \Closure $fail) {
                 if ($value && ! is_dir(lang_path($value))) {
-                    $fail('The selected locale is not available.');
+                    $fail(__('validation.locale_not_available'));
                 }
             }],
         ];
