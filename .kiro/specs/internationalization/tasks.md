@@ -125,44 +125,44 @@ This plan implements a complete i18n system where Laravel is the single source o
     - Call `useLocaleSync()` in `AppLayout` and `AuthLayout` to keep locale in sync on every Inertia navigation
     - _Requirements: 5.2_
 
-- [ ] 8. LocaleSelector component and integration points
-  - [ ] 8.1 Create `LocaleSelector` React component
+- [x] 8. LocaleSelector component and integration points
+  - [x] 8.1 Create `LocaleSelector` React component
     - Create `resources/js/components/locale-selector.tsx`
     - Fetch available locales from `GET /api/locales` on mount (cache the result)
     - Display current locale with a dropdown (use Radix UI `DropdownMenu` consistent with existing UI patterns)
     - For authenticated users: PATCH to profile update endpoint with `{ locale }`, then call `i18n.changeLanguage()`
     - For URL session users: store in `localStorage` as `locale_{convention_id}`, call `i18n.changeLanguage()`
     - _Requirements: 6.1, 6.2, 6.3_
-  - [ ] 8.2 Add `LocaleSelector` to app sidebar for URL session users
+  - [x] 8.2 Add `LocaleSelector` to app sidebar for URL session users
     - Display the locale selector in the sidebar footer area for anonymous URL session users
     - _Requirements: 6.5_
-  - [ ] 8.3 Add locale selector to convention show page
+  - [x] 8.3 Add locale selector to convention show page
     - Display locale selector alongside existing Export and Delete actions for Owner/Admin
     - On selection, persist to `conventions.locale` via convention update endpoint
     - _Requirements: 7.1, 7.2_
-  - [ ] 8.4 Add locale selector to user profile settings page
+  - [x] 8.4 Add locale selector to user profile settings page
     - Add locale dropdown to the profile/settings page
     - Pre-select the user's currently saved locale
     - On update, persist to `users.locale` and immediately apply the new locale
     - _Requirements: 8.1, 8.2, 8.3_
-  - [ ] 8.5 Add locale selector to guest convention creation form
+  - [x] 8.5 Add locale selector to guest convention creation form
     - Add locale dropdown to the welcome page guest convention form
     - Default to Swedish (`sv`)
     - On submission, store selected locale in both `conventions.locale` and `users.locale`
     - _Requirements: 9.1, 9.2, 9.3_
-  - [ ] 8.6 Implement localStorage locale persistence for URL session users
+  - [x] 8.6 Implement localStorage locale persistence for URL session users
     - Create `resources/js/hooks/use-url-session-locale.ts`
     - On locale selection: store in `localStorage` with key `locale_{convention_id}`
     - On page load: check `localStorage` for stored locale for current convention ID
     - Apply stored locale if found, otherwise use convention's default locale
     - _Requirements: 14.1, 14.2, 14.3, 14.4_
-  - [ ] 8.7 Update backend to accept `locale` in convention update and profile update requests
+  - [x] 8.7 Update backend to accept `locale` in convention update and profile update requests
     - Add `locale` validation to `UpdateConventionRequest` (nullable string, must be a valid locale directory)
     - Add `locale` field handling to profile update endpoint
     - Update `StoreGuestConventionRequest` to accept `locale` field
     - _Requirements: 7.2, 8.2, 9.3_
 
-- [ ] 9. Checkpoint - Verify frontend i18n and locale selector
+- [x] 9. Checkpoint - Verify frontend i18n and locale selector
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 10. Backend string localization

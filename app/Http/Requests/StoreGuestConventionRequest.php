@@ -50,6 +50,11 @@ class StoreGuestConventionRequest extends FormRequest
             'start_date' => ['required', 'date', 'after_or_equal:today'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'other_info' => ['nullable', 'string'],
+            'locale' => ['nullable', 'string', 'max:10', function (string $attribute, mixed $value, \Closure $fail) {
+                if ($value && ! is_dir(lang_path($value))) {
+                    $fail('The selected locale is not available.');
+                }
+            }],
         ];
     }
 

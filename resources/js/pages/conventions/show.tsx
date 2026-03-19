@@ -8,6 +8,7 @@ import ConfirmationDialog from '@/components/confirmation-dialog';
 import AttendanceReportBanner from '@/components/conventions/attendance-report-banner';
 import ExportDropdown from '@/components/conventions/export-dropdown';
 import FloorRow from '@/components/conventions/floor-row';
+import { LocaleSelector } from '@/components/locale-selector';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendanceReport } from '@/hooks/use-attendance-report';
@@ -116,6 +117,7 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
                     {/* Owner actions */}
                     {isOwner && (
                         <div className="flex items-center gap-2 self-start sm:self-auto">
+                            <LocaleSelector conventionId={convention.id} />
                             <ExportDropdown convention={convention} />
                             <Tooltip>
                                 <TooltipTrigger asChild>

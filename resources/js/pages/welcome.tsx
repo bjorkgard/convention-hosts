@@ -498,6 +498,29 @@ export default function Welcome() {
                                                         }
                                                     />
                                                 </div>
+                                                <div className="grid gap-1.5">
+                                                    <Label htmlFor="locale">
+                                                        Language
+                                                    </Label>
+                                                    <select
+                                                        id="locale"
+                                                        name="locale"
+                                                        defaultValue="sv"
+                                                        className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                                    >
+                                                        <option value="sv">
+                                                            Svenska
+                                                        </option>
+                                                        <option value="en">
+                                                            English
+                                                        </option>
+                                                    </select>
+                                                    <InputError
+                                                        message={
+                                                            errors.locale
+                                                        }
+                                                    />
+                                                </div>
                                             </fieldset>
 
                                             <Button

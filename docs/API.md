@@ -122,6 +122,7 @@ Allows unauthenticated users to create a convention without registering first. T
 | start_date | date | required, after_or_equal:today |
 | end_date | date | required, after_or_equal:start_date |
 | other_info | string | nullable |
+| locale | string | nullable, max:10, must match an existing `lang/` directory |
 
 Custom validation: rejects if an overlapping convention exists in the same city/country.
 
@@ -191,7 +192,13 @@ PUT /conventions/{convention}
 
 Middleware: `auth`, `EnsureConventionOrUrlAccess`
 
-Same fields as Store Convention. Excludes current convention from overlap check.
+Same fields as Store Convention, plus:
+
+| Field | Type | Rules |
+|-------|------|-------|
+| locale | string | nullable, max:10, must match an existing `lang/` directory |
+
+Excludes current convention from overlap check.
 
 ### Delete Convention
 

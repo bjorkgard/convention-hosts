@@ -37,6 +37,7 @@ function makeConvention(overrides: Partial<Convention> = {}): Convention {
         start_date: '2025-06-15',
         end_date: '2025-06-20',
         other_info: null,
+        locale: 'sv',
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
         ...overrides,

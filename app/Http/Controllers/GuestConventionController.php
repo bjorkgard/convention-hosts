@@ -37,6 +37,7 @@ class GuestConventionController extends Controller
                 'mobile' => $validated['mobile'],
                 'password' => Hash::make(Str::random(32)),
                 'email_confirmed' => false,
+                'locale' => $validated['locale'] ?? null,
             ]);
         }
 
@@ -49,6 +50,7 @@ class GuestConventionController extends Controller
             'start_date' => $validated['start_date'],
             'end_date' => $validated['end_date'],
             'other_info' => $validated['other_info'] ?? null,
+            'locale' => $validated['locale'] ?? 'sv',
         ], $user);
 
         if ($isNewUser) {

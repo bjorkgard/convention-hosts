@@ -68,6 +68,10 @@ The active locale is resolved per-request in this priority order:
 | users | locale | string, nullable | null | User's preferred language |
 | conventions | locale | string, nullable | 'sv' | Convention's default language for anonymous visitors |
 
+### Locale Validation
+
+When updating a convention or creating a guest convention, the `locale` field is validated against the `lang/` directory. Only locale codes that have a corresponding `lang/{locale}/` directory are accepted (max 10 characters). This ensures conventions can only be set to locales that have translation files available.
+
 ## Backend Usage
 
 Use Laravel's `__()` helper or `@lang()` Blade directive:
