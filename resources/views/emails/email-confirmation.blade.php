@@ -1,16 +1,16 @@
 @component('mail::message')
-# Hello {{ $userName }},
+# {{ __('emails.confirmation.greeting', ['name' => $userName]) }}
 
-Please confirm your email address by clicking the button below.
+{{ __('emails.confirmation.body') }}
 
 @component('mail::button', ['url' => $confirmationUrl])
-Confirm Email Address
+{{ __('emails.confirmation.button') }}
 @endcomponent
 
-This confirmation link will expire on **{{ $expiresAt }}**.
+{{ __('emails.confirmation.expiry', ['date' => $expiresAt]) }}
 
-If you did not request this change, no further action is required.
+{{ __('emails.confirmation.no_action') }}
 
-Thanks,<br>
+{{ __('emails.confirmation.thanks') }}<br>
 {{ config('app.name') }}
 @endcomponent

@@ -1,8 +1,9 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { CalendarDays } from 'lucide-react';
 
 import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
 import AppLogo from '@/components/app-logo';
+import { LocaleSelector } from '@/components/locale-selector';
 import { NavConvention } from '@/components/nav-convention';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -17,7 +18,7 @@ import {
 } from '@/components/ui/sidebar';
 import { VersionBadge } from '@/components/version-badge';
 import { useConventionRole } from '@/hooks/use-convention-role';
-import type { NavItem } from '@/types';
+import type { NavItem, PageProps } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
@@ -29,6 +30,7 @@ const mainNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { isUrlSession } = useConventionRole();
+    const { urlSession } = usePage<PageProps>().props;
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -51,6 +53,16 @@ export function AppSidebar() {
 
             <SidebarFooter>
                 {!isUrlSession && <NavUser />}
+                {isUrlSession && urlSession && (
+                    <div className="px-2 group-data-[collapsible=icon]:hidden">
+                        <LocaleSelector
+                            conventionId={urlSession.convention_id}
+                            useLocalStorage
+                            variant="ghost"
+                            size="sm"
+                        />
+                    </div>
+                )}
                 <VersionBadge className="px-2 pb-1 text-left group-data-[collapsible=icon]:hidden" />
             </SidebarFooter>
         </Sidebar>

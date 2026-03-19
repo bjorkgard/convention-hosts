@@ -7,6 +7,7 @@ use App\Http\Controllers\ConsentController;
 use App\Http\Controllers\ConventionController;
 use App\Http\Controllers\FloorController;
 use App\Http\Controllers\GuestConventionController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\UrlAccessController;
@@ -89,6 +90,7 @@ Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::put('conventions/{convention}', [ConventionController::class, 'update'])->name('conventions.update');
+        Route::patch('conventions/{convention}/locale', [ConventionController::class, 'updateLocale'])->name('conventions.updateLocale');
     });
 
     Route::middleware([EnsureConventionOrUrlAccess::class, EnsureOwnerRole::class])->group(function () {
@@ -131,6 +133,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+// Locale API (public, no auth required)
+Route::get('api/locales', [LocaleController::class, 'index'])->name('locales.index');
+Route::get('api/translations/{locale}', [LocaleController::class, 'show'])->name('translations.show');
 
 // Version API (public, cached)
 Route::get('api/version/latest', [VersionController::class, 'latest'])->name('version.latest');

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ChevronRight, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { show } from '@/actions/App/Http/Controllers/SectionController';
 import OccupancyGauge from '@/components/conventions/occupancy-gauge';
@@ -46,6 +47,7 @@ function canDeleteSection(role: Role | null): boolean {
 }
 
 export default function FloorRow({ floor, sections, userRole, defaultOpen = false, onEdit, onDelete, onEditSection, onDeleteSection }: FloorRowProps) {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(defaultOpen);
     const averageOccupancy = getAverageOccupancy(sections);
 
@@ -59,7 +61,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
                     <span className="truncate font-medium">{floor.name}</span>
                     <OccupancyGauge occupancy={averageOccupancy} size={28} />
                     <span className="text-muted-foreground shrink-0 text-sm">
-                        {sections.length} {sections.length === 1 ? 'section' : 'sections'}
+                        {t('floor.row.section_count', { count: sections.length })}
                     </span>
                 </CollapsibleTrigger>
 
@@ -80,7 +82,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
                                         <Pencil className="size-4" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Rename this floor</TooltipContent>
+                                <TooltipContent>{t('floor.row.edit_tooltip')}</TooltipContent>
                             </Tooltip>
                         )}
                         {canDelete(userRole) && onDelete && (
@@ -98,7 +100,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
                                         <Trash2 className="size-4" />
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Delete this floor and all its sections</TooltipContent>
+                                <TooltipContent>{t('floor.row.delete_tooltip')}</TooltipContent>
                             </Tooltip>
                         )}
                     </div>
@@ -107,7 +109,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
 
             <CollapsibleContent>
                 {sections.length === 0 ? (
-                    <p className="text-muted-foreground px-4 pb-3 text-sm">No sections on this floor.</p>
+                    <p className="text-muted-foreground px-4 pb-3 text-sm">{t('floor.row.no_sections')}</p>
                 ) : (
                     <ul className="border-t">
                         {sections.map((section) => {
@@ -124,7 +126,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
                                             <OccupancyGauge occupancy={section.occupancy} size={32} />
                                             <span className="flex-1 truncate text-sm font-medium">{section.name}</span>
                                             <span className="text-muted-foreground shrink-0 text-xs">
-                                                {section.available_seats}/{section.number_of_seats} seats
+                                                {t('floor.row.seats', { available: section.available_seats, total: section.number_of_seats })}
                                             </span>
                                         </Link>
                                         {(showEditSection || showDeleteSection) && (
@@ -142,7 +144,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
                                                                 <Pencil className="size-3.5" />
                                                             </Button>
                                                         </TooltipTrigger>
-                                                        <TooltipContent>Edit section details</TooltipContent>
+                                                        <TooltipContent>{t('floor.row.edit_section_tooltip')}</TooltipContent>
                                                     </Tooltip>
                                                 )}
                                                 {showDeleteSection && (
@@ -158,7 +160,7 @@ export default function FloorRow({ floor, sections, userRole, defaultOpen = fals
                                                                 <Trash2 className="size-3.5" />
                                                             </Button>
                                                         </TooltipTrigger>
-                                                        <TooltipContent>Delete this section</TooltipContent>
+                                                        <TooltipContent>{t('floor.row.delete_section_tooltip')}</TooltipContent>
                                                     </Tooltip>
                                                 )}
                                             </div>

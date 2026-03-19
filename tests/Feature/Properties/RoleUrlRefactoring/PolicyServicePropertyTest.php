@@ -8,6 +8,7 @@ use App\Models\Floor;
 use App\Models\Section;
 use App\Models\User;
 use App\Services\AttendanceReportService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -215,6 +216,7 @@ it('allows URL sessions to update reports created by authenticated users', funct
 })->group('property', 'role-url-refactoring');
 
 it('prevents updates to locked attendance periods', function () {
+    App::setLocale('en');
     $service = app(AttendanceReportService::class);
 
     $convention = Convention::factory()->create();

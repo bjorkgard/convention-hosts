@@ -9,6 +9,7 @@ export interface Convention {
     start_date: string;
     end_date: string;
     other_info: string | null;
+    locale: string;
     created_at: string;
     updated_at: string;
     section_url?: string;

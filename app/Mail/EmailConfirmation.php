@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class EmailConfirmation extends Mailable
 {
@@ -26,8 +27,11 @@ class EmailConfirmation extends Mailable
      */
     public function envelope(): Envelope
     {
+        $locale = $this->user->locale ?? 'sv';
+        App::setLocale($locale);
+
         return new Envelope(
-            subject: 'Confirm Your Email Address',
+            subject: __('emails.confirmation.subject'),
         );
     }
 

@@ -34,6 +34,7 @@ class ConventionFactory extends Factory
             'other_info' => $this->faker->optional()->paragraph(),
             'floor_url_token' => Str::random(64),
             'section_url_token' => Str::random(64),
+            'locale' => 'sv',
         ];
     }
 

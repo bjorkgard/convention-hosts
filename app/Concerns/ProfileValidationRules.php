@@ -18,6 +18,11 @@ trait ProfileValidationRules
             'first_name' => $this->firstNameRules(),
             'last_name' => $this->lastNameRules(),
             'email' => $this->emailRules($userId),
+            'locale' => ['nullable', 'string', 'max:10', function (string $attribute, mixed $value, \Closure $fail) {
+                if ($value && ! is_dir(lang_path($value))) {
+                    $fail(__('validation.locale_not_available'));
+                }
+            }],
         ];
     }
 

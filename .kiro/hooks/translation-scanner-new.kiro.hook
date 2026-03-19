@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Translation Scanner (New Files)",
+  "description": "Scans newly created PHP, Blade, TypeScript, and TSX files for t('key') and __('key') translation calls. For any keys not present in lang/en/, adds them to the appropriate domain file. For new keys added to en/, adds placeholder entries to all other locale directories.",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      "**/*.php",
+      "**/*.blade.php",
+      "**/*.ts",
+      "**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A new file has been created. Scan it for translation function calls — t('key') in TypeScript/TSX files and __('key') or @lang('key') in PHP/Blade files.\n\nFor each translation key found:\n1. Parse the key to determine the domain (the first segment before the dot, e.g., 'convention' from 'convention.create.title'). If the key has no dot, use 'common' as the domain.\n2. Check if the key exists in the corresponding lang/en/{domain}.php file.\n3. If the key is MISSING from lang/en/{domain}.php:\n   a. Add it to lang/en/{domain}.php with the English string as the value (use the key's last segment as a readable default, e.g., 'Create Title' from 'convention.create.title').\n   b. Add a corresponding placeholder entry prefixed with [TRANSLATE] to all other locale files (e.g., lang/sv/{domain}.php).\n4. If the domain file doesn't exist yet, create it in both lang/en/ and all other locale directories.\n\nOnly report keys that were actually added. If all keys already exist, do nothing and say so briefly."
+  }
+}

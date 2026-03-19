@@ -1,4 +1,5 @@
 import { Head } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import AuthLayout from '@/layouts/auth-layout';
 
 interface GuestConventionConfirmationProps {
@@ -10,25 +11,24 @@ export default function GuestConventionConfirmation({
     conventionName,
     email,
 }: GuestConventionConfirmationProps) {
+    const { t } = useTranslation();
+
     return (
         <AuthLayout
-            title="Convention created"
-            description="Your convention has been created. Please check your email to set your password."
+            title={t('auth.guest_confirmation.title')}
+            description={t('auth.guest_confirmation.description')}
         >
-            <Head title="Convention created" />
+            <Head title={t('auth.guest_confirmation.title')} />
 
             <div className="space-y-4 text-center">
                 <p className="text-sm text-muted-foreground">
-                    Your convention <strong>{conventionName}</strong> has been
-                    created successfully.
+                    {t('auth.guest_confirmation.convention_created', { name: conventionName })}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                    A verification email has been sent to{' '}
-                    <strong>{email}</strong>.
+                    {t('auth.guest_confirmation.verification_sent', { email })}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                    Please click the link in the email to set your password and
-                    activate your account.
+                    {t('auth.guest_confirmation.click_link')}
                 </p>
             </div>
         </AuthLayout>

@@ -11,8 +11,8 @@ vi.mock('@inertiajs/react', () => ({
 
 // Mock Wayfinder actions
 vi.mock('@/actions/App/Http/Controllers/UserController', () => ({
-    destroy: { url: ({ convention, user }: { convention: number; user: number }) => `/conventions/${convention}/users/${user}` },
-    resendInvitation: { url: ({ convention, user }: { convention: number; user: number }) => `/conventions/${convention}/users/${user}/resend` },
+    destroy: { url: ({ convention, user }: { convention: string; user: string }) => `/conventions/${convention}/users/${user}` },
+    resendInvitation: { url: ({ convention, user }: { convention: string; user: string }) => `/conventions/${convention}/users/${user}/resend` },
 }));
 
 // Mock ConfirmationDialog
@@ -49,7 +49,7 @@ import UserRow from '../user-row';
 
 function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
     return {
-        id: 1,
+        id: '1',
         name: 'John Doe',
         first_name: 'John',
         last_name: 'Doe',
@@ -58,6 +58,7 @@ function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
         email_confirmed: true,
         roles: ['Administrator'],
         email_verified_at: null,
+        locale: 'en',
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
         ...overrides,
@@ -66,7 +67,7 @@ function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
 
 function makeConvention(overrides: Partial<Convention> = {}): Convention {
     return {
-        id: 1,
+        id: '1',
         name: 'Test Convention',
         city: 'Paris',
         country: 'France',
@@ -74,6 +75,7 @@ function makeConvention(overrides: Partial<Convention> = {}): Convention {
         start_date: '2025-06-15',
         end_date: '2025-06-20',
         other_info: null,
+        locale: 'en',
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
         ...overrides,
@@ -93,16 +95,16 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: true });
         render(<UserRow user={user} convention={makeConvention()} />);
 
-        expect(screen.getByLabelText('Email confirmed')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Email not confirmed')).not.toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.email_confirmed')).toBeInTheDocument();
+        expect(screen.queryByLabelText('user.row.email_not_confirmed')).not.toBeInTheDocument();
     });
 
     it('shows warning icon when email_confirmed is false', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} />);
 
-        expect(screen.getByLabelText('Email not confirmed')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Email confirmed')).not.toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.email_not_confirmed')).toBeInTheDocument();
+        expect(screen.queryByLabelText('user.row.email_confirmed')).not.toBeInTheDocument();
     });
 
     it('renders role badges for each role', () => {
@@ -124,14 +126,14 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
 
-        expect(screen.getByLabelText('Resend invitation')).toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.resend_label')).toBeInTheDocument();
     });
 
     it('disables resend invitation button when email_confirmed=true even with canManage=true', () => {
         const user = makeUser({ email_confirmed: true });
         render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
 
-        const resendButton = screen.getByLabelText('Resend invitation');
+        const resendButton = screen.getByLabelText('user.row.resend_label');
         expect(resendButton).toBeDisabled();
     });
 
@@ -139,9 +141,9 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} canManage={false} />);
 
-        expect(screen.queryByLabelText('Resend invitation')).not.toBeInTheDocument();
-        expect(screen.queryByLabelText(/^Edit /)).not.toBeInTheDocument();
-        expect(screen.queryByLabelText(/^Delete /)).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('user.row.resend_label')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/^user\.row\.edit_label/)).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/^user\.row\.delete_label/)).not.toBeInTheDocument();
     });
 
     it('shows edit and delete buttons when canManage=true', () => {
@@ -149,7 +151,7 @@ describe('UserRow', () => {
         const onEdit = vi.fn();
         render(<UserRow user={user} convention={makeConvention()} canManage={true} onEdit={onEdit} />);
 
-        expect(screen.getByLabelText('Edit John Doe')).toBeInTheDocument();
-        expect(screen.getByLabelText('Delete John Doe')).toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.edit_label')).toBeInTheDocument();
+        expect(screen.getByLabelText('user.row.delete_label')).toBeInTheDocument();
     });
 });

@@ -1,4 +1,5 @@
 import { OctagonAlert } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -10,6 +11,7 @@ interface FullButtonProps {
 }
 
 export default function FullButton({ section, onUpdate }: FullButtonProps) {
+    const { t } = useTranslation();
     const isAlreadyFull = section.occupancy === 100;
 
     return (
@@ -23,11 +25,11 @@ export default function FullButton({ section, onUpdate }: FullButtonProps) {
                     onClick={onUpdate}
                 >
                     <OctagonAlert className="size-6" />
-                    Full
+                    {t('section.full_button.label')}
                 </Button>
             </TooltipTrigger>
             <TooltipContent>
-                {isAlreadyFull ? 'Section is already at 100% capacity' : 'Instantly set this section to 100% occupancy'}
+                {isAlreadyFull ? t('section.full_button.already_full') : t('section.full_button.tooltip')}
             </TooltipContent>
         </Tooltip>
     );

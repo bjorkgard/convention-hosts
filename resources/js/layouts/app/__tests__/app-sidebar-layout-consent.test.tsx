@@ -96,7 +96,7 @@ describe('AppSidebarLayout consent prompt visibility', () => {
             </AppSidebarLayout>,
         );
 
-        expect(screen.getByRole('region', { name: /cookie consent/i })).toBeInTheDocument();
+        expect(screen.getByRole('region', { name: /cookie_consent/i })).toBeInTheDocument();
         expect(screen.getByText('Page content')).toBeInTheDocument();
     });
 
@@ -108,7 +108,7 @@ describe('AppSidebarLayout consent prompt visibility', () => {
             </AppSidebarLayout>,
         );
 
-        expect(screen.queryByRole('region', { name: /cookie consent/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('region', { name: /cookie_consent/i })).not.toBeInTheDocument();
 
         setConsentState('declined');
         rerender(
@@ -117,6 +117,6 @@ describe('AppSidebarLayout consent prompt visibility', () => {
             </AppSidebarLayout>,
         );
 
-        expect(screen.queryByRole('region', { name: /cookie consent/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('region', { name: /cookie_consent/i })).not.toBeInTheDocument();
     });
 });

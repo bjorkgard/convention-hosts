@@ -41,7 +41,7 @@ class UpdateOccupancyRequest extends FormRequest
             if (is_null($this->occupancy) && is_null($this->available_seats)) {
                 $validator->errors()->add(
                     'occupancy',
-                    'Either occupancy or available_seats must be provided.'
+                    __('validation.occupancy_or_seats_required')
                 );
             }
         });

@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, SearchX } from 'lucide-react';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as searchIndex } from '@/actions/App/Http/Controllers/SearchController';
@@ -39,17 +40,18 @@ interface SearchIndexProps {
 }
 
 export default function SearchIndex({ convention, sections, floors, filters }: SearchIndexProps) {
+    const { t } = useTranslation();
+
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: conventionsIndex.url() },
+        { title: t('convention.index.heading'), href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
-        { title: 'Search', href: searchIndex.url(convention.id) },
+        { title: t('search.heading'), href: searchIndex.url(convention.id) },
     ];
 
     const applyFilters = useCallback(
         (newFilters: Partial<SearchFilters>) => {
             const merged = { ...filters, ...newFilters };
 
-            // Build clean query params (omit empty values)
             const query: Record<string, string> = {};
             if (merged.floor_id) query.floor_id = merged.floor_id;
             if (merged.elder_friendly === '1' || merged.elder_friendly === 'true') query.elder_friendly = '1';
@@ -86,16 +88,16 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Search" />
+            <Head title={t('search.title')} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center gap-3">
-                    <Link href={conventionShow.url(convention.id)} aria-label="Back to convention">
+                    <Link href={conventionShow.url(convention.id)} aria-label={t('search.back_label')}>
                         <ArrowLeft className="text-muted-foreground size-5" />
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
+                        <h1 className="text-2xl font-semibold tracking-tight">{t('search.heading')}</h1>
                         <p className="text-muted-foreground text-sm">
-                            Find available sections with less than 90% occupancy. Use filters to narrow results by floor or accessibility.
+                            {t('search.description')}
                         </p>
                     </div>
                 </div>
@@ -103,13 +105,13 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                 {/* Filters */}
                 <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-end sm:gap-4">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="floor-filter">Floor</Label>
+                        <Label htmlFor="floor-filter">{t('search.floor_label')}</Label>
                         <Select value={filters.floor_id ?? 'all'} onValueChange={handleFloorChange}>
                             <SelectTrigger id="floor-filter" className="w-full sm:w-48">
-                                <SelectValue placeholder="All floors" />
+                                <SelectValue placeholder={t('search.all_floors')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All floors</SelectItem>
+                                <SelectItem value="all">{t('search.all_floors')}</SelectItem>
                                 {floors.map((floor) => (
                                     <SelectItem key={floor.id} value={String(floor.id)}>
                                         {floor.name}
@@ -126,7 +128,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                             onCheckedChange={handleElderFriendlyChange}
                         />
                         <Label htmlFor="elder-friendly" className="cursor-pointer">
-                            Elder-friendly
+                            {t('search.elder_friendly')}
                         </Label>
                     </div>
 
@@ -137,7 +139,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                             onCheckedChange={handleHandicapFriendlyChange}
                         />
                         <Label htmlFor="handicap-friendly" className="cursor-pointer">
-                            Handicap-friendly
+                            {t('search.handicap_friendly')}
                         </Label>
                     </div>
 
@@ -148,7 +150,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                             onCheckedChange={handleHearingLoopChange}
                         />
                         <Label htmlFor="hearing-loop" className="cursor-pointer">
-                            Hearing loop
+                            {t('search.hearing_loop')}
                         </Label>
                     </div>
                 </div>
@@ -157,12 +159,12 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                 {sections.data.length === 0 ? (
                     <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                         <SearchX className="text-muted-foreground mb-2 size-10" />
-                        <p className="text-muted-foreground">No available sections found matching your filters.</p>
+                        <p className="text-muted-foreground">{t('search.no_results')}</p>
                     </div>
                 ) : (
                     <>
                         <p className="text-muted-foreground text-sm">
-                            {sections.total} {sections.total === 1 ? 'section' : 'sections'} available
+                            {t('search.results_count', { count: sections.total })}
                         </p>
                         <div className="flex flex-col gap-2">
                             {sections.data.map((section) => (
@@ -174,7 +176,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                     <OccupancyGauge occupancy={section.occupancy} size={40} />
                                     <div className="min-w-0 flex-1">
                                         <p className="truncate font-medium">{section.name}</p>
-                                        <p className="text-muted-foreground truncate text-sm">{section.floor?.name ?? 'Unknown floor'}</p>
+                                        <p className="text-muted-foreground truncate text-sm">{section.floor?.name ?? t('search.unknown_floor')}</p>
                                     </div>
                                 </Link>
                             ))}
@@ -182,7 +184,7 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
                         {/* Pagination */}
                         {sections.last_page > 1 && (
-                            <nav className="flex flex-wrap items-center justify-center gap-1 pt-2" aria-label="Pagination">
+                            <nav className="flex flex-wrap items-center justify-center gap-1 pt-2" aria-label={t('search.pagination_label')}>
                                 {sections.links.map((link, i) => {
                                     if (!link.url) {
                                         return (

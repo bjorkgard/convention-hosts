@@ -32,6 +32,7 @@ class User extends Authenticatable
         'mobile',
         'password',
         'email_confirmed',
+        'locale',
     ];
 
     /**

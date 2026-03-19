@@ -11,6 +11,7 @@ import {
     Users,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { index as conventionsIndex } from '@/actions/App/Http/Controllers/ConventionController';
 import { store as guestStore } from '@/actions/App/Http/Controllers/GuestConventionController';
@@ -21,75 +22,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UpdateNotificationModal } from '@/components/update-notification-modal';
 import { VersionBadge } from '@/components/version-badge';
+import { localeLabel } from '@/lib/locale-labels';
 import { login } from '@/routes';
 
-const features = [
-    {
-        icon: LayoutGrid,
-        title: 'Venue Organization',
-        description:
-            'Organize venues into floors and sections with capacity tracking for every area.',
-    },
-    {
-        icon: BarChart3,
-        title: 'Live Occupancy',
-        description:
-            'Real-time occupancy tracking with color-coded indicators and daily auto-reset.',
-    },
-    {
-        icon: Users,
-        title: 'Role-Based Access',
-        description:
-            'Four-tier roles from Owner to Section User, each with scoped permissions.',
-    },
-    {
-        icon: CalendarDays,
-        title: 'Attendance Reports',
-        description:
-            'Time-bound morning and afternoon attendance collection with period locking.',
-    },
-    {
-        icon: Search,
-        title: 'Smart Search',
-        description:
-            'Find available sections filtered by accessibility and sorted by occupancy.',
-    },
-    {
-        icon: Smartphone,
-        title: 'Mobile Ready',
-        description:
-            'Progressive Web App with install support for on-site convention management.',
-    },
-];
-
-const steps = [
-    {
-        number: '1',
-        title: 'Create a Convention',
-        description:
-            'Set up your event with dates, location, and venue details.',
-    },
-    {
-        number: '2',
-        title: 'Organize Your Venue',
-        description: 'Add floors and sections with seating capacity.',
-    },
-    {
-        number: '3',
-        title: 'Invite Your Team',
-        description: 'Assign roles and let your team manage their areas.',
-    },
-    {
-        number: '4',
-        title: 'Track in Real Time',
-        description: 'Monitor occupancy and collect attendance on the go.',
-    },
-];
+const featureIcons = [LayoutGrid, BarChart3, Users, CalendarDays, Search, Smartphone];
+const featureKeys = ['venue', 'occupancy', 'roles', 'attendance', 'search', 'mobile'];
 
 export default function Welcome() {
     const { auth } = usePage().props;
     const [showForm, setShowForm] = useState(false);
     const formRef = useRef<HTMLDivElement>(null);
+    const { t } = useTranslation();
+    const [locales, setLocales] = useState<string[]>(['sv', 'en']);
+
+    const features = featureKeys.map((key, i) => ({
+        icon: featureIcons[i],
+        title: t(`public.welcome.features.${key}_title`),
+        description: t(`public.welcome.features.${key}_description`),
+    }));
+
+    const steps = [1, 2, 3, 4].map((n) => ({
+        number: String(n),
+        title: t(`public.welcome.steps.step${n}_title`),
+        description: t(`public.welcome.steps.step${n}_description`),
+    }));
 
     useEffect(() => {
         if (showForm && formRef.current) {
@@ -100,9 +56,18 @@ export default function Welcome() {
         }
     }, [showForm]);
 
+    useEffect(() => {
+        fetch('/api/locales')
+            .then((res) => res.json())
+            .then((data: string[]) => {
+                if (data.length > 0) setLocales(data);
+            })
+            .catch(() => {});
+    }, []);
+
     return (
         <>
-            <Head title="Convention Manager">
+            <Head title={t('public.welcome.title')}>
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link
                     href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap"
@@ -131,20 +96,20 @@ export default function Welcome() {
                             {auth.user ? (
                                 <Button asChild>
                                     <Link href={conventionsIndex.url()}>
-                                        My Conventions
+                                        {t('public.welcome.nav.my_conventions')}
                                         <ArrowRight className="ml-1 size-4" />
                                     </Link>
                                 </Button>
                             ) : (
                                 <>
                                     <Button variant="ghost" asChild>
-                                        <Link href={login()}>Log in</Link>
+                                        <Link href={login()}>{t('public.welcome.nav.login')}</Link>
                                     </Button>
                                     <Button
                                         onClick={() => setShowForm(true)}
                                         className="cursor-pointer"
                                     >
-                                        Get Started
+                                        {t('public.welcome.nav.get_started')}
                                     </Button>
                                 </>
                             )}
@@ -158,24 +123,22 @@ export default function Welcome() {
                     <div className="relative mx-auto max-w-6xl text-center">
                         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground">
                             <Shield className="size-4" />
-                            Trusted by convention organizers worldwide
+                            {t('public.welcome.hero.badge')}
                         </div>
                         <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                            Manage Your Conventions{' '}
+                            {t('public.welcome.hero.heading')}{' '}
                             <span className="text-primary">
-                                with Confidence
+                                {t('public.welcome.hero.heading_highlight')}
                             </span>
                         </h1>
                         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-                            Real-time occupancy tracking, attendance reporting,
-                            and role-based team management. Everything you need
-                            to run a smooth convention, from your phone.
+                            {t('public.welcome.hero.description')}
                         </p>
                         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                             {auth.user ? (
                                 <Button size="lg" asChild>
                                     <Link href={conventionsIndex.url()}>
-                                        Go to Conventions
+                                        {t('public.welcome.hero.go_to_conventions')}
                                         <ArrowRight className="ml-2 size-4" />
                                     </Link>
                                 </Button>
@@ -186,12 +149,12 @@ export default function Welcome() {
                                         onClick={() => setShowForm(true)}
                                         className="cursor-pointer"
                                     >
-                                        Create Your Convention
+                                        {t('public.welcome.hero.create_convention')}
                                         <ArrowRight className="ml-2 size-4" />
                                     </Button>
                                     <Button size="lg" variant="outline" asChild>
                                         <a href="#features">
-                                            See How It Works
+                                            {t('public.welcome.hero.see_how')}
                                             <ChevronDown className="ml-2 size-4" />
                                         </a>
                                     </Button>
@@ -209,11 +172,10 @@ export default function Welcome() {
                     <div className="mx-auto max-w-6xl">
                         <div className="mb-14 text-center">
                             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                                Everything You Need to Run a Convention
+                                {t('public.welcome.features.heading')}
                             </h2>
                             <p className="mt-4 text-lg text-muted-foreground">
-                                From venue setup to real-time tracking, all in
-                                one place.
+                                {t('public.welcome.features.description')}
                             </p>
                         </div>
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -242,11 +204,10 @@ export default function Welcome() {
                     <div className="mx-auto max-w-6xl">
                         <div className="mb-14 text-center">
                             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                                Up and Running in Minutes
+                                {t('public.welcome.steps.heading')}
                             </h2>
                             <p className="mt-4 text-lg text-muted-foreground">
-                                No account needed to get started. Create your
-                                first convention right now.
+                                {t('public.welcome.steps.description')}
                             </p>
                         </div>
                         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -283,12 +244,10 @@ export default function Welcome() {
                         <div className="mx-auto max-w-2xl">
                             <div className="mb-10 text-center">
                                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                                    Create Your Convention
+                                    {t('public.welcome.form.heading')}
                                 </h2>
                                 <p className="mt-4 text-muted-foreground">
-                                    No account required. Fill in the details and
-                                    we'll send you a verification email to get
-                                    started.
+                                    {t('public.welcome.form.description')}
                                 </p>
                             </div>
                             <div className="rounded-xl border border-border bg-card p-6 shadow-sm sm:p-8">
@@ -300,19 +259,19 @@ export default function Welcome() {
                                         <>
                                             <fieldset className="space-y-4">
                                                 <legend className="mb-2 text-sm font-semibold tracking-wider text-muted-foreground uppercase">
-                                                    Your Details
+                                                    {t('public.welcome.form.your_details')}
                                                 </legend>
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="first_name">
-                                                            First Name *
+                                                            {t('public.welcome.form.first_name_label')}
                                                         </Label>
                                                         <Input
                                                             id="first_name"
                                                             name="first_name"
                                                             required
                                                             autoComplete="given-name"
-                                                            placeholder="Jane"
+                                                            placeholder={t('public.welcome.form.first_name_placeholder')}
                                                         />
                                                         <InputError
                                                             message={
@@ -322,14 +281,14 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="last_name">
-                                                            Last Name *
+                                                            {t('public.welcome.form.last_name_label')}
                                                         </Label>
                                                         <Input
                                                             id="last_name"
                                                             name="last_name"
                                                             required
                                                             autoComplete="family-name"
-                                                            placeholder="Doe"
+                                                            placeholder={t('public.welcome.form.last_name_placeholder')}
                                                         />
                                                         <InputError
                                                             message={
@@ -341,7 +300,7 @@ export default function Welcome() {
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="email">
-                                                            Email *
+                                                            {t('public.welcome.form.email_label')}
                                                         </Label>
                                                         <Input
                                                             id="email"
@@ -349,7 +308,7 @@ export default function Welcome() {
                                                             type="email"
                                                             required
                                                             autoComplete="email"
-                                                            placeholder="jane@example.com"
+                                                            placeholder={t('public.welcome.form.email_placeholder')}
                                                         />
                                                         <InputError
                                                             message={
@@ -359,7 +318,7 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="mobile">
-                                                            Mobile *
+                                                            {t('public.welcome.form.mobile_label')}
                                                         </Label>
                                                         <Input
                                                             id="mobile"
@@ -367,7 +326,7 @@ export default function Welcome() {
                                                             type="tel"
                                                             required
                                                             autoComplete="tel"
-                                                            placeholder="+1 234 567 890"
+                                                            placeholder={t('public.welcome.form.mobile_placeholder')}
                                                         />
                                                         <InputError
                                                             message={
@@ -380,18 +339,18 @@ export default function Welcome() {
 
                                             <fieldset className="space-y-4">
                                                 <legend className="mb-2 text-sm font-semibold tracking-wider text-muted-foreground uppercase">
-                                                    Convention Details
+                                                    {t('public.welcome.form.convention_details')}
                                                 </legend>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="name">
-                                                        Convention Name *
+                                                        {t('public.welcome.form.name_label')}
                                                     </Label>
                                                     <Input
                                                         id="name"
                                                         name="name"
                                                         required
                                                         autoComplete="off"
-                                                        placeholder="Annual Tech Summit 2026"
+                                                        placeholder={t('public.welcome.form.name_placeholder')}
                                                     />
                                                     <InputError
                                                         message={errors.name}
@@ -400,14 +359,14 @@ export default function Welcome() {
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="city">
-                                                            City *
+                                                            {t('public.welcome.form.city_label')}
                                                         </Label>
                                                         <Input
                                                             id="city"
                                                             name="city"
                                                             required
                                                             autoComplete="off"
-                                                            placeholder="San Francisco"
+                                                            placeholder={t('public.welcome.form.city_placeholder')}
                                                         />
                                                         <InputError
                                                             message={
@@ -417,14 +376,14 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="country">
-                                                            Country *
+                                                            {t('public.welcome.form.country_label')}
                                                         </Label>
                                                         <Input
                                                             id="country"
                                                             name="country"
                                                             required
                                                             autoComplete="off"
-                                                            placeholder="United States"
+                                                            placeholder={t('public.welcome.form.country_placeholder')}
                                                         />
                                                         <InputError
                                                             message={
@@ -435,13 +394,13 @@ export default function Welcome() {
                                                 </div>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="address">
-                                                        Address
+                                                        {t('public.welcome.form.address_label')}
                                                     </Label>
                                                     <Input
                                                         id="address"
                                                         name="address"
                                                         autoComplete="off"
-                                                        placeholder="123 Convention Center Blvd (optional)"
+                                                        placeholder={t('public.welcome.form.address_placeholder')}
                                                     />
                                                     <InputError
                                                         message={errors.address}
@@ -450,7 +409,7 @@ export default function Welcome() {
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="start_date">
-                                                            Start Date *
+                                                            {t('public.welcome.form.start_date_label')}
                                                         </Label>
                                                         <Input
                                                             id="start_date"
@@ -466,7 +425,7 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="end_date">
-                                                            End Date *
+                                                            {t('public.welcome.form.end_date_label')}
                                                         </Label>
                                                         <Input
                                                             id="end_date"
@@ -483,18 +442,40 @@ export default function Welcome() {
                                                 </div>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="other_info">
-                                                        Other Information
+                                                        {t('public.welcome.form.other_info_label')}
                                                     </Label>
                                                     <textarea
                                                         id="other_info"
                                                         name="other_info"
                                                         rows={3}
-                                                        placeholder="Additional details about your convention (optional)"
+                                                        placeholder={t('public.welcome.form.other_info_placeholder')}
                                                         className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                                                     />
                                                     <InputError
                                                         message={
                                                             errors.other_info
+                                                        }
+                                                    />
+                                                </div>
+                                                <div className="grid gap-1.5">
+                                                    <Label htmlFor="locale">
+                                                        {t('public.welcome.form.language_label')}
+                                                    </Label>
+                                                    <select
+                                                        id="locale"
+                                                        name="locale"
+                                                        defaultValue="sv"
+                                                        className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                                    >
+                                                        {locales.map((code) => (
+                                                            <option key={code} value={code}>
+                                                                {localeLabel(code)}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <InputError
+                                                        message={
+                                                            errors.locale
                                                         }
                                                     />
                                                 </div>
@@ -507,8 +488,8 @@ export default function Welcome() {
                                                 size="lg"
                                             >
                                                 {processing
-                                                    ? 'Creating Convention...'
-                                                    : 'Create Convention'}
+                                                    ? t('public.welcome.form.submitting')
+                                                    : t('public.welcome.form.submit')}
                                                 {!processing && (
                                                     <ArrowRight className="ml-2 size-4" />
                                                 )}
@@ -526,10 +507,10 @@ export default function Welcome() {
                     <section className="px-4 py-20 sm:px-6 lg:py-28">
                         <div className="mx-auto max-w-3xl text-center">
                             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                                Ready to Manage Your Next Convention?
+                                {t('public.welcome.cta.heading')}
                             </h2>
                             <p className="mt-4 text-lg text-muted-foreground">
-                                Start for free. No credit card required.
+                                {t('public.welcome.cta.description')}
                             </p>
                             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                                 <Button
@@ -537,12 +518,12 @@ export default function Welcome() {
                                     onClick={() => setShowForm(true)}
                                     className="cursor-pointer"
                                 >
-                                    Get Started Now
+                                    {t('public.welcome.cta.button')}
                                     <ArrowRight className="ml-2 size-4" />
                                 </Button>
                                 <Button size="lg" variant="outline" asChild>
                                     <Link href={login()}>
-                                        Log in to Your Account
+                                        {t('public.welcome.cta.login')}
                                     </Link>
                                 </Button>
                             </div>
@@ -559,9 +540,7 @@ export default function Welcome() {
                             <VersionBadge />
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            &copy; {new Date().getFullYear()}{' '}
-                            {import.meta.env.VITE_APP_NAME}. All rights
-                            reserved.
+                            {t('public.welcome.footer.copyright', { year: new Date().getFullYear(), app: import.meta.env.VITE_APP_NAME })}
                         </p>
                     </div>
                 </footer>

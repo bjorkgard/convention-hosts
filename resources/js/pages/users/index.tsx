@@ -1,6 +1,7 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft, Plus, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { index as conventionsIndex, show } from '@/actions/App/Http/Controllers/ConventionController';
 import { index as usersIndex, store, update } from '@/actions/App/Http/Controllers/UserController';
@@ -53,6 +54,7 @@ interface UsersIndexProps {
 
 export default function UsersIndex({ convention, users }: UsersIndexProps) {
     const { isManager } = useConventionRole();
+    const { t } = useTranslation();
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [editingUser, setEditingUser] = useState<ConventionUser | null>(null);
@@ -61,9 +63,9 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
     const editForm = useForm<UserFormData>({ ...emptyForm });
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: conventionsIndex.url() },
+        { title: t('navigation.conventions'), href: conventionsIndex.url() },
         { title: convention.name, href: show.url(convention.id) },
-        { title: 'Users', href: usersIndex.url(convention.id) },
+        { title: t('user.index.heading'), href: usersIndex.url(convention.id) },
     ];
 
     function toggleRole(form: ReturnType<typeof useForm<UserFormData>>, role: Role) {
@@ -109,7 +111,7 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Users — ${convention.name}`} />
+            <Head title={t('user.index.title', { convention: convention.name })} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 {/* Header */}
                 <div className="flex items-center justify-between gap-2">
@@ -120,9 +122,9 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
                             </Link>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
+                            <h1 className="text-2xl font-semibold tracking-tight">{t('user.index.heading')}</h1>
                             <p className="text-muted-foreground text-sm">
-                                Manage who has access to this convention. Invite users and assign roles to control what they can see and do.
+                                {t('user.index.description')}
                             </p>
                         </div>
                     </div>
@@ -135,11 +137,11 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
                                     onClick={() => setShowAddDialog(true)}
                                 >
                                     <Plus className="size-4" />
-                                    <span className="hidden sm:inline">Add User</span>
-                                    <span className="sm:hidden">Add</span>
+                                    <span className="hidden sm:inline">{t('user.index.add_button')}</span>
+                                    <span className="sm:hidden">{t('user.index.add_short')}</span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Invite a new user by email and assign their role</TooltipContent>
+                            <TooltipContent>{t('user.index.add_tooltip')}</TooltipContent>
                         </Tooltip>
                     )}
                 </div>
@@ -148,14 +150,14 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
                 {users.length === 0 ? (
                     <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
                         <Users className="text-muted-foreground mb-2 size-8" />
-                        <p className="text-muted-foreground">No users yet.</p>
+                        <p className="text-muted-foreground">{t('user.index.empty')}</p>
                         {isManager && (
                             <Button
                                 variant="link"
                                 className="mt-2 cursor-pointer"
                                 onClick={() => setShowAddDialog(true)}
                             >
-                                Invite your first user
+                                {t('user.index.empty_invite')}
                             </Button>
                         )}
                     </div>
@@ -178,12 +180,12 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
             <UserFormDialog
                 open={showAddDialog}
                 onOpenChange={setShowAddDialog}
-                title="Add User"
-                description={`Invite a new user to ${convention.name}.`}
+                title={t('user.add_dialog.title')}
+                description={t('user.add_dialog.description', { convention: convention.name })}
                 form={addForm}
                 onSubmit={handleAdd}
-                submitLabel="Invite User"
-                submittingLabel="Inviting..."
+                submitLabel={t('user.add_dialog.submit')}
+                submittingLabel={t('user.add_dialog.submitting')}
                 onToggleRole={(role) => toggleRole(addForm, role)}
             />
 
@@ -191,12 +193,12 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
             <UserFormDialog
                 open={!!editingUser}
                 onOpenChange={(open) => !open && setEditingUser(null)}
-                title="Edit User"
-                description="Update user details and roles."
+                title={t('user.edit_dialog.title')}
+                description={t('user.edit_dialog.description')}
                 form={editForm}
                 onSubmit={handleEdit}
-                submitLabel="Save"
-                submittingLabel="Saving..."
+                submitLabel={t('user.edit_dialog.submit')}
+                submittingLabel={t('user.edit_dialog.submitting')}
                 onToggleRole={(role) => toggleRole(editForm, role)}
             />
         </AppLayout>
@@ -226,6 +228,7 @@ function UserFormDialog({
     submittingLabel,
     onToggleRole,
 }: UserFormDialogProps) {
+    const { t } = useTranslation();
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -238,7 +241,7 @@ function UserFormDialog({
                     <div className="grid gap-4 py-4">
                         {/* First name */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-first-name">First Name</Label>
+                            <Label htmlFor="user-first-name">{t('user.form.first_name_label')}</Label>
                             <Input
                                 id="user-first-name"
                                 value={form.data.first_name}
@@ -250,7 +253,7 @@ function UserFormDialog({
 
                         {/* Last name */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-last-name">Last Name</Label>
+                            <Label htmlFor="user-last-name">{t('user.form.last_name_label')}</Label>
                             <Input
                                 id="user-last-name"
                                 value={form.data.last_name}
@@ -262,7 +265,7 @@ function UserFormDialog({
 
                         {/* Email */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-email">Email</Label>
+                            <Label htmlFor="user-email">{t('user.form.email_label')}</Label>
                             <Input
                                 id="user-email"
                                 type="email"
@@ -275,7 +278,7 @@ function UserFormDialog({
 
                         {/* Mobile */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-mobile">Mobile</Label>
+                            <Label htmlFor="user-mobile">{t('user.form.mobile_label')}</Label>
                             <Input
                                 id="user-mobile"
                                 type="tel"
@@ -288,7 +291,7 @@ function UserFormDialog({
 
                         {/* Roles */}
                         <div className="grid gap-2">
-                            <Label>Roles</Label>
+                            <Label>{t('user.form.roles_label')}</Label>
                             <div className="grid grid-cols-2 gap-2">
                                 {ALL_ROLES.map((role) => (
                                     <label
@@ -309,7 +312,7 @@ function UserFormDialog({
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button type="button" variant="outline" className="cursor-pointer">
-                                Cancel
+                                {t('user.form.cancel')}
                             </Button>
                         </DialogClose>
                         <Button type="submit" disabled={form.processing} className="cursor-pointer">

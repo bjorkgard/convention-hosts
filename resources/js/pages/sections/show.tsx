@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Accessibility, ArrowLeft, CheckCircle2, Circle, Clock, Heart, Send, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { report } from '@/actions/App/Http/Controllers/AttendanceController';
 import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
@@ -28,10 +29,12 @@ function AttendanceCard({
     activePeriod,
     section,
     myReport,
+    t,
 }: {
     activePeriod: AttendancePeriod;
     section: Section;
     myReport: AttendanceReport | null;
+    t: (key: string, options?: Record<string, unknown>) => string;
 }) {
     const [attendanceValue, setAttendanceValue] = useState(myReport ? String(myReport.attendance) : '');
 
@@ -50,7 +53,7 @@ function AttendanceCard({
     return (
         <Card className="rounded-xl border border-border shadow-sm">
             <CardHeader>
-                <CardTitle className="text-lg">Attendance Report</CardTitle>
+                <CardTitle className="text-lg">{t('attendance.card.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 {/* Status line */}
@@ -58,30 +61,30 @@ function AttendanceCard({
                     {myReport ? (
                         <>
                             <CheckCircle2 className="size-4 text-green-500" />
-                            <span className="text-green-700 dark:text-green-400">Reported: {myReport.attendance}</span>
+                            <span className="text-green-700 dark:text-green-400">{t('attendance.card.reported', { count: myReport.attendance })}</span>
                         </>
                     ) : (
                         <>
                             <Circle className="text-muted-foreground size-4" />
-                            <span className="text-muted-foreground">Not yet reported</span>
+                            <span className="text-muted-foreground">{t('attendance.card.not_reported')}</span>
                         </>
                     )}
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-2">
-                    <Label htmlFor="attendance-input">Attendance ({activePeriod.period})</Label>
+                    <Label htmlFor="attendance-input">{t('attendance.card.input_label', { period: activePeriod.period })}</Label>
                     <div className="flex items-center gap-2">
                         <Input
                             id="attendance-input"
                             type="number"
                             min={0}
-                            placeholder="Enter attendance count"
+                            placeholder={t('attendance.card.input_placeholder')}
                             value={attendanceValue}
                             onChange={(e) => setAttendanceValue(e.target.value)}
                             className="flex-1"
                         />
                         <Button type="submit" className="cursor-pointer gap-1.5">
                             <Send className="size-4" />
-                            {myReport ? 'Update' : 'Send'}
+                            {myReport ? t('attendance.card.update') : t('attendance.card.send')}
                         </Button>
                     </div>
                 </form>
@@ -100,6 +103,7 @@ interface SectionsShowProps {
 }
 
 export default function SectionsShow({ section, floor, convention, activePeriod, myReport }: SectionsShowProps) {
+    const { t } = useTranslation();
     useFlashToast();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -108,9 +112,9 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
     const canDeleteSection = isManager;
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: conventionsIndex.url() },
+        { title: t('convention.index.heading'), href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
-        { title: 'Floors', href: floorsIndex.url(convention.id) },
+        { title: t('floor.index.heading'), href: floorsIndex.url(convention.id) },
         { title: floor.name, href: `${floorsIndex.url(convention.id)}?open=${floor.id}` },
         { title: section.name, href: sectionShow.url(section.id) },
     ];
@@ -156,7 +160,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${section.name} — ${convention.name}`} />
+            <Head title={t('section.show.title', { section: section.name, convention: convention.name })} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-2">
@@ -184,10 +188,10 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                                     onClick={() => setShowDeleteDialog(true)}
                                 >
                                     <Trash2 className="size-4" />
-                                    Delete
+                                    {t('section.show.delete_button')}
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Permanently delete this section and its data</TooltipContent>
+                            <TooltipContent>{t('section.show.delete_tooltip')}</TooltipContent>
                         </Tooltip>
                     )}
                 </div>
@@ -196,7 +200,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                 <Card className="rounded-xl border border-border shadow-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-lg">Section Details</CardTitle>
+                            <CardTitle className="text-lg">{t('section.show.details_title')}</CardTitle>
                             <OccupancyGauge occupancy={section.occupancy} size={48} />
                         </div>
                     </CardHeader>
@@ -206,19 +210,19 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                             <div className="flex items-center gap-1.5 text-sm">
                                 <Users className="text-muted-foreground size-4" />
                                 <span className="font-medium">{section.number_of_seats}</span>
-                                <span className="text-muted-foreground">seats</span>
+                                <span className="text-muted-foreground">{t('section.show.seats')}</span>
                             </div>
 
                             {section.elder_friendly && (
                                 <Badge variant="secondary" className="gap-1">
                                     <Heart className="size-3" />
-                                    Elder-friendly
+                                    {t('section.show.elder_friendly')}
                                 </Badge>
                             )}
                             {section.handicap_friendly && (
                                 <Badge variant="secondary" className="gap-1">
                                     <Accessibility className="size-3" />
-                                    Handicap-friendly
+                                    {t('section.show.handicap_friendly')}
                                 </Badge>
                             )}
                         </div>
@@ -231,7 +235,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
 
                         {/* Occupancy help text */}
                         <p className="text-muted-foreground text-sm">
-                            Set occupancy by selecting a percentage, entering available seats, or pressing FULL.<br/>You can update these as often as needed throughout the day. All numbers reset automatically every night.
+                            {t('section.show.occupancy_help')}<br/>{t('section.show.occupancy_help_reset')}
                         </p>
 
                         {/* Occupancy controls */}
@@ -247,9 +251,9 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                         <CardFooter className="text-muted-foreground flex items-center gap-1.5 text-xs">
                             <Clock className="size-3.5 shrink-0" />
                             <span>
-                                Last updated
-                                {lastUpdatedByName && <> by {lastUpdatedByName}</>}
-                                {lastUpdateTime && <> at {lastUpdateTime}</>}
+                                {t('section.show.last_updated')}
+                                {lastUpdatedByName && <> {t('section.show.last_updated_by', { name: lastUpdatedByName })}</>}
+                                {lastUpdateTime && <> {t('section.show.last_updated_at', { time: lastUpdateTime })}</>}
                             </span>
                         </CardFooter>
                     )}
@@ -262,6 +266,7 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                         activePeriod={activePeriod}
                         section={section}
                         myReport={myReport}
+                        t={t}
                     />
                 )}
             </div>
@@ -270,9 +275,9 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
             <ConfirmationDialog
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}
-                title="Delete Section"
-                description={`Are you sure you want to delete "${section.name}"? All occupancy data and attendance reports for this section will be permanently removed. This action cannot be undone.`}
-                confirmLabel="Delete section"
+                title={t('section.delete_dialog.title')}
+                description={t('section.delete_dialog.description', { name: section.name })}
+                confirmLabel={t('section.delete_dialog.confirm')}
                 variant="destructive"
                 loading={deleting}
                 onConfirm={handleDeleteSection}

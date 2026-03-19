@@ -1,5 +1,6 @@
 import { Download, MoreVertical, Plus, Share, Smartphone } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -67,6 +68,7 @@ function wasPromptDismissed(): boolean {
 
 export default function InstallPrompt() {
     const consent = useConsent();
+    const { t } = useTranslation();
     const allowOptionalStorage = isOptionalStorageAllowed(consent);
     const [deferredPrompt, setDeferredPrompt] =
         useState<BeforeInstallPromptEvent | null>(null);
@@ -166,14 +168,14 @@ export default function InstallPrompt() {
                         onClick={handleInstallClick}
                     >
                         <Download className="size-4" />
-                        Install App
+                        {t('common.install_app.button')}
                     </Button>
                     <DialogTrigger asChild>
                         <Button
                             variant="ghost"
                             size="icon"
                             className="size-8 shrink-0 cursor-pointer"
-                            aria-label="Installation instructions"
+                            aria-label={t('common.install_app.instructions_label')}
                         >
                             <Smartphone className="size-4" />
                         </Button>
@@ -181,19 +183,19 @@ export default function InstallPrompt() {
                 </div>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Install App</DialogTitle>
+                        <DialogTitle>{t('common.install_app.title')}</DialogTitle>
                         <DialogDescription>
-                            Add this app to your home screen for quick access.
+                            {t('common.install_app.description')}
                         </DialogDescription>
                     </DialogHeader>
-                    <InstructionsContent />
+                    <InstructionsContent t={t} />
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button
                                 variant="outline"
                                 className="cursor-pointer"
                             >
-                                Close
+                                {t('common.install_app.close')}
                             </Button>
                         </DialogClose>
                     </DialogFooter>
@@ -212,21 +214,21 @@ export default function InstallPrompt() {
                     className="w-full cursor-pointer"
                 >
                     <Download className="size-4" />
-                    Install App
+                    {t('common.install_app.button')}
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Install App</DialogTitle>
+                    <DialogTitle>{t('common.install_app.title')}</DialogTitle>
                     <DialogDescription>
-                        Add this app to your home screen for quick access.
+                        {t('common.install_app.description')}
                     </DialogDescription>
                 </DialogHeader>
-                <InstructionsContent />
+                <InstructionsContent t={t} />
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant="outline" className="cursor-pointer">
-                            Close
+                            {t('common.install_app.close')}
                         </Button>
                     </DialogClose>
                 </DialogFooter>
@@ -235,12 +237,12 @@ export default function InstallPrompt() {
     );
 }
 
-function InstructionsContent() {
+function InstructionsContent({ t }: { t: (key: string) => string }) {
     return (
         <div className="space-y-6">
             <div className="space-y-3">
                 <h3 className="flex items-center gap-2 text-sm font-semibold">
-                    iOS (Safari)
+                    {t('common.install_app.ios_heading')}
                 </h3>
                 <ol className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start gap-2">
@@ -248,8 +250,7 @@ function InstructionsContent() {
                             1
                         </span>
                         <span className="flex items-center gap-1.5">
-                            Tap the <Share className="inline size-4" /> Share
-                            button
+                            {t('common.install_app.ios_step1')} <Share className="inline size-4" />
                         </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -257,22 +258,21 @@ function InstructionsContent() {
                             2
                         </span>
                         <span className="flex items-center gap-1.5">
-                            Tap <Plus className="inline size-4" /> &quot;Add to
-                            Home Screen&quot;
+                            <Plus className="inline size-4" /> {t('common.install_app.ios_step2')}
                         </span>
                     </li>
                     <li className="flex items-start gap-2">
                         <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium text-muted-foreground">
                             3
                         </span>
-                        <span>Tap &quot;Add&quot;</span>
+                        <span>{t('common.install_app.ios_step3')}</span>
                     </li>
                 </ol>
             </div>
 
             <div className="space-y-3">
                 <h3 className="flex items-center gap-2 text-sm font-semibold">
-                    Android (Chrome)
+                    {t('common.install_app.android_heading')}
                 </h3>
                 <ol className="space-y-2 text-sm text-muted-foreground">
                     <li className="flex items-start gap-2">
@@ -280,8 +280,7 @@ function InstructionsContent() {
                             1
                         </span>
                         <span className="flex items-center gap-1.5">
-                            Tap the <MoreVertical className="inline size-4" />{' '}
-                            menu
+                            {t('common.install_app.android_step1')} <MoreVertical className="inline size-4" />
                         </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -289,9 +288,7 @@ function InstructionsContent() {
                             2
                         </span>
                         <span className="flex items-center gap-1.5">
-                            Tap <Download className="inline size-4" />{' '}
-                            &quot;Install app&quot; or &quot;Add to Home
-                            Screen&quot;
+                            <Download className="inline size-4" /> {t('common.install_app.android_step2')}
                         </span>
                     </li>
                 </ol>

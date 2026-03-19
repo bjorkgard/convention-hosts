@@ -122,6 +122,7 @@ Allows unauthenticated users to create a convention without registering first. T
 | start_date | date | required, after_or_equal:today |
 | end_date | date | required, after_or_equal:start_date |
 | other_info | string | nullable |
+| locale | string | nullable, max:10, must match an existing `lang/` directory |
 
 Custom validation: rejects if an overlapping convention exists in the same city/country.
 
@@ -191,7 +192,29 @@ PUT /conventions/{convention}
 
 Middleware: `auth`, `EnsureConventionOrUrlAccess`
 
-Same fields as Store Convention. Excludes current convention from overlap check.
+Same fields as Store Convention, plus:
+
+| Field | Type | Rules |
+|-------|------|-------|
+| locale | string | nullable, max:10, must match an existing `lang/` directory |
+
+Excludes current convention from overlap check.
+
+### Update Convention Locale
+
+```
+PATCH /conventions/{convention}/locale
+```
+
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
+
+Dedicated endpoint for updating only the convention's default locale. Used by the `LocaleSelector` component to persist a convention-level language preference without submitting the full convention update form.
+
+| Field | Type | Rules |
+|-------|------|-------|
+| locale | string | required, max:10, must match an existing `lang/` directory |
+
+On success: redirects to `conventions.show`.
 
 ### Delete Convention
 
@@ -658,6 +681,44 @@ If the repository has no releases (GitHub returns 404), all fields are `null`. T
 Returned on network failures or non-2xx/non-404 GitHub API responses.
 
 Configured via `GITHUB_REPO` environment variable (default: `bjorkgard/convention-hosts`).
+
+---
+
+## Locales (Public)
+
+### List Available Locales
+
+```
+GET /api/locales
+```
+
+No authentication required. Returns a JSON array of available locale codes, auto-discovered from `lang/` subdirectories.
+
+**Response (200):**
+
+```json
+["en", "sv"]
+```
+
+### Get Translations for a Locale
+
+```
+GET /api/translations/{locale}
+```
+
+No authentication required. Returns all translation key-value pairs for the given locale, merged from all domain files.
+
+**Response (200):**
+
+```json
+{
+  "auth": { "login": { "title": "Log in", "email_label": "Email" } },
+  "convention": { "create": { "title": "Create Convention" } },
+  "common": { "save": "Save", "cancel": "Cancel" }
+}
+```
+
+**Response (404):** Returned when the locale code has no corresponding `lang/` directory.
 
 ---
 

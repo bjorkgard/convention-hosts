@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class UserInvitation extends Mailable
 {
@@ -28,8 +29,11 @@ class UserInvitation extends Mailable
      */
     public function envelope(): Envelope
     {
+        $locale = $this->user->locale ?? 'sv';
+        App::setLocale($locale);
+
         return new Envelope(
-            subject: "Invitation to {$this->convention->name}",
+            subject: __('emails.invitation.subject', ['convention' => $this->convention->name]),
         );
     }
 

@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Check, ClipboardList, Copy, MapPin, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { start } from '@/actions/App/Http/Controllers/AttendanceController';
 import { destroy, index, show } from '@/actions/App/Http/Controllers/ConventionController';
@@ -8,6 +9,7 @@ import ConfirmationDialog from '@/components/confirmation-dialog';
 import AttendanceReportBanner from '@/components/conventions/attendance-report-banner';
 import ExportDropdown from '@/components/conventions/export-dropdown';
 import FloorRow from '@/components/conventions/floor-row';
+import { LocaleSelector } from '@/components/locale-selector';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendanceReport } from '@/hooks/use-attendance-report';
@@ -28,29 +30,25 @@ interface ConventionsShowProps {
 }
 
 function formatDateRange(startDate: string, endDate: string): string {
-    // Slice to YYYY-MM-DD to handle full ISO timestamps; use noon to avoid DST edge cases
     const start = new Date(startDate.slice(0, 10) + 'T12:00:00');
     const end = new Date(endDate.slice(0, 10) + 'T12:00:00');
-
     const fmt = (d: Date, opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('sv-SE', opts).format(d);
 
     if (startDate.slice(0, 10) === endDate.slice(0, 10)) {
         return fmt(start, { day: 'numeric', month: 'long', year: 'numeric' });
     }
-
     if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
         return `${start.getDate()}–${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
     }
-
     if (start.getFullYear() === end.getFullYear()) {
         return `${fmt(start, { day: 'numeric', month: 'long' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
     }
-
     return `${fmt(start, { day: 'numeric', month: 'long', year: 'numeric' })} – ${fmt(end, { day: 'numeric', month: 'long', year: 'numeric' })}`;
 }
 
 export default function ConventionsShow({ convention, floors, section_url }: ConventionsShowProps) {
     useFlashToast();
+    const { t } = useTranslation();
     const { isOwner, isManager, isAdministrator } = useConventionRole();
     const { activePeriod, canStart, canStop, reportedCount, totalCount } = useAttendanceReport();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -58,7 +56,7 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
     const [copiedUrl, copyToClipboard] = useClipboard();
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Conventions', href: index.url() },
+        { title: t('convention.index.heading'), href: index.url() },
         { title: convention.name, href: show.url(convention.id) },
     ];
 
@@ -76,10 +74,7 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
         router.post(start.url(convention.id));
     }
 
-    // Calculate total attendance from active period reports
     const totalAttendance = activePeriod?.reports?.reduce((sum, r) => sum + r.attendance, 0) ?? 0;
-
-    // Determine the primary user role for FloorRow
     const userRole = isOwner ? 'Owner' : isAdministrator ? 'Administrator' : null;
 
     return (
@@ -113,9 +108,9 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
                         </div>
                     </div>
 
-                    {/* Owner actions */}
                     {isOwner && (
                         <div className="flex items-center gap-2 self-start sm:self-auto">
+                            <LocaleSelector conventionId={convention.id} />
                             <ExportDropdown convention={convention} />
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -126,10 +121,10 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
                                         onClick={() => setShowDeleteDialog(true)}
                                     >
                                         <Trash2 className="size-4" />
-                                        Delete
+                                        {t('convention.show.delete_button')}
                                     </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Permanently delete this convention and all its data</TooltipContent>
+                                <TooltipContent>{t('convention.show.delete_tooltip')}</TooltipContent>
                             </Tooltip>
                         </div>
                     )}
@@ -138,19 +133,19 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
                 {/* URL Access Links */}
                 {isManager && section_url && (
                     <div className="flex flex-col gap-3 rounded-xl border border-border p-4">
-                        <h2 className="text-sm font-medium">Access URLs</h2>
+                        <h2 className="text-sm font-medium">{t('convention.show.access_urls_heading')}</h2>
                         <div className="flex flex-col gap-2">
                             <UrlCopyRow
-                                label="Access URL"
+                                label={t('convention.show.access_url_label')}
                                 url={section_url}
                                 copied={copiedUrl === section_url}
                                 onCopy={() => copyToClipboard(section_url)}
+                                t={t}
                             />
                         </div>
                     </div>
                 )}
 
-                {/* Attendance report banner or start button */}
                 {isManager && activePeriod && canStop && (
                     <AttendanceReportBanner
                         convention={convention}
@@ -170,22 +165,22 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
                                 onClick={handleStartAttendance}
                             >
                                 <ClipboardList className="size-4" />
-                                Start attendance report
+                                {t('convention.show.start_attendance')}
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent>Begin collecting attendance from each section for this period</TooltipContent>
+                        <TooltipContent>{t('convention.show.start_attendance_tooltip')}</TooltipContent>
                     </Tooltip>
                 )}
 
                 {/* Floors list */}
                 <div className="flex flex-col gap-2">
-                    <h2 className="text-lg font-medium">Floors</h2>
+                    <h2 className="text-lg font-medium">{t('convention.show.floors_heading')}</h2>
                     <p className="text-muted-foreground text-sm">
-                        Expand a floor to see its sections and current occupancy. Tap a section to update its status.
+                        {t('convention.show.floors_description')}
                     </p>
                     {floors.length === 0 ? (
                         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
-                            <p className="text-muted-foreground">No floors yet.</p>
+                            <p className="text-muted-foreground">{t('convention.show.no_floors')}</p>
                         </div>
                     ) : (
                         <div className="flex flex-col gap-2">
@@ -202,13 +197,12 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
                 </div>
             </div>
 
-            {/* Delete confirmation dialog */}
             <ConfirmationDialog
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}
-                title="Delete Convention"
-                description={`Are you sure you want to delete "${convention.name}"? This action cannot be undone. All floors, sections, users, and attendance data will be permanently removed.`}
-                confirmLabel="Delete convention"
+                title={t('convention.show.delete_title')}
+                description={t('convention.show.delete_description', { name: convention.name })}
+                confirmLabel={t('convention.show.delete_confirm')}
                 variant="destructive"
                 loading={deleting}
                 onConfirm={handleDelete}
@@ -217,7 +211,7 @@ export default function ConventionsShow({ convention, floors, section_url }: Con
     );
 }
 
-function UrlCopyRow({ label, url, copied, onCopy }: { label: string; url: string; copied: boolean; onCopy: () => void }) {
+function UrlCopyRow({ label, url, copied, onCopy, t }: { label: string; url: string; copied: boolean; onCopy: () => void; t: (key: string, opts?: Record<string, string>) => string }) {
     return (
         <div className="flex flex-col gap-1">
             <span className="text-muted-foreground text-xs font-medium">{label}</span>
@@ -225,11 +219,11 @@ function UrlCopyRow({ label, url, copied, onCopy }: { label: string; url: string
                 <code className="bg-muted flex-1 truncate rounded px-2 py-1 text-xs">{url}</code>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" className="size-7 shrink-0 cursor-pointer" onClick={onCopy} aria-label={`Copy ${label}`}>
+                        <Button variant="ghost" size="icon" className="size-7 shrink-0 cursor-pointer" onClick={onCopy} aria-label={t('convention.show.copy_label', { label })}>
                             {copied ? <Check className="size-3.5 text-green-500" /> : <Copy className="size-3.5" />}
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>{copied ? 'Copied' : 'Copy to clipboard'}</TooltipContent>
+                    <TooltipContent>{copied ? t('convention.show.copied') : t('convention.show.copy_to_clipboard')}</TooltipContent>
                 </Tooltip>
             </div>
         </div>

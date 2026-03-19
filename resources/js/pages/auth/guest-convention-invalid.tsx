@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { AlertTriangle, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/auth-layout';
 
@@ -8,18 +9,24 @@ type Props = {
 };
 
 export default function GuestConventionInvalid({ reason }: Props) {
+    const { t } = useTranslation();
     const isExpired = reason === 'expired';
 
+    const title = isExpired
+        ? t('auth.guest_invalid.expired_title')
+        : t('auth.guest_invalid.invalid_title');
+
+    const description = isExpired
+        ? t('auth.guest_invalid.expired_description')
+        : t('auth.guest_invalid.invalid_description');
+
+    const notice = isExpired
+        ? t('auth.guest_invalid.expired_notice')
+        : t('auth.guest_invalid.invalid_notice');
+
     return (
-        <AuthLayout
-            title={isExpired ? 'Verification link expired' : 'Invalid verification link'}
-            description={
-                isExpired
-                    ? 'This verification link has expired. Please create a new convention to receive a new link.'
-                    : 'This verification link is invalid. The link may have been modified or is no longer valid.'
-            }
-        >
-            <Head title={isExpired ? 'Verification link expired' : 'Invalid verification link'} />
+        <AuthLayout title={title} description={description}>
+            <Head title={title} />
 
             <div className="flex flex-col items-center gap-6">
                 <div className="flex size-16 items-center justify-center rounded-full bg-muted">
@@ -31,13 +38,11 @@ export default function GuestConventionInvalid({ reason }: Props) {
                 </div>
 
                 <p className="text-center text-sm text-muted-foreground">
-                    {isExpired
-                        ? 'Verification links are valid for 24 hours after they are sent.'
-                        : 'Please make sure you are using the exact link from your verification email.'}
+                    {notice}
                 </p>
 
                 <Button asChild className="w-full">
-                    <Link href="/">Go to home page</Link>
+                    <Link href="/">{t('auth.guest_invalid.home_link')}</Link>
                 </Button>
             </div>
         </AuthLayout>

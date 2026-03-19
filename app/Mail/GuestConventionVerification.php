@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class GuestConventionVerification extends Mailable
 {
@@ -28,8 +29,11 @@ class GuestConventionVerification extends Mailable
      */
     public function envelope(): Envelope
     {
+        $locale = $this->user->locale ?? 'sv';
+        App::setLocale($locale);
+
         return new Envelope(
-            subject: "Verify your email for {$this->convention->name}",
+            subject: __('emails.guest_verification.subject', ['convention' => $this->convention->name]),
         );
     }
 

@@ -1,6 +1,7 @@
 import { Form, Head } from '@inertiajs/react';
 import { Check, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { store } from '@/actions/App/Http/Controllers/Auth/InvitationController';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -22,38 +23,39 @@ type Props = {
     };
 };
 
-const PASSWORD_CRITERIA = [
-    { key: 'minLength', label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
-    { key: 'lowercase', label: 'At least one lowercase letter', test: (p: string) => /[a-z]/.test(p) },
-    { key: 'uppercase', label: 'At least one uppercase letter', test: (p: string) => /[A-Z]/.test(p) },
-    { key: 'number', label: 'At least one number', test: (p: string) => /[0-9]/.test(p) },
-    { key: 'symbol', label: 'At least one symbol (@$!%*#?&)', test: (p: string) => /[@$!%*#?&]/.test(p) },
-] as const;
-
 export default function Invitation({ user, convention }: Props) {
+    const { t } = useTranslation();
     const [password, setPassword] = useState('');
 
+    const passwordCriteria = useMemo(() => [
+        { key: 'minLength', label: t('auth.password_criteria.min_length'), test: (p: string) => p.length >= 8 },
+        { key: 'lowercase', label: t('auth.password_criteria.lowercase'), test: (p: string) => /[a-z]/.test(p) },
+        { key: 'uppercase', label: t('auth.password_criteria.uppercase'), test: (p: string) => /[A-Z]/.test(p) },
+        { key: 'number', label: t('auth.password_criteria.number'), test: (p: string) => /[0-9]/.test(p) },
+        { key: 'symbol', label: t('auth.password_criteria.symbol'), test: (p: string) => /[@$!%*#?&]/.test(p) },
+    ], [t]);
+
     const criteriaResults = useMemo(
-        () => PASSWORD_CRITERIA.map((c) => ({ ...c, met: c.test(password) })),
-        [password],
+        () => passwordCriteria.map((c) => ({ ...c, met: c.test(password) })),
+        [password, passwordCriteria],
     );
 
     return (
         <AuthLayout
-            title={`Welcome, ${user.first_name}!`}
-            description={`Set your password to join ${convention.name}`}
+            title={t('auth.invitation.welcome_title', { name: user.first_name })}
+            description={t('auth.invitation.description', { convention: convention.name })}
         >
-            <Head title="Set your password" />
+            <Head title={t('auth.invitation.title')} />
 
             <Form
-                {...store.form({ user: user.id, convention: convention.id })}
+                {...store.form({ user: String(user.id), convention: String(convention.id) })}
                 resetOnSuccess={['password', 'password_confirmation']}
                 className="flex flex-col gap-6"
             >
                 {({ processing, errors }) => (
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">{t('auth.invitation.email_label')}</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -64,7 +66,7 @@ export default function Invitation({ user, convention }: Props) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">{t('auth.invitation.password_label')}</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -73,7 +75,7 @@ export default function Invitation({ user, convention }: Props) {
                                 autoFocus
                                 tabIndex={1}
                                 autoComplete="new-password"
-                                placeholder="Password"
+                                placeholder={t('auth.invitation.password_placeholder')}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -82,7 +84,7 @@ export default function Invitation({ user, convention }: Props) {
 
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">
-                                Confirm password
+                                {t('auth.invitation.confirm_password_label')}
                             </Label>
                             <Input
                                 id="password_confirmation"
@@ -91,7 +93,7 @@ export default function Invitation({ user, convention }: Props) {
                                 required
                                 tabIndex={2}
                                 autoComplete="new-password"
-                                placeholder="Confirm password"
+                                placeholder={t('auth.invitation.confirm_password_placeholder')}
                             />
                             <InputError
                                 message={errors.password_confirmation}
@@ -99,7 +101,7 @@ export default function Invitation({ user, convention }: Props) {
                         </div>
 
                         {password.length > 0 && (
-                            <ul className="grid gap-1.5 text-sm" aria-label="Password requirements">
+                            <ul className="grid gap-1.5 text-sm" aria-label={t('auth.password_criteria.label')}>
                                 {criteriaResults.map((c) => (
                                     <li
                                         key={c.key}
@@ -124,7 +126,7 @@ export default function Invitation({ user, convention }: Props) {
                             data-test="set-password-button"
                         >
                             {processing && <Spinner />}
-                            Set password
+                            {t('auth.invitation.submit')}
                         </Button>
                     </div>
                 )}

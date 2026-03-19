@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Support\Consent\OptionalStorageRegistry;
 use App\Support\Consent\UserConsentResolver;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -64,6 +65,7 @@ class HandleInertiaRequests extends Middleware
                 'error' => $request->session()->get('error'),
             ],
             'urlSession' => $urlSessionProp,
+            'locale' => App::getLocale(),
         ];
 
         // Force Apple appearance when URL session is active

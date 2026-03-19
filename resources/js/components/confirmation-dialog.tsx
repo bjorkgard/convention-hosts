@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -26,12 +27,15 @@ export default function ConfirmationDialog({
     onOpenChange,
     title,
     description,
-    confirmLabel = 'Confirm',
-    cancelLabel = 'Cancel',
+    confirmLabel,
+    cancelLabel,
     variant = 'destructive',
     onConfirm,
     loading = false,
 }: ConfirmationDialogProps) {
+    const { t } = useTranslation();
+    const resolvedConfirmLabel = confirmLabel ?? t('common.confirmation_dialog.default_confirm');
+    const resolvedCancelLabel = cancelLabel ?? t('common.confirmation_dialog.default_cancel');
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
@@ -42,7 +46,7 @@ export default function ConfirmationDialog({
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button variant="outline" className="cursor-pointer">
-                            {cancelLabel}
+                            {resolvedCancelLabel}
                         </Button>
                     </DialogClose>
                     <Button
@@ -51,7 +55,7 @@ export default function ConfirmationDialog({
                         disabled={loading}
                         onClick={onConfirm}
                     >
-                        {loading ? 'Please wait...' : confirmLabel}
+                        {loading ? t('common.loading') : resolvedConfirmLabel}
                     </Button>
                 </DialogFooter>
             </DialogContent>

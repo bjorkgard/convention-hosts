@@ -29,6 +29,7 @@ class Convention extends Model
         'other_info',
         'floor_url_token',
         'section_url_token',
+        'locale',
     ];
 
     /**

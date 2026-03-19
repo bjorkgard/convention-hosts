@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getOccupancyColorClass } from '@/hooks/use-occupancy-color';
@@ -11,6 +13,8 @@ interface OccupancyDropdownProps {
 }
 
 export default function OccupancyDropdown({ currentOccupancy, onUpdate }: OccupancyDropdownProps) {
+    const { t } = useTranslation();
+
     function handleChange(value: string) {
         const occupancy = Number(value);
         if (occupancy !== currentOccupancy) {
@@ -20,10 +24,10 @@ export default function OccupancyDropdown({ currentOccupancy, onUpdate }: Occupa
 
     return (
         <div className="space-y-2">
-            <Label htmlFor="occupancy-select">Occupancy</Label>
+            <Label htmlFor="occupancy-select">{t('section.occupancy.label')}</Label>
             <Select value={String(currentOccupancy)} onValueChange={handleChange}>
                 <SelectTrigger id="occupancy-select" className="w-full">
-                    <SelectValue placeholder="Select occupancy" />
+                    <SelectValue placeholder={t('section.occupancy.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
                     {OCCUPANCY_OPTIONS.map((option) => (

@@ -43,6 +43,11 @@ class UpdateConventionRequest extends FormRequest
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'other_info' => ['nullable', 'string'],
+            'locale' => ['nullable', 'string', 'max:10', function (string $attribute, mixed $value, \Closure $fail) {
+                if ($value && ! is_dir(lang_path($value))) {
+                    $fail(__('validation.locale_not_available'));
+                }
+            }],
         ];
     }
 
@@ -56,7 +61,7 @@ class UpdateConventionRequest extends FormRequest
             if ($this->city && $this->country && $this->start_date && $this->end_date && $this->hasOverlappingConvention()) {
                 $validator->errors()->add(
                     'start_date',
-                    'A convention already exists in this location during these dates.'
+                    __('validation.convention_overlapping')
                 );
             }
         });

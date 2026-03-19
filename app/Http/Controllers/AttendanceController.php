@@ -26,13 +26,13 @@ class AttendanceController extends Controller
         $user = $request->user();
 
         if (! $user->hasAnyRole($convention, ['Owner', 'Administrator'])) {
-            abort(403, 'Only convention managers can start attendance reports.');
+            abort(403, __('attendance.start.forbidden'));
         }
 
         try {
             $period = $this->attendanceReportService->startReport($convention);
 
-            return redirect()->back()->with('success', 'Attendance report started for '.$period->period.' period.');
+            return redirect()->back()->with('success', __('attendance.start.success', ['period' => $period->period]));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -48,12 +48,12 @@ class AttendanceController extends Controller
         $user = $request->user();
 
         if (! $user->hasAnyRole($convention, ['Owner', 'Administrator'])) {
-            abort(403, 'Only convention managers can stop attendance reports.');
+            abort(403, __('attendance.stop.forbidden'));
         }
 
         $this->attendanceReportService->stopReport($attendancePeriod);
 
-        return redirect()->back()->with('success', 'Attendance report has been locked.');
+        return redirect()->back()->with('success', __('attendance.stop.success'));
     }
 
     /**
@@ -74,7 +74,7 @@ class AttendanceController extends Controller
                 $user
             );
 
-            return redirect()->back()->with('success', "Attendance of {$attendance} reported for the {$attendancePeriod->period} period.");
+            return redirect()->back()->with('success', __('attendance.report.success', ['attendance' => $attendance, 'period' => $attendancePeriod->period]));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

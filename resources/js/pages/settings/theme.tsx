@@ -1,4 +1,6 @@
 import { Head } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
+
 import Heading from '@/components/heading';
 import {
     Select,
@@ -14,28 +16,26 @@ import SettingsLayout from '@/layouts/settings/layout';
 import { edit as editTheme } from '@/routes/theme';
 import type { BreadcrumbItem } from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Theme settings',
-        href: editTheme(),
-    },
-];
-
 export default function ThemeSettings() {
+    const { t } = useTranslation();
     const { theme, updateTheme } = useTheme();
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: t('settings.theme.breadcrumb'), href: editTheme() },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Theme settings" />
+            <Head title={t('settings.theme.title')} />
 
-            <h1 className="sr-only">Theme settings</h1>
+            <h1 className="sr-only">{t('settings.theme.title')}</h1>
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <Heading
                         variant="small"
-                        title="Theme"
-                        description="Choose a color theme for the application"
+                        title={t('settings.theme.heading')}
+                        description={t('settings.theme.description')}
                     />
 
                     <div className="space-y-2">
@@ -43,7 +43,7 @@ export default function ThemeSettings() {
                             className="text-sm font-medium leading-none"
                             htmlFor="theme-select"
                         >
-                            Color theme
+                            {t('settings.theme.color_theme_label')}
                         </label>
                         <Select
                             value={theme}
@@ -53,15 +53,15 @@ export default function ThemeSettings() {
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                {THEMES.map((t) => (
-                                    <SelectItem key={t} value={t}>
-                                        {THEME_LABELS[t]}
+                                {THEMES.map((th) => (
+                                    <SelectItem key={th} value={th}>
+                                        {THEME_LABELS[th]}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
                         <p className="text-muted-foreground text-sm">
-                            The page will reload when you select a new theme.
+                            {t('settings.theme.reload_notice')}
                         </p>
                     </div>
                 </div>

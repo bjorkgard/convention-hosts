@@ -1,16 +1,16 @@
 @component('mail::message')
-# Hello {{ $userName }},
+# {{ __('emails.guest_verification.greeting', ['name' => $userName]) }}
 
-Your convention **{{ $conventionName }}** has been created successfully.
+{{ __('emails.guest_verification.body', ['convention' => $conventionName]) }}
 
-Please click the button below to verify your email and set your password.
+{{ __('emails.guest_verification.action_description') }}
 
 @component('mail::button', ['url' => $verificationUrl])
-Verify Email & Set Password
+{{ __('emails.guest_verification.button') }}
 @endcomponent
 
-This verification link will expire on **{{ $expiresAt }}**.
+{{ __('emails.guest_verification.expiry', ['date' => $expiresAt]) }}
 
-Thanks,<br>
+{{ __('emails.guest_verification.thanks') }}<br>
 {{ config('app.name') }}
 @endcomponent
