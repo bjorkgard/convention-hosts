@@ -38,7 +38,7 @@ describe('Convention creation to deletion flow', function () {
         expect($convention)->not->toBeNull();
         $response->assertRedirect(route('conventions.show', $convention));
 
-        // Step 2: Verify owner has Owner + ConventionUser roles
+        // Step 2: Verify owner has Owner + Administrator roles
         $roles = DB::table('convention_user_roles')
             ->where('convention_id', $convention->id)
             ->where('user_id', $owner->id)
@@ -46,7 +46,7 @@ describe('Convention creation to deletion flow', function () {
             ->toArray();
 
         expect($roles)->toContain('Owner')
-            ->toContain('ConventionUser');
+            ->toContain('Administrator');
 
         // Step 3: Update convention
         $this->actingAs($owner)->put(route('conventions.update', $convention), [
@@ -80,7 +80,7 @@ describe('Convention creation to deletion flow', function () {
 
         // Step 5: Non-owner cannot delete
         $nonOwner = User::factory()->create();
-        ConventionTestHelper::attachUserToConvention($nonOwner, $convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($nonOwner, $convention, ['Administrator']);
 
         $this->actingAs($nonOwner)
             ->delete(route('conventions.destroy', $convention))
@@ -126,7 +126,7 @@ describe('User invitation to login flow', function () {
             'last_name' => 'Doe',
             'email' => 'jane.doe@example.com',
             'mobile' => '+1234567890',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ]);
 
         // Step 2: Verify user was created
@@ -190,7 +190,7 @@ describe('User invitation to login flow', function () {
             'last_name' => $existingUser->last_name,
             'email' => 'existing@example.com',
             'mobile' => '+9876543210',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ], $convention);
 
         // No new user created — existing user connected
@@ -209,7 +209,7 @@ describe('User invitation to login flow', function () {
         $hasRole = DB::table('convention_user_roles')
             ->where('convention_id', $convention->id)
             ->where('user_id', $existingUser->id)
-            ->where('role', 'ConventionUser')
+            ->where('role', 'Administrator')
             ->exists();
 
         expect($hasRole)->toBeTrue();
@@ -388,7 +388,7 @@ describe('Attendance reporting flow', function () {
             ->assertSessionHas('error');
     });
 
-    it('restricts attendance updates to original reporter only', function () {
+    it('allows any convention member to update attendance reports', function () {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => 1,
             'sections_per_floor' => 1,
@@ -410,21 +410,21 @@ describe('Attendance reporting flow', function () {
             ['attendance' => 100, 'period_id' => $period->id]
         )->assertRedirect();
 
-        // Different user tries to update the same section
+        // Different user can update the same section (open access)
         $otherUser = User::factory()->create();
-        ConventionTestHelper::attachUserToConvention($otherUser, $convention, ['ConventionUser']);
+        ConventionTestHelper::attachUserToConvention($otherUser, $convention, ['Administrator']);
 
         $this->actingAs($otherUser)->post(
             route('attendance.report', [$section, $period]),
             ['attendance' => 200, 'period_id' => $period->id]
-        );
+        )->assertRedirect();
 
-        // Original value should remain
+        // Value should be updated to 200
         $report = AttendanceReport::where('attendance_period_id', $period->id)
             ->where('section_id', $section->id)
             ->first();
 
-        expect($report->attendance)->toBe(100);
+        expect($report->attendance)->toBe(200);
     });
 });
 
@@ -516,22 +516,17 @@ describe('Search and navigation flow', function () {
         expect(collect($sections['data'])->count())->toBe(2);
     });
 
-    it('allows any authenticated user to search regardless of role', function () {
+    it('allows any authenticated user with convention access to search', function () {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => 1,
             'sections_per_floor' => 1,
         ]);
         $convention = $structure['convention'];
-        $section = $structure['sections']->first();
 
-        // Create a SectionUser with minimal access
-        $sectionUser = ConventionTestHelper::createUserWithRole(
-            $convention,
-            'SectionUser',
-            ['section_ids' => [$section->id]]
-        );
+        // Create an Administrator with convention access
+        $admin = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
 
-        $this->actingAs($sectionUser)
+        $this->actingAs($admin)
             ->get(route('search.index', $convention))
             ->assertOk();
     });
@@ -571,11 +566,11 @@ describe('Export flow', function () {
 
         expect($response->getStatusCode())->toBe(200);
 
-        // Non-owner (ConventionUser) cannot export
-        $conventionUser = User::factory()->create();
-        ConventionTestHelper::attachUserToConvention($conventionUser, $convention, ['ConventionUser']);
+        // Non-owner (Administrator) cannot export
+        $administrator = User::factory()->create();
+        ConventionTestHelper::attachUserToConvention($administrator, $convention, ['Administrator']);
 
-        $this->actingAs($conventionUser)
+        $this->actingAs($administrator)
             ->get(route('conventions.export', ['convention' => $convention, 'format' => 'md']))
             ->assertForbidden();
     });
@@ -642,7 +637,9 @@ describe('Role-based access across flows', function () {
         $convention = Convention::factory()->create();
 
         $this->get(route('conventions.index'))->assertRedirect(route('login'));
-        $this->get(route('conventions.show', $convention))->assertRedirect(route('login'));
+        // conventions.show is behind EnsureConventionOrUrlAccess (no auth middleware),
+        // so unauthenticated requests get 403 (no session, no role)
+        $this->get(route('conventions.show', $convention))->assertForbidden();
     });
 
     it('prevents users without convention access from viewing convention', function () {
@@ -656,80 +653,37 @@ describe('Role-based access across flows', function () {
             ->assertForbidden();
     });
 
-    it('allows convention show page for all role types', function () {
+    it('allows convention show page for Owner and Administrator', function () {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => 1,
             'sections_per_floor' => 1,
         ]);
         $convention = $structure['convention'];
         $owner = $structure['owner'];
-        $floor = $structure['floors']->first();
-        $section = $structure['sections']->first();
 
         // Owner
         $this->actingAs($owner)
             ->get(route('conventions.show', $convention))
             ->assertOk();
 
-        // ConventionUser
-        $cu = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser');
-        $this->actingAs($cu)
-            ->get(route('conventions.show', $convention))
-            ->assertOk();
-
-        // FloorUser
-        $fu = ConventionTestHelper::createUserWithRole($convention, 'FloorUser', [
-            'floor_ids' => [$floor->id],
-        ]);
-        $this->actingAs($fu)
-            ->get(route('conventions.show', $convention))
-            ->assertOk();
-
-        // SectionUser
-        $su = ConventionTestHelper::createUserWithRole($convention, 'SectionUser', [
-            'section_ids' => [$section->id],
-        ]);
-        $this->actingAs($su)
+        // Administrator
+        $admin = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
+        $this->actingAs($admin)
             ->get(route('conventions.show', $convention))
             ->assertOk();
     });
 
-    it('prevents FloorUser from adding or deleting floors', function () {
+    it('prevents non-Owner/Administrator from starting attendance reports', function () {
         $structure = ConventionTestHelper::createConventionWithStructure([
             'floors' => 1,
             'sections_per_floor' => 1,
         ]);
         $convention = $structure['convention'];
-        $floor = $structure['floors']->first();
 
-        $floorUser = ConventionTestHelper::createUserWithRole($convention, 'FloorUser', [
-            'floor_ids' => [$floor->id],
-        ]);
+        // Outsider cannot start attendance
+        $outsider = User::factory()->create();
 
-        // Cannot add floors
-        $this->actingAs($floorUser)
-            ->post(route('floors.store', $convention), ['name' => 'New Floor'])
-            ->assertForbidden();
-
-        // Cannot delete floors
-        $this->actingAs($floorUser)
-            ->delete(route('floors.destroy', $floor))
-            ->assertForbidden();
-    });
-
-    it('prevents non-Owner/ConventionUser from starting attendance reports', function () {
-        $structure = ConventionTestHelper::createConventionWithStructure([
-            'floors' => 1,
-            'sections_per_floor' => 1,
-        ]);
-        $convention = $structure['convention'];
-        $floor = $structure['floors']->first();
-
-        $floorUser = ConventionTestHelper::createUserWithRole($convention, 'FloorUser', [
-            'floor_ids' => [$floor->id],
-        ]);
-
-        $this->actingAs($floorUser)
+        $this->actingAs($outsider)
             ->post(route('attendance.start', $convention))
             ->assertForbidden();
     });

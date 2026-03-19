@@ -54,6 +54,15 @@ Route::get('email/confirm/{user}', function (\App\Models\User $user) {
 Route::get('url-access/floor/{token}', [UrlAccessController::class, 'floor'])->name('url-access.floor');
 Route::get('url-access/section/{token}', [UrlAccessController::class, 'section'])->name('url-access.section');
 
+// Auth-only convention routes (must be registered BEFORE conventions/{convention} wildcard)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('consent', [ConsentController::class, 'store'])->name('consent.store');
+
+    Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
+    Route::get('conventions/create', [ConventionController::class, 'create'])->name('conventions.create');
+    Route::post('conventions', [ConventionController::class, 'store'])->name('conventions.store');
+});
+
 // Routes accessible by both authenticated users AND URL sessions
 Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
     Route::get('conventions/{convention}', [ConventionController::class, 'show'])->name('conventions.show');
@@ -77,13 +86,6 @@ Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('consent', [ConsentController::class, 'store'])->name('consent.store');
-
-    // Convention routes (auth-only)
-    Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
-    Route::get('conventions/create', [ConventionController::class, 'create'])->name('conventions.create');
-    Route::post('conventions', [ConventionController::class, 'store'])->name('conventions.store');
-
     Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::put('conventions/{convention}', [ConventionController::class, 'update'])->name('conventions.update');
     });

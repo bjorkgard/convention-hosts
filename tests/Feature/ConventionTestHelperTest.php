@@ -15,7 +15,7 @@ it('creates a convention with default structure', function () {
     // Verify owner has correct roles
     $roles = $result['owner']->rolesForConvention($result['convention']);
     expect($roles)->toContain('Owner')
-        ->and($roles)->toContain('ConventionUser');
+        ->and($roles)->toContain('Administrator');
 
     // Verify sections belong to correct floors
     foreach ($result['floors'] as $floor) {
@@ -64,48 +64,16 @@ it('creates a user with Owner role', function () {
     expect($user->conventions->contains($convention))->toBeTrue();
 });
 
-it('creates a user with FloorUser role and floor assignments', function () {
-    $result = ConventionTestHelper::createConventionWithStructure(['with_owner' => false]);
-    $floorIds = $result['floors']->pluck('id')->toArray();
-
-    $user = ConventionTestHelper::createUserWithRole($result['convention'], 'FloorUser', [
-        'floor_ids' => $floorIds,
-    ]);
-
-    expect($user->hasRole($result['convention'], 'FloorUser'))->toBeTrue();
-
-    $assignedFloorIds = $user->floors()->pluck('floors.id')->toArray();
-    sort($assignedFloorIds);
-    sort($floorIds);
-    expect($assignedFloorIds)->toBe($floorIds);
-});
-
-it('creates a user with SectionUser role and section assignments', function () {
-    $result = ConventionTestHelper::createConventionWithStructure(['with_owner' => false]);
-    $sectionIds = $result['sections']->take(2)->pluck('id')->toArray();
-
-    $user = ConventionTestHelper::createUserWithRole($result['convention'], 'SectionUser', [
-        'section_ids' => $sectionIds,
-    ]);
-
-    expect($user->hasRole($result['convention'], 'SectionUser'))->toBeTrue();
-
-    $assignedSectionIds = $user->sections()->pluck('sections.id')->toArray();
-    sort($assignedSectionIds);
-    sort($sectionIds);
-    expect($assignedSectionIds)->toBe($sectionIds);
-});
-
 it('reuses an existing user when provided', function () {
     $convention = Convention::factory()->create();
     $existingUser = User::factory()->create();
 
-    $user = ConventionTestHelper::createUserWithRole($convention, 'ConventionUser', [
+    $user = ConventionTestHelper::createUserWithRole($convention, 'Administrator', [
         'user' => $existingUser,
     ]);
 
     expect($user->id)->toBe($existingUser->id);
-    expect($user->hasRole($convention, 'ConventionUser'))->toBeTrue();
+    expect($user->hasRole($convention, 'Administrator'))->toBeTrue();
 });
 
 it('creates an authenticated user setup', function () {

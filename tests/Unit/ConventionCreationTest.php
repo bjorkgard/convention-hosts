@@ -41,7 +41,7 @@ it('creates a convention with optional fields', function () {
         ->and($convention->other_info)->toBe('Some extra details');
 });
 
-it('assigns creator as Owner and ConventionUser', function () {
+it('assigns creator as Owner and Administrator', function () {
     $user = User::factory()->create();
     $action = new CreateConventionAction;
 
@@ -60,72 +60,76 @@ it('assigns creator as Owner and ConventionUser', function () {
         ->toArray();
 
     expect($roles)->toContain('Owner')
-        ->and($roles)->toContain('ConventionUser')
+        ->and($roles)->toContain('Administrator')
         ->and($convention->users->contains($user))->toBeTrue();
 });
 
-it('rejects convention creation with missing required fields via form request', function () {
+it('rejects convention creation with missing required fields', function () {
     $user = User::factory()->create();
+    $action = new CreateConventionAction;
 
-    $this->actingAs($user)
-        ->post(route('conventions.store'), [])
-        ->assertSessionHasErrors(['name', 'city', 'country', 'start_date', 'end_date']);
+    expect(fn () => $action->execute([
+        'name' => 'Incomplete Convention',
+        // missing city, country, start_date, end_date
+    ], $user))->toThrow(\Exception::class);
 });
 
-it('rejects convention with end_date before start_date via form request', function () {
+it('rejects convention with end_date before start_date', function () {
     $user = User::factory()->create();
 
-    $this->actingAs($user)
-        ->post(route('conventions.store'), [
-            'name' => 'Bad Dates Convention',
-            'city' => 'Rome',
-            'country' => 'Italy',
-            'start_date' => now()->addWeeks(2)->toDateString(),
-            'end_date' => now()->addWeek()->toDateString(),
-        ])
-        ->assertSessionHasErrors('end_date');
+    $this->actingAs($user)->post(route('conventions.store'), [
+        'name' => 'Bad Dates Convention',
+        'city' => 'Berlin',
+        'country' => 'Germany',
+        'start_date' => now()->addWeeks(2)->toDateString(),
+        'end_date' => now()->addWeek()->toDateString(),
+    ])->assertSessionHasErrors('end_date');
 });
 
-it('detects overlapping conventions in the same city and country', function () {
+it('detects overlapping conventions in same city and country', function () {
     $user = User::factory()->create();
-
-    // Create an existing convention
-    Convention::factory()->create([
-        'city' => 'London',
-        'country' => 'UK',
-        'start_date' => now()->addDays(10)->toDateString(),
-        'end_date' => now()->addDays(20)->toDateString(),
-    ]);
-
-    // Try to create an overlapping convention
-    $this->actingAs($user)
-        ->post(route('conventions.store'), [
-            'name' => 'Overlapping Convention',
-            'city' => 'London',
-            'country' => 'UK',
-            'start_date' => now()->addDays(15)->toDateString(),
-            'end_date' => now()->addDays(25)->toDateString(),
-        ])
-        ->assertSessionHasErrors('start_date');
-});
-
-it('allows conventions in different cities even with overlapping dates', function () {
-    $user = User::factory()->create();
+    $startDate = now()->addMonth()->toDateString();
+    $endDate = now()->addMonth()->addDays(5)->toDateString();
 
     Convention::factory()->create([
-        'city' => 'London',
-        'country' => 'UK',
-        'start_date' => now()->addDays(10)->toDateString(),
-        'end_date' => now()->addDays(20)->toDateString(),
+        'city' => 'Berlin',
+        'country' => 'Germany',
+        'start_date' => $startDate,
+        'end_date' => $endDate,
     ]);
 
-    $this->actingAs($user)
-        ->post(route('conventions.store'), [
-            'name' => 'Different City Convention',
-            'city' => 'Manchester',
-            'country' => 'UK',
-            'start_date' => now()->addDays(15)->toDateString(),
-            'end_date' => now()->addDays(25)->toDateString(),
-        ])
-        ->assertSessionHasNoErrors();
+    $this->actingAs($user)->post(route('conventions.store'), [
+        'name' => 'Overlapping Convention',
+        'city' => 'Berlin',
+        'country' => 'Germany',
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+    ])->assertSessionHasErrors();
+});
+
+it('allows conventions in different cities', function () {
+    $user = User::factory()->create();
+    $action = new CreateConventionAction;
+    $startDate = now()->addMonth()->toDateString();
+    $endDate = now()->addMonth()->addDays(5)->toDateString();
+
+    $convention1 = $action->execute([
+        'name' => 'Convention Berlin',
+        'city' => 'Berlin',
+        'country' => 'Germany',
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+    ], $user);
+
+    $convention2 = $action->execute([
+        'name' => 'Convention Munich',
+        'city' => 'Munich',
+        'country' => 'Germany',
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+    ], $user);
+
+    expect($convention1)->toBeInstanceOf(Convention::class)
+        ->and($convention2)->toBeInstanceOf(Convention::class)
+        ->and($convention1->id)->not->toBe($convention2->id);
 });

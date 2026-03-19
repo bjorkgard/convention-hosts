@@ -25,7 +25,7 @@ beforeEach(function () {
     $this->convention->users()->attach($this->owner->id);
     DB::table('convention_user_roles')->insert([
         ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'Owner', 'created_at' => now()],
-        ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'ConventionUser', 'created_at' => now()],
+        ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'Administrator', 'created_at' => now()],
     ]);
 });
 
@@ -38,7 +38,7 @@ it('returns email_confirmed as true for confirmed users in user listing', functi
     DB::table('convention_user_roles')->insert([
         'convention_id' => $this->convention->id,
         'user_id' => $confirmedUser->id,
-        'role' => 'ConventionUser',
+        'role' => 'Administrator',
         'created_at' => now(),
     ]);
 
@@ -66,7 +66,7 @@ it('returns email_confirmed as false for unconfirmed users in user listing', fun
     DB::table('convention_user_roles')->insert([
         'convention_id' => $this->convention->id,
         'user_id' => $unconfirmedUser->id,
-        'role' => 'SectionUser',
+        'role' => 'Administrator',
         'created_at' => now(),
     ]);
 
@@ -99,7 +99,7 @@ it('accurately reflects email_confirmed status for mixed confirmed and unconfirm
         DB::table('convention_user_roles')->insert([
             'convention_id' => $this->convention->id,
             'user_id' => $user->id,
-            'role' => fake()->randomElement(['ConventionUser', 'FloorUser', 'SectionUser']),
+            'role' => fake()->randomElement(['Owner', 'Administrator']),
             'created_at' => now(),
         ]);
 

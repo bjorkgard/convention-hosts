@@ -21,7 +21,7 @@ function createConventionWithOwner(User $user): Convention
     $convention->users()->attach($user->id);
     DB::table('convention_user_roles')->insert([
         ['convention_id' => $convention->id, 'user_id' => $user->id, 'role' => 'Owner'],
-        ['convention_id' => $convention->id, 'user_id' => $user->id, 'role' => 'ConventionUser'],
+        ['convention_id' => $convention->id, 'user_id' => $user->id, 'role' => 'Administrator'],
     ]);
 
     return $convention;
@@ -109,7 +109,7 @@ test('user creation trims and strips HTML from text fields', function () {
         'last_name' => '  <script>alert("x")</script>Doe  ',
         'email' => 'john.doe@example.com',
         'mobile' => '  +1234567890  ',
-        'roles' => ['ConventionUser'],
+        'roles' => ['Administrator'],
     ]);
 
     $created = User::where('email', 'john.doe@example.com')->first();

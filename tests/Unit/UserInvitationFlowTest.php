@@ -3,7 +3,6 @@
 use App\Actions\InviteUserAction;
 use App\Mail\UserInvitation;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Tests\Helpers\ConventionTestHelper;
@@ -20,7 +19,7 @@ it('invites a new user and creates their record', function () {
         'last_name' => 'Doe',
         'email' => 'jane@example.com',
         'mobile' => '+1234567890',
-        'roles' => ['ConventionUser'],
+        'roles' => ['Administrator'],
     ], $convention);
 
     expect($user)->toBeInstanceOf(User::class)
@@ -43,7 +42,7 @@ it('connects existing user to convention instead of creating duplicate', functio
         'last_name' => 'User',
         'email' => 'existing@example.com',
         'mobile' => '+1234567890',
-        'roles' => ['ConventionUser'],
+        'roles' => ['Administrator'],
     ], $convention);
 
     expect($user->id)->toBe($existingUser->id)
@@ -62,7 +61,7 @@ it('sends invitation email via Mailgun', function () {
         'last_name' => 'Test',
         'email' => 'emailtest@example.com',
         'mobile' => '+1234567890',
-        'roles' => ['ConventionUser'],
+        'roles' => ['Administrator'],
     ], $convention);
 
     Mail::assertSent(UserInvitation::class, function ($mail) {
@@ -82,11 +81,10 @@ it('generates a signed invitation URL', function () {
         'last_name' => 'URL',
         'email' => 'signed@example.com',
         'mobile' => '+1234567890',
-        'roles' => ['ConventionUser'],
+        'roles' => ['Administrator'],
     ], $convention);
 
     Mail::assertSent(UserInvitation::class, function ($mail) use ($user) {
-        // The mailable was sent, which means a signed URL was generated
         return $mail->hasTo($user->email);
     });
 });
@@ -114,54 +112,4 @@ it('sets password and confirms email via invitation', function () {
     $user->refresh();
     expect($user->email_confirmed)->toBeTrue()
         ->and($user->password)->not->toBeNull();
-});
-
-it('attaches floor assignments for FloorUser role', function () {
-    Mail::fake();
-
-    $structure = ConventionTestHelper::createConventionWithStructure();
-    $convention = $structure['convention'];
-    $floor = $structure['floors']->first();
-    $action = new InviteUserAction;
-
-    $user = $action->execute([
-        'first_name' => 'Floor',
-        'last_name' => 'User',
-        'email' => 'flooruser@example.com',
-        'mobile' => '+1234567890',
-        'roles' => ['FloorUser'],
-        'floor_ids' => [$floor->id],
-    ], $convention);
-
-    $assignedFloors = DB::table('floor_user')
-        ->where('user_id', $user->id)
-        ->pluck('floor_id')
-        ->toArray();
-
-    expect($assignedFloors)->toContain($floor->id);
-});
-
-it('attaches section assignments for SectionUser role', function () {
-    Mail::fake();
-
-    $structure = ConventionTestHelper::createConventionWithStructure();
-    $convention = $structure['convention'];
-    $section = $structure['sections']->first();
-    $action = new InviteUserAction;
-
-    $user = $action->execute([
-        'first_name' => 'Section',
-        'last_name' => 'User',
-        'email' => 'sectionuser@example.com',
-        'mobile' => '+1234567890',
-        'roles' => ['SectionUser'],
-        'section_ids' => [$section->id],
-    ], $convention);
-
-    $assignedSections = DB::table('section_user')
-        ->where('user_id', $user->id)
-        ->pluck('section_id')
-        ->toArray();
-
-    expect($assignedSections)->toContain($section->id);
 });

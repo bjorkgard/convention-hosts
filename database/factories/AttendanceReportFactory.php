@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\AttendancePeriod;
 use App\Models\AttendanceReport;
 use App\Models\Section;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,7 +25,6 @@ class AttendanceReportFactory extends Factory
             'attendance_period_id' => AttendancePeriod::factory(),
             'section_id' => Section::factory(),
             'attendance' => $this->faker->numberBetween(0, 200),
-            'reported_by' => User::factory(),
             'reported_at' => now(),
         ];
     }

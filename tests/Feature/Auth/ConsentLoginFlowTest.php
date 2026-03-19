@@ -43,12 +43,12 @@ test('password login first delivers the shared undecided consent contract on the
     ConventionTestHelper::attachUserToConvention(
         $user,
         ConventionTestHelper::createConventionWithStructure(['with_owner' => false])['convention'],
-        ['ConventionUser'],
+        ['Administrator'],
     );
     ConventionTestHelper::attachUserToConvention(
         $user,
         ConventionTestHelper::createConventionWithStructure(['with_owner' => false])['convention'],
-        ['ConventionUser'],
+        ['Administrator'],
     );
 
     $loginResponse = $this->post(route('login.store'), [
@@ -133,12 +133,12 @@ test('two factor completion first delivers the shared undecided consent contract
     ConventionTestHelper::attachUserToConvention(
         $user,
         ConventionTestHelper::createConventionWithStructure(['with_owner' => false])['convention'],
-        ['ConventionUser'],
+        ['Administrator'],
     );
     ConventionTestHelper::attachUserToConvention(
         $user,
         ConventionTestHelper::createConventionWithStructure(['with_owner' => false])['convention'],
-        ['ConventionUser'],
+        ['Administrator'],
     );
 
     $this->post(route('login.store'), [

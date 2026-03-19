@@ -19,7 +19,6 @@ class ExportConventionAction
             'floors.sections.attendanceReports',
             'users',
             'attendancePeriods.reports.section',
-            'attendancePeriods.reports.reportedBy',
         ]);
 
         // Delegate to format-specific exporter

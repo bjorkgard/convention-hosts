@@ -25,7 +25,7 @@ beforeEach(function () {
     $this->convention->users()->attach($this->owner->id);
     DB::table('convention_user_roles')->insert([
         ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'Owner', 'created_at' => now()],
-        ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'ConventionUser', 'created_at' => now()],
+        ['convention_id' => $this->convention->id, 'user_id' => $this->owner->id, 'role' => 'Administrator', 'created_at' => now()],
     ]);
 
     $this->floor = Floor::factory()->create([

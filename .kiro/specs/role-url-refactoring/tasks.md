@@ -220,33 +220,33 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Test `role-badge` only renders Owner and Administrator variants
     - Test user dropdown hidden when urlSession is active
 
-- [ ] 8. Update existing tests and seeders
-  - [ ] 8.1 Update ConventionTestHelper
+- [x] 8. Update existing tests and seeders
+  - [x] 8.1 Update ConventionTestHelper
     - Replace `ConventionUser` references with `Administrator`
     - Remove FloorUser/SectionUser helper methods and setup
     - Add URL session helper methods for test setup
     - _Requirements: 1.1_
 
-  - [ ] 8.2 Update DemoSeeder
+  - [x] 8.2 Update DemoSeeder
     - Replace `ConventionUser` with `Administrator` in seed data
     - Remove FloorUser and SectionUser seed data
     - Remove floor_user and section_user pivot seeding
     - _Requirements: 1.1, 1.5, 1.6_
 
-  - [ ] 8.3 Update existing feature and property tests
+  - [x] 8.3 Update existing feature and property tests
     - Replace all `ConventionUser` references with `Administrator` across test files
     - Remove FloorUser/SectionUser test scenarios
     - Update role-based test assertions to reflect two-role system
     - Update attendance report tests to remove `reported_by` assertions
     - _Requirements: 1.1, 1.5, 1.6, 8.6_
 
-  - [ ] 8.4 Update existing frontend tests
+  - [x] 8.4 Update existing frontend tests
     - Update `use-convention-role` tests for new hook shape
     - Update `user-row` tests to remove FloorUser/SectionUser scenarios
     - Update any test referencing old role names
     - _Requirements: 1.1_
 
-- [ ] 9. Final checkpoint - Ensure all tests pass
+- [x] 9. Final checkpoint - Ensure all tests pass
   - Run `php artisan test` for backend tests
   - Run `npm run test` for frontend tests
   - Run `npm run types:check` for TypeScript validation

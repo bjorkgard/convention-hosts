@@ -35,7 +35,7 @@ class ConventionTestHelper
 
         if ($withOwner) {
             $owner = $owner ?? User::factory()->create();
-            static::attachUserToConvention($owner, $convention, ['Owner', 'ConventionUser']);
+            static::attachUserToConvention($owner, $convention, ['Owner', 'Administrator']);
         }
 
         $floors = collect();
@@ -65,13 +65,11 @@ class ConventionTestHelper
 
     /**
      * Create a user and assign them a specific role for a convention.
-     * Handles pivot table attachments for FloorUser and SectionUser roles.
+     * Only Owner and Administrator roles are supported.
      *
      * @param  array{
      *     user?: User|null,
      *     user_attributes?: array<string, mixed>,
-     *     floor_ids?: array<int>,
-     *     section_ids?: array<int>,
      * }  $options
      */
     public static function createUserWithRole(
@@ -82,26 +80,6 @@ class ConventionTestHelper
         $user = $options['user'] ?? User::factory()->create($options['user_attributes'] ?? []);
 
         static::attachUserToConvention($user, $convention, [$role]);
-
-        if ($role === 'FloorUser' && ! empty($options['floor_ids'])) {
-            foreach ($options['floor_ids'] as $floorId) {
-                DB::table('floor_user')->insertOrIgnore([
-                    'floor_id' => $floorId,
-                    'user_id' => $user->id,
-                    'created_at' => now(),
-                ]);
-            }
-        }
-
-        if ($role === 'SectionUser' && ! empty($options['section_ids'])) {
-            foreach ($options['section_ids'] as $sectionId) {
-                DB::table('section_user')->insertOrIgnore([
-                    'section_id' => $sectionId,
-                    'user_id' => $user->id,
-                    'created_at' => now(),
-                ]);
-            }
-        }
 
         return $user;
     }
@@ -135,10 +113,6 @@ class ConventionTestHelper
      * Create an authenticated user with a given role for a convention,
      * useful for quickly setting up test scenarios.
      *
-     * @param  array{
-     *     floor_ids?: array<int>,
-     *     section_ids?: array<int>,
-     * }  $options
      * @return array{user: User, convention: Convention}
      */
     public static function createAuthenticatedUser(
@@ -152,5 +126,25 @@ class ConventionTestHelper
             'user' => $user,
             'convention' => $convention,
         ];
+    }
+
+    /**
+     * Set up a URL session in the Laravel session for testing URL-based access.
+     *
+     * @param  'floor'|'section'  $type
+     */
+    public static function setUrlSession(Convention $convention, string $type): void
+    {
+        $token = $type === 'floor'
+            ? $convention->floor_url_token
+            : $convention->section_url_token;
+
+        session([
+            'url_session' => [
+                'convention_id' => $convention->id,
+                'type' => $type,
+                'token' => $token,
+            ],
+        ]);
     }
 }

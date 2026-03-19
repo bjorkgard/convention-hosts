@@ -13,7 +13,6 @@ class ConventionMarkdownExport
             'floors.sections',
             'users',
             'attendancePeriods.reports.section.floor',
-            'attendancePeriods.reports.reportedBy',
         ]);
     }
 
@@ -83,8 +82,8 @@ class ConventionMarkdownExport
         if ($this->convention->attendancePeriods->isEmpty()) {
             $markdown .= "*No attendance history available.*\n\n";
         } else {
-            $markdown .= "| Date | Period | Locked | Floor | Section | Attendance | Reported By | Reported At |\n";
-            $markdown .= "|------|--------|--------|-------|---------|------------|-------------|-------------|\n";
+            $markdown .= "| Date | Period | Locked | Floor | Section | Attendance | Reported At |\n";
+            $markdown .= "|------|--------|--------|-------|---------|------------|-------------|\n";
 
             foreach ($this->convention->attendancePeriods as $period) {
                 foreach ($period->reports as $report) {
@@ -92,7 +91,6 @@ class ConventionMarkdownExport
                     $markdown .= ($period->locked ? 'Yes' : 'No').' | ';
                     $markdown .= "{$report->section->floor->name} | {$report->section->name} | ";
                     $markdown .= "{$report->attendance} | ";
-                    $markdown .= "{$report->reportedBy->first_name} {$report->reportedBy->last_name} | ";
                     $markdown .= "{$report->reported_at->format('Y-m-d H:i:s')} |\n";
                 }
             }

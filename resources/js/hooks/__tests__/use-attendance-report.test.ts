@@ -38,7 +38,6 @@ function makeReport(overrides: Partial<AttendanceReport> = {}): AttendanceReport
         attendance_period_id: 1,
         section_id: 1,
         attendance: 50,
-        reported_by: 1,
         reported_at: '2025-06-15T10:00:00Z',
         created_at: '2025-06-15T10:00:00Z',
         updated_at: '2025-06-15T10:00:00Z',
@@ -121,20 +120,10 @@ describe('useAttendanceReport', () => {
             expect(result.current.canStart).toBe(true);
         });
 
-        it('is false when user is FloorUser (not a manager)', () => {
+        it('is false when user has no recognized role', () => {
             setPageProps({
                 attendancePeriods: [],
-                userRoles: ['FloorUser'],
-            });
-
-            const { result } = renderHook(() => useAttendanceReport());
-            expect(result.current.canStart).toBe(false);
-        });
-
-        it('is false when user is SectionUser (not a manager)', () => {
-            setPageProps({
-                attendancePeriods: [],
-                userRoles: ['SectionUser'],
+                userRoles: [],
             });
 
             const { result } = renderHook(() => useAttendanceReport());
@@ -212,7 +201,7 @@ describe('useAttendanceReport', () => {
         it('is false for non-manager even with active period', () => {
             setPageProps({
                 attendancePeriods: [makePeriod({ locked: false })],
-                userRoles: ['FloorUser'],
+                userRoles: [],
             });
 
             const { result } = renderHook(() => useAttendanceReport());

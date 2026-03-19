@@ -216,7 +216,6 @@ it('validates export data structure before serialization', function () {
                 AttendanceReport::factory()->create([
                     'attendance_period_id' => $period->id,
                     'section_id' => $convention->floors->first()->sections->first()->id,
-                    'reported_by' => User::factory()->create()->id,
                 ]);
             }
         }

@@ -45,7 +45,7 @@ beforeEach(function () {
     DB::table('convention_user_roles')->insert([
         'convention_id' => $this->convention->id,
         'user_id' => $this->targetUser->id,
-        'role' => 'SectionUser',
+        'role' => 'Administrator',
         'created_at' => now(),
     ]);
 });
@@ -96,7 +96,7 @@ it('enforces rate limiting across multiple random iterations', function () {
         DB::table('convention_user_roles')->insert([
             'convention_id' => $this->convention->id,
             'user_id' => $targetUser->id,
-            'role' => fake()->randomElement(['ConventionUser', 'FloorUser', 'SectionUser']),
+            'role' => fake()->randomElement(['Owner', 'Administrator']),
             'created_at' => now(),
         ]);
 

@@ -107,7 +107,6 @@ it('includes attendance history in Markdown export', function () {
         'attendance_period_id' => $period->id,
         'section_id' => $section->id,
         'attendance' => 125,
-        'reported_by' => $owner->id,
         'reported_at' => now(),
     ]);
 

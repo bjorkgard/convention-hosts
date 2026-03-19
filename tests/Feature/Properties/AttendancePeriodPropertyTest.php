@@ -137,11 +137,11 @@ it('allows same period type on different dates for the same convention', functio
  * Property 31: Attendance Report Data Storage
  *
  * For any attendance report submitted, the system should store the attendance
- * value, reported_by user ID, reported_at timestamp, and the period's locked status.
+ * value, reported_at timestamp, and the period's locked status.
  *
  * **Validates: Requirements 10.4**
  */
-it('stores attendance value, reported_by, and reported_at correctly for each report', function () {
+it('stores attendance value and reported_at correctly for each report', function () {
     $structure = ConventionTestHelper::createConventionWithStructure([
         'floors' => 1,
         'sections_per_floor' => 1,
@@ -171,11 +171,6 @@ it('stores attendance value, reported_by, and reported_at correctly for each rep
             "Iteration {$i}: attendance value should be {$attendanceValue}"
         );
 
-        // Property: reported_by stores the user ID
-        expect($report->reported_by)->toBe($user->id,
-            "Iteration {$i}: reported_by should be the reporting user's ID"
-        );
-
         // Property: reported_at is a valid timestamp
         expect($report->reported_at)->not->toBeNull(
             "Iteration {$i}: reported_at should be set"
@@ -190,7 +185,6 @@ it('stores attendance value, reported_by, and reported_at correctly for each rep
             'attendance_period_id' => $period->id,
             'section_id' => $section->id,
             'attendance' => $attendanceValue,
-            'reported_by' => $user->id,
         ]);
 
         // Verify the period's locked status is accessible
@@ -230,7 +224,6 @@ it('enforces unique constraint on attendance_period_id and section_id', function
                 'attendance_period_id' => $period->id,
                 'section_id' => $section->id,
                 'attendance' => fake()->numberBetween(0, 200),
-                'reported_by' => $user->id,
                 'reported_at' => now(),
             ]);
         } catch (\Throwable $e) {

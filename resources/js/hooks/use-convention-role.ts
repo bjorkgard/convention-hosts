@@ -1,10 +1,10 @@
 import { usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 
-import type { UrlSession } from '@/types';
+import type { PageProps, UrlSession } from '@/types';
 import type { Role } from '@/types/user';
 
-interface ConventionRolePageProps {
+interface ConventionRolePageProps extends PageProps {
     userRoles?: Role[];
     urlSession?: UrlSession | null;
 }

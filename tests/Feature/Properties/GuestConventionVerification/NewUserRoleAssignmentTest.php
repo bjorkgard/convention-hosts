@@ -52,9 +52,9 @@ it('assigns Owner and ConventionUser roles to new users across 100+ iterations',
             ->values()
             ->toArray();
 
-        // Assert both Owner and ConventionUser roles are assigned
+        // Assert both Owner and Administrator roles are assigned
         expect($roles)->toContain('Owner');
-        expect($roles)->toContain('ConventionUser');
+        expect($roles)->toContain('Administrator');
         expect($roles)->toHaveCount(2);
     }
 })->group('property', 'guest-convention-verification');

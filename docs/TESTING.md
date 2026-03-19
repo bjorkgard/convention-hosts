@@ -70,16 +70,17 @@ tests/                          # Backend tests (Pest PHP)
 │   ├── Properties/           # Feature-level property-based tests
 │   └── ...                   # Other feature tests
 ├── Property/                  # Pure property-based tests
+│   ├── AttendanceCalculationsTest.php
 │   ├── AttendancePropertiesTest.php
 │   ├── ConventionPropertiesTest.php
+│   ├── DailyOccupancyResetTest.php
 │   ├── EmailUpdateConfirmationTest.php
-│   ├── FloorUserPermissionsTest.php        # (legacy — to be updated for URL sessions)
 │   ├── InvitationEmailDeliveryTest.php
+│   ├── OccupancyColorCodingTest.php
 │   ├── OccupancyPropertiesTest.php
-│   ├── RoleBasedDataScopingTest.php
 │   ├── SectionCrudPropertyTest.php
 │   ├── SectionFrontendPropertyTest.php
-│   ├── SectionUserRestrictionsTest.php      # (legacy — to be updated for URL sessions)
+│   ├── SectionValidationPropertyTest.php
 │   └── UserPropertiesTest.php
 ├── Unit/                      # Unit tests for actions and services
 ├── Helpers/                   # ConventionTestHelper — shared test setup
@@ -612,6 +613,67 @@ test('guest convention creation sends verification email to new user', function 
 });
 ```
 
+## ConventionTestHelper
+
+`tests/Helpers/ConventionTestHelper.php` provides shared setup utilities for convention-related tests. Use it instead of duplicating scaffolding across test files.
+
+### createConventionWithStructure
+
+Creates a convention with floors, sections, and optionally an owner user.
+
+```php
+$structure = ConventionTestHelper::createConventionWithStructure([
+    'floors' => 2,                // default: 2
+    'sections_per_floor' => 3,    // default: 3
+    'convention_attributes' => [],
+    'with_owner' => true,         // default: true
+    'owner' => null,              // provide existing User or null to auto-create
+]);
+
+// Returns: ['convention' => Convention, 'floors' => Collection, 'sections' => Collection, 'owner' => User|null]
+```
+
+When `with_owner` is true, the owner is assigned both `Owner` and `Administrator` roles.
+
+### createUserWithRole
+
+Creates a user and assigns them a role for a convention. Only `Owner` and `Administrator` roles are supported.
+
+```php
+$admin = ConventionTestHelper::createUserWithRole($convention, 'Administrator');
+$owner = ConventionTestHelper::createUserWithRole($convention, 'Owner', [
+    'user' => $existingUser,           // optional: use existing user
+    'user_attributes' => ['email' => 'custom@example.com'],  // optional
+]);
+```
+
+### attachUserToConvention
+
+Attaches a user to a convention and assigns roles via pivot tables.
+
+```php
+ConventionTestHelper::attachUserToConvention($user, $convention, ['Owner', 'Administrator']);
+```
+
+### createAuthenticatedUser
+
+Shorthand for creating a user with a role, useful for quick test setup.
+
+```php
+['user' => $user, 'convention' => $convention] = ConventionTestHelper::createAuthenticatedUser($convention, 'Administrator');
+```
+
+### setUrlSession
+
+Sets up a URL session in the Laravel session for testing anonymous URL-based access.
+
+```php
+ConventionTestHelper::setUrlSession($convention, 'floor');   // floor URL session
+ConventionTestHelper::setUrlSession($convention, 'section'); // section URL session
+```
+
+This reads the convention's `floor_url_token` or `section_url_token` and stores it in the session as `url_session`, matching the format used by `UrlAccessController`.
+
 ## Property-Based Tests
 
 Property-based tests validate formal correctness properties of the system. Each test runs multiple iterations with varied inputs to ensure invariants hold across a wide range of scenarios.
@@ -640,9 +702,6 @@ php artisan test --group=property
 | `Property/AttendanceCalculationsTest` | Attendance arithmetic invariants |
 | `Property/InvitationEmailDeliveryTest` | Invitation email delivery via signed URL |
 | `Property/EmailUpdateConfirmationTest` | Email update triggers re-confirmation |
-| `Property/RoleBasedDataScopingTest` | Role-based query scoping (Owner, Administrator, URL sessions) |
-| `Property/FloorUserPermissionsTest` | FloorUser permission enforcement (legacy — to be updated for URL sessions) |
-| `Property/SectionUserRestrictionsTest` | SectionUser edit and scope restrictions (legacy — to be updated for URL sessions) |
 | `Property/SectionCrudPropertyTest` | Section create/update/delete persistence |
 | `Property/SectionFrontendPropertyTest` | Button visibility by role, floor selector, section display data |
 | `Property/OccupancyColorCodingTest` | Color coding thresholds across full occupancy range |

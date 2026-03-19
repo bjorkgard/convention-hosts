@@ -56,7 +56,7 @@ function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
         email: 'john@example.com',
         mobile: '+1234567890',
         email_confirmed: true,
-        roles: ['ConventionUser'],
+        roles: ['Administrator'],
         email_verified_at: null,
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
@@ -106,12 +106,11 @@ describe('UserRow', () => {
     });
 
     it('renders role badges for each role', () => {
-        const user = makeUser({ roles: ['Owner', 'ConventionUser', 'FloorUser'] });
+        const user = makeUser({ roles: ['Owner', 'Administrator'] });
         render(<UserRow user={user} convention={makeConvention()} />);
 
         expect(screen.getByTestId('role-badge-Owner')).toBeInTheDocument();
-        expect(screen.getByTestId('role-badge-ConventionUser')).toBeInTheDocument();
-        expect(screen.getByTestId('role-badge-FloorUser')).toBeInTheDocument();
+        expect(screen.getByTestId('role-badge-Administrator')).toBeInTheDocument();
     });
 
     it('does not render role badges when roles array is empty', () => {

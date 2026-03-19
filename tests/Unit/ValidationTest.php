@@ -17,7 +17,7 @@ it('rejects emails containing jwpub.org', function () {
             'last_name' => 'User',
             'email' => 'user@jwpub.org',
             'mobile' => '+1234567890',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ])
         ->assertSessionHasErrors('email');
 });
@@ -33,7 +33,7 @@ it('rejects emails with jwpub.org in subdomain', function () {
             'last_name' => 'User',
             'email' => 'user@mail.jwpub.org',
             'mobile' => '+1234567890',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ])
         ->assertSessionHasErrors('email');
 });
@@ -51,7 +51,7 @@ it('accepts valid email addresses', function () {
             'last_name' => 'User',
             'email' => 'valid@example.com',
             'mobile' => '+1234567890',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ])
         ->assertSessionHasNoErrors();
 });
@@ -218,41 +218,7 @@ it('requires email uniqueness for user creation', function () {
             'last_name' => 'Email',
             'email' => 'taken@example.com',
             'mobile' => '+1234567890',
-            'roles' => ['ConventionUser'],
+            'roles' => ['Administrator'],
         ])
         ->assertSessionHasErrors('email');
-});
-
-it('requires floor_ids when FloorUser role is assigned', function () {
-    $structure = ConventionTestHelper::createConventionWithStructure();
-    $convention = $structure['convention'];
-    $owner = $structure['owner'];
-
-    $this->actingAs($owner)
-        ->post(route('users.store', $convention), [
-            'first_name' => 'Floor',
-            'last_name' => 'User',
-            'email' => 'flooruser-test@example.com',
-            'mobile' => '+1234567890',
-            'roles' => ['FloorUser'],
-            // Missing floor_ids
-        ])
-        ->assertSessionHasErrors('floor_ids');
-});
-
-it('requires section_ids when SectionUser role is assigned', function () {
-    $structure = ConventionTestHelper::createConventionWithStructure();
-    $convention = $structure['convention'];
-    $owner = $structure['owner'];
-
-    $this->actingAs($owner)
-        ->post(route('users.store', $convention), [
-            'first_name' => 'Section',
-            'last_name' => 'User',
-            'email' => 'sectionuser-test@example.com',
-            'mobile' => '+1234567890',
-            'roles' => ['SectionUser'],
-            // Missing section_ids
-        ])
-        ->assertSessionHasErrors('section_ids');
 });

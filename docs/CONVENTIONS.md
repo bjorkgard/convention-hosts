@@ -352,7 +352,6 @@ class ConventionExport implements WithMultipleSheets
             'floors.sections',
             'users',
             'attendancePeriods.reports.section.floor',
-            'attendancePeriods.reports.reportedBy',
         ]);
     }
 
