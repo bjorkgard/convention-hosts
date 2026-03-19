@@ -11,8 +11,8 @@ vi.mock('@inertiajs/react', () => ({
 
 // Mock Wayfinder actions
 vi.mock('@/actions/App/Http/Controllers/UserController', () => ({
-    destroy: { url: ({ convention, user }: { convention: number; user: number }) => `/conventions/${convention}/users/${user}` },
-    resendInvitation: { url: ({ convention, user }: { convention: number; user: number }) => `/conventions/${convention}/users/${user}/resend` },
+    destroy: { url: ({ convention, user }: { convention: string; user: string }) => `/conventions/${convention}/users/${user}` },
+    resendInvitation: { url: ({ convention, user }: { convention: string; user: string }) => `/conventions/${convention}/users/${user}/resend` },
 }));
 
 // Mock ConfirmationDialog
@@ -49,7 +49,7 @@ import UserRow from '../user-row';
 
 function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
     return {
-        id: 1,
+        id: '1',
         name: 'John Doe',
         first_name: 'John',
         last_name: 'Doe',
@@ -58,6 +58,7 @@ function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
         email_confirmed: true,
         roles: ['Administrator'],
         email_verified_at: null,
+        locale: 'en',
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
         ...overrides,
@@ -66,7 +67,7 @@ function makeUser(overrides: Partial<ConventionUser> = {}): ConventionUser {
 
 function makeConvention(overrides: Partial<Convention> = {}): Convention {
     return {
-        id: 1,
+        id: '1',
         name: 'Test Convention',
         city: 'Paris',
         country: 'France',
@@ -74,6 +75,7 @@ function makeConvention(overrides: Partial<Convention> = {}): Convention {
         start_date: '2025-06-15',
         end_date: '2025-06-20',
         other_info: null,
+        locale: 'en',
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
         ...overrides,
