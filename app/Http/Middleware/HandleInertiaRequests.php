@@ -39,7 +39,8 @@ class HandleInertiaRequests extends Middleware
     {
         $consentResolver = app(UserConsentResolver::class);
         $optionalStorage = app(OptionalStorageRegistry::class);
-        $consent = $consentResolver->resolve($request->user());
+        $sessionConsentState = $request->session()->get('consent_state');
+        $consent = $consentResolver->resolve($request->user(), $sessionConsentState);
         $sidebarOpen = $optionalStorage->trustedSidebarOpen($request);
 
         // Check for active URL session

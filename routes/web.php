@@ -54,10 +54,11 @@ Route::get('email/confirm/{user}', function (\App\Models\User $user) {
 Route::get('url-access/floor/{token}', [UrlAccessController::class, 'floor'])->name('url-access.floor');
 Route::get('url-access/section/{token}', [UrlAccessController::class, 'section'])->name('url-access.section');
 
+// Consent route (available to both authenticated and URL-session users)
+Route::post('consent', [ConsentController::class, 'store'])->name('consent.store');
+
 // Auth-only convention routes (must be registered BEFORE conventions/{convention} wildcard)
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('consent', [ConsentController::class, 'store'])->name('consent.store');
-
     Route::get('conventions', [ConventionController::class, 'index'])->name('conventions.index');
     Route::get('conventions/create', [ConventionController::class, 'create'])->name('conventions.create');
     Route::post('conventions', [ConventionController::class, 'store'])->name('conventions.store');
