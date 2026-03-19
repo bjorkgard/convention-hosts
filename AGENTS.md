@@ -64,8 +64,8 @@ Laravel Policies (`ConventionPolicy`, `FloorPolicy`, `SectionPolicy`, `UserPolic
 Convention
 ├── floors (Floor)
 │   └── sections (Section) — occupancy, available_seats, number_of_seats,
-│                             elder_friendly, handicap_friendly, information,
-│                             last_occupancy_updated_by, last_occupancy_updated_at
+│                             elder_friendly, handicap_friendly, hearing_loop,
+│                             information, last_occupancy_updated_by, last_occupancy_updated_at
 ├── users (User) — via convention_user pivot; roles in convention_user_roles pivot
 │                  User fields: first_name, last_name, email, mobile, email_confirmed
 │                  Roles: Owner, Administrator

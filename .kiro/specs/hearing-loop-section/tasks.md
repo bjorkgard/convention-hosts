@@ -11,6 +11,7 @@ Add the `hearing_loop` boolean accessibility flag to sections across the full st
     - Create migration `add_hearing_loop_to_sections_table`
     - Add `boolean('hearing_loop')->default(false)->after('handicap_friendly')`
     - Drop existing `idx_sections_accessibility` index and recreate with `['elder_friendly', 'handicap_friendly', 'hearing_loop']`
+    - Add standalone `idx_sections_hearing_loop` index on `hearing_loop` for efficient standalone filtering (B-tree left-prefix requirement)
     - _Requirements: 1.1_
 
   - [x] 1.2 Update Section model fillable and casts

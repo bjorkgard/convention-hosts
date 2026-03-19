@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->dropIndex('idx_sections_accessibility');
             $table->index(['elder_friendly', 'handicap_friendly', 'hearing_loop'], 'idx_sections_accessibility');
+            $table->index('hearing_loop', 'idx_sections_hearing_loop');
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('sections', function (Blueprint $table) {
+            $table->dropIndex('idx_sections_hearing_loop');
             $table->dropIndex('idx_sections_accessibility');
             $table->index(['elder_friendly', 'handicap_friendly'], 'idx_sections_accessibility');
 

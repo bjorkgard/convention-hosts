@@ -43,6 +43,7 @@ No new routes, controllers, middleware, or policies are needed. The `ResetDailyO
 - New migration: `add_hearing_loop_to_sections_table`
 - Adds `boolean('hearing_loop')->default(false)->after('handicap_friendly')`
 - Updates the existing `idx_sections_accessibility` index to include all three accessibility columns: `['elder_friendly', 'handicap_friendly', 'hearing_loop']`
+- Adds standalone `idx_sections_hearing_loop` index on `hearing_loop` for efficient standalone filtering
 
 #### Section Model (`app/Models/Section.php`)
 - Add `'hearing_loop'` to `$fillable` array after `'handicap_friendly'`
@@ -109,7 +110,7 @@ No new routes, controllers, middleware, or policies are needed. The `ResetDailyO
 
 ### Index Update
 
-The existing composite index `idx_sections_accessibility` on `['elder_friendly', 'handicap_friendly']` will be dropped and recreated as `['elder_friendly', 'handicap_friendly', 'hearing_loop']` to support efficient filtering on any combination of accessibility flags.
+The existing composite index `idx_sections_accessibility` on `['elder_friendly', 'handicap_friendly']` will be dropped and recreated as `['elder_friendly', 'handicap_friendly', 'hearing_loop']` to support combined accessibility filtering. A standalone single-column index `idx_sections_hearing_loop` on `hearing_loop` is also added so that queries filtering only on `hearing_loop` (without elder/handicap predicates) can use an index efficiently — B-tree indexes require left-prefix matching, so the third column of a composite index cannot be used in isolation.
 
 
 ## Correctness Properties

@@ -93,6 +93,7 @@ CREATE TABLE sections (
 CREATE INDEX idx_sections_floor ON sections(floor_id);
 CREATE INDEX idx_sections_occupancy ON sections(occupancy);
 CREATE INDEX idx_sections_accessibility ON sections(elder_friendly, handicap_friendly, hearing_loop);
+CREATE INDEX idx_sections_hearing_loop ON sections(hearing_loop);
 ```
 
 **Key Features:**
