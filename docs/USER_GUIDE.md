@@ -20,7 +20,7 @@ If you received an invitation email or a guest convention verification email, cl
 
 The system checks for date conflicts — you cannot create a convention that overlaps with an existing one in the same city and country.
 
-You are automatically assigned as **Owner** and **ConventionUser**, giving you full control over the convention.
+You are automatically assigned as **Owner** and **Administrator**, giving you full control over the convention.
 
 ## Managing the Venue
 
@@ -32,7 +32,7 @@ Conventions are organized into a hierarchy: **Convention → Floors → Sections
 2. Click **Add Floor**
 3. Enter a floor name
 
-Only Owner and ConventionUser roles can add or delete floors. FloorUsers can rename their assigned floors but cannot add new ones.
+Only Owner and Administrator roles can add or delete floors.
 
 ### Adding Sections
 
@@ -51,7 +51,7 @@ To edit a section, expand a floor row and click the pencil icon next to the sect
 
 Sections start with 0% occupancy and 0 available seats.
 
-The floor dropdown shows only floors you have access to based on your role. Owner and ConventionUser see all floors; FloorUser sees only assigned floors. SectionUser cannot create sections.
+The floor dropdown shows only floors you have access to based on your role. Owner and Administrator see all floors. URL session users cannot create sections.
 
 ## Tracking Occupancy
 
@@ -90,7 +90,7 @@ Attendance reporting collects headcounts from each section during morning and af
 
 ### Starting a Report
 
-1. A ConventionUser or Owner clicks **Start Attendance Report** on the convention page
+1. An Owner or Administrator clicks **Start Attendance Report** on the convention page
 2. The system determines the current period (morning before 12:00, afternoon after)
 3. A banner appears showing the active report with a counter: "X of Y sections reported"
 
@@ -100,13 +100,13 @@ You can start a maximum of 2 reports per day (one morning, one afternoon).
 
 1. Navigate to your assigned section
 2. Enter the attendance count
-3. The system records your count along with your name and the timestamp
+3. The system records your count along with the timestamp
 
-Only the person who originally reported can update the count for that section (until the period is locked).
+Any user with section permissions (authenticated or via URL) can create or update attendance reports.
 
 ### Stopping a Report
 
-1. The ConventionUser or Owner clicks **Stop Attendance Report**
+1. The Owner or Administrator clicks **Stop Attendance Report**
 2. If not all sections have reported, a confirmation warning appears
 3. Once stopped, the period is locked permanently — no further changes are possible
 4. Locked period data appears on the convention page as historical records
@@ -118,14 +118,14 @@ Only the person who originally reported can update the count for that section (u
 1. Go to **Users** within your convention
 2. Click **Add User**
 3. Fill in: first name, last name, email, mobile
-4. Select one or more roles:
+4. Select a role:
    - **Owner** — full control
-   - **ConventionUser** — convention-wide access
-   - **FloorUser** — access to specific floors (select which floors)
-   - **SectionUser** — access to specific sections (select which sections)
+   - **Administrator** — convention-wide access (manage floors, sections, users, attendance)
 5. Click **Invite**
 
 The system sends an invitation email with a secure link. If the email already belongs to an existing user, that user is connected to your convention instead of creating a duplicate account.
+
+For floor and section volunteer access, share the Floor Access URL or Section Access URL from the convention page instead of creating user accounts.
 
 ### Email Confirmation Status
 
@@ -146,22 +146,59 @@ Click **Delete** on a user to remove them from the convention. All their role an
 
 Your role determines what you can see and do:
 
-| Capability | Owner | ConventionUser | FloorUser | SectionUser |
-|-----------|-------|----------------|-----------|-------------|
+| Capability | Owner | Administrator | Floor URL | Section URL |
+|-----------|-------|---------------|-----------|-------------|
 | View convention | Yes | Yes | Yes | Yes |
 | Edit convention | Yes | Yes | No | No |
 | Delete convention | Yes | No | No | No |
 | Export data | Yes | No | No | No |
-| Manage all floors | Yes | Yes | No | No |
-| Edit assigned floors | Yes | Yes | Yes | No |
-| Manage all sections | Yes | Yes | No | No |
-| Edit assigned sections | Yes | Yes | Yes | Yes |
-| Manage all users | Yes | Yes | No | No |
+| Manage floors | Yes | Yes | No | No |
+| View floors | Yes | Yes | Yes | No |
+| Manage sections | Yes | Yes | No | No |
+| View sections | Yes | Yes | Yes | Yes |
+| Update occupancy | Yes | Yes | Yes | Yes |
+| Manage users | Yes | Yes | No | No |
 | Start/stop attendance | Yes | Yes | No | No |
-| Report attendance | Yes | Yes | Yes (assigned) | Yes (assigned) |
+| Report attendance | Yes | Yes | Yes | Yes |
 | Search sections | Yes | Yes | Yes | Yes |
 
-FloorUsers see only their assigned floors and the sections within them. SectionUsers see only their assigned sections. The navigation and data tables automatically adjust to show only what you have access to.
+URL session users access the convention via a shareable link and see a simplified interface without user account options.
+
+## URL-Based Volunteer Access
+
+Instead of creating user accounts for every volunteer, convention organizers can share access URLs.
+
+### Sharing Access URLs
+
+1. Open your convention page as an Owner or Administrator
+2. Find the "Floor Access URL" and "Section Access URL" displayed on the page
+3. Click the copy button next to the URL you want to share
+4. Send the URL to your volunteers via messaging app, email, or printed QR code
+
+### Floor Access URL
+
+Volunteers who open this link can:
+- View all floors and sections
+- Update occupancy for any section
+- Report attendance for any section
+
+They cannot create/edit/delete floors or sections, manage users, or start/stop attendance reports.
+
+### Section Access URL
+
+Volunteers who open this link can:
+- View all sections
+- Update occupancy for any section
+- Report attendance for any section
+
+They cannot view floors, manage users, or start/stop attendance reports.
+
+### URL Session Behavior
+
+- No login is required — the link opens directly into the convention
+- The interface is simplified: no user menu, profile, or logout options
+- The Apple theme is applied automatically
+- If the browser session expires, the volunteer simply re-opens the link
 
 ## Searching for Available Sections
 
@@ -228,7 +265,7 @@ Access your settings from the user menu:
 
 **Can't see floors or sections:** Your role may not have access. Check with your convention manager about your assigned role and scope.
 
-**Occupancy not updating:** Make sure you have edit permission for the section. FloorUsers can only update sections on their assigned floors; SectionUsers can only update their assigned sections.
+**Occupancy not updating:** Make sure you have permission for the section. Authenticated users with Owner or Administrator roles can update any section. URL session users can update occupancy for sections within their access scope.
 
 **Attendance report won't start:** The maximum is 2 reports per day. If both morning and afternoon periods have already been created, you'll need to wait until the next day.
 

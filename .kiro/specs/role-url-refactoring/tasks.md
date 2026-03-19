@@ -6,8 +6,8 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
 
 ## Tasks
 
-- [ ] 1. Database migration and model updates
-  - [ ] 1.1 Create migration `simplify_roles_and_add_url_tokens`
+- [x] 1. Database migration and model updates
+  - [x] 1.1 Create migration `simplify_roles_and_add_url_tokens`
     - Add `floor_url_token` (string 64, unique, nullable) and `section_url_token` (string 64, unique, nullable) to `conventions` table
     - Generate tokens for all existing conventions using `Str::random(64)`
     - Rename `ConventionUser` to `Administrator` in `convention_user_roles`
@@ -18,7 +18,7 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Wrap in database transaction for atomicity
     - _Requirements: 1.5, 1.6, 1.7, 1.8, 2.5, 2.7, 8.6, 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7, 10.8_
 
-  - [ ] 1.2 Update Convention model
+  - [x] 1.2 Update Convention model
     - Add `floor_url_token` and `section_url_token` to `$fillable`
     - Add both token fields to `$hidden` array
     - Add `booted()` method with `creating` event to auto-generate tokens via `Str::random(64)`
@@ -26,21 +26,21 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Remove any FloorUser/SectionUser relationship methods if referenced
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [ ] 1.3 Update User model
+  - [x] 1.3 Update User model
     - Remove `floors()` BelongsToMany relationship (via `floor_user`)
     - Remove `sections()` BelongsToMany relationship (via `section_user`)
     - _Requirements: 1.5, 1.6_
 
-  - [ ] 1.4 Update AttendanceReport model
+  - [x] 1.4 Update AttendanceReport model
     - Remove `reported_by` from `$fillable`
     - Remove `reportedBy()` relationship method
     - _Requirements: 8.6_
 
-  - [ ] 1.5 Update Convention factory
+  - [x] 1.5 Update Convention factory
     - Add `floor_url_token` and `section_url_token` generation to factory definition
     - _Requirements: 2.1, 2.2_
 
-  - [ ]* 1.6 Write property tests for migration and token generation (backend)
+  - [ ] 1.6 Write property tests for migration and token generation (backend)
     - **Property 3: Token generation and validity on convention creation** — verify both tokens are non-null strings of at least 32 characters for any newly created convention
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4**
     - **Property 4: Token uniqueness across conventions** — verify floor_url_token and section_url_token differ across any two distinct conventions
@@ -85,7 +85,7 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Run `php artisan wayfinder:generate --with-form` to regenerate type-safe frontend routes after route changes
     - _Requirements: 3.1, 4.1_
 
-  - [ ]* 3.6 Write property tests for URL access flow (backend)
+  - [ ] 3.6 Write property tests for URL access flow (backend)
     - **Property 5: Floor URL session grants correct positive permissions** — verify floor token creates session allowing view floors/sections, update occupancy, report attendance
     - **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
     - **Property 6: Floor URL session denies administrative actions** — verify floor session cannot create/edit/delete floors, create/delete sections, manage users, start/stop reports, lock periods
@@ -139,7 +139,7 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Update roles validation to only accept `Owner` and `Administrator`
     - _Requirements: 1.1, 1.9_
 
-  - [ ]* 4.8 Write property tests for policies and services (backend)
+  - [ ] 4.8 Write property tests for policies and services (backend)
     - **Property 1: Role system invariant** — verify only Owner and Administrator roles exist in convention_user_roles for any convention
     - **Validates: Requirements 1.1, 1.5, 1.6**
     - **Property 2: Owner role assignment on convention creation** — verify creator always gets Owner role
@@ -168,7 +168,7 @@ Refactor the Convention Management System from a four-tier role system (Owner, C
     - Check for `urlSession` prop and force `apple` theme when URL session is active
     - _Requirements: 9.4, 9.5_
 
-  - [ ]* 6.4 Write property tests for frontend hooks (Vitest + fast-check)
+  - [ ] 6.4 Write property tests for frontend hooks (Vitest + fast-check)
     - **Property 1: Role system invariant** — generate random role arrays, verify hook only recognizes Owner/Administrator
     - **Validates: Requirements 1.1, 1.5, 1.6**
     - **Property 11: URL session Apple theme** — generate random URL session states, verify theme is always "apple" when URL session active

@@ -74,24 +74,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the floors associated with the user.
-     */
-    public function floors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(Floor::class, 'floor_user')
-            ->withPivot('created_at');
-    }
-
-    /**
-     * Get the sections associated with the user.
-     */
-    public function sections(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(Section::class, 'section_user')
-            ->withPivot('created_at');
-    }
-
-    /**
      * Get the roles for a specific convention.
      */
     public function rolesForConvention(Convention $convention): \Illuminate\Support\Collection

@@ -92,7 +92,7 @@ POST /conventions
 
 Custom validation: rejects if an overlapping convention exists in the same city/country.
 
-On success: redirects to `conventions.show`. Creator is assigned Owner and ConventionUser roles.
+On success: redirects to `conventions.show`. Creator is assigned Owner and Administrator roles. URL tokens for floor and section access are auto-generated.
 
 Error example:
 ```json
@@ -128,7 +128,7 @@ Custom validation: rejects if an overlapping convention exists in the same city/
 **Behavior:**
 - If the email already exists, the existing user is used (no duplicate created), logged in, and redirected to `conventions.show`
 - If the email is new, a user account is created with a random password and `email_confirmed` set to false
-- The user is assigned Owner and ConventionUser roles via `CreateConventionAction`
+- The user is assigned Owner and Administrator roles via `CreateConventionAction`
 - **New users are NOT logged in.** A verification email with a signed URL (24h expiry) is sent, and the user sees a confirmation page with instructions to check their email.
 
 On success (existing user): redirects to `conventions.show`.
@@ -169,19 +169,20 @@ Sets the user's password, marks `email_confirmed` as true, logs the user in, and
 GET /conventions/{convention}
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `ScopeByRole`
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
 
 Returns Inertia page `conventions/show` with:
 
 | Prop | Type | Description |
 |------|------|-------------|
 | convention | Convention | Convention details |
-| floors | Floor[] | Role-scoped floors with nested sections |
+| floors | Floor[] | Floors with nested sections |
 | attendancePeriods | AttendancePeriod[] | All periods with reports, ordered by date desc |
-| users | User[] | Convention users with roles |
+| users | User[] | Convention users with roles (authenticated users only) |
 | userRoles | string[] | Current user's roles for this convention |
-| userFloorIds | number[] | Floor IDs the current user is assigned to |
-| userSectionIds | number[] | Section IDs the current user is assigned to |
+| urlSession | UrlSession\|null | URL session data (type, convention_id) or null |
+| floor_url | string | Floor access URL (Owner/Administrator only) |
+| section_url | string | Section access URL (Owner/Administrator only) |
 
 ### Update Convention
 
@@ -189,7 +190,7 @@ Returns Inertia page `conventions/show` with:
 PUT /conventions/{convention}
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `ScopeByRole`
+Middleware: `auth`, `EnsureConventionOrUrlAccess`
 
 Same fields as Store Convention. Excludes current convention from overlap check.
 
@@ -199,7 +200,7 @@ Same fields as Store Convention. Excludes current convention from overlap check.
 DELETE /conventions/{convention}
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `EnsureOwnerRole`
+Middleware: `auth`, `EnsureConventionOrUrlAccess`, `EnsureOwnerRole`
 Authorization: ConventionPolicy `delete` (Owner only)
 
 On success: redirects to `conventions.index`.
@@ -210,7 +211,7 @@ On success: redirects to `conventions.index`.
 GET /conventions/{convention}/export?format={format}
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `EnsureOwnerRole`
+Middleware: `auth`, `EnsureConventionOrUrlAccess`, `EnsureOwnerRole`
 Authorization: ConventionPolicy `export` (Owner only)
 
 | Parameter | Type | Values |
@@ -218,6 +219,30 @@ Authorization: ConventionPolicy `export` (Owner only)
 | format | string | `xlsx`, `docx`, `md` |
 
 Returns: binary file download. File is deleted from server after sending.
+
+---
+
+## URL Access (Unauthenticated)
+
+### Access via Floor URL
+
+```
+GET /url-access/floor/{token}
+```
+
+No authentication required. Looks up the convention by `floor_url_token`, creates a URL session in the Laravel session, and redirects to `conventions.show`.
+
+Returns 404 if the token is invalid or the convention doesn't exist.
+
+### Access via Section URL
+
+```
+GET /url-access/section/{token}
+```
+
+No authentication required. Looks up the convention by `section_url_token`, creates a URL session in the Laravel session, and redirects to `conventions.show`.
+
+Returns 404 if the token is invalid or the convention doesn't exist.
 
 ---
 
@@ -229,17 +254,16 @@ Returns: binary file download. File is deleted from server after sending.
 GET /conventions/{convention}/floors
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `ScopeByRole`
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
 
 Returns Inertia page `floors/index` with:
 
 | Prop | Type | Description |
 |------|------|-------------|
 | convention | Convention | Parent convention |
-| floors | Floor[] | Role-scoped floors with sections and assigned users (id, first_name, last_name) |
+| floors | Floor[] | Floors with sections |
 | userRoles | string[] | Current user's roles |
-| userFloorIds | number[] | Assigned floor IDs |
-| userSectionIds | number[] | Assigned section IDs |
+| urlSession | UrlSession\|null | URL session data or null |
 
 ### Store Floor
 
@@ -247,8 +271,8 @@ Returns Inertia page `floors/index` with:
 POST /conventions/{convention}/floors
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `ScopeByRole`
-Authorization: FloorPolicy `create` (Owner or ConventionUser only)
+Middleware: `auth`, `EnsureConventionOrUrlAccess`
+Authorization: FloorPolicy `create` (Owner or Administrator only)
 
 | Field | Type | Rules |
 |-------|------|-------|
@@ -262,7 +286,7 @@ On success: redirects to `conventions.show`.
 PUT /floors/{floor}
 ```
 
-Authorization: FloorPolicy `update` (Owner, ConventionUser, or assigned FloorUser)
+Authorization: FloorPolicy `update` (Owner or Administrator)
 
 | Field | Type | Rules |
 |-------|------|-------|
@@ -274,7 +298,7 @@ Authorization: FloorPolicy `update` (Owner, ConventionUser, or assigned FloorUse
 DELETE /floors/{floor}
 ```
 
-Authorization: FloorPolicy `delete` (Owner or ConventionUser only)
+Authorization: FloorPolicy `delete` (Owner or Administrator only)
 
 Cascades: deletes all sections on the floor via database foreign key.
 
@@ -288,9 +312,9 @@ Cascades: deletes all sections on the floor via database foreign key.
 GET /conventions/{convention}/floors/{floor}/sections
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `ScopeByRole`
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
 
-Returns Inertia page `sections/index` with role-scoped sections.
+Returns Inertia page `sections/index` with sections.
 
 ### Show Section
 
@@ -396,14 +420,14 @@ On success: redirects to `floors.index`.
 GET /conventions/{convention}/users
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `ScopeByRole`
+Middleware: `auth`, `EnsureConventionOrUrlAccess`
 
 Returns Inertia page `users/index` with:
 
 | Prop | Type | Description |
 |------|------|-------------|
 | convention | Convention | Parent convention |
-| users | User[] | Role-scoped users with roles, floor_ids, section_ids |
+| users | User[] | Convention users with roles |
 | floors | Floor[] | Convention floors with sections (for add/edit form) |
 | userRoles | string[] | Current user's roles |
 
@@ -419,9 +443,7 @@ POST /conventions/{convention}/users
 | last_name | string | required, max:255 |
 | email | string | required, email, unique, must not contain "jwpub.org" |
 | mobile | string | required, max:255 |
-| roles | string[] | required, min:1, each one of: Owner, ConventionUser, FloorUser, SectionUser |
-| floor_ids | integer[] | required if FloorUser role, each must exist in floors table |
-| section_ids | integer[] | required if SectionUser role, each must exist in sections table |
+| roles | string[] | required, min:1, each one of: Owner, Administrator |
 
 If the email already exists, the existing user is attached to the convention instead of creating a duplicate. Sends an invitation email with a signed URL (24h expiry).
 
@@ -451,7 +473,7 @@ Removes all role and pivot records for this convention. If the user has no remai
 POST /conventions/{convention}/users/{user}/resend-invitation
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`, `throttle:3,60`
+Middleware: `auth`, `EnsureConventionOrUrlAccess`, `throttle:3,60`
 
 Rate limited: 3 requests per 60 minutes. Generates a new signed URL and sends the invitation email.
 
@@ -465,8 +487,8 @@ Rate limited: 3 requests per 60 minutes. Generates a new signed URL and sends th
 POST /conventions/{convention}/attendance/start
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`
-Authorization: Owner or ConventionUser role required (checked in controller)
+Middleware: `auth`, `EnsureConventionOrUrlAccess`
+Authorization: Owner or Administrator role required (checked in controller)
 
 Determines the current period (morning if before 12:00, afternoon otherwise). Maximum 2 reports per day per convention.
 
@@ -479,8 +501,8 @@ On failure: redirects back with `attendance` error (e.g., "Maximum 2 attendance 
 POST /conventions/{convention}/attendance/{attendancePeriod}/stop
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`
-Authorization: Owner or ConventionUser role required
+Middleware: `auth`, `EnsureConventionOrUrlAccess`
+Authorization: Owner or Administrator role required
 
 Locks the period permanently. No further attendance updates are allowed.
 
@@ -494,7 +516,7 @@ POST /sections/{section}/attendance/{attendancePeriod}/report
 |-------|------|-------|
 | attendance | integer | required, min:0 |
 
-Creates or updates the attendance report for this section and period. Records `reported_by` and `reported_at`. Before locking, only the original reporter can update. After locking, no updates are allowed.
+Creates or updates the attendance report for this section and period. Records `reported_at` timestamp. Any user with section permissions can create or update reports. After locking, no updates are allowed.
 
 ---
 
@@ -506,9 +528,9 @@ Creates or updates the attendance report for this section and period. Records `r
 GET /conventions/{convention}/search
 ```
 
-Middleware: `auth`, `EnsureConventionAccess`
+Middleware: `auth` or URL session, `EnsureConventionOrUrlAccess`
 
-No role-based filtering — accessible to all authenticated users with convention access.
+No role-based filtering — accessible to all users with convention access (authenticated or via URL session).
 
 | Parameter | Type | Rules |
 |-----------|------|-------|
@@ -627,7 +649,6 @@ All validation errors are returned as Inertia redirects with errors in the sessi
 | `auth` | Requires authenticated session |
 | `verified` | Requires verified email |
 | `signed` | Verifies URL signature (invitation links) |
-| `EnsureConventionAccess` | Verifies user has any role for the convention |
+| `EnsureConventionOrUrlAccess` | Verifies user has a role or valid URL session for the convention |
 | `EnsureOwnerRole` | Verifies user has Owner role |
-| `ScopeByRole` | Injects `scoped_floor_ids` / `scoped_section_ids` based on role |
 | `throttle:3,60` | Rate limits to 3 requests per 60 minutes |

@@ -22,7 +22,8 @@ A comprehensive convention management system built with Laravel and React. Manag
 - Multi-format data export (.xlsx, .docx, Markdown)
 
 ### User Management and Security
-- Four-tier role-based access control (Owner, ConventionUser, FloorUser, SectionUser)
+- Two-tier role-based access control (Owner, Administrator)
+- URL-based anonymous access for floor and section volunteers (no account required)
 - Secure email invitations with signed URL account activation (24h expiry)
 - Login with "remember me", password reset, email verification
 - Two-factor authentication (TOTP) with recovery codes
@@ -127,9 +128,9 @@ This creates floors, sections (with accessibility features), users across all fo
 | Role | Email | Password |
 |------|-------|----------|
 | Owner | owner@example.com | Password1! |
-| ConventionUser | manager@example.com | Password1! |
-| FloorUser | floor@example.com | Password1! |
-| SectionUser | section@example.com | Password1! |
+| Administrator | manager@example.com | Password1! |
+
+Floor and section access is now handled via shareable URLs (no user accounts needed). See [User Guide](docs/USER_GUIDE.md) for details.
 
 To reset and re-seed:
 

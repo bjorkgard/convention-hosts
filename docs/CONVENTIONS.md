@@ -31,6 +31,8 @@ CREATE TABLE conventions (
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     other_info TEXT,
+    floor_url_token VARCHAR(64) UNIQUE,
+    section_url_token VARCHAR(64) UNIQUE,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
     CONSTRAINT check_dates CHECK (end_date >= start_date)
@@ -39,12 +41,15 @@ CREATE TABLE conventions (
 -- Indexes
 CREATE INDEX idx_conventions_location ON conventions(city, country);
 CREATE INDEX idx_conventions_dates ON conventions(start_date, end_date);
+CREATE UNIQUE INDEX idx_conventions_floor_url_token ON conventions(floor_url_token);
+CREATE UNIQUE INDEX idx_conventions_section_url_token ON conventions(section_url_token);
 ```
 
 **Key Features:**
 - Date range validation (end_date must be >= start_date)
 - Location-based indexing for conflict detection
 - Optional address and additional information fields
+- Auto-generated URL tokens for anonymous floor and section access (64-char random strings)
 
 #### floors
 Organizes convention venues into physical levels.
@@ -120,7 +125,7 @@ CREATE TABLE convention_user_roles (
     id INTEGER PRIMARY KEY,
     convention_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    role VARCHAR(50) NOT NULL CHECK (role IN ('Owner', 'ConventionUser', 'FloorUser', 'SectionUser')),
+    role VARCHAR(50) NOT NULL CHECK (role IN ('Owner', 'Administrator')),
     created_at TIMESTAMP,
     FOREIGN KEY (convention_id) REFERENCES conventions(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -128,30 +133,7 @@ CREATE TABLE convention_user_roles (
 );
 ```
 
-#### floor_user & section_user
-Scope user access to specific floors or sections.
-
-```sql
-CREATE TABLE floor_user (
-    id INTEGER PRIMARY KEY,
-    floor_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    created_at TIMESTAMP,
-    FOREIGN KEY (floor_id) REFERENCES floors(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(floor_id, user_id)
-);
-
-CREATE TABLE section_user (
-    id INTEGER PRIMARY KEY,
-    section_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    created_at TIMESTAMP,
-    FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(section_id, user_id)
-);
-```
+> **Note:** The previous `FloorUser` and `SectionUser` roles and their pivot tables (`floor_user`, `section_user`) have been removed. Floor and section access is now handled via URL-based anonymous access tokens stored on the `conventions` table.
 
 ### Attendance Tracking
 
@@ -181,63 +163,72 @@ CREATE TABLE attendance_reports (
     attendance_period_id INTEGER NOT NULL,
     section_id INTEGER NOT NULL,
     attendance INTEGER NOT NULL CHECK (attendance >= 0),
-    reported_by INTEGER NOT NULL,
     reported_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
     FOREIGN KEY (attendance_period_id) REFERENCES attendance_periods(id) ON DELETE CASCADE,
     FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE,
-    FOREIGN KEY (reported_by) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(attendance_period_id, section_id)
 );
 ```
 
+> **Note:** The `reported_by` column has been removed. Any user with section permissions (authenticated or via URL session) can create or update attendance reports. Only the timestamp of the last update is tracked.
+
 ## Role-Based Access Control
 
-The system implements a four-tier hierarchical role system with middleware-enforced access control.
+The system implements a two-tier authenticated role system supplemented by URL-based anonymous access tokens.
 
-### Role Hierarchy
+### Authenticated Roles
 
 ```
 Owner (Full Control)
-  ├─ All ConventionUser capabilities
+  ├─ All Administrator capabilities
   ├─ Delete convention
   ├─ Export convention data
   └─ Override all restrictions
 
-ConventionUser (Convention-wide Access)
+Administrator (Convention-wide Access)
   ├─ View/edit all floors, sections, users
   ├─ Start/stop attendance reports
   ├─ Lock attendance periods
   └─ Manage all convention entities
-
-FloorUser (Floor-scoped Access)
-  ├─ View/edit assigned floors
-  ├─ Manage sections on assigned floors
-  ├─ View users on assigned floors
-  └─ Report attendance for assigned sections
-
-SectionUser (Section-scoped Access)
-  ├─ View/edit assigned sections
-  ├─ Update occupancy for assigned sections
-  ├─ Report attendance for assigned sections
-  └─ View users on assigned sections
 ```
+
+### URL-Based Anonymous Access
+
+Floor and section management by volunteers is handled via shareable URLs that create anonymous sessions:
+
+```
+Floor URL Session
+  ├─ View all floors and sections
+  ├─ Update occupancy for any section
+  └─ Report attendance for any section
+
+Section URL Session
+  ├─ View all sections
+  ├─ Update occupancy for any section
+  └─ Report attendance for any section
+```
+
+URL sessions cannot: create/edit/delete floors or sections, manage users, start/stop attendance reports, or lock attendance periods.
 
 ### Permission Matrix
 
-| Action | Owner | ConventionUser | FloorUser | SectionUser |
-|--------|-------|----------------|-----------|-------------|
+| Action | Owner | Administrator | Floor URL | Section URL |
+|--------|-------|---------------|-----------|-------------|
 | View convention | ✓ | ✓ | ✓ | ✓ |
 | Edit convention | ✓ | ✓ | ✗ | ✗ |
 | Delete convention | ✓ | ✗ | ✗ | ✗ |
 | Export data | ✓ | ✗ | ✗ | ✗ |
-| Manage all floors | ✓ | ✓ | ✗ | ✗ |
-| Manage assigned floors | ✓ | ✓ | ✓ | ✗ |
-| Manage all sections | ✓ | ✓ | ✗ | ✗ |
-| Manage assigned sections | ✓ | ✓ | ✓ | ✓ |
+| Manage floors | ✓ | ✓ | ✗ | ✗ |
+| View floors | ✓ | ✓ | ✓ | ✗ |
+| Manage sections | ✓ | ✓ | ✗ | ✗ |
+| View sections | ✓ | ✓ | ✓ | ✓ |
+| Update occupancy | ✓ | ✓ | ✓ | ✓ |
+| Manage users | ✓ | ✓ | ✗ | ✗ |
 | Start/stop attendance | ✓ | ✓ | ✗ | ✗ |
-| Report attendance | ✓ | ✓ | ✓ (assigned) | ✓ (assigned) |
+| Report attendance | ✓ | ✓ | ✓ | ✓ |
+| Lock attendance periods | ✓ | ✓ | ✗ | ✗ |
 
 ## Key Features
 
@@ -250,14 +241,14 @@ Unauthenticated users can create a convention directly from the landing page wit
 **Flow for existing users:**
 1. Guest submits convention details along with their name, email, and mobile number
 2. System finds the existing user by email
-3. Convention is created via `CreateConventionAction` (assigns Owner and ConventionUser roles)
+3. Convention is created via `CreateConventionAction` (assigns Owner and Administrator roles)
 4. User is automatically logged in
 5. Redirected to the new convention's detail page
 
 **Flow for new users:**
 1. Guest submits convention details along with their name, email, and mobile number
 2. System creates a user account with a random password and `email_confirmed` set to false
-3. Convention is created via `CreateConventionAction` (assigns Owner and ConventionUser roles)
+3. Convention is created via `CreateConventionAction` (assigns Owner and Administrator roles)
 4. A verification email is sent with a signed URL (24h expiry) to set a password
 5. User is redirected to a confirmation page (not logged in) showing the convention name and email
 6. User clicks the email link, sets a password, and is then logged in and redirected to the convention
@@ -304,15 +295,15 @@ Real-time section occupancy with visual color coding:
 - Periods can be locked to prevent further updates
 
 **Workflow:**
-1. ConventionUser starts attendance report
+1. Owner or Administrator starts attendance report
 2. Section managers report attendance for their sections
 3. System tracks "X of Y sections reported"
-4. ConventionUser locks period when complete
+4. Owner or Administrator locks period when complete
 5. Locked periods display historical data
 
 **Restrictions:**
-- Only original reporter can update before lock
-- ConventionUser can override and lock anytime
+- Any user with section permissions can create or update attendance reports
+- Owner or Administrator can override and lock anytime
 - Locked periods are immutable
 
 ### User Invitation System
@@ -449,6 +440,12 @@ The `Convention` model represents a convention event with all its relationships 
 - `start_date` - Convention start date (cast to Carbon date)
 - `end_date` - Convention end date (cast to Carbon date)
 - `other_info` - Optional additional information
+- `floor_url_token` - Auto-generated 64-char token for anonymous floor access
+- `section_url_token` - Auto-generated 64-char token for anonymous section access
+
+**Hidden Attributes:**
+- `floor_url_token` - Hidden from default serialization (exposed explicitly for Owner/Administrator)
+- `section_url_token` - Hidden from default serialization (exposed explicitly for Owner/Administrator)
 
 **Relationships:**
 
@@ -466,14 +463,14 @@ $convention->users()               // BelongsToMany User (via convention_user)
 ```php
 // Get all roles for a specific user
 $roles = $convention->userRoles($user);
-// Returns: Collection of role strings ['Owner', 'ConventionUser']
+// Returns: Collection of role strings ['Owner', 'Administrator']
 
 // Check if user has a specific role
 $isOwner = $convention->hasRole($user, 'Owner');
 // Returns: bool
 
 // Check if user has any of the specified roles
-$hasAccess = $convention->hasAnyRole($user, ['Owner', 'ConventionUser']);
+$hasAccess = $convention->hasAnyRole($user, ['Owner', 'Administrator']);
 // Returns: bool
 ```
 
@@ -499,13 +496,17 @@ if ($convention->hasRole($user, 'Owner')) {
     // Allow deletion
 }
 
-if ($convention->hasAnyRole($user, ['Owner', 'ConventionUser'])) {
+if ($convention->hasAnyRole($user, ['Owner', 'Administrator'])) {
     // Allow full access
 }
 
 // Get user's roles
 $userRoles = $convention->userRoles($user);
-// ['Owner', 'ConventionUser']
+// ['Owner', 'Administrator']
+
+// Get URL access links
+$floorUrl = $convention->floorAccessUrl();
+$sectionUrl = $convention->sectionAccessUrl();
 ```
 
 **Date Casting:**
@@ -545,8 +546,9 @@ The action performs the following operations within a database transaction:
 2. **Attaches the creator** to the convention via the `convention_user` pivot table
 3. **Assigns roles** to the creator:
    - `Owner` role (full administrative privileges)
-   - `ConventionUser` role (convention-wide access)
-4. **Returns the fresh convention** instance with all relationships loaded
+   - `Administrator` role (convention-wide access)
+4. **Auto-generates URL tokens** via the Convention model's `creating` boot event (`floor_url_token` and `section_url_token`)
+5. **Returns the fresh convention** instance with all relationships loaded
 
 **Transaction Safety:**
 
@@ -665,7 +667,7 @@ public function store(StoreConventionRequest $request)
     // If validation passes, create convention
     $convention = Convention::create($request->validated());
     
-    // Attach creator as Owner and ConventionUser
+    // Attach creator as Owner and Administrator
     // ...
 }
 ```
@@ -676,21 +678,21 @@ The overlap detection is covered by property-based tests in Task 3.2 of the impl
 
 ## Middleware and Authorization
 
-### EnsureConventionAccess Middleware
+### EnsureConventionOrUrlAccess Middleware
 
-The `EnsureConventionAccess` middleware enforces convention-level access control by verifying that authenticated users have at least one role for the requested convention.
+The `EnsureConventionOrUrlAccess` middleware enforces convention-level access control by verifying that the request has access via either an authenticated user role or a URL session token.
 
-**Location:** `app/Http/Middleware/EnsureConventionAccess.php`
+**Location:** `app/Http/Middleware/EnsureConventionOrUrlAccess.php`
 
-**Purpose:** Prevents unauthorized access to convention resources by checking if the user has any role (Owner, ConventionUser, FloorUser, or SectionUser) for the requested convention.
+**Purpose:** Prevents unauthorized access to convention resources by checking if the user has any role (Owner or Administrator) for the requested convention, or if a valid URL session exists for the convention.
 
 **How It Works:**
 
-1. Extracts the authenticated user from the request
-2. Retrieves the convention from the route parameter
-3. Checks if the user's conventions collection contains the requested convention
-4. Aborts with 403 if user has no access
-5. Allows request to proceed if user has any role for the convention
+1. Retrieves the convention from the route parameter
+2. If user is authenticated, checks if the user's conventions collection contains the requested convention
+3. If not authenticated (or no role), checks for a URL session with matching convention_id
+4. Aborts with 403 if neither condition is met
+5. Allows request to proceed if access is confirmed
 
 **Implementation:**
 
@@ -717,7 +719,7 @@ public function handle(Request $request, Closure $next): Response
 **Usage in Routes:**
 
 ```php
-Route::middleware(['auth', EnsureConventionAccess::class])->group(function () {
+Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
     Route::get('/conventions/{convention}', [ConventionController::class, 'show']);
     Route::get('/conventions/{convention}/floors', [FloorController::class, 'index']);
     Route::get('/conventions/{convention}/sections', [SectionController::class, 'index']);
@@ -728,14 +730,14 @@ Route::middleware(['auth', EnsureConventionAccess::class])->group(function () {
 
 - **Graceful Skipping:** If no convention parameter exists in the route, the middleware passes through without checks
 - **Relationship-Based:** Uses Eloquent relationships to verify access, leveraging the `convention_user` pivot table
-- **Role-Agnostic:** Checks for any role without distinguishing between Owner, ConventionUser, FloorUser, or SectionUser
+- **Role-Agnostic:** Checks for any role without distinguishing between Owner or Administrator for authenticated users
+- **URL Session Support:** Also accepts URL session tokens for anonymous floor/section access
 - **Clear Error Response:** Returns 403 Forbidden with descriptive message "No access to this convention" when access is denied
 
 **Additional Authorization Layers:**
 
 After the middleware confirms basic convention access, additional authorization is enforced through:
 
-- **ScopeByRole Middleware:** Filters query results based on user's role scope (FloorUser sees only assigned floors, SectionUser sees only assigned sections)
 - **EnsureOwnerRole Middleware:** Restricts certain actions (delete, export) to Owner role only
 - **Policies:** Fine-grained permissions for Convention, Floor, Section, and User entities
 - **Signed URLs:** Time-limited invitation links with cryptographic signatures
@@ -767,11 +769,11 @@ The `ConventionController` handles all convention CRUD operations, role-scoped d
 
 **Role-Scoped Data Loading (show method):**
 
-The `show()` method dynamically scopes data based on the user's role, using scoped IDs injected by the `ScopeByRole` middleware:
+The `show()` method returns data based on the user's role or URL session:
 
-- **Owner / ConventionUser**: Sees all floors, sections, users, and attendance data
-- **FloorUser**: Sees only assigned floors and their sections
-- **SectionUser**: Sees only floors containing assigned sections, filtered to those sections
+- **Owner / Administrator**: Sees all floors, sections, users, and attendance data
+- **Floor URL session**: Sees all floors and sections (read-only, can update occupancy and report attendance)
+- **Section URL session**: Sees all sections (read-only, can update occupancy and report attendance)
 
 **Props returned to frontend:**
 
@@ -805,7 +807,7 @@ The `GuestConventionController` allows unauthenticated users to create a convent
 
 1. Validates user fields (first_name, last_name, email) and convention fields via `StoreGuestConventionRequest`
 2. Finds an existing user by email or creates a new one with a random password and `email_confirmed=false`
-3. Delegates convention creation to `CreateConventionAction` (assigns Owner + ConventionUser roles)
+3. Delegates convention creation to `CreateConventionAction` (assigns Owner + Administrator roles)
 4. **Existing user:** Logs the user in via `Auth::login()` and redirects to the convention detail page
 5. **New user:** Sends a `GuestConventionVerification` email with a signed URL (24h expiry), then renders the confirmation page without logging the user in
 
@@ -819,7 +821,7 @@ The frontend data models are defined in `resources/js/types/convention.ts` and m
 | `Floor` | Venue level | convention_id, name |
 | `Section` | Seating area | floor_id, number_of_seats, occupancy, available_seats, elder_friendly, handicap_friendly |
 | `AttendancePeriod` | Reporting period | convention_id, date, period (`'morning'` \| `'afternoon'`), locked |
-| `AttendanceReport` | Section attendance | attendance_period_id, section_id, attendance, reported_by |
+| `AttendanceReport` | Section attendance | attendance_period_id, section_id, attendance, reported_at |
 
 All interfaces include optional relationship fields (e.g., `floors?: Floor[]` on Convention) for when data is eagerly loaded via Inertia props. The `User` type is imported from `@/types/auth`.
 
@@ -836,21 +838,20 @@ Reads the current user's roles and scope from Inertia shared page props.
 | Prop | Type | Description |
 |------|------|-------------|
 | `userRoles` | `Role[]` | Roles for the current convention |
-| `userFloorIds` | `number[]` | Floor IDs the user is assigned to |
-| `userSectionIds` | `number[]` | Section IDs the user is assigned to |
+| `urlSession` | `UrlSession\|null` | URL session data (type and convention_id), or null |
 
-These props are provided by the `ConventionController.show()` method.
+These props are provided by the `ConventionController.show()` method and `HandleInertiaRequests` middleware.
 
 **Return Value:**
 
 ```typescript
 interface UseConventionRoleReturn {
     isOwner: boolean;
-    isConventionUser: boolean;
-    isFloorUser: boolean;
-    isSectionUser: boolean;
-    hasFloorAccess: (floorId: number) => boolean;
-    hasSectionAccess: (sectionId: number) => boolean;
+    isAdministrator: boolean;
+    isManager: boolean;          // Owner or Administrator
+    isUrlSession: boolean;
+    isFloorUrlSession: boolean;
+    isSectionUrlSession: boolean;
 }
 ```
 
@@ -860,21 +861,19 @@ interface UseConventionRoleReturn {
 import { useConventionRole } from '@/hooks/use-convention-role';
 
 function FloorList({ floors }) {
-    const { isOwner, isConventionUser, hasFloorAccess } = useConventionRole();
+    const { isManager, isFloorUrlSession } = useConventionRole();
 
-    return floors
-        .filter((floor) => hasFloorAccess(floor.id))
-        .map((floor) => (
-            <FloorRow
-                key={floor.id}
-                floor={floor}
-                canEdit={isOwner || isConventionUser}
-            />
-        ));
+    return floors.map((floor) => (
+        <FloorRow
+            key={floor.id}
+            floor={floor}
+            canEdit={isManager}
+        />
+    ));
 }
 ```
 
-Owner and ConventionUser roles automatically have access to all floors and sections. FloorUser and SectionUser access is determined by the scoped ID sets.
+Owner and Administrator roles automatically have access to all floors and sections. URL session users have fixed permission sets based on their token type (floor or section).
 
 ## Frontend Navigation
 
@@ -888,10 +887,10 @@ When viewing a convention, the sidebar displays context-aware navigation links s
 
 | Link | Icon | Visible To |
 |------|------|------------|
-| Floors | Building2 | Owner, ConventionUser, FloorUser |
-| Sections | Grid3X3 | All convention users |
-| Users | Users | Owner, ConventionUser, FloorUser |
-| Search | Search | All convention users |
+| Administration | Building2 | Owner, Administrator, Floor URL session |
+| Sections | Grid3X3 | All convention users and URL sessions |
+| Users | Users | Owner, Administrator |
+| Availability | Search | All convention users and URL sessions |
 
 The component uses the `useConventionRole` hook for role checks and Wayfinder type-safe actions for URL generation. It only renders when a `convention` prop is present in the page props.
 
@@ -917,7 +916,7 @@ The Convention Management System is currently under development.
 - Form request validation (conventions, floors, sections, users, attendance, search, passwords)
 - Business logic actions (CreateConvention, InviteUser, UpdateOccupancy, ExportConvention, AttendanceReportService)
 - Export system (Excel, Word, Markdown)
-- Middleware and authorization (EnsureConventionAccess, EnsureOwnerRole, ScopeByRole, policies)
+- Middleware and authorization (EnsureConventionOrUrlAccess, EnsureOwnerRole, policies)
 - Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation)
 - Scheduled tasks (daily occupancy reset via `app:reset-daily-occupancy` command)
 - Property-based tests for core business rules
@@ -932,7 +931,7 @@ The Convention Management System is currently under development.
 
 - **Section CRUD from FloorsIndex** — Full section create/edit/delete management from the Floors page via modal dialogs. Includes:
   - **`SectionModal` component** (`resources/js/components/conventions/section-modal.tsx`) — Dialog for creating and editing sections with floor selector dropdown, accessibility checkboxes, and inline validation errors. Uses `useForm` from Inertia with Wayfinder type-safe routing.
-  - **`FloorRow` section action buttons** — Inline edit (Pencil) and delete (Trash2) icon buttons next to each section in expanded floor rows. Visibility is role-gated: Owner, ConventionUser, and assigned FloorUser can edit/delete; SectionUser sees no action buttons. Props: `onEditSection`, `onDeleteSection`, `userFloorIds`, `userSectionIds`.
+  - **`FloorRow` section action buttons** — Inline edit (Pencil) and delete (Trash2) icon buttons next to each section in expanded floor rows. Visibility is role-gated: Owner and Administrator can edit/delete. Props: `onEditSection`, `onDeleteSection`.
   - **`UpdateSectionRequest`** (`app/Http/Requests/UpdateSectionRequest.php`) — Dedicated form request for section updates (no `floor_id` since sections don't change floors on edit).
   - **`StoreSectionRequest` updated** — Added `floor_id` validation (`sometimes|required|exists:floors,id`) for creating sections from the FloorsIndex page.
   - **`SectionController` updated** — Store/update/destroy actions redirect to `floors.index` route. Store accepts `floor_id` from request body. Update uses `UpdateSectionRequest`.
@@ -940,7 +939,7 @@ The Convention Management System is currently under development.
 - **`GuestConventionController`** (`app/Http/Controllers/GuestConventionController.php`) — Allows unauthenticated users to create a convention from the landing page. Finds or creates a user by email, creates the convention via `CreateConventionAction`, and logs the user in automatically. Route: `POST /conventions/guest` (guest middleware)
 - **`StoreGuestConventionRequest`** (`app/Http/Requests/StoreGuestConventionRequest.php`) — Form request validating both user fields (first_name, last_name, email) and convention fields with date overlap detection
 - **`NavConvention` component** (`resources/js/components/nav-convention.tsx`) — Context-aware sidebar navigation that displays convention-specific links (Floors, Sections, Users, Search) with role-based visibility using `useConventionRole` and Wayfinder type-safe routing
-- **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and scope data from Inertia page props, exposing `isOwner`, `isConventionUser`, `isFloorUser`, `isSectionUser` booleans and `hasFloorAccess(floorId)` / `hasSectionAccess(sectionId)` helpers
+- **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and URL session data from Inertia page props, exposing `isOwner`, `isAdministrator`, `isManager`, `isUrlSession`, `isFloorUrlSession`, `isSectionUrlSession` booleans
 - **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes
 
 ## Development Setup

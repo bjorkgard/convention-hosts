@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Convention extends Model
 {
@@ -26,6 +27,18 @@ class Convention extends Model
         'start_date',
         'end_date',
         'other_info',
+        'floor_url_token',
+        'section_url_token',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'floor_url_token',
+        'section_url_token',
     ];
 
     /**
@@ -39,6 +52,33 @@ class Convention extends Model
             'start_date' => 'date',
             'end_date' => 'date',
         ];
+    }
+
+    /**
+     * Auto-generate URL tokens on convention creation.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (Convention $convention) {
+            $convention->floor_url_token ??= Str::random(64);
+            $convention->section_url_token ??= Str::random(64);
+        });
+    }
+
+    /**
+     * Get the full floor access URL for this convention.
+     */
+    public function floorAccessUrl(): string
+    {
+        return route('url-access.floor', $this->floor_url_token);
+    }
+
+    /**
+     * Get the full section access URL for this convention.
+     */
+    public function sectionAccessUrl(): string
+    {
+        return route('url-access.section', $this->section_url_token);
     }
 
     /**

@@ -20,7 +20,6 @@ class AttendanceReport extends Model
         'attendance_period_id',
         'section_id',
         'attendance',
-        'reported_by',
         'reported_at',
     ];
 
@@ -51,13 +50,5 @@ class AttendanceReport extends Model
     public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class);
-    }
-
-    /**
-     * Get the user who reported the attendance.
-     */
-    public function reportedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'reported_by');
     }
 }

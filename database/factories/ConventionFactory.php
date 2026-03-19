@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Convention;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Convention>
@@ -31,6 +32,8 @@ class ConventionFactory extends Factory
             'start_date' => $startDate,
             'end_date' => $endDate,
             'other_info' => $this->faker->optional()->paragraph(),
+            'floor_url_token' => Str::random(64),
+            'section_url_token' => Str::random(64),
         ];
     }
 
@@ -54,7 +57,7 @@ class ConventionFactory extends Factory
                 [
                     'convention_id' => $convention->id,
                     'user_id' => $user->id,
-                    'role' => 'ConventionUser',
+                    'role' => 'Administrator',
                     'created_at' => now(),
                 ],
             ]);

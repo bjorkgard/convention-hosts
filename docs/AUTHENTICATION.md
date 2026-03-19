@@ -23,14 +23,14 @@ Users can create a convention without registering first. The flow differs depend
 **Existing user:**
 1. Guest submits convention form with name, email, and convention details at `POST /conventions/guest`
 2. System finds the existing user by email
-3. Convention created with user as Owner and ConventionUser
+3. Convention created with user as Owner and Administrator
 4. User logged in via `Auth::login()`
 5. Redirected to convention detail page
 
 **New user:**
 1. Guest submits convention form at `POST /conventions/guest`
 2. System creates a new user account with a random password and `email_confirmed` = false
-3. Convention created with user as Owner and ConventionUser
+3. Convention created with user as Owner and Administrator
 4. A verification email is sent containing a signed URL (24h expiry) to set a password
 5. User is redirected to a confirmation page (not logged in) showing the convention name and instructions to check their email
 6. User clicks the email link, sets a password on the set-password page

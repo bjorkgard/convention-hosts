@@ -73,13 +73,13 @@ tests/                          # Backend tests (Pest PHP)
 │   ├── AttendancePropertiesTest.php
 │   ├── ConventionPropertiesTest.php
 │   ├── EmailUpdateConfirmationTest.php
-│   ├── FloorUserPermissionsTest.php
+│   ├── FloorUserPermissionsTest.php        # (legacy — to be updated for URL sessions)
 │   ├── InvitationEmailDeliveryTest.php
 │   ├── OccupancyPropertiesTest.php
 │   ├── RoleBasedDataScopingTest.php
 │   ├── SectionCrudPropertyTest.php
 │   ├── SectionFrontendPropertyTest.php
-│   ├── SectionUserRestrictionsTest.php
+│   ├── SectionUserRestrictionsTest.php      # (legacy — to be updated for URL sessions)
 │   └── UserPropertiesTest.php
 ├── Unit/                      # Unit tests for actions and services
 ├── Helpers/                   # ConventionTestHelper — shared test setup
@@ -582,7 +582,7 @@ test('inviting a user sends an invitation email', function () {
         'last_name'  => 'User',
         'email'      => 'invited@example.com',
         'mobile'     => '+1234567890',
-        'roles'      => ['SectionUser'],
+        'roles'      => ['Administrator'],
     ]);
 
     Mail::assertSent(UserInvitation::class, fn ($mail) => $mail->hasTo('invited@example.com'));
@@ -641,8 +641,8 @@ php artisan test --group=property
 | `Property/InvitationEmailDeliveryTest` | Invitation email delivery via signed URL |
 | `Property/EmailUpdateConfirmationTest` | Email update triggers re-confirmation |
 | `Property/RoleBasedDataScopingTest` | Role-based query scoping across all four roles |
-| `Property/FloorUserPermissionsTest` | FloorUser permission enforcement |
-| `Property/SectionUserRestrictionsTest` | SectionUser edit and scope restrictions |
+| `Property/FloorUserPermissionsTest` | FloorUser permission enforcement (legacy — to be updated for URL sessions) |
+| `Property/SectionUserRestrictionsTest` | SectionUser edit and scope restrictions (legacy — to be updated for URL sessions) |
 | `Property/SectionCrudPropertyTest` | Section create/update/delete persistence |
 | `Property/SectionFrontendPropertyTest` | Button visibility by role, floor selector, section display data |
 | `Property/OccupancyColorCodingTest` | Color coding thresholds across full occupancy range |
@@ -666,7 +666,7 @@ it('sends exactly one invitation email for any valid user data', function () {
             'last_name' => fake()->lastName(),
             'email' => 'test-'.$i.'@example.com',
             'mobile' => fake()->phoneNumber(),
-            'roles' => [fake()->randomElement(['ConventionUser', 'Owner'])],
+            'roles' => [fake()->randomElement(['Administrator', 'Owner'])],
         ];
 
         $user = (new InviteUserAction)->execute($userData, $convention);
