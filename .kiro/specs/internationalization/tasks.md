@@ -40,44 +40,44 @@ This plan implements a complete i18n system where Laravel is the single source o
     - Include Laravel's built-in validation messages in Swedish via `lang/sv/validation.php`
     - _Requirements: 1.3, 11.4_
 
-- [ ] 3. Checkpoint - Verify migrations and translation files
+- [x] 3. Checkpoint - Verify migrations and translation files
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 4. Backend locale infrastructure
-  - [ ] 4.1 Create `LocaleController` with API endpoints
+- [x] 4. Backend locale infrastructure
+  - [x] 4.1 Create `LocaleController` with API endpoints
     - Create `app/Http/Controllers/LocaleController.php`
     - Implement `index()`: return JSON array of locale codes from `lang/` subdirectories
     - Implement `show(string $locale)`: return merged translations from all domain files for the locale, 404 if locale directory doesn't exist
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
-  - [ ] 4.2 Register locale API routes
+  - [x] 4.2 Register locale API routes
     - Add `GET /api/locales` and `GET /api/translations/{locale}` routes in `routes/web.php`
     - Ensure routes are public (no auth middleware) so anonymous URL sessions and public pages can load translations
     - _Requirements: 2.1, 2.4_
-  - [ ] 4.3 Create `SetLocale` middleware
+  - [x] 4.3 Create `SetLocale` middleware
     - Create `app/Http/Middleware/SetLocale.php`
     - Implement locale resolution priority chain: authenticated user `locale` → URL session convention `locale` → fallback `'sv'`
     - Call `App::setLocale()` with the resolved locale
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
-  - [ ] 4.4 Register `SetLocale` as global middleware
+  - [x] 4.4 Register `SetLocale` as global middleware
     - Add `SetLocale` to the global web middleware stack in `bootstrap/app.php` so it runs before controllers on every request
     - _Requirements: 3.4_
-  - [ ] 4.5 Share resolved locale via Inertia
+  - [x] 4.5 Share resolved locale via Inertia
     - Add `'locale' => App::getLocale()` to the shared data array in `HandleInertiaRequests`
     - _Requirements: 3.5_
-  - [ ] 4.6 Write Pest feature tests for `LocaleController`
+  - [x] 4.6 Write Pest feature tests for `LocaleController`
     - Test `GET /api/locales` returns available locale codes
     - Test `GET /api/translations/en` returns merged translations
     - Test `GET /api/translations/nonexistent` returns 404
     - Test endpoints are accessible without authentication
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
-  - [ ] 4.7 Write Pest feature tests for `SetLocale` middleware
+  - [x] 4.7 Write Pest feature tests for `SetLocale` middleware
     - Test authenticated user locale is applied
     - Test URL session convention locale is applied when user locale is null
     - Test fallback to `'sv'` when no locale context exists
     - Test locale is shared via Inertia props
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-- [ ] 5. Checkpoint - Verify backend locale infrastructure
+- [x] 5. Checkpoint - Verify backend locale infrastructure
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 6. Email locale resolution

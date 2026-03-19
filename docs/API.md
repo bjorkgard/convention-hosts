@@ -661,6 +661,44 @@ Configured via `GITHUB_REPO` environment variable (default: `bjorkgard/conventio
 
 ---
 
+## Locales (Public)
+
+### List Available Locales
+
+```
+GET /api/locales
+```
+
+No authentication required. Returns a JSON array of available locale codes, auto-discovered from `lang/` subdirectories.
+
+**Response (200):**
+
+```json
+["en", "sv"]
+```
+
+### Get Translations for a Locale
+
+```
+GET /api/translations/{locale}
+```
+
+No authentication required. Returns all translation key-value pairs for the given locale, merged from all domain files.
+
+**Response (200):**
+
+```json
+{
+  "auth": { "login": { "title": "Log in", "email_label": "Email" } },
+  "convention": { "create": { "title": "Create Convention" } },
+  "common": { "save": "Save", "cancel": "Cancel" }
+}
+```
+
+**Response (404):** Returned when the locale code has no corresponding `lang/` directory.
+
+---
+
 ## Error Responses
 
 All validation errors are returned as Inertia redirects with errors in the session. The frontend accesses them via `usePage().props.errors`.
