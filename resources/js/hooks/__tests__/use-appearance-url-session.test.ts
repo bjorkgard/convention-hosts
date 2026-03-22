@@ -53,7 +53,7 @@ describe('useAppearance — URL session override', () => {
         it('forces light appearance for any URL session state', () => {
             const urlSessionArb = fc.record({
                 convention_id: fc.uuid(),
-                type: fc.constantFrom('floor' as const, 'section' as const),
+                type: fc.constant('section' as const),
             });
 
             fc.assert(
@@ -71,7 +71,7 @@ describe('useAppearance — URL session override', () => {
 
         it('updateAppearance is a no-op when URL session is active', () => {
             setPageProps({
-                urlSession: { convention_id: 'test-id', type: 'floor' },
+                urlSession: { convention_id: 'test-id', type: 'section' },
             });
             const { result } = renderHook(() => useAppearance());
 

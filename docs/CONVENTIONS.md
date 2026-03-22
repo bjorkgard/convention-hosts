@@ -133,7 +133,7 @@ CREATE TABLE convention_user_roles (
 );
 ```
 
-> **Note:** The previous `FloorUser` and `SectionUser` roles and their pivot tables (`floor_user`, `section_user`) have been removed. Floor and section access is now handled via URL-based anonymous access tokens stored on the `conventions` table.
+> **Note:** The previous `FloorUser` and `SectionUser` roles and their pivot tables (`floor_user`, `section_user`) have been removed. Anonymous access is now handled via a URL-based section access token stored on the `conventions` table.
 
 ### Attendance Tracking
 
