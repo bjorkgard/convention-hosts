@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Listeners\SecurityEventListener;
+use App\Models\AttendancePeriod;
 use App\Models\Convention;
+use App\Models\Section;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,9 +25,9 @@ class EnsureConventionOrUrlAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $convention = $request->route('convention');
+        $convention = $this->resolveConvention($request);
 
-        // If convention is not in the route, skip this middleware
+        // If no convention could be resolved from any route parameter, skip this middleware
         if (! $convention instanceof Convention) {
             return $next($request);
         }
@@ -58,5 +60,32 @@ class EnsureConventionOrUrlAccess
         );
 
         abort(403, 'No access to this convention');
+    }
+
+    /**
+     * Resolve the convention from route parameters.
+     *
+     * Checks in order: {convention}, {section} (via floor), {attendancePeriod}.
+     * This ensures token validation runs even on section-scoped routes
+     * that don't include {convention} in the URL.
+     */
+    private function resolveConvention(Request $request): ?Convention
+    {
+        $convention = $request->route('convention');
+        if ($convention instanceof Convention) {
+            return $convention;
+        }
+
+        $section = $request->route('section');
+        if ($section instanceof Section) {
+            return $section->floor?->convention;
+        }
+
+        $attendancePeriod = $request->route('attendancePeriod');
+        if ($attendancePeriod instanceof AttendancePeriod) {
+            return $attendancePeriod->convention;
+        }
+
+        return null;
     }
 }

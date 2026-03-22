@@ -324,7 +324,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 #### EnsureConventionOrUrlAccess
 
-Verifies that the request has access to a convention — either via an authenticated user with a role, or via a URL session with a valid token:
+Verifies that the request has access to a convention — either via an authenticated user with a role, or via a URL session with a valid token.
+
+The middleware resolves the convention from multiple route parameters, checking `{convention}`, `{section}` (via its floor), and `{attendancePeriod}` in order. This ensures access control is enforced even on section-scoped or attendance-period-scoped routes that don't include `{convention}` directly in the URL.
 
 ```php
 // app/Http/Middleware/EnsureConventionOrUrlAccess.php
@@ -332,36 +334,31 @@ class EnsureConventionOrUrlAccess
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $convention = $request->route('convention');
+        $convention = $this->resolveConvention($request);
 
         if (! $convention instanceof Convention) {
             return $next($request);
         }
 
         // Path 1: Authenticated user with a convention role
-        $user = $request->user();
-        if ($user && $user->conventions->contains($convention)) {
-            return $next($request);
-        }
-
         // Path 2: URL session with matching convention_id and valid token
-        $urlSession = session('url_session');
-        if ($urlSession && ($urlSession['convention_id'] ?? null) === $convention->id) {
-            $storedToken = $urlSession['token'] ?? null;
-            $currentToken = $convention->section_url_token;
+        // Aborts 403 if neither path matches
+    }
 
-            if ($storedToken && $storedToken === $currentToken) {
-                return $next($request);
-            }
-
-            // Token was regenerated — clear the stale session
-            session()->forget('url_session');
-        }
-
-        abort(403, 'No access to this convention');
+    private function resolveConvention(Request $request): ?Convention
+    {
+        // 1. Direct {convention} route parameter
+        // 2. {section} → floor → convention
+        // 3. {attendancePeriod} → convention
+        return null;
     }
 }
 ```
+
+**Convention resolution order:**
+1. `{convention}` — direct route model binding
+2. `{section}` — traverses `section.floor.convention`
+3. `{attendancePeriod}` — traverses `attendancePeriod.convention`
 
 **Token validation:** When a convention owner regenerates the URL access token, any existing URL sessions using the old token are automatically invalidated. The middleware compares the session's stored token against the convention's current `section_url_token` and clears stale sessions, forcing the user to re-enter via the new URL.
 
@@ -369,10 +366,11 @@ class EnsureConventionOrUrlAccess
 ```php
 Route::middleware(EnsureConventionOrUrlAccess::class)->group(function () {
     Route::get('/conventions/{convention}', [ConventionController::class, 'show']);
+    // Also protects section and attendance routes without {convention} in the URL
 });
 ```
 
-This middleware ensures that users can only access conventions they are associated with through either the role-based access control system or a valid, current URL session token.
+This middleware ensures that users can only access conventions they are associated with through either the role-based access control system or a valid, current URL session token — regardless of which route parameter identifies the convention.
 
 #### URL Session and Policy Interaction
 

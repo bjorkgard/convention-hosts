@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `EnsureConventionOrUrlAccess` middleware now resolves conventions from multiple route parameters (`{convention}`, `{section}`, `{attendancePeriod}`), ensuring access control is enforced on section-scoped and attendance-period-scoped routes
 - Validate URL session tokens against current convention tokens in `EnsureConventionOrUrlAccess` middleware; stale sessions from regenerated tokens are automatically cleared
 - Move consent route outside auth middleware so URL-session (anonymous) users can submit cookie consent; anonymous consent is stored in the Laravel session
 - Rename ConventionUser role to Administrator
