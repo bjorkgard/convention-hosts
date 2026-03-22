@@ -47,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - update floor operation redirects to floors.index
 - update user-row test fixtures to use string IDs and add locale
+- clarify section-only access model in documentation
+- update role model to two-tier authenticated system with URL-based access
 
 ## [v0.5.4] - 2026-03-12
 
