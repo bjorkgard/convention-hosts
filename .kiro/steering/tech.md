@@ -84,3 +84,4 @@ composer ci:check           # Run all checks (lint, format, types, tests)
 - `maatwebsite/excel` - Excel export
 - `phpoffice/phpword` - Word document export
 - `symfony/mailgun-mailer` - Mailgun email integration
+- `i18next` / `react-i18next` - Frontend internationalization

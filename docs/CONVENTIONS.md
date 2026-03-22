@@ -32,6 +32,7 @@ CREATE TABLE conventions (
     end_date DATE NOT NULL,
     other_info TEXT,
     section_url_token VARCHAR(64) UNIQUE,
+    locale VARCHAR(10) DEFAULT 'en',
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
     CONSTRAINT check_dates CHECK (end_date >= start_date)
@@ -436,6 +437,7 @@ The `Convention` model represents a convention event with all its relationships 
 - `end_date` - Convention end date (cast to Carbon date)
 - `other_info` - Optional additional information
 - `section_url_token` - Auto-generated 64-char token for anonymous section access
+- `locale` - Convention locale preference for internationalization (default: 'en')
 
 **Hidden Attributes:**
 - `section_url_token` - Hidden from default serialization (exposed explicitly for Owner/Administrator)
@@ -898,40 +900,24 @@ The `NavConvention` component is rendered in the `AppSidebar` below the main nav
 
 ## Implementation Status
 
-The Convention Management System is currently under development.
+The Convention Management System is fully implemented and in active use.
 
-### Completed
-
-- Database migrations (conventions, floors, sections, users, pivots, attendance)
-- Eloquent models with relationships and role management
-- Form request validation (conventions, floors, sections, users, attendance, search, passwords)
-- Business logic actions (CreateConvention, InviteUser, UpdateOccupancy, ExportConvention, AttendanceReportService)
+### Core System
+- Database migrations (conventions, floors, sections, users, pivots, attendance, URL tokens, hearing loop, locale, consent)
+- Eloquent models with relationships, role management, and URL token generation
+- Form request validation (conventions, floors, sections, users, attendance, search, passwords, consent)
+- Business logic actions (CreateConvention, InviteUser, UpdateOccupancy, ExportConvention, RecordUserConsent, AttendanceReportService)
 - Export system (Excel, Word, Markdown)
-- Middleware and authorization (EnsureConventionOrUrlAccess, EnsureOwnerRole, policies)
-- Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation)
-- Scheduled tasks (daily occupancy reset via `app:reset-daily-occupancy` command)
-- Property-based tests for core business rules
-
-### In Progress
-
-- Email system (Mailgun integration, invitation and confirmation mailables)
-- Frontend UI components and Inertia pages
-- PWA support
-
-### Recently Added
-
-- **Section CRUD from FloorsIndex** — Full section create/edit/delete management from the Floors page via modal dialogs. Includes:
-  - **`SectionModal` component** (`resources/js/components/conventions/section-modal.tsx`) — Dialog for creating and editing sections with floor selector dropdown, accessibility checkboxes, and inline validation errors. Uses `useForm` from Inertia with Wayfinder type-safe routing.
-  - **`FloorRow` section action buttons** — Inline edit (Pencil) and delete (Trash2) icon buttons next to each section in expanded floor rows. Visibility is role-gated: Owner and Administrator can edit/delete. Props: `onEditSection`, `onDeleteSection`.
-  - **`UpdateSectionRequest`** (`app/Http/Requests/UpdateSectionRequest.php`) — Dedicated form request for section updates (no `floor_id` since sections don't change floors on edit).
-  - **`StoreSectionRequest` updated** — Added `floor_id` validation (`sometimes|required|exists:floors,id`) for creating sections from the FloorsIndex page.
-  - **`SectionController` updated** — Store/update/destroy actions redirect to `floors.index` route. Store accepts `floor_id` from request body. Update uses `UpdateSectionRequest`.
-  - **Property-based tests** — Comprehensive PBT coverage for creation, update, deletion, cancellation, authorization enforcement, and server-side validation rejection.
-- **`GuestConventionController`** (`app/Http/Controllers/GuestConventionController.php`) — Allows unauthenticated users to create a convention from the landing page. Finds or creates a user by email, creates the convention via `CreateConventionAction`, and logs the user in automatically. Route: `POST /conventions/guest` (guest middleware)
-- **`StoreGuestConventionRequest`** (`app/Http/Requests/StoreGuestConventionRequest.php`) — Form request validating both user fields (first_name, last_name, email) and convention fields with date overlap detection
-- **`NavConvention` component** (`resources/js/components/nav-convention.tsx`) — Context-aware sidebar navigation that displays convention-specific links (Administration, Sections, Users, Availability) with role-based visibility using `useConventionRole` and Wayfinder type-safe routing
-- **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and URL session data from Inertia page props, exposing `isOwner`, `isAdministrator`, `isManager`, `isUrlSession`, `isSectionUrlSession` booleans
-- **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes
+- Middleware and authorization (EnsureConventionOrUrlAccess, EnsureOwnerRole, SetLocale, policies)
+- Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation, UrlAccess, Consent, Locale, Version)
+- Scheduled tasks (daily occupancy reset, unconfirmed guest convention cleanup)
+- Email system (Mailgun integration — UserInvitation, EmailConfirmation, GuestConventionVerification)
+- Frontend UI components and Inertia pages (all CRUD flows, modals, role-gated navigation)
+- PWA support (manifest, service worker, install prompt)
+- Internationalization (i18n with SetLocale middleware, LocaleController, i18next frontend)
+- Consent management (cookie consent banner, authenticated consent prompt)
+- URL-based anonymous access (section URL tokens, URL sessions)
+- Property-based and feature tests for core business rules
 
 ## Development Setup
 
