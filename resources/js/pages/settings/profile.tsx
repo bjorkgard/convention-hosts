@@ -12,11 +12,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import { localeLabel } from '@/lib/locale-labels';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
-
-import { localeLabel } from '@/lib/locale-labels';
 
 const LOCALE_OPTIONS: { value: string; label: string }[] = [
     { value: 'sv', label: 'Svenska' },
@@ -47,9 +46,7 @@ export default function Profile({
             .then((res) => res.json())
             .then((codes: string[]) => {
                 const mapped = codes.map((c) => {
-                    const existing = LOCALE_OPTIONS.find(
-                        (o) => o.value === c,
-                    );
+                    const existing = LOCALE_OPTIONS.find((o) => o.value === c);
                     return existing ?? { value: c, label: localeLabel(c) };
                 });
                 setLocales(mapped);
@@ -81,7 +78,9 @@ export default function Profile({
                         {({ processing, recentlySuccessful, errors }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="first_name">{t('settings.profile.first_name_label')}</Label>
+                                    <Label htmlFor="first_name">
+                                        {t('settings.profile.first_name_label')}
+                                    </Label>
 
                                     <Input
                                         id="first_name"
@@ -90,7 +89,9 @@ export default function Profile({
                                         name="first_name"
                                         required
                                         autoComplete="given-name"
-                                        placeholder={t('settings.profile.first_name_placeholder')}
+                                        placeholder={t(
+                                            'settings.profile.first_name_placeholder',
+                                        )}
                                     />
 
                                     <InputError
@@ -100,7 +101,9 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="last_name">{t('settings.profile.last_name_label')}</Label>
+                                    <Label htmlFor="last_name">
+                                        {t('settings.profile.last_name_label')}
+                                    </Label>
 
                                     <Input
                                         id="last_name"
@@ -109,7 +112,9 @@ export default function Profile({
                                         name="last_name"
                                         required
                                         autoComplete="family-name"
-                                        placeholder={t('settings.profile.last_name_placeholder')}
+                                        placeholder={t(
+                                            'settings.profile.last_name_placeholder',
+                                        )}
                                     />
 
                                     <InputError
@@ -119,7 +124,9 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">{t('settings.profile.email_label')}</Label>
+                                    <Label htmlFor="email">
+                                        {t('settings.profile.email_label')}
+                                    </Label>
 
                                     <Input
                                         id="email"
@@ -129,7 +136,9 @@ export default function Profile({
                                         name="email"
                                         required
                                         autoComplete="username"
-                                        placeholder={t('settings.profile.email_placeholder')}
+                                        placeholder={t(
+                                            'settings.profile.email_placeholder',
+                                        )}
                                     />
 
                                     <InputError
@@ -139,7 +148,9 @@ export default function Profile({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="locale">{t('settings.profile.language_label')}</Label>
+                                    <Label htmlFor="locale">
+                                        {t('settings.profile.language_label')}
+                                    </Label>
 
                                     <select
                                         ref={selectRef}
@@ -172,20 +183,26 @@ export default function Profile({
                                     auth.user.email_verified_at === null && (
                                         <div>
                                             <p className="-mt-4 text-sm text-muted-foreground">
-                                                {t('settings.profile.email_unverified')}{' '}
+                                                {t(
+                                                    'settings.profile.email_unverified',
+                                                )}{' '}
                                                 <Link
                                                     href={send()}
                                                     as="button"
                                                     className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                                                 >
-                                                    {t('settings.profile.resend_verification')}
+                                                    {t(
+                                                        'settings.profile.resend_verification',
+                                                    )}
                                                 </Link>
                                             </p>
 
                                             {status ===
                                                 'verification-link-sent' && (
                                                 <div className="mt-2 text-sm font-medium text-green-600">
-                                                    {t('settings.profile.verification_sent')}
+                                                    {t(
+                                                        'settings.profile.verification_sent',
+                                                    )}
                                                 </div>
                                             )}
                                         </div>

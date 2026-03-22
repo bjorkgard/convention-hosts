@@ -54,21 +54,31 @@ describe('AuthenticatedConsentPrompt', () => {
 
         render(<AuthenticatedConsentPrompt />);
 
-        expect(screen.getByRole('region', { name: /cookie_consent/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /accept_all/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /cookie_consent\.decline/i })).toBeInTheDocument();
+        expect(
+            screen.getByRole('region', { name: /cookie_consent/i }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: /accept_all/i }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: /cookie_consent\.decline/i }),
+        ).toBeInTheDocument();
     });
 
     it('hides when consent is accepted or declined', () => {
         setConsentState('accepted');
         const { rerender } = render(<AuthenticatedConsentPrompt />);
 
-        expect(screen.queryByRole('region', { name: /cookie_consent/i })).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('region', { name: /cookie_consent/i }),
+        ).not.toBeInTheDocument();
 
         setConsentState('declined');
         rerender(<AuthenticatedConsentPrompt />);
 
-        expect(screen.queryByRole('region', { name: /cookie_consent/i })).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('region', { name: /cookie_consent/i }),
+        ).not.toBeInTheDocument();
     });
 
     it('posts the accepted state through the generated action', async () => {
@@ -82,7 +92,10 @@ describe('AuthenticatedConsentPrompt', () => {
         expect(mockPost).toHaveBeenCalledWith(
             '/consent',
             { state: 'accepted' },
-            expect.objectContaining({ preserveScroll: true, onFinish: expect.any(Function) }),
+            expect.objectContaining({
+                preserveScroll: true,
+                onFinish: expect.any(Function),
+            }),
         );
     });
 
@@ -92,12 +105,17 @@ describe('AuthenticatedConsentPrompt', () => {
 
         render(<AuthenticatedConsentPrompt />);
 
-        await user.click(screen.getByRole('button', { name: /cookie_consent\.decline/i }));
+        await user.click(
+            screen.getByRole('button', { name: /cookie_consent\.decline/i }),
+        );
 
         expect(mockPost).toHaveBeenCalledWith(
             '/consent',
             { state: 'declined' },
-            expect.objectContaining({ preserveScroll: true, onFinish: expect.any(Function) }),
+            expect.objectContaining({
+                preserveScroll: true,
+                onFinish: expect.any(Function),
+            }),
         );
     });
 
@@ -107,15 +125,16 @@ describe('AuthenticatedConsentPrompt', () => {
 
         render(<AuthenticatedConsentPrompt />);
 
-        const acceptButton = screen.getByRole('button', { name: /accept_all/i });
+        const acceptButton = screen.getByRole('button', {
+            name: /accept_all/i,
+        });
 
         await user.click(acceptButton);
         await user.click(screen.getByRole('button', { name: /saving/i }));
 
         expect(mockPost).toHaveBeenCalledTimes(1);
-        expect(screen.getByRole('region', { name: /cookie_consent/i })).toHaveAttribute(
-            'aria-busy',
-            'true',
-        );
+        expect(
+            screen.getByRole('region', { name: /cookie_consent/i }),
+        ).toHaveAttribute('aria-busy', 'true');
     });
 });

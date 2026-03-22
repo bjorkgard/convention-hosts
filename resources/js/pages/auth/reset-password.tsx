@@ -31,7 +31,9 @@ export default function ResetPassword({ token, email }: Props) {
                 {({ processing, errors }) => (
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">{t('auth.reset_password.email_label')}</Label>
+                            <Label htmlFor="email">
+                                {t('auth.reset_password.email_label')}
+                            </Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -48,7 +50,9 @@ export default function ResetPassword({ token, email }: Props) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">{t('auth.reset_password.password_label')}</Label>
+                            <Label htmlFor="password">
+                                {t('auth.reset_password.password_label')}
+                            </Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -56,14 +60,18 @@ export default function ResetPassword({ token, email }: Props) {
                                 autoComplete="new-password"
                                 className="mt-1 block w-full"
                                 autoFocus
-                                placeholder={t('auth.reset_password.password_placeholder')}
+                                placeholder={t(
+                                    'auth.reset_password.password_placeholder',
+                                )}
                             />
                             <InputError message={errors.password} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">
-                                {t('auth.reset_password.confirm_password_label')}
+                                {t(
+                                    'auth.reset_password.confirm_password_label',
+                                )}
                             </Label>
                             <Input
                                 id="password_confirmation"
@@ -71,7 +79,9 @@ export default function ResetPassword({ token, email }: Props) {
                                 name="password_confirmation"
                                 autoComplete="new-password"
                                 className="mt-1 block w-full"
-                                placeholder={t('auth.reset_password.confirm_password_placeholder')}
+                                placeholder={t(
+                                    'auth.reset_password.confirm_password_placeholder',
+                                )}
                             />
                             <InputError
                                 message={errors.password_confirmation}

@@ -30,7 +30,9 @@ export default function DeleteUser() {
             />
             <div className="space-y-4 rounded-xl border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                 <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-                    <p className="font-medium">{t('settings.delete_account.warning_title')}</p>
+                    <p className="font-medium">
+                        {t('settings.delete_account.warning_title')}
+                    </p>
                     <p className="text-sm">
                         {t('settings.delete_account.warning_description')}
                     </p>
@@ -69,7 +71,9 @@ export default function DeleteUser() {
                                             htmlFor="password"
                                             className="sr-only"
                                         >
-                                            {t('settings.delete_account.password_label')}
+                                            {t(
+                                                'settings.delete_account.password_label',
+                                            )}
                                         </Label>
 
                                         <Input
@@ -77,7 +81,9 @@ export default function DeleteUser() {
                                             type="password"
                                             name="password"
                                             ref={passwordInput}
-                                            placeholder={t('settings.delete_account.password_placeholder')}
+                                            placeholder={t(
+                                                'settings.delete_account.password_placeholder',
+                                            )}
                                             autoComplete="current-password"
                                         />
 
@@ -92,7 +98,9 @@ export default function DeleteUser() {
                                                     resetAndClearErrors()
                                                 }
                                             >
-                                                {t('settings.delete_account.cancel')}
+                                                {t(
+                                                    'settings.delete_account.cancel',
+                                                )}
                                             </Button>
                                         </DialogClose>
 
@@ -105,7 +113,9 @@ export default function DeleteUser() {
                                                 type="submit"
                                                 data-test="confirm-delete-user-button"
                                             >
-                                                {t('settings.delete_account.confirm')}
+                                                {t(
+                                                    'settings.delete_account.confirm',
+                                                )}
                                             </button>
                                         </Button>
                                     </DialogFooter>

@@ -53,7 +53,9 @@ vi.mock('@/components/install-prompt', () => ({
 }));
 
 vi.mock('@/components/update-notification-modal', () => ({
-    UpdateNotificationModal: () => <div data-testid="update-notification-modal" />,
+    UpdateNotificationModal: () => (
+        <div data-testid="update-notification-modal" />
+    ),
 }));
 
 vi.mock('@/components/ui/sonner', () => ({
@@ -96,7 +98,9 @@ describe('AppSidebarLayout consent prompt visibility', () => {
             </AppSidebarLayout>,
         );
 
-        expect(screen.getByRole('region', { name: /cookie_consent/i })).toBeInTheDocument();
+        expect(
+            screen.getByRole('region', { name: /cookie_consent/i }),
+        ).toBeInTheDocument();
         expect(screen.getByText('Page content')).toBeInTheDocument();
     });
 
@@ -108,7 +112,9 @@ describe('AppSidebarLayout consent prompt visibility', () => {
             </AppSidebarLayout>,
         );
 
-        expect(screen.queryByRole('region', { name: /cookie_consent/i })).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('region', { name: /cookie_consent/i }),
+        ).not.toBeInTheDocument();
 
         setConsentState('declined');
         rerender(
@@ -117,6 +123,8 @@ describe('AppSidebarLayout consent prompt visibility', () => {
             </AppSidebarLayout>,
         );
 
-        expect(screen.queryByRole('region', { name: /cookie_consent/i })).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('region', { name: /cookie_consent/i }),
+        ).not.toBeInTheDocument();
     });
 });

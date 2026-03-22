@@ -9,7 +9,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { Convention } from '@/types/convention';
 
 interface ExportDropdownProps {
@@ -35,7 +39,11 @@ export default function ExportDropdown({ convention }: ExportDropdownProps) {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm" className="cursor-pointer gap-1.5">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="cursor-pointer gap-1.5"
+                        >
                             <Download className="size-4" />
                             {t('export.button')}
                         </Button>

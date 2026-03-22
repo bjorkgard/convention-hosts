@@ -17,10 +17,7 @@ type Props = {
     canRegister: boolean;
 };
 
-export default function Login({
-    status,
-    canResetPassword,
-}: Props) {
+export default function Login({ status, canResetPassword }: Props) {
     const { t } = useTranslation();
 
     return (
@@ -39,7 +36,9 @@ export default function Login({
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">{t('auth.login.email_label')}</Label>
+                                <Label htmlFor="email">
+                                    {t('auth.login.email_label')}
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -48,14 +47,18 @@ export default function Login({
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
-                                    placeholder={t('auth.login.email_placeholder')}
+                                    placeholder={t(
+                                        'auth.login.email_placeholder',
+                                    )}
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">{t('auth.login.password_label')}</Label>
+                                    <Label htmlFor="password">
+                                        {t('auth.login.password_label')}
+                                    </Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
@@ -73,7 +76,9 @@ export default function Login({
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder={t('auth.login.password_placeholder')}
+                                    placeholder={t(
+                                        'auth.login.password_placeholder',
+                                    )}
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -84,7 +89,9 @@ export default function Login({
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">{t('auth.login.remember_me')}</Label>
+                                <Label htmlFor="remember">
+                                    {t('auth.login.remember_me')}
+                                </Label>
                             </div>
 
                             <Button

@@ -31,14 +31,18 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
-                                <Label htmlFor="email">{t('auth.forgot_password.email_label')}</Label>
+                                <Label htmlFor="email">
+                                    {t('auth.forgot_password.email_label')}
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     name="email"
                                     autoComplete="off"
                                     autoFocus
-                                    placeholder={t('auth.forgot_password.email_placeholder')}
+                                    placeholder={t(
+                                        'auth.forgot_password.email_placeholder',
+                                    )}
                                 />
 
                                 <InputError message={errors.email} />
@@ -62,7 +66,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
 
                 <div className="space-x-1 text-center text-sm text-muted-foreground">
                     <span>{t('auth.forgot_password_return')}</span>
-                    <TextLink href={login()}>{t('auth.forgot_password_login_link')}</TextLink>
+                    <TextLink href={login()}>
+                        {t('auth.forgot_password_login_link')}
+                    </TextLink>
                 </div>
             </div>
         </AuthLayout>

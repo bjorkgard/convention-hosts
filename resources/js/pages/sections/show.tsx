@@ -1,12 +1,30 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Accessibility, ArrowLeft, CheckCircle2, Circle, Clock, Heart, Send, Trash2, Users } from 'lucide-react';
+import {
+    Accessibility,
+    ArrowLeft,
+    CheckCircle2,
+    Circle,
+    Clock,
+    Heart,
+    Send,
+    Trash2,
+    Users,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { report } from '@/actions/App/Http/Controllers/AttendanceController';
-import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
+import {
+    index as conventionsIndex,
+    show as conventionShow,
+} from '@/actions/App/Http/Controllers/ConventionController';
 import { index as floorsIndex } from '@/actions/App/Http/Controllers/FloorController';
-import { destroy, setFull, show as sectionShow, updateOccupancy } from '@/actions/App/Http/Controllers/SectionController';
+import {
+    destroy,
+    setFull,
+    show as sectionShow,
+    updateOccupancy,
+} from '@/actions/App/Http/Controllers/SectionController';
 import ConfirmationDialog from '@/components/confirmation-dialog';
 import AvailableSeatsInput from '@/components/conventions/available-seats-input';
 import FullButton from '@/components/conventions/full-button';
@@ -14,15 +32,31 @@ import OccupancyDropdown from '@/components/conventions/occupancy-dropdown';
 import OccupancyGauge from '@/components/conventions/occupancy-gauge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import AppLayout from '@/layouts/app-layout';
-import type { AttendancePeriod, AttendanceReport, Convention, Floor, Section } from '@/types/convention';
+import type {
+    AttendancePeriod,
+    AttendanceReport,
+    Convention,
+    Floor,
+    Section,
+} from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
 
 function AttendanceCard({
@@ -36,7 +70,9 @@ function AttendanceCard({
     myReport: AttendanceReport | null;
     t: (key: string, options?: Record<string, unknown>) => string;
 }) {
-    const [attendanceValue, setAttendanceValue] = useState(myReport ? String(myReport.attendance) : '');
+    const [attendanceValue, setAttendanceValue] = useState(
+        myReport ? String(myReport.attendance) : '',
+    );
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -44,7 +80,10 @@ function AttendanceCard({
         if (isNaN(attendance) || attendance < 0) return;
 
         router.post(
-            report.url({ section: section.id, attendancePeriod: activePeriod.id }),
+            report.url({
+                section: section.id,
+                attendancePeriod: activePeriod.id,
+            }),
             { attendance },
             { preserveScroll: true },
         );
@@ -53,7 +92,9 @@ function AttendanceCard({
     return (
         <Card className="rounded-xl border border-border shadow-sm">
             <CardHeader>
-                <CardTitle className="text-lg">{t('attendance.card.title')}</CardTitle>
+                <CardTitle className="text-lg">
+                    {t('attendance.card.title')}
+                </CardTitle>
             </CardHeader>
             <CardContent>
                 {/* Status line */}
@@ -61,17 +102,27 @@ function AttendanceCard({
                     {myReport ? (
                         <>
                             <CheckCircle2 className="size-4 text-green-500" />
-                            <span className="text-green-700 dark:text-green-400">{t('attendance.card.reported', { count: myReport.attendance })}</span>
+                            <span className="text-green-700 dark:text-green-400">
+                                {t('attendance.card.reported', {
+                                    count: myReport.attendance,
+                                })}
+                            </span>
                         </>
                     ) : (
                         <>
-                            <Circle className="text-muted-foreground size-4" />
-                            <span className="text-muted-foreground">{t('attendance.card.not_reported')}</span>
+                            <Circle className="size-4 text-muted-foreground" />
+                            <span className="text-muted-foreground">
+                                {t('attendance.card.not_reported')}
+                            </span>
                         </>
                     )}
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-2">
-                    <Label htmlFor="attendance-input">{t('attendance.card.input_label', { period: activePeriod.period })}</Label>
+                    <Label htmlFor="attendance-input">
+                        {t('attendance.card.input_label', {
+                            period: activePeriod.period,
+                        })}
+                    </Label>
                     <div className="flex items-center gap-2">
                         <Input
                             id="attendance-input"
@@ -82,9 +133,14 @@ function AttendanceCard({
                             onChange={(e) => setAttendanceValue(e.target.value)}
                             className="flex-1"
                         />
-                        <Button type="submit" className="cursor-pointer gap-1.5">
+                        <Button
+                            type="submit"
+                            className="cursor-pointer gap-1.5"
+                        >
                             <Send className="size-4" />
-                            {myReport ? t('attendance.card.update') : t('attendance.card.send')}
+                            {myReport
+                                ? t('attendance.card.update')
+                                : t('attendance.card.send')}
                         </Button>
                     </div>
                 </form>
@@ -102,7 +158,13 @@ interface SectionsShowProps {
     myReport: AttendanceReport | null;
 }
 
-export default function SectionsShow({ section, floor, convention, activePeriod, myReport }: SectionsShowProps) {
+export default function SectionsShow({
+    section,
+    floor,
+    convention,
+    activePeriod,
+    myReport,
+}: SectionsShowProps) {
     const { t } = useTranslation();
     useFlashToast();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -114,13 +176,23 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
     const breadcrumbs: BreadcrumbItem[] = [
         { title: t('convention.index.heading'), href: conventionsIndex.url() },
         { title: convention.name, href: conventionShow.url(convention.id) },
-        { title: t('floor.index.heading'), href: floorsIndex.url(convention.id) },
-        { title: floor.name, href: `${floorsIndex.url(convention.id)}?open=${floor.id}` },
+        {
+            title: t('floor.index.heading'),
+            href: floorsIndex.url(convention.id),
+        },
+        {
+            title: floor.name,
+            href: `${floorsIndex.url(convention.id)}?open=${floor.id}`,
+        },
         { title: section.name, href: sectionShow.url(section.id) },
     ];
 
     function handleOccupancyUpdate(occupancy: number) {
-        router.patch(updateOccupancy.url(section.id), { occupancy }, { preserveScroll: true });
+        router.patch(
+            updateOccupancy.url(section.id),
+            { occupancy },
+            { preserveScroll: true },
+        );
     }
 
     function handleSetFull() {
@@ -128,7 +200,11 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
     }
 
     function handleAvailableSeatsUpdate(availableSeats: number) {
-        router.patch(updateOccupancy.url(section.id), { available_seats: availableSeats }, { preserveScroll: true });
+        router.patch(
+            updateOccupancy.url(section.id),
+            { available_seats: availableSeats },
+            { preserveScroll: true },
+        );
     }
 
     function handleDeleteSection() {
@@ -160,19 +236,31 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('section.show.title', { section: section.name, convention: convention.name })} />
+            <Head
+                title={t('section.show.title', {
+                    section: section.name,
+                    convention: convention.name,
+                })}
+            />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-2">
-                        <Button variant="ghost" size="icon" asChild className="mt-0.5 shrink-0">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            asChild
+                            className="mt-0.5 shrink-0"
+                        >
                             <Link href={floorsIndex.url(convention.id)}>
                                 <ArrowLeft />
                             </Link>
                         </Button>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-2xl font-semibold tracking-tight">{section.name}</h1>
-                            <p className="text-muted-foreground text-sm">
+                            <h1 className="text-2xl font-semibold tracking-tight">
+                                {section.name}
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
                                 {floor.name} · {convention.name}
                             </p>
                         </div>
@@ -184,14 +272,16 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                                 <Button
                                     variant="destructive"
                                     size="sm"
-                                    className="cursor-pointer gap-1.5 shrink-0"
+                                    className="shrink-0 cursor-pointer gap-1.5"
                                     onClick={() => setShowDeleteDialog(true)}
                                 >
                                     <Trash2 className="size-4" />
                                     {t('section.show.delete_button')}
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>{t('section.show.delete_tooltip')}</TooltipContent>
+                            <TooltipContent>
+                                {t('section.show.delete_tooltip')}
+                            </TooltipContent>
                         </Tooltip>
                     )}
                 </div>
@@ -200,17 +290,26 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                 <Card className="rounded-xl border border-border shadow-sm">
                     <CardHeader>
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-lg">{t('section.show.details_title')}</CardTitle>
-                            <OccupancyGauge occupancy={section.occupancy} size={48} />
+                            <CardTitle className="text-lg">
+                                {t('section.show.details_title')}
+                            </CardTitle>
+                            <OccupancyGauge
+                                occupancy={section.occupancy}
+                                size={48}
+                            />
                         </div>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-4">
                         {/* Seats & accessibility */}
                         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             <div className="flex items-center gap-1.5 text-sm">
-                                <Users className="text-muted-foreground size-4" />
-                                <span className="font-medium">{section.number_of_seats}</span>
-                                <span className="text-muted-foreground">{t('section.show.seats')}</span>
+                                <Users className="size-4 text-muted-foreground" />
+                                <span className="font-medium">
+                                    {section.number_of_seats}
+                                </span>
+                                <span className="text-muted-foreground">
+                                    {t('section.show.seats')}
+                                </span>
                             </div>
 
                             {section.elder_friendly && (
@@ -228,32 +327,59 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                         </div>
 
                         {section.information && (
-                            <p className="text-muted-foreground text-sm">{section.information}</p>
+                            <p className="text-sm text-muted-foreground">
+                                {section.information}
+                            </p>
                         )}
 
                         <Separator />
 
                         {/* Occupancy help text */}
-                        <p className="text-muted-foreground text-sm">
-                            {t('section.show.occupancy_help')}<br/>{t('section.show.occupancy_help_reset')}
+                        <p className="text-sm text-muted-foreground">
+                            {t('section.show.occupancy_help')}
+                            <br />
+                            {t('section.show.occupancy_help_reset')}
                         </p>
 
                         {/* Occupancy controls */}
                         <div className="flex flex-col gap-4">
-                            <OccupancyDropdown currentOccupancy={section.occupancy} onUpdate={handleOccupancyUpdate} />
-                            <FullButton section={section} onUpdate={handleSetFull} />
-                            <AvailableSeatsInput section={section} onUpdate={handleAvailableSeatsUpdate} />
+                            <OccupancyDropdown
+                                currentOccupancy={section.occupancy}
+                                onUpdate={handleOccupancyUpdate}
+                            />
+                            <FullButton
+                                section={section}
+                                onUpdate={handleSetFull}
+                            />
+                            <AvailableSeatsInput
+                                section={section}
+                                onUpdate={handleAvailableSeatsUpdate}
+                            />
                         </div>
                     </CardContent>
 
                     {/* Last update footer */}
                     {(lastUpdatedByName || lastUpdateTime) && (
-                        <CardFooter className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                        <CardFooter className="flex items-center gap-1.5 text-xs text-muted-foreground">
                             <Clock className="size-3.5 shrink-0" />
                             <span>
                                 {t('section.show.last_updated')}
-                                {lastUpdatedByName && <> {t('section.show.last_updated_by', { name: lastUpdatedByName })}</>}
-                                {lastUpdateTime && <> {t('section.show.last_updated_at', { time: lastUpdateTime })}</>}
+                                {lastUpdatedByName && (
+                                    <>
+                                        {' '}
+                                        {t('section.show.last_updated_by', {
+                                            name: lastUpdatedByName,
+                                        })}
+                                    </>
+                                )}
+                                {lastUpdateTime && (
+                                    <>
+                                        {' '}
+                                        {t('section.show.last_updated_at', {
+                                            time: lastUpdateTime,
+                                        })}
+                                    </>
+                                )}
                             </span>
                         </CardFooter>
                     )}
@@ -276,7 +402,9 @@ export default function SectionsShow({ section, floor, convention, activePeriod,
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}
                 title={t('section.delete_dialog.title')}
-                description={t('section.delete_dialog.description', { name: section.name })}
+                description={t('section.delete_dialog.description', {
+                    name: section.name,
+                })}
                 confirmLabel={t('section.delete_dialog.confirm')}
                 variant="destructive"
                 loading={deleting}

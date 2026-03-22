@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 
-export type OccupancyLevel = 'green' | 'dark-green' | 'yellow' | 'orange' | 'red';
+export type OccupancyLevel =
+    | 'green'
+    | 'dark-green'
+    | 'yellow'
+    | 'orange'
+    | 'red';
 
 const colorClassMap: Record<OccupancyLevel, string> = {
     green: 'text-green-500 bg-green-50',

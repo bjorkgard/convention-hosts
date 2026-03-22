@@ -24,15 +24,24 @@ describe('use-cookie-consent legacy compatibility surface', () => {
         it('returns stored consent when present and version matches', () => {
             localStorage.setItem(
                 'cookie_consent',
-                JSON.stringify({ accepted: true, version: COOKIE_CONSENT_VERSION }),
+                JSON.stringify({
+                    accepted: true,
+                    version: COOKIE_CONSENT_VERSION,
+                }),
             );
-            expect(getCookieConsent()).toEqual({ accepted: true, version: COOKIE_CONSENT_VERSION });
+            expect(getCookieConsent()).toEqual({
+                accepted: true,
+                version: COOKIE_CONSENT_VERSION,
+            });
         });
 
         it('returns null when stored version is outdated', () => {
             localStorage.setItem(
                 'cookie_consent',
-                JSON.stringify({ accepted: true, version: COOKIE_CONSENT_VERSION - 1 }),
+                JSON.stringify({
+                    accepted: true,
+                    version: COOKIE_CONSENT_VERSION - 1,
+                }),
             );
             expect(getCookieConsent()).toBeNull();
         });
@@ -63,7 +72,10 @@ describe('use-cookie-consent legacy compatibility surface', () => {
         it('stores the legacy accepted compatibility record with current version', () => {
             acceptCookies();
             const stored = JSON.parse(localStorage.getItem('cookie_consent')!);
-            expect(stored).toEqual({ accepted: true, version: COOKIE_CONSENT_VERSION });
+            expect(stored).toEqual({
+                accepted: true,
+                version: COOKIE_CONSENT_VERSION,
+            });
         });
     });
 
@@ -71,7 +83,10 @@ describe('use-cookie-consent legacy compatibility surface', () => {
         it('stores the legacy declined compatibility record with current version', () => {
             declineCookies();
             const stored = JSON.parse(localStorage.getItem('cookie_consent')!);
-            expect(stored).toEqual({ accepted: false, version: COOKIE_CONSENT_VERSION });
+            expect(stored).toEqual({
+                accepted: false,
+                version: COOKIE_CONSENT_VERSION,
+            });
         });
     });
 });

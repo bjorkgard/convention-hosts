@@ -10,6 +10,8 @@ import CookieConsentBanner from '../cookie-consent-banner';
 describe('CookieConsentBanner', () => {
     it('delegates to the authenticated consent prompt', () => {
         render(<CookieConsentBanner />);
-        expect(screen.getByTestId('authenticated-consent-prompt')).toBeInTheDocument();
+        expect(
+            screen.getByTestId('authenticated-consent-prompt'),
+        ).toBeInTheDocument();
     });
 });

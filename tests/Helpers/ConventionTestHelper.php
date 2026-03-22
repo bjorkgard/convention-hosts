@@ -130,19 +130,15 @@ class ConventionTestHelper
 
     /**
      * Set up a URL session in the Laravel session for testing URL-based access.
-     *
-     * @param  'floor'|'section'  $type
      */
-    public static function setUrlSession(Convention $convention, string $type): void
+    public static function setUrlSession(Convention $convention): void
     {
-        $token = $type === 'floor'
-            ? $convention->floor_url_token
-            : $convention->section_url_token;
+        $token = $convention->section_url_token;
 
         session([
             'url_session' => [
                 'convention_id' => $convention->id,
-                'type' => $type,
+                'type' => 'section',
                 'token' => $token,
             ],
         ]);

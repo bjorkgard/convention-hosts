@@ -25,8 +25,22 @@ import { VersionBadge } from '@/components/version-badge';
 import { localeLabel } from '@/lib/locale-labels';
 import { login } from '@/routes';
 
-const featureIcons = [LayoutGrid, BarChart3, Users, CalendarDays, Search, Smartphone];
-const featureKeys = ['venue', 'occupancy', 'roles', 'attendance', 'search', 'mobile'];
+const featureIcons = [
+    LayoutGrid,
+    BarChart3,
+    Users,
+    CalendarDays,
+    Search,
+    Smartphone,
+];
+const featureKeys = [
+    'venue',
+    'occupancy',
+    'roles',
+    'attendance',
+    'search',
+    'mobile',
+];
 
 export default function Welcome() {
     const { auth } = usePage().props;
@@ -103,7 +117,9 @@ export default function Welcome() {
                             ) : (
                                 <>
                                     <Button variant="ghost" asChild>
-                                        <Link href={login()}>{t('public.welcome.nav.login')}</Link>
+                                        <Link href={login()}>
+                                            {t('public.welcome.nav.login')}
+                                        </Link>
                                     </Button>
                                     <Button
                                         onClick={() => setShowForm(true)}
@@ -138,7 +154,9 @@ export default function Welcome() {
                             {auth.user ? (
                                 <Button size="lg" asChild>
                                     <Link href={conventionsIndex.url()}>
-                                        {t('public.welcome.hero.go_to_conventions')}
+                                        {t(
+                                            'public.welcome.hero.go_to_conventions',
+                                        )}
                                         <ArrowRight className="ml-2 size-4" />
                                     </Link>
                                 </Button>
@@ -149,7 +167,9 @@ export default function Welcome() {
                                         onClick={() => setShowForm(true)}
                                         className="cursor-pointer"
                                     >
-                                        {t('public.welcome.hero.create_convention')}
+                                        {t(
+                                            'public.welcome.hero.create_convention',
+                                        )}
                                         <ArrowRight className="ml-2 size-4" />
                                     </Button>
                                     <Button size="lg" variant="outline" asChild>
@@ -259,19 +279,25 @@ export default function Welcome() {
                                         <>
                                             <fieldset className="space-y-4">
                                                 <legend className="mb-2 text-sm font-semibold tracking-wider text-muted-foreground uppercase">
-                                                    {t('public.welcome.form.your_details')}
+                                                    {t(
+                                                        'public.welcome.form.your_details',
+                                                    )}
                                                 </legend>
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="first_name">
-                                                            {t('public.welcome.form.first_name_label')}
+                                                            {t(
+                                                                'public.welcome.form.first_name_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="first_name"
                                                             name="first_name"
                                                             required
                                                             autoComplete="given-name"
-                                                            placeholder={t('public.welcome.form.first_name_placeholder')}
+                                                            placeholder={t(
+                                                                'public.welcome.form.first_name_placeholder',
+                                                            )}
                                                         />
                                                         <InputError
                                                             message={
@@ -281,14 +307,18 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="last_name">
-                                                            {t('public.welcome.form.last_name_label')}
+                                                            {t(
+                                                                'public.welcome.form.last_name_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="last_name"
                                                             name="last_name"
                                                             required
                                                             autoComplete="family-name"
-                                                            placeholder={t('public.welcome.form.last_name_placeholder')}
+                                                            placeholder={t(
+                                                                'public.welcome.form.last_name_placeholder',
+                                                            )}
                                                         />
                                                         <InputError
                                                             message={
@@ -300,7 +330,9 @@ export default function Welcome() {
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="email">
-                                                            {t('public.welcome.form.email_label')}
+                                                            {t(
+                                                                'public.welcome.form.email_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="email"
@@ -308,7 +340,9 @@ export default function Welcome() {
                                                             type="email"
                                                             required
                                                             autoComplete="email"
-                                                            placeholder={t('public.welcome.form.email_placeholder')}
+                                                            placeholder={t(
+                                                                'public.welcome.form.email_placeholder',
+                                                            )}
                                                         />
                                                         <InputError
                                                             message={
@@ -318,7 +352,9 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="mobile">
-                                                            {t('public.welcome.form.mobile_label')}
+                                                            {t(
+                                                                'public.welcome.form.mobile_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="mobile"
@@ -326,7 +362,9 @@ export default function Welcome() {
                                                             type="tel"
                                                             required
                                                             autoComplete="tel"
-                                                            placeholder={t('public.welcome.form.mobile_placeholder')}
+                                                            placeholder={t(
+                                                                'public.welcome.form.mobile_placeholder',
+                                                            )}
                                                         />
                                                         <InputError
                                                             message={
@@ -339,18 +377,24 @@ export default function Welcome() {
 
                                             <fieldset className="space-y-4">
                                                 <legend className="mb-2 text-sm font-semibold tracking-wider text-muted-foreground uppercase">
-                                                    {t('public.welcome.form.convention_details')}
+                                                    {t(
+                                                        'public.welcome.form.convention_details',
+                                                    )}
                                                 </legend>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="name">
-                                                        {t('public.welcome.form.name_label')}
+                                                        {t(
+                                                            'public.welcome.form.name_label',
+                                                        )}
                                                     </Label>
                                                     <Input
                                                         id="name"
                                                         name="name"
                                                         required
                                                         autoComplete="off"
-                                                        placeholder={t('public.welcome.form.name_placeholder')}
+                                                        placeholder={t(
+                                                            'public.welcome.form.name_placeholder',
+                                                        )}
                                                     />
                                                     <InputError
                                                         message={errors.name}
@@ -359,14 +403,18 @@ export default function Welcome() {
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="city">
-                                                            {t('public.welcome.form.city_label')}
+                                                            {t(
+                                                                'public.welcome.form.city_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="city"
                                                             name="city"
                                                             required
                                                             autoComplete="off"
-                                                            placeholder={t('public.welcome.form.city_placeholder')}
+                                                            placeholder={t(
+                                                                'public.welcome.form.city_placeholder',
+                                                            )}
                                                         />
                                                         <InputError
                                                             message={
@@ -376,14 +424,18 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="country">
-                                                            {t('public.welcome.form.country_label')}
+                                                            {t(
+                                                                'public.welcome.form.country_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="country"
                                                             name="country"
                                                             required
                                                             autoComplete="off"
-                                                            placeholder={t('public.welcome.form.country_placeholder')}
+                                                            placeholder={t(
+                                                                'public.welcome.form.country_placeholder',
+                                                            )}
                                                         />
                                                         <InputError
                                                             message={
@@ -394,13 +446,17 @@ export default function Welcome() {
                                                 </div>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="address">
-                                                        {t('public.welcome.form.address_label')}
+                                                        {t(
+                                                            'public.welcome.form.address_label',
+                                                        )}
                                                     </Label>
                                                     <Input
                                                         id="address"
                                                         name="address"
                                                         autoComplete="off"
-                                                        placeholder={t('public.welcome.form.address_placeholder')}
+                                                        placeholder={t(
+                                                            'public.welcome.form.address_placeholder',
+                                                        )}
                                                     />
                                                     <InputError
                                                         message={errors.address}
@@ -409,7 +465,9 @@ export default function Welcome() {
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="start_date">
-                                                            {t('public.welcome.form.start_date_label')}
+                                                            {t(
+                                                                'public.welcome.form.start_date_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="start_date"
@@ -425,7 +483,9 @@ export default function Welcome() {
                                                     </div>
                                                     <div className="grid gap-1.5">
                                                         <Label htmlFor="end_date">
-                                                            {t('public.welcome.form.end_date_label')}
+                                                            {t(
+                                                                'public.welcome.form.end_date_label',
+                                                            )}
                                                         </Label>
                                                         <Input
                                                             id="end_date"
@@ -442,13 +502,17 @@ export default function Welcome() {
                                                 </div>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="other_info">
-                                                        {t('public.welcome.form.other_info_label')}
+                                                        {t(
+                                                            'public.welcome.form.other_info_label',
+                                                        )}
                                                     </Label>
                                                     <textarea
                                                         id="other_info"
                                                         name="other_info"
                                                         rows={3}
-                                                        placeholder={t('public.welcome.form.other_info_placeholder')}
+                                                        placeholder={t(
+                                                            'public.welcome.form.other_info_placeholder',
+                                                        )}
                                                         className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                                                     />
                                                     <InputError
@@ -459,7 +523,9 @@ export default function Welcome() {
                                                 </div>
                                                 <div className="grid gap-1.5">
                                                     <Label htmlFor="locale">
-                                                        {t('public.welcome.form.language_label')}
+                                                        {t(
+                                                            'public.welcome.form.language_label',
+                                                        )}
                                                     </Label>
                                                     <select
                                                         id="locale"
@@ -468,15 +534,18 @@ export default function Welcome() {
                                                         className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                                                     >
                                                         {locales.map((code) => (
-                                                            <option key={code} value={code}>
-                                                                {localeLabel(code)}
+                                                            <option
+                                                                key={code}
+                                                                value={code}
+                                                            >
+                                                                {localeLabel(
+                                                                    code,
+                                                                )}
                                                             </option>
                                                         ))}
                                                     </select>
                                                     <InputError
-                                                        message={
-                                                            errors.locale
-                                                        }
+                                                        message={errors.locale}
                                                     />
                                                 </div>
                                             </fieldset>
@@ -488,8 +557,12 @@ export default function Welcome() {
                                                 size="lg"
                                             >
                                                 {processing
-                                                    ? t('public.welcome.form.submitting')
-                                                    : t('public.welcome.form.submit')}
+                                                    ? t(
+                                                          'public.welcome.form.submitting',
+                                                      )
+                                                    : t(
+                                                          'public.welcome.form.submit',
+                                                      )}
                                                 {!processing && (
                                                     <ArrowRight className="ml-2 size-4" />
                                                 )}
@@ -540,7 +613,10 @@ export default function Welcome() {
                             <VersionBadge />
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            {t('public.welcome.footer.copyright', { year: new Date().getFullYear(), app: import.meta.env.VITE_APP_NAME })}
+                            {t('public.welcome.footer.copyright', {
+                                year: new Date().getFullYear(),
+                                app: import.meta.env.VITE_APP_NAME,
+                            })}
                         </p>
                     </div>
                 </footer>

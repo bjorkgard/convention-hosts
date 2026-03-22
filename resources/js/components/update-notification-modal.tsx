@@ -23,9 +23,13 @@ export function UpdateNotificationModal() {
         <Dialog open={showModal} onOpenChange={(open) => !open && dismiss()}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{t('common.update_notification.title')}</DialogTitle>
+                    <DialogTitle>
+                        {t('common.update_notification.title')}
+                    </DialogTitle>
                     <DialogDescription>
-                        {t('common.update_notification.description', { version: latestRelease.version })}
+                        {t('common.update_notification.description', {
+                            version: latestRelease.version,
+                        })}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -34,7 +38,7 @@ export function UpdateNotificationModal() {
                         <span className="text-muted-foreground">
                             {t('common.update_notification.current_version')}
                         </span>
-                        <code className="bg-muted rounded px-2 py-0.5 text-xs">
+                        <code className="rounded bg-muted px-2 py-0.5 text-xs">
                             {currentVersion ?? 'unknown'}
                         </code>
                     </div>
@@ -55,8 +59,8 @@ export function UpdateNotificationModal() {
                         )}
 
                     {latestRelease.body && (
-                        <div className="bg-muted max-h-48 overflow-y-auto rounded-md p-3">
-                            <pre className="text-muted-foreground whitespace-pre-wrap text-xs">
+                        <div className="max-h-48 overflow-y-auto rounded-md bg-muted p-3">
+                            <pre className="text-xs whitespace-pre-wrap text-muted-foreground">
                                 {latestRelease.body}
                             </pre>
                         </div>

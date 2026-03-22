@@ -51,8 +51,7 @@ Route::get('email/confirm/{user}', function (\App\Models\User $user) {
     return redirect()->route('home')->with('status', 'Email confirmed successfully.');
 })->name('email.confirm')->middleware('signed');
 
-// URL access routes (public, no auth required)
-Route::get('url-access/floor/{token}', [UrlAccessController::class, 'floor'])->name('url-access.floor');
+// URL access route (public, no auth required)
 Route::get('url-access/section/{token}', [UrlAccessController::class, 'section'])->name('url-access.section');
 
 // Consent route (available to both authenticated and URL-session users)
@@ -91,6 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware([EnsureConventionOrUrlAccess::class])->group(function () {
         Route::put('conventions/{convention}', [ConventionController::class, 'update'])->name('conventions.update');
         Route::patch('conventions/{convention}/locale', [ConventionController::class, 'updateLocale'])->name('conventions.updateLocale');
+        Route::post('conventions/{convention}/regenerate-url-token', [ConventionController::class, 'regenerateUrlToken'])->name('conventions.regenerateUrlToken');
     });
 
     Route::middleware([EnsureConventionOrUrlAccess::class, EnsureOwnerRole::class])->group(function () {

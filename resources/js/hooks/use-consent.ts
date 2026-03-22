@@ -17,11 +17,11 @@ function isConsentContract(value: unknown): value is ConsentContract {
     const candidate = value as Partial<ConsentContract>;
 
     return (
-        (candidate.state === 'accepted'
-            || candidate.state === 'declined'
-            || candidate.state === 'undecided')
-        && typeof candidate.version === 'number'
-        && typeof candidate.allowOptionalStorage === 'boolean'
+        (candidate.state === 'accepted' ||
+            candidate.state === 'declined' ||
+            candidate.state === 'undecided') &&
+        typeof candidate.version === 'number' &&
+        typeof candidate.allowOptionalStorage === 'boolean'
     );
 }
 

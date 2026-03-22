@@ -23,7 +23,7 @@ A comprehensive convention management system built with Laravel and React. Manag
 
 ### User Management and Security
 - Two-tier role-based access control (Owner, Administrator)
-- URL-based anonymous access for floor and section volunteers (no account required)
+- URL-based anonymous access for section volunteers (no account required)
 - Secure email invitations with signed URL account activation (24h expiry)
 - Login with "remember me", password reset, email verification
 - Two-factor authentication (TOTP) with recovery codes

@@ -40,14 +40,16 @@ export default function ThemeSettings() {
 
                     <div className="space-y-2">
                         <label
-                            className="text-sm font-medium leading-none"
+                            className="text-sm leading-none font-medium"
                             htmlFor="theme-select"
                         >
                             {t('settings.theme.color_theme_label')}
                         </label>
                         <Select
                             value={theme}
-                            onValueChange={(value) => updateTheme(value as Theme)}
+                            onValueChange={(value) =>
+                                updateTheme(value as Theme)
+                            }
                         >
                             <SelectTrigger id="theme-select" className="w-48">
                                 <SelectValue />
@@ -60,7 +62,7 @@ export default function ThemeSettings() {
                                 ))}
                             </SelectContent>
                         </Select>
-                        <p className="text-muted-foreground text-sm">
+                        <p className="text-sm text-muted-foreground">
                             {t('settings.theme.reload_notice')}
                         </p>
                     </div>

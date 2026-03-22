@@ -10,13 +10,14 @@ This is a Convention Management System built with Laravel and React that enables
 - Convention editing and deletion (owner-only for delete)
 - Hierarchical venue organization (Convention → Floor → Section)
 - Multi-format data export (.xlsx, .docx, Markdown)
+- URL-based anonymous access via shareable section URL token
 
 ### Section CRUD Management
 - Create sections via modal dialog from the floors index page
 - Edit section details (name, seats, accessibility flags, information)
 - Delete sections with authorization checks
 - Floor selector in create mode, read-only floor display in edit mode
-- Role-based authorization: Owner/ConventionUser can manage all, FloorUser can manage on assigned floors, SectionUser cannot create/delete
+- Role-based authorization: Owner and Administrator can manage all sections
 
 ### Occupancy Tracking
 - Real-time section occupancy tracking with visual indicators
@@ -35,11 +36,10 @@ This is a Convention Management System built with Laravel and React that enables
 - Secure user invitation flow with email confirmation
 - User editing and role reassignment
 - User removal from convention (deletes user record if no remaining conventions)
-- Four-tier role-based access control:
+- Two-tier authenticated role system supplemented by URL-based anonymous access:
   - Owner: Full administrative privileges
-  - ConventionUser: Convention-wide access
-  - FloorUser: Floor-scoped access
-  - SectionUser: Section-scoped access
+  - Administrator: Convention-wide management access
+  - Section URL session: Anonymous access via shareable URL (view floors/sections, update occupancy, report attendance)
 - User profile management
 - Two-factor authentication (2FA) with recovery codes
 - Password management
@@ -47,8 +47,21 @@ This is a Convention Management System built with Laravel and React that enables
 
 ### Search & Accessibility
 - Mobile-optimized search for available sections
-- Accessibility filters (elder-friendly, handicap-friendly)
+- Accessibility filters (elder-friendly, handicap-friendly, hearing loop)
 - Progressive Web App (PWA) installation support
+
+### Internationalization (i18n)
+- Multi-language support with locale auto-discovery from lang/ directory
+- User and convention locale preferences
+- Laravel-to-i18next translation format conversion
+- Locale selector component in UI
+- SetLocale middleware for request-level locale resolution
+
+### Consent Management
+- Cookie consent banner for anonymous users
+- Authenticated consent prompt for logged-in users
+- Consent state tracking (accepted, declined, undecided)
+- Consent versioning with timestamps
 
 ### Version Checking
 - GitHub release version checking via VersionController API

@@ -5,7 +5,15 @@ import { describe, expect, it, vi } from 'vitest';
 // Mock @inertiajs/react
 vi.mock('@inertiajs/react', () => ({
     Head: () => null,
-    Link: ({ href, children, ...props }: { href: string; children?: React.ReactNode; [key: string]: unknown }) => (
+    Link: ({
+        href,
+        children,
+        ...props
+    }: {
+        href: string;
+        children?: React.ReactNode;
+        [key: string]: unknown;
+    }) => (
         <a href={href} {...props}>
             {children}
         </a>
@@ -22,7 +30,9 @@ vi.mock('@/actions/App/Http/Controllers/ConventionController', () => ({
 }));
 
 vi.mock('@/actions/App/Http/Controllers/SearchController', () => ({
-    index: { url: (conventionId: number) => `/conventions/${conventionId}/search` },
+    index: {
+        url: (conventionId: number) => `/conventions/${conventionId}/search`,
+    },
 }));
 
 vi.mock('@/actions/App/Http/Controllers/SectionController', () => ({
@@ -32,22 +42,42 @@ vi.mock('@/actions/App/Http/Controllers/SectionController', () => ({
 // Mock OccupancyGauge
 vi.mock('@/components/conventions/occupancy-gauge', () => ({
     default: ({ occupancy }: { occupancy: number }) => (
-        <span data-testid={`occupancy-indicator-${occupancy}`}>Occupancy: {occupancy}%</span>
+        <span data-testid={`occupancy-indicator-${occupancy}`}>
+            Occupancy: {occupancy}%
+        </span>
     ),
 }));
 
 // Mock Checkbox
 vi.mock('@/components/ui/checkbox', () => ({
-    Checkbox: ({ id, checked, onCheckedChange }: { id?: string; checked?: boolean; onCheckedChange?: (checked: boolean) => void }) => (
-        <input type="checkbox" id={id} checked={checked ?? false} onChange={(e) => onCheckedChange?.(e.target.checked)} />
+    Checkbox: ({
+        id,
+        checked,
+        onCheckedChange,
+    }: {
+        id?: string;
+        checked?: boolean;
+        onCheckedChange?: (checked: boolean) => void;
+    }) => (
+        <input
+            type="checkbox"
+            id={id}
+            checked={checked ?? false}
+            onChange={(e) => onCheckedChange?.(e.target.checked)}
+        />
     ),
 }));
 
 // Mock Label
 vi.mock('@/components/ui/label', () => ({
-    Label: ({ children, ...props }: { children: React.ReactNode; htmlFor?: string; className?: string }) => (
-        <label {...props}>{children}</label>
-    ),
+    Label: ({
+        children,
+        ...props
+    }: {
+        children: React.ReactNode;
+        htmlFor?: string;
+        className?: string;
+    }) => <label {...props}>{children}</label>,
 }));
 
 // Mock Select components (same pattern as occupancy-dropdown tests)
@@ -66,21 +96,35 @@ vi.mock('@/components/ui/select', () => ({
                 ? children
                 : React.Children.map(children, (child) => {
                       if (React.isValidElement(child)) {
-                          return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
-                              __value: value,
-                              __onValueChange: onValueChange,
-                          });
+                          return React.cloneElement(
+                              child as React.ReactElement<
+                                  Record<string, unknown>
+                              >,
+                              {
+                                  __value: value,
+                                  __onValueChange: onValueChange,
+                              },
+                          );
                       }
                       return child;
                   })}
         </div>
     ),
-    SelectTrigger: ({ children, ...props }: { children: React.ReactNode; id?: string; className?: string }) => (
+    SelectTrigger: ({
+        children,
+        ...props
+    }: {
+        children: React.ReactNode;
+        id?: string;
+        className?: string;
+    }) => (
         <button data-testid="select-trigger" {...props}>
             {children}
         </button>
     ),
-    SelectValue: ({ placeholder }: { placeholder?: string }) => <span data-testid="select-value">{placeholder}</span>,
+    SelectValue: ({ placeholder }: { placeholder?: string }) => (
+        <span data-testid="select-value">{placeholder}</span>
+    ),
     SelectContent: ({
         children,
         __value,
@@ -90,22 +134,38 @@ vi.mock('@/components/ui/select', () => ({
         __value?: string;
         __onValueChange?: (value: string) => void;
     }) => (
-        <select data-testid="select-content" value={__value} onChange={(e) => __onValueChange?.(e.target.value)}>
+        <select
+            data-testid="select-content"
+            value={__value}
+            onChange={(e) => __onValueChange?.(e.target.value)}
+        >
             {children}
         </select>
     ),
-    SelectItem: ({ value, children }: { value: string; children: React.ReactNode }) => <option value={value}>{children}</option>,
+    SelectItem: ({
+        value,
+        children,
+    }: {
+        value: string;
+        children: React.ReactNode;
+    }) => <option value={value}>{children}</option>,
 }));
 
 // Mock AppLayout
 vi.mock('@/layouts/app-layout', () => ({
-    default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    default: ({ children }: { children: React.ReactNode }) => (
+        <div>{children}</div>
+    ),
 }));
 
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
-    ArrowLeft: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="arrow-left-icon" {...props} />,
-    SearchX: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="search-x-icon" {...props} />,
+    ArrowLeft: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="arrow-left-icon" {...props} />
+    ),
+    SearchX: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="search-x-icon" {...props} />
+    ),
 }));
 
 import type { Convention, Floor, Section } from '@/types/convention';
@@ -130,7 +190,9 @@ function makeConvention(overrides: Partial<Convention> = {}): Convention {
     };
 }
 
-function makeSection(overrides: Partial<Section & { floor: Floor }> = {}): Section & { floor: Floor } {
+function makeSection(
+    overrides: Partial<Section & { floor: Floor }> = {},
+): Section & { floor: Floor } {
     return {
         id: 1,
         floor_id: 1,
@@ -167,7 +229,10 @@ interface PaginatedSections {
     links: { url: string | null; label: string; active: boolean }[];
 }
 
-function makePaginatedSections(sections: (Section & { floor: Floor })[] = [], total?: number): PaginatedSections {
+function makePaginatedSections(
+    sections: (Section & { floor: Floor })[] = [],
+    total?: number,
+): PaginatedSections {
     return {
         data: sections,
         current_page: 1,
@@ -218,8 +283,12 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('search.elder_friendly')).toBeInTheDocument();
-            expect(screen.getByLabelText('search.elder_friendly')).not.toBeChecked();
+            expect(
+                screen.getByLabelText('search.elder_friendly'),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByLabelText('search.elder_friendly'),
+            ).not.toBeChecked();
         });
 
         it('renders handicap-friendly checkbox', () => {
@@ -232,8 +301,12 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('search.handicap_friendly')).toBeInTheDocument();
-            expect(screen.getByLabelText('search.handicap_friendly')).not.toBeChecked();
+            expect(
+                screen.getByLabelText('search.handicap_friendly'),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByLabelText('search.handicap_friendly'),
+            ).not.toBeChecked();
         });
 
         it('checks elder-friendly when filter is active', () => {
@@ -246,7 +319,9 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('search.elder_friendly')).toBeChecked();
+            expect(
+                screen.getByLabelText('search.elder_friendly'),
+            ).toBeChecked();
         });
 
         it('checks handicap-friendly when filter is active', () => {
@@ -259,15 +334,39 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByLabelText('search.handicap_friendly')).toBeChecked();
+            expect(
+                screen.getByLabelText('search.handicap_friendly'),
+            ).toBeChecked();
         });
     });
 
     describe('result display', () => {
         it('renders section names and floor names in results', () => {
             const sections = [
-                makeSection({ id: 1, name: 'Alpha', occupancy: 10, floor: { id: 1, convention_id: 1, name: 'Level 1', created_at: '', updated_at: '' } }),
-                makeSection({ id: 2, name: 'Beta', occupancy: 30, floor: { id: 2, convention_id: 1, name: 'Level 2', created_at: '', updated_at: '' } }),
+                makeSection({
+                    id: 1,
+                    name: 'Alpha',
+                    occupancy: 10,
+                    floor: {
+                        id: 1,
+                        convention_id: 1,
+                        name: 'Level 1',
+                        created_at: '',
+                        updated_at: '',
+                    },
+                }),
+                makeSection({
+                    id: 2,
+                    name: 'Beta',
+                    occupancy: 30,
+                    floor: {
+                        id: 2,
+                        convention_id: 1,
+                        name: 'Level 2',
+                        created_at: '',
+                        updated_at: '',
+                    },
+                }),
             ];
 
             render(
@@ -320,7 +419,9 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('search.results_count')).toBeInTheDocument();
+            expect(
+                screen.getByText('search.results_count'),
+            ).toBeInTheDocument();
         });
 
         it('shows singular "section" when total is 1', () => {
@@ -335,7 +436,9 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByText('search.results_count')).toBeInTheDocument();
+            expect(
+                screen.getByText('search.results_count'),
+            ).toBeInTheDocument();
         });
     });
 
@@ -363,7 +466,9 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.queryByText('search.results_count')).not.toBeInTheDocument();
+            expect(
+                screen.queryByText('search.results_count'),
+            ).not.toBeInTheDocument();
         });
     });
 
@@ -408,9 +513,15 @@ describe('SearchIndex', () => {
                 />,
             );
 
-            expect(screen.getByTestId('occupancy-indicator-15')).toBeInTheDocument();
-            expect(screen.getByTestId('occupancy-indicator-60')).toBeInTheDocument();
-            expect(screen.getByTestId('occupancy-indicator-85')).toBeInTheDocument();
+            expect(
+                screen.getByTestId('occupancy-indicator-15'),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByTestId('occupancy-indicator-60'),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByTestId('occupancy-indicator-85'),
+            ).toBeInTheDocument();
         });
     });
 });

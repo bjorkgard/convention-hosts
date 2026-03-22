@@ -3,7 +3,15 @@ import { describe, expect, it, vi } from 'vitest';
 
 // Mock @inertiajs/react Link component
 vi.mock('@inertiajs/react', () => ({
-    Link: ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
+    Link: ({
+        href,
+        children,
+        ...props
+    }: {
+        href: string;
+        children: React.ReactNode;
+        [key: string]: unknown;
+    }) => (
         <a href={href} data-testid="inertia-link" {...props}>
             {children}
         </a>
@@ -19,8 +27,12 @@ vi.mock('@/actions/App/Http/Controllers/ConventionController', () => ({
 
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
-    Calendar: ({ className }: { className?: string }) => <svg data-testid="calendar-icon" className={className} />,
-    MapPin: ({ className }: { className?: string }) => <svg data-testid="map-pin-icon" className={className} />,
+    Calendar: ({ className }: { className?: string }) => (
+        <svg data-testid="calendar-icon" className={className} />
+    ),
+    MapPin: ({ className }: { className?: string }) => (
+        <svg data-testid="map-pin-icon" className={className} />
+    ),
 }));
 
 import type { Convention } from '@/types/convention';
@@ -46,7 +58,11 @@ function makeConvention(overrides: Partial<Convention> = {}): Convention {
 
 describe('ConventionCard', () => {
     it('renders convention name, city, and country', () => {
-        const convention = makeConvention({ name: 'Annual Gathering', city: 'Berlin', country: 'Germany' });
+        const convention = makeConvention({
+            name: 'Annual Gathering',
+            city: 'Berlin',
+            country: 'Germany',
+        });
         render(<ConventionCard convention={convention} />);
 
         expect(screen.getByText('Annual Gathering')).toBeInTheDocument();
@@ -62,30 +78,44 @@ describe('ConventionCard', () => {
     });
 
     it('formats same-day date range', () => {
-        const convention = makeConvention({ start_date: '2025-06-15', end_date: '2025-06-15' });
+        const convention = makeConvention({
+            start_date: '2025-06-15',
+            end_date: '2025-06-15',
+        });
         render(<ConventionCard convention={convention} />);
 
         expect(screen.getByText('15 juni 2025')).toBeInTheDocument();
     });
 
     it('formats same-month date range', () => {
-        const convention = makeConvention({ start_date: '2025-06-10', end_date: '2025-06-15' });
+        const convention = makeConvention({
+            start_date: '2025-06-10',
+            end_date: '2025-06-15',
+        });
         render(<ConventionCard convention={convention} />);
 
         expect(screen.getByText('10–15 juni 2025')).toBeInTheDocument();
     });
 
     it('formats cross-month date range within same year', () => {
-        const convention = makeConvention({ start_date: '2025-06-10', end_date: '2025-07-15' });
+        const convention = makeConvention({
+            start_date: '2025-06-10',
+            end_date: '2025-07-15',
+        });
         render(<ConventionCard convention={convention} />);
 
         expect(screen.getByText('10 juni – 15 juli 2025')).toBeInTheDocument();
     });
 
     it('formats cross-year date range', () => {
-        const convention = makeConvention({ start_date: '2025-12-28', end_date: '2026-01-03' });
+        const convention = makeConvention({
+            start_date: '2025-12-28',
+            end_date: '2026-01-03',
+        });
         render(<ConventionCard convention={convention} />);
 
-        expect(screen.getByText('28 december 2025 – 3 januari 2026')).toBeInTheDocument();
+        expect(
+            screen.getByText('28 december 2025 – 3 januari 2026'),
+        ).toBeInTheDocument();
     });
 });

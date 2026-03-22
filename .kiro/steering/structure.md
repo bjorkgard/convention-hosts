@@ -3,26 +3,26 @@
 ## Backend (Laravel)
 
 ### Application Code (`app/`)
-- `Actions/` - Business logic actions (CreateConventionAction, ExportConventionAction, InviteUserAction, UpdateOccupancyAction, Fortify/)
+- `Actions/` - Business logic actions (CreateConventionAction, ExportConventionAction, InviteUserAction, UpdateOccupancyAction, Consent/RecordUserConsentAction, Fortify/)
 - `Concerns/` - Reusable traits (PasswordValidationRules, ProfileValidationRules, SanitizesInput)
 - `Console/Commands/` - Artisan commands (ResetDailyOccupancy, CleanupUnconfirmedGuestConventions)
 - `Exports/` - Data export classes (ConventionExport, ConventionWordExport, ConventionMarkdownExport, sheets for attendance/floors/users/convention)
-- `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/, VersionController)
-- `Http/Middleware/` - Custom middleware (EnsureConventionAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, ScopeByRole, SecureHeaders)
-- `Http/Requests/` - Form request validation classes organized by feature (Settings/, plus Store/Update requests for convention, floor, section, user, occupancy, attendance, search, guest convention, set password)
-- `Listeners/` - Event listeners (SecurityEventListener for failed login, authorization failure, invalid signed URL, rate limit logging)
+- `Http/Controllers/` - HTTP controllers organized by feature (Auth/, Settings/, ConsentController, ConventionController, FloorController, GuestConventionController, LocaleController, SearchController, SectionController, UrlAccessController, UserController, VersionController)
+- `Http/Middleware/` - Custom middleware (EnsureConventionOrUrlAccess, EnsureOwnerRole, HandleAppearance, HandleInertiaRequests, SecureHeaders, SetLocale)
+- `Http/Requests/` - Form request validation classes organized by feature (Consent/, Settings/, plus Store/Update requests for convention, floor, section, user, occupancy, attendance, search, guest convention, set password)
+- `Listeners/` - Event listeners (SecurityEventListener)
 - `Mail/` - Mailable classes (UserInvitation, EmailConfirmation, GuestConventionVerification)
 - `Models/` - Eloquent models:
-  - `User.php` - User model with convention relationships
-  - `Convention.php` - Convention model with floors and attendance periods
+  - `User.php` - User model with convention relationships, locale, consent fields
+  - `Convention.php` - Convention model with floors, attendance periods, section_url_token, locale
   - `Floor.php` - Floor model with sections
-  - `Section.php` - Section model with occupancy tracking
+  - `Section.php` - Section model with occupancy tracking, hearing_loop
   - `AttendancePeriod.php` - Time-bound attendance reporting periods
-  - `AttendanceReport.php` - Section attendance data
-- `Observers/` - Model observers (UserObserver - resets email_confirmed on email change, sends confirmation email)
+  - `AttendanceReport.php` - Section attendance data (no reported_by field)
+- `Observers/` - Model observers (UserObserver)
 - `Policies/` - Authorization policies (ConventionPolicy, FloorPolicy, SectionPolicy, UserPolicy)
 - `Providers/` - Service providers (AppServiceProvider, FortifyServiceProvider)
-- `Services/` - Business logic services (AttendanceReportService - start/stop reports, report attendance, period determination)
+- `Services/` - Business logic services (AttendanceReportService)
 
 ### Configuration (`config/`)
 Standard Laravel configuration files including `fortify.php` for authentication settings.
@@ -31,15 +31,19 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - `factories/` - Model factories for testing (User, Convention, Floor, Section, AttendancePeriod, AttendanceReport)
 - `migrations/` - Database schema migrations:
   - Convention management tables (conventions, floors, sections)
-  - User pivot tables (convention_user, floor_user, section_user)
-  - Role management (convention_user_roles)
+  - User pivot table (convention_user)
+  - Role management (convention_user_roles) - roles: Owner, Administrator
   - Attendance tracking (attendance_periods, attendance_reports)
   - Two-factor authentication columns
-- `seeders/` - Database seeders (DatabaseSeeder, DemoSeeder with sample convention data and all role types)
+  - URL tokens (section_url_token on conventions)
+  - Hearing loop field on sections
+  - Locale fields on users and conventions
+  - Consent fields on users
+- `seeders/` - Database seeders (DatabaseSeeder, DemoSeeder with sample convention data and role types)
 - `database.sqlite` - SQLite database file (development)
 
 ### Routes
-- `routes/web.php` - Main web routes (conventions, floors, sections, users, attendance, search, guest convention, invitation, email confirmation, version API)
+- `routes/web.php` - Main web routes (conventions, floors, sections, users, attendance, search, guest convention, invitation, email confirmation, URL access, consent, locale API, version API)
 - `routes/settings.php` - Settings-related routes (included in web.php)
 - `routes/console.php` - Artisan console commands and scheduled tasks
 
@@ -54,20 +58,26 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - `components/` - React components
   - `ui/` - Reusable UI components (shadcn/ui style, DO NOT EDIT)
   - `conventions/` - Convention feature components (attendance-report-banner, available-seats-input, convention-card, export-dropdown, floor-row, full-button, occupancy-dropdown, occupancy-gauge, occupancy-indicator, role-badge, section-card, section-modal, user-row)
-  - General components (alert-error, app-content, app-header, app-logo, app-logo-icon, app-shell, app-sidebar, app-sidebar-header, appearance-tabs, breadcrumbs, confirmation-dialog, delete-user, heading, input-error, install-prompt, nav-convention, nav-footer, nav-main, nav-user, text-link, two-factor-recovery-codes, two-factor-setup-modal, update-notification-modal, user-info, user-menu-content, version-badge)
+  - General components (alert-error, app-content, app-header, app-logo, app-logo-icon, app-shell, app-sidebar, app-sidebar-header, appearance-tabs, authenticated-consent-prompt, breadcrumbs, confirmation-dialog, cookie-consent-banner, delete-user, heading, input-error, install-prompt, locale-selector, nav-convention, nav-footer, nav-main, nav-user, text-link, two-factor-recovery-codes, two-factor-setup-modal, update-notification-modal, user-info, user-menu-content, version-badge)
   
 - `hooks/` - Custom React hooks
   - `use-app-version.ts` - GitHub release version checking
   - `use-appearance.tsx` - Theme/appearance management
   - `use-attendance-report.ts` - Attendance report state management
   - `use-clipboard.ts` - Clipboard copy utility
+  - `use-consent.ts` - Consent state management
   - `use-convention-role.ts` - Convention role checks
+  - `use-cookie-consent.tsx` - Cookie consent banner logic
   - `use-current-url.ts` - Current URL tracking
+  - `use-flash-toast.ts` - Flash message toast notifications
   - `use-initials.tsx` - User initials generation
+  - `use-locale-sync.ts` - Locale synchronization
   - `use-mobile-navigation.ts` - Mobile navigation state
   - `use-mobile.tsx` - Mobile detection
   - `use-occupancy-color.ts` - Occupancy color mapping
+  - `use-theme.tsx` - Theme management
   - `use-two-factor-auth.ts` - 2FA state management
+  - `use-url-session-locale.ts` - URL session locale handling
   
 - `layouts/` - Page layout components
   - `app/` - Authenticated app layouts (app-header-layout, app-sidebar-layout)
@@ -92,12 +102,12 @@ Standard Laravel configuration files including `fortify.php` for authentication 
 - `routes/` - **Auto-generated** Wayfinder route definitions (DO NOT EDIT)
   
 - `types/` - TypeScript type definitions
-  - `index.ts` - Barrel export with shared PageProps, Flash, Errors types
+  - `index.ts` - Barrel export with shared PageProps, Flash, Errors, UrlSession, ConsentContract types
   - `auth.ts` - Authentication types
   - `convention.ts` - Convention, Floor, Section, Attendance types
   - `navigation.ts` - Navigation types
   - `ui.ts` - UI component types
-  - `user.ts` - User and Role types
+  - `user.ts` - User and Role types (Role = 'Owner' | 'Administrator')
   - `global.d.ts` - Global type declarations
   - `vite-env.d.ts` - Vite client type references
   
@@ -127,13 +137,16 @@ Standard Laravel configuration files including `fortify.php` for authentication 
   - `Auth/` - Authentication flows (login, registration, password reset, email verification, 2FA challenge, verification notification)
   - `GuestConventionVerification/` - Guest convention verification tests (confirmation page, set password page, signed URL error handling)
   - `Integration/` - End-to-end integration tests (complete user flows, mobile responsiveness, performance, role-based access, security audit)
-  - `Properties/` - Property-based feature tests (attendance periods, convention creation, CSRF, email confirmation, exports, floor/section, occupancy dropdown/full button/metadata, roles, user management)
+  - `Properties/` - Property-based feature tests (attendance periods, convention creation, CSRF, email confirmation, exports, floor/section, hearing loop export/search, occupancy dropdown/full button/metadata, roles, user management)
     - `GuestConventionVerification/` - Guest convention property tests (account activation, confirmation page, existing user auto-login, new user creation, role assignment, password validation, set password page, verification email content)
+    - `RoleUrlRefactoring/` - Role/URL refactoring property tests (token generation)
   - `Section/` - Section-specific tests (authorization)
   - `Settings/` - Settings tests (password update, profile update, 2FA)
-  - Root-level feature tests for convention overlap, convention test helper, CSRF, dashboard, exports (data completeness, format serialization), floor/section validation, form errors, input sanitization, rate limiting (login, invitation resend), navigation, password (confirmation, validation), remember me session, search (accessibility, occupancy filter), security (headers, logging), signed URLs, user email validation
-- `tests/Property/` - Property-based unit tests (attendance calculations, attendance properties, convention properties, daily occupancy reset, email update confirmation, floor user permissions, invitation email delivery, occupancy color coding, occupancy properties, role-based data scoping, section CRUD property, section frontend property, section user restrictions, section validation property, user properties)
+  - Root-level feature tests for convention overlap, CSRF, exports, floor/section validation, form errors, input sanitization, rate limiting, navigation, password, search, security, signed URLs, user email validation, locale, flash sharing
+- `tests/Property/` - Property-based unit tests (attendance calculations, attendance properties, convention properties, daily occupancy reset, email update confirmation, hearing loop daily reset/round trip/validation, invitation email delivery, occupancy color coding, occupancy properties, section CRUD/frontend/validation property, user properties)
 - `tests/Unit/` - Unit tests (attendance reporting, convention creation, exports, occupancy, role-based access, search, user invitation, validation)
+  - `tests/Unit/Actions/` - Action unit tests
+  - `tests/Unit/Support/` - Support class unit tests
 - `tests/Helpers/` - Test utilities (ConventionTestHelper)
 
 ## Key Conventions

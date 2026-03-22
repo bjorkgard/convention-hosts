@@ -31,8 +31,8 @@ CREATE TABLE conventions (
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     other_info TEXT,
-    floor_url_token VARCHAR(64) UNIQUE,
     section_url_token VARCHAR(64) UNIQUE,
+    locale VARCHAR(10) DEFAULT 'en',
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
     CONSTRAINT check_dates CHECK (end_date >= start_date)
@@ -41,7 +41,6 @@ CREATE TABLE conventions (
 -- Indexes
 CREATE INDEX idx_conventions_location ON conventions(city, country);
 CREATE INDEX idx_conventions_dates ON conventions(start_date, end_date);
-CREATE UNIQUE INDEX idx_conventions_floor_url_token ON conventions(floor_url_token);
 CREATE UNIQUE INDEX idx_conventions_section_url_token ON conventions(section_url_token);
 ```
 
@@ -49,7 +48,7 @@ CREATE UNIQUE INDEX idx_conventions_section_url_token ON conventions(section_url
 - Date range validation (end_date must be >= start_date)
 - Location-based indexing for conflict detection
 - Optional address and additional information fields
-- Auto-generated URL tokens for anonymous floor and section access (64-char random strings)
+- Auto-generated URL token for anonymous section access (64-char random string)
 
 #### floors
 Organizes convention venues into physical levels.
@@ -135,7 +134,7 @@ CREATE TABLE convention_user_roles (
 );
 ```
 
-> **Note:** The previous `FloorUser` and `SectionUser` roles and their pivot tables (`floor_user`, `section_user`) have been removed. Floor and section access is now handled via URL-based anonymous access tokens stored on the `conventions` table.
+> **Note:** The previous `FloorUser` and `SectionUser` roles and their pivot tables (`floor_user`, `section_user`) have been removed. Anonymous access is now handled via a URL-based section access token stored on the `conventions` table.
 
 ### Attendance Tracking
 
@@ -198,16 +197,11 @@ Administrator (Convention-wide Access)
 
 ### URL-Based Anonymous Access
 
-Floor and section management by volunteers is handled via shareable URLs that create anonymous sessions:
+Section management by volunteers is handled via a shareable URL that creates an anonymous session:
 
 ```
-Floor URL Session
-  ├─ View all floors and sections
-  ├─ Update occupancy for any section
-  └─ Report attendance for any section
-
 Section URL Session
-  ├─ View all sections
+  ├─ View all floors and sections
   ├─ Update occupancy for any section
   └─ Report attendance for any section
 ```
@@ -216,21 +210,21 @@ URL sessions cannot: create/edit/delete floors or sections, manage users, start/
 
 ### Permission Matrix
 
-| Action | Owner | Administrator | Floor URL | Section URL |
-|--------|-------|---------------|-----------|-------------|
-| View convention | ✓ | ✓ | ✓ | ✓ |
-| Edit convention | ✓ | ✓ | ✗ | ✗ |
-| Delete convention | ✓ | ✗ | ✗ | ✗ |
-| Export data | ✓ | ✗ | ✗ | ✗ |
-| Manage floors | ✓ | ✓ | ✗ | ✗ |
-| View floors | ✓ | ✓ | ✓ | ✗ |
-| Manage sections | ✓ | ✓ | ✗ | ✗ |
-| View sections | ✓ | ✓ | ✓ | ✓ |
-| Update occupancy | ✓ | ✓ | ✓ | ✓ |
-| Manage users | ✓ | ✓ | ✗ | ✗ |
-| Start/stop attendance | ✓ | ✓ | ✗ | ✗ |
-| Report attendance | ✓ | ✓ | ✓ | ✓ |
-| Lock attendance periods | ✓ | ✓ | ✗ | ✗ |
+| Action | Owner | Administrator | Section URL |
+|--------|-------|---------------|-------------|
+| View convention | ✓ | ✓ | ✓ |
+| Edit convention | ✓ | ✓ | ✗ |
+| Delete convention | ✓ | ✗ | ✗ |
+| Export data | ✓ | ✗ | ✗ |
+| Manage floors | ✓ | ✓ | ✗ |
+| View floors | ✓ | ✓ | ✓ |
+| Manage sections | ✓ | ✓ | ✗ |
+| View sections | ✓ | ✓ | ✓ |
+| Update occupancy | ✓ | ✓ | ✓ |
+| Manage users | ✓ | ✓ | ✗ |
+| Start/stop attendance | ✓ | ✓ | ✗ |
+| Report attendance | ✓ | ✓ | ✓ |
+| Lock attendance periods | ✓ | ✓ | ✗ |
 
 ## Key Features
 
@@ -442,11 +436,10 @@ The `Convention` model represents a convention event with all its relationships 
 - `start_date` - Convention start date (cast to Carbon date)
 - `end_date` - Convention end date (cast to Carbon date)
 - `other_info` - Optional additional information
-- `floor_url_token` - Auto-generated 64-char token for anonymous floor access
 - `section_url_token` - Auto-generated 64-char token for anonymous section access
+- `locale` - Convention locale preference for internationalization (default: 'en')
 
 **Hidden Attributes:**
-- `floor_url_token` - Hidden from default serialization (exposed explicitly for Owner/Administrator)
 - `section_url_token` - Hidden from default serialization (exposed explicitly for Owner/Administrator)
 
 **Relationships:**
@@ -506,8 +499,7 @@ if ($convention->hasAnyRole($user, ['Owner', 'Administrator'])) {
 $userRoles = $convention->userRoles($user);
 // ['Owner', 'Administrator']
 
-// Get URL access links
-$floorUrl = $convention->floorAccessUrl();
+// Get URL access link
 $sectionUrl = $convention->sectionAccessUrl();
 ```
 
@@ -549,7 +541,7 @@ The action performs the following operations within a database transaction:
 3. **Assigns roles** to the creator:
    - `Owner` role (full administrative privileges)
    - `Administrator` role (convention-wide access)
-4. **Auto-generates URL tokens** via the Convention model's `creating` boot event (`floor_url_token` and `section_url_token`)
+4. **Auto-generates URL token** via the Convention model's `creating` boot event (`section_url_token`)
 5. **Returns the fresh convention** instance with all relationships loaded
 
 **Transaction Safety:**
@@ -775,8 +767,7 @@ The `ConventionController` handles all convention CRUD operations, role-scoped d
 The `show()` method returns data based on the user's role or URL session:
 
 - **Owner / Administrator**: Sees all floors, sections, users, and attendance data
-- **Floor URL session**: Sees all floors and sections (read-only, can update occupancy and report attendance)
-- **Section URL session**: Sees all sections (read-only, can update occupancy and report attendance)
+- **Section URL session**: Sees all floors and sections (read-only, can update occupancy and report attendance)
 
 **Props returned to frontend:**
 
@@ -853,7 +844,6 @@ interface UseConventionRoleReturn {
     isAdministrator: boolean;
     isManager: boolean;          // Owner or Administrator
     isUrlSession: boolean;
-    isFloorUrlSession: boolean;
     isSectionUrlSession: boolean;
 }
 ```
@@ -864,7 +854,7 @@ interface UseConventionRoleReturn {
 import { useConventionRole } from '@/hooks/use-convention-role';
 
 function FloorList({ floors }) {
-    const { isManager, isFloorUrlSession } = useConventionRole();
+    const { isManager } = useConventionRole();
 
     return floors.map((floor) => (
         <FloorRow
@@ -876,7 +866,7 @@ function FloorList({ floors }) {
 }
 ```
 
-Owner and Administrator roles automatically have access to all floors and sections. URL session users have fixed permission sets based on their token type (floor or section).
+Owner and Administrator roles automatically have access to all floors and sections. URL session users have a fixed permission set based on their section token.
 
 ## Frontend Navigation
 
@@ -890,7 +880,7 @@ When viewing a convention, the sidebar displays context-aware navigation links s
 
 | Link | Icon | Visible To |
 |------|------|------------|
-| Administration | Building2 | Owner, Administrator, Floor URL session |
+| Administration | Building2 | Owner, Administrator |
 | Sections | Grid3X3 | All convention users and URL sessions |
 | Users | Users | Owner, Administrator |
 | Availability | Search | All convention users and URL sessions |
@@ -910,40 +900,24 @@ The `NavConvention` component is rendered in the `AppSidebar` below the main nav
 
 ## Implementation Status
 
-The Convention Management System is currently under development.
+The Convention Management System is fully implemented and in active use.
 
-### Completed
-
-- Database migrations (conventions, floors, sections, users, pivots, attendance)
-- Eloquent models with relationships and role management
-- Form request validation (conventions, floors, sections, users, attendance, search, passwords)
-- Business logic actions (CreateConvention, InviteUser, UpdateOccupancy, ExportConvention, AttendanceReportService)
+### Core System
+- Database migrations (conventions, floors, sections, users, pivots, attendance, URL tokens, hearing loop, locale, consent)
+- Eloquent models with relationships, role management, and URL token generation
+- Form request validation (conventions, floors, sections, users, attendance, search, passwords, consent)
+- Business logic actions (CreateConvention, InviteUser, UpdateOccupancy, ExportConvention, RecordUserConsent, AttendanceReportService)
 - Export system (Excel, Word, Markdown)
-- Middleware and authorization (EnsureConventionOrUrlAccess, EnsureOwnerRole, policies)
-- Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation)
-- Scheduled tasks (daily occupancy reset via `app:reset-daily-occupancy` command)
-- Property-based tests for core business rules
-
-### In Progress
-
-- Email system (Mailgun integration, invitation and confirmation mailables)
-- Frontend UI components and Inertia pages
-- PWA support
-
-### Recently Added
-
-- **Section CRUD from FloorsIndex** — Full section create/edit/delete management from the Floors page via modal dialogs. Includes:
-  - **`SectionModal` component** (`resources/js/components/conventions/section-modal.tsx`) — Dialog for creating and editing sections with floor selector dropdown, accessibility checkboxes, and inline validation errors. Uses `useForm` from Inertia with Wayfinder type-safe routing.
-  - **`FloorRow` section action buttons** — Inline edit (Pencil) and delete (Trash2) icon buttons next to each section in expanded floor rows. Visibility is role-gated: Owner and Administrator can edit/delete. Props: `onEditSection`, `onDeleteSection`.
-  - **`UpdateSectionRequest`** (`app/Http/Requests/UpdateSectionRequest.php`) — Dedicated form request for section updates (no `floor_id` since sections don't change floors on edit).
-  - **`StoreSectionRequest` updated** — Added `floor_id` validation (`sometimes|required|exists:floors,id`) for creating sections from the FloorsIndex page.
-  - **`SectionController` updated** — Store/update/destroy actions redirect to `floors.index` route. Store accepts `floor_id` from request body. Update uses `UpdateSectionRequest`.
-  - **Property-based tests** — Comprehensive PBT coverage for creation, update, deletion, cancellation, authorization enforcement, and server-side validation rejection.
-- **`GuestConventionController`** (`app/Http/Controllers/GuestConventionController.php`) — Allows unauthenticated users to create a convention from the landing page. Finds or creates a user by email, creates the convention via `CreateConventionAction`, and logs the user in automatically. Route: `POST /conventions/guest` (guest middleware)
-- **`StoreGuestConventionRequest`** (`app/Http/Requests/StoreGuestConventionRequest.php`) — Form request validating both user fields (first_name, last_name, email) and convention fields with date overlap detection
-- **`NavConvention` component** (`resources/js/components/nav-convention.tsx`) — Context-aware sidebar navigation that displays convention-specific links (Administration, Sections, Users, Availability) with role-based visibility using `useConventionRole` and Wayfinder type-safe routing
-- **`useConventionRole` hook** (`resources/js/hooks/use-convention-role.ts`) — React hook that reads role and URL session data from Inertia page props, exposing `isOwner`, `isAdministrator`, `isManager`, `isUrlSession`, `isFloorUrlSession`, `isSectionUrlSession` booleans
-- **TypeScript type definitions** (`resources/js/types/convention.ts`) for all convention data models: `Convention`, `Floor`, `Section`, `AttendancePeriod`, `AttendanceReport` with full relationship typing and optional nested includes
+- Middleware and authorization (EnsureConventionOrUrlAccess, EnsureOwnerRole, SetLocale, policies)
+- Controllers and routes (Convention, Floor, Section, User, Attendance, Search, Invitation, UrlAccess, Consent, Locale, Version)
+- Scheduled tasks (daily occupancy reset, unconfirmed guest convention cleanup)
+- Email system (Mailgun integration — UserInvitation, EmailConfirmation, GuestConventionVerification)
+- Frontend UI components and Inertia pages (all CRUD flows, modals, role-gated navigation)
+- PWA support (manifest, service worker, install prompt)
+- Internationalization (i18n with SetLocale middleware, LocaleController, i18next frontend)
+- Consent management (cookie consent banner, authenticated consent prompt)
+- URL-based anonymous access (section URL tokens, URL sessions)
+- Property-based and feature tests for core business rules
 
 ## Development Setup
 

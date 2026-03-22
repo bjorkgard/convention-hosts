@@ -27,7 +27,6 @@ class Convention extends Model
         'start_date',
         'end_date',
         'other_info',
-        'floor_url_token',
         'section_url_token',
         'locale',
     ];
@@ -38,7 +37,6 @@ class Convention extends Model
      * @var list<string>
      */
     protected $hidden = [
-        'floor_url_token',
         'section_url_token',
     ];
 
@@ -61,17 +59,16 @@ class Convention extends Model
     protected static function booted(): void
     {
         static::creating(function (Convention $convention) {
-            $convention->floor_url_token ??= Str::random(64);
             $convention->section_url_token ??= Str::random(64);
         });
     }
 
     /**
-     * Get the full floor access URL for this convention.
+     * Regenerate the section URL token, invalidating the old one.
      */
-    public function floorAccessUrl(): string
+    public function regenerateUrlToken(): void
     {
-        return route('url-access.floor', $this->floor_url_token);
+        $this->update(['section_url_token' => Str::random(64)]);
     }
 
     /**

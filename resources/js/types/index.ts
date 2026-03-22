@@ -27,7 +27,7 @@ export type Errors = Record<string, string>;
 
 export interface UrlSession {
     convention_id: string;
-    type: 'floor' | 'section';
+    type: 'section';
 }
 
 export interface PageProps {

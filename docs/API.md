@@ -92,7 +92,7 @@ POST /conventions
 
 Custom validation: rejects if an overlapping convention exists in the same city/country.
 
-On success: redirects to `conventions.show`. Creator is assigned Owner and Administrator roles. URL tokens for floor and section access are auto-generated.
+On success: redirects to `conventions.show`. Creator is assigned Owner and Administrator roles. A URL token for section access is auto-generated.
 
 Error example:
 ```json
@@ -242,6 +242,21 @@ Authorization: ConventionPolicy `export` (Owner only)
 
 Returns: binary file download. File is deleted from server after sending.
 
+### Regenerate URL Token
+
+```
+POST /conventions/{convention}/regenerate-url-token
+```
+
+Middleware: `auth`, `EnsureConventionOrUrlAccess`
+Authorization: Owner or Administrator only
+
+No request body required.
+
+Generates a new random 64-character section URL token, invalidating the previous token. Any active URL sessions using the old token are automatically cleared by the `EnsureConventionOrUrlAccess` middleware on next request.
+
+On success: redirects to `conventions.show` with a flash message.
+
 ---
 
 ## Consent
@@ -267,16 +282,6 @@ On success: redirects back.
 ---
 
 ## URL Access (Unauthenticated)
-
-### Access via Floor URL
-
-```
-GET /url-access/floor/{token}
-```
-
-No authentication required. Looks up the convention by `floor_url_token`, creates a URL session in the Laravel session, and redirects to `conventions.show`.
-
-Returns 404 if the token is invalid or the convention doesn't exist.
 
 ### Access via Section URL
 

@@ -175,7 +175,9 @@ export default function InstallPrompt() {
                             variant="ghost"
                             size="icon"
                             className="size-8 shrink-0 cursor-pointer"
-                            aria-label={t('common.install_app.instructions_label')}
+                            aria-label={t(
+                                'common.install_app.instructions_label',
+                            )}
                         >
                             <Smartphone className="size-4" />
                         </Button>
@@ -183,7 +185,9 @@ export default function InstallPrompt() {
                 </div>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{t('common.install_app.title')}</DialogTitle>
+                        <DialogTitle>
+                            {t('common.install_app.title')}
+                        </DialogTitle>
                         <DialogDescription>
                             {t('common.install_app.description')}
                         </DialogDescription>
@@ -250,7 +254,8 @@ function InstructionsContent({ t }: { t: (key: string) => string }) {
                             1
                         </span>
                         <span className="flex items-center gap-1.5">
-                            {t('common.install_app.ios_step1')} <Share className="inline size-4" />
+                            {t('common.install_app.ios_step1')}{' '}
+                            <Share className="inline size-4" />
                         </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -258,7 +263,8 @@ function InstructionsContent({ t }: { t: (key: string) => string }) {
                             2
                         </span>
                         <span className="flex items-center gap-1.5">
-                            <Plus className="inline size-4" /> {t('common.install_app.ios_step2')}
+                            <Plus className="inline size-4" />{' '}
+                            {t('common.install_app.ios_step2')}
                         </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -280,7 +286,8 @@ function InstructionsContent({ t }: { t: (key: string) => string }) {
                             1
                         </span>
                         <span className="flex items-center gap-1.5">
-                            {t('common.install_app.android_step1')} <MoreVertical className="inline size-4" />
+                            {t('common.install_app.android_step1')}{' '}
+                            <MoreVertical className="inline size-4" />
                         </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -288,7 +295,8 @@ function InstructionsContent({ t }: { t: (key: string) => string }) {
                             2
                         </span>
                         <span className="flex items-center gap-1.5">
-                            <Download className="inline size-4" /> {t('common.install_app.android_step2')}
+                            <Download className="inline size-4" />{' '}
+                            {t('common.install_app.android_step2')}
                         </span>
                     </li>
                 </ol>

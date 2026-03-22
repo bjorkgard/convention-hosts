@@ -77,7 +77,9 @@ export default function TwoFactorRecoveryCodes({
                             className="size-4"
                             aria-hidden="true"
                         />
-                        {codesAreVisible ? t('settings.two_factor.hide_codes') : t('settings.two_factor.show_codes')}
+                        {codesAreVisible
+                            ? t('settings.two_factor.hide_codes')
+                            : t('settings.two_factor.show_codes')}
                     </Button>
 
                     {canRegenerateCodes && (
@@ -93,7 +95,8 @@ export default function TwoFactorRecoveryCodes({
                                     disabled={processing}
                                     aria-describedby="regenerate-warning"
                                 >
-                                    <RefreshCw /> {t('settings.two_factor.regenerate_codes')}
+                                    <RefreshCw />{' '}
+                                    {t('settings.two_factor.regenerate_codes')}
                                 </Button>
                             )}
                         </Form>
@@ -113,7 +116,9 @@ export default function TwoFactorRecoveryCodes({
                                     ref={codesSectionRef}
                                     className="grid gap-1 rounded-lg bg-muted p-4 font-mono text-sm"
                                     role="list"
-                                    aria-label={t('settings.two_factor.recovery_codes_heading')}
+                                    aria-label={t(
+                                        'settings.two_factor.recovery_codes_heading',
+                                    )}
                                 >
                                     {recoveryCodesList.length ? (
                                         recoveryCodesList.map((code, index) => (
@@ -146,7 +151,9 @@ export default function TwoFactorRecoveryCodes({
 
                                 <div className="text-xs text-muted-foreground select-none">
                                     <p id="regenerate-warning">
-                                        {t('settings.two_factor.regenerate_warning')}
+                                        {t(
+                                            'settings.two_factor.regenerate_warning',
+                                        )}
                                     </p>
                                 </div>
                             </>
