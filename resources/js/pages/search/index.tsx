@@ -3,13 +3,22 @@ import { ArrowLeft, SearchX } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { index as conventionsIndex, show as conventionShow } from '@/actions/App/Http/Controllers/ConventionController';
+import {
+    index as conventionsIndex,
+    show as conventionShow,
+} from '@/actions/App/Http/Controllers/ConventionController';
 import { index as searchIndex } from '@/actions/App/Http/Controllers/SearchController';
 import { show as sectionShow } from '@/actions/App/Http/Controllers/SectionController';
 import OccupancyGauge from '@/components/conventions/occupancy-gauge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import type { Convention, Floor, Section } from '@/types/convention';
 import type { BreadcrumbItem } from '@/types/navigation';
@@ -39,7 +48,12 @@ interface SearchIndexProps {
     filters: SearchFilters;
 }
 
-export default function SearchIndex({ convention, sections, floors, filters }: SearchIndexProps) {
+export default function SearchIndex({
+    convention,
+    sections,
+    floors,
+    filters,
+}: SearchIndexProps) {
     const { t } = useTranslation();
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -54,9 +68,18 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
             const query: Record<string, string> = {};
             if (merged.floor_id) query.floor_id = merged.floor_id;
-            if (merged.elder_friendly === '1' || merged.elder_friendly === 'true') query.elder_friendly = '1';
-            if (merged.handicap_friendly === '1' || merged.handicap_friendly === 'true') query.handicap_friendly = '1';
-            if (merged.hearing_loop === '1' || merged.hearing_loop === 'true') query.hearing_loop = '1';
+            if (
+                merged.elder_friendly === '1' ||
+                merged.elder_friendly === 'true'
+            )
+                query.elder_friendly = '1';
+            if (
+                merged.handicap_friendly === '1' ||
+                merged.handicap_friendly === 'true'
+            )
+                query.handicap_friendly = '1';
+            if (merged.hearing_loop === '1' || merged.hearing_loop === 'true')
+                query.hearing_loop = '1';
 
             router.get(searchIndex.url(convention.id), query, {
                 preserveState: true,
@@ -91,12 +114,17 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
             <Head title={t('search.title')} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center gap-3">
-                    <Link href={conventionShow.url(convention.id)} aria-label={t('search.back_label')}>
-                        <ArrowLeft className="text-muted-foreground size-5" />
+                    <Link
+                        href={conventionShow.url(convention.id)}
+                        aria-label={t('search.back_label')}
+                    >
+                        <ArrowLeft className="size-5 text-muted-foreground" />
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-semibold tracking-tight">{t('search.heading')}</h1>
-                        <p className="text-muted-foreground text-sm">
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                            {t('search.heading')}
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
                             {t('search.description')}
                         </p>
                     </div>
@@ -105,15 +133,30 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                 {/* Filters */}
                 <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-end sm:gap-4">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="floor-filter">{t('search.floor_label')}</Label>
-                        <Select value={filters.floor_id ?? 'all'} onValueChange={handleFloorChange}>
-                            <SelectTrigger id="floor-filter" className="w-full sm:w-48">
-                                <SelectValue placeholder={t('search.all_floors')} />
+                        <Label htmlFor="floor-filter">
+                            {t('search.floor_label')}
+                        </Label>
+                        <Select
+                            value={filters.floor_id ?? 'all'}
+                            onValueChange={handleFloorChange}
+                        >
+                            <SelectTrigger
+                                id="floor-filter"
+                                className="w-full sm:w-48"
+                            >
+                                <SelectValue
+                                    placeholder={t('search.all_floors')}
+                                />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">{t('search.all_floors')}</SelectItem>
+                                <SelectItem value="all">
+                                    {t('search.all_floors')}
+                                </SelectItem>
                                 {floors.map((floor) => (
-                                    <SelectItem key={floor.id} value={String(floor.id)}>
+                                    <SelectItem
+                                        key={floor.id}
+                                        value={String(floor.id)}
+                                    >
                                         {floor.name}
                                     </SelectItem>
                                 ))}
@@ -124,10 +167,16 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="elder-friendly"
-                            checked={filters.elder_friendly === '1' || filters.elder_friendly === 'true'}
+                            checked={
+                                filters.elder_friendly === '1' ||
+                                filters.elder_friendly === 'true'
+                            }
                             onCheckedChange={handleElderFriendlyChange}
                         />
-                        <Label htmlFor="elder-friendly" className="cursor-pointer">
+                        <Label
+                            htmlFor="elder-friendly"
+                            className="cursor-pointer"
+                        >
                             {t('search.elder_friendly')}
                         </Label>
                     </div>
@@ -135,10 +184,16 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="handicap-friendly"
-                            checked={filters.handicap_friendly === '1' || filters.handicap_friendly === 'true'}
+                            checked={
+                                filters.handicap_friendly === '1' ||
+                                filters.handicap_friendly === 'true'
+                            }
                             onCheckedChange={handleHandicapFriendlyChange}
                         />
-                        <Label htmlFor="handicap-friendly" className="cursor-pointer">
+                        <Label
+                            htmlFor="handicap-friendly"
+                            className="cursor-pointer"
+                        >
                             {t('search.handicap_friendly')}
                         </Label>
                     </div>
@@ -146,10 +201,16 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                     <div className="flex items-center gap-2">
                         <Checkbox
                             id="hearing-loop"
-                            checked={filters.hearing_loop === '1' || filters.hearing_loop === 'true'}
+                            checked={
+                                filters.hearing_loop === '1' ||
+                                filters.hearing_loop === 'true'
+                            }
                             onCheckedChange={handleHearingLoopChange}
                         />
-                        <Label htmlFor="hearing-loop" className="cursor-pointer">
+                        <Label
+                            htmlFor="hearing-loop"
+                            className="cursor-pointer"
+                        >
                             {t('search.hearing_loop')}
                         </Label>
                     </div>
@@ -158,13 +219,17 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                 {/* Results */}
                 {sections.data.length === 0 ? (
                     <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
-                        <SearchX className="text-muted-foreground mb-2 size-10" />
-                        <p className="text-muted-foreground">{t('search.no_results')}</p>
+                        <SearchX className="mb-2 size-10 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                            {t('search.no_results')}
+                        </p>
                     </div>
                 ) : (
                     <>
-                        <p className="text-muted-foreground text-sm">
-                            {t('search.results_count', { count: sections.total })}
+                        <p className="text-sm text-muted-foreground">
+                            {t('search.results_count', {
+                                count: sections.total,
+                            })}
                         </p>
                         <div className="flex flex-col gap-2">
                             {sections.data.map((section) => (
@@ -173,10 +238,18 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                     href={sectionShow.url(section.id)}
                                     className="flex min-h-[44px] cursor-pointer items-center gap-3 rounded-xl border border-border p-3 transition-colors duration-200 hover:border-primary/30 hover:bg-accent"
                                 >
-                                    <OccupancyGauge occupancy={section.occupancy} size={40} />
+                                    <OccupancyGauge
+                                        occupancy={section.occupancy}
+                                        size={40}
+                                    />
                                     <div className="min-w-0 flex-1">
-                                        <p className="truncate font-medium">{section.name}</p>
-                                        <p className="text-muted-foreground truncate text-sm">{section.floor?.name ?? t('search.unknown_floor')}</p>
+                                        <p className="truncate font-medium">
+                                            {section.name}
+                                        </p>
+                                        <p className="truncate text-sm text-muted-foreground">
+                                            {section.floor?.name ??
+                                                t('search.unknown_floor')}
+                                        </p>
                                     </div>
                                 </Link>
                             ))}
@@ -184,14 +257,19 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
 
                         {/* Pagination */}
                         {sections.last_page > 1 && (
-                            <nav className="flex flex-wrap items-center justify-center gap-1 pt-2" aria-label={t('search.pagination_label')}>
+                            <nav
+                                className="flex flex-wrap items-center justify-center gap-1 pt-2"
+                                aria-label={t('search.pagination_label')}
+                            >
                                 {sections.links.map((link, i) => {
                                     if (!link.url) {
                                         return (
                                             <span
                                                 key={i}
-                                                className="text-muted-foreground min-h-[44px] min-w-[44px] px-3 py-2 text-center text-sm"
-                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className="min-h-[44px] min-w-[44px] px-3 py-2 text-center text-sm text-muted-foreground"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label,
+                                                }}
                                             />
                                         );
                                     }
@@ -205,7 +283,9 @@ export default function SearchIndex({ convention, sections, floors, filters }: S
                                                     : 'hover:bg-accent'
                                             }`}
                                             preserveState
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            dangerouslySetInnerHTML={{
+                                                __html: link.label,
+                                            }}
                                         />
                                     );
                                 })}

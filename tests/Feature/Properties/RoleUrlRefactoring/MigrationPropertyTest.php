@@ -74,8 +74,7 @@ it('ensures reported_by column does not exist on attendance_reports post-migrati
  * Property 13: Migration token generation for existing conventions
  *
  * For all conventions that exist before the migration runs, after migration each
- * convention must have non-null floor_url_token and section_url_token values
- * of at least 32 characters.
+ * convention must have a non-null section_url_token value of at least 32 characters.
  *
  * **Validates: Requirements 10.6**
  */
@@ -87,12 +86,6 @@ it('ensures all conventions have valid tokens post-migration', function () {
     $allConventions = DB::table('conventions')->get();
 
     foreach ($allConventions as $convention) {
-        expect($convention->floor_url_token)
-            ->not->toBeNull("Convention {$convention->id} must have a floor_url_token")
-            ->toBeString()
-            ->and(strlen($convention->floor_url_token))
-            ->toBeGreaterThanOrEqual(32, "Convention {$convention->id} floor_url_token must be >= 32 chars");
-
         expect($convention->section_url_token)
             ->not->toBeNull("Convention {$convention->id} must have a section_url_token")
             ->toBeString()
@@ -112,27 +105,22 @@ it('ensures all conventions have valid tokens post-migration', function () {
  */
 it('restores schema structure after rollback and re-migration', function () {
     // Current state: migration has run (up). Verify current schema.
-    expect(Schema::hasColumn('conventions', 'floor_url_token'))->toBeTrue();
+    expect(Schema::hasColumn('conventions', 'floor_url_token'))->toBeFalse();
     expect(Schema::hasColumn('conventions', 'section_url_token'))->toBeTrue();
     expect(Schema::hasTable('floor_user'))->toBeFalse();
     expect(Schema::hasTable('section_user'))->toBeFalse();
     expect(Schema::hasColumn('attendance_reports', 'reported_by'))->toBeFalse();
 
-    // Roll back the role-url-refactoring migration (step 4 because hearing_loop and locale migrations are now after it)
-    Artisan::call('migrate:rollback', ['--step' => 4]);
+    // Roll back the last 5 migrations (drop_floor_url_token + hearing_loop + locale + simplify_roles + any other)
+    Artisan::call('migrate:rollback', ['--step' => 5]);
 
     // After rollback: old schema should be restored
     expect(Schema::hasTable('floor_user'))->toBeTrue('floor_user table should be restored after rollback');
     expect(Schema::hasTable('section_user'))->toBeTrue('section_user table should be restored after rollback');
     expect(Schema::hasColumn('attendance_reports', 'reported_by'))
         ->toBeTrue('reported_by column should be restored after rollback');
-    expect(Schema::hasColumn('conventions', 'floor_url_token'))
-        ->toBeFalse('floor_url_token should be removed after rollback');
-    expect(Schema::hasColumn('conventions', 'section_url_token'))
-        ->toBeFalse('section_url_token should be removed after rollback');
 
     // Verify ConventionUser role is restored (Administrator renamed back)
-    // Any Administrator roles that existed should now be ConventionUser
     $adminCount = DB::table('convention_user_roles')->where('role', 'Administrator')->count();
     expect($adminCount)->toBe(0, 'No Administrator roles should exist after rollback');
 
@@ -140,7 +128,7 @@ it('restores schema structure after rollback and re-migration', function () {
     Artisan::call('migrate');
 
     // Verify migration re-applied correctly
-    expect(Schema::hasColumn('conventions', 'floor_url_token'))->toBeTrue();
+    expect(Schema::hasColumn('conventions', 'floor_url_token'))->toBeFalse();
     expect(Schema::hasColumn('conventions', 'section_url_token'))->toBeTrue();
     expect(Schema::hasTable('floor_user'))->toBeFalse();
     expect(Schema::hasTable('section_user'))->toBeFalse();

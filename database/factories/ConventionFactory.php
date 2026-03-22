@@ -32,7 +32,6 @@ class ConventionFactory extends Factory
             'start_date' => $startDate,
             'end_date' => $endDate,
             'other_info' => $this->faker->optional()->paragraph(),
-            'floor_url_token' => Str::random(64),
             'section_url_token' => Str::random(64),
             'locale' => 'sv',
         ];

@@ -18,21 +18,34 @@ vi.mock('@/components/ui/select', () => ({
                 ? children
                 : React.Children.map(children, (child) => {
                       if (React.isValidElement(child)) {
-                          return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
-                              __value: value,
-                              __onValueChange: onValueChange,
-                          });
+                          return React.cloneElement(
+                              child as React.ReactElement<
+                                  Record<string, unknown>
+                              >,
+                              {
+                                  __value: value,
+                                  __onValueChange: onValueChange,
+                              },
+                          );
                       }
                       return child;
                   })}
         </div>
     ),
-    SelectTrigger: ({ children, ...props }: { children: React.ReactNode; id?: string }) => (
+    SelectTrigger: ({
+        children,
+        ...props
+    }: {
+        children: React.ReactNode;
+        id?: string;
+    }) => (
         <button data-testid="select-trigger" {...props}>
             {children}
         </button>
     ),
-    SelectValue: ({ placeholder }: { placeholder?: string }) => <span data-testid="select-value">{placeholder}</span>,
+    SelectValue: ({ placeholder }: { placeholder?: string }) => (
+        <span data-testid="select-value">{placeholder}</span>
+    ),
     SelectContent: ({
         children,
         __value,
@@ -50,16 +63,24 @@ vi.mock('@/components/ui/select', () => ({
             {children}
         </select>
     ),
-    SelectItem: ({ value, children }: { value: string; children: React.ReactNode }) => (
-        <option value={value}>{children}</option>
-    ),
+    SelectItem: ({
+        value,
+        children,
+    }: {
+        value: string;
+        children: React.ReactNode;
+    }) => <option value={value}>{children}</option>,
 }));
 
 // Mock Label to render a simple label element
 vi.mock('@/components/ui/label', () => ({
-    Label: ({ children, ...props }: { children: React.ReactNode; htmlFor?: string }) => (
-        <label {...props}>{children}</label>
-    ),
+    Label: ({
+        children,
+        ...props
+    }: {
+        children: React.ReactNode;
+        htmlFor?: string;
+    }) => <label {...props}>{children}</label>,
 }));
 
 // Mock getOccupancyColorClass to return a predictable string
@@ -98,7 +119,9 @@ describe('OccupancyDropdown', () => {
     it('displays the current occupancy value as selected', () => {
         render(<OccupancyDropdown currentOccupancy={50} onUpdate={vi.fn()} />);
 
-        const select = screen.getByTestId('select-content') as HTMLSelectElement;
+        const select = screen.getByTestId(
+            'select-content',
+        ) as HTMLSelectElement;
         expect(select.value).toBe('50');
     });
 

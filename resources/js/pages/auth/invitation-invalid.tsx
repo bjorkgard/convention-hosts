@@ -31,9 +31,15 @@ export default function InvitationInvalid({ reason }: Props) {
             <div className="flex flex-col items-center gap-6">
                 <div className="flex size-16 items-center justify-center rounded-full bg-muted">
                     {isExpired ? (
-                        <Clock className="size-8 text-muted-foreground" aria-hidden="true" />
+                        <Clock
+                            className="size-8 text-muted-foreground"
+                            aria-hidden="true"
+                        />
                     ) : (
-                        <AlertTriangle className="size-8 text-muted-foreground" aria-hidden="true" />
+                        <AlertTriangle
+                            className="size-8 text-muted-foreground"
+                            aria-hidden="true"
+                        />
                     )}
                 </div>
 
@@ -42,7 +48,9 @@ export default function InvitationInvalid({ reason }: Props) {
                 </p>
 
                 <Button asChild className="w-full">
-                    <Link href="/">{t('auth.invitation_invalid.home_link')}</Link>
+                    <Link href="/">
+                        {t('auth.invitation_invalid.home_link')}
+                    </Link>
                 </Button>
             </div>
         </AuthLayout>

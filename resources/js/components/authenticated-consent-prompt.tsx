@@ -13,7 +13,8 @@ type PendingDecision = 'accepted' | 'declined' | null;
 export default function AuthenticatedConsentPrompt() {
     const consent = useConsent();
     const { t } = useTranslation();
-    const [pendingDecision, setPendingDecision] = useState<PendingDecision>(null);
+    const [pendingDecision, setPendingDecision] =
+        useState<PendingDecision>(null);
 
     if (consent.state !== 'undecided') {
         return null;
@@ -37,7 +38,7 @@ export default function AuthenticatedConsentPrompt() {
     };
 
     return (
-        <div className="fixed inset-x-4 bottom-4 z-40 md:left-[calc(var(--sidebar-width)+1rem)] md:right-4">
+        <div className="fixed inset-x-4 bottom-4 z-40 md:right-4 md:left-[calc(var(--sidebar-width)+1rem)]">
             <section
                 role="region"
                 aria-label={t('common.cookie_consent.aria_label')}

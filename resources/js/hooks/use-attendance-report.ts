@@ -31,8 +31,7 @@ export function useAttendanceReport(): UseAttendanceReportReturn {
         const isManager = roles.has('Owner') || roles.has('Administrator');
 
         // Find the active (unlocked) period
-        const activePeriod =
-            attendancePeriods.find((p) => !p.locked) ?? null;
+        const activePeriod = attendancePeriods.find((p) => !p.locked) ?? null;
 
         // Count today's periods to check max 2 per day limit
         const today = new Date().toISOString().slice(0, 10);
@@ -40,7 +39,8 @@ export function useAttendanceReport(): UseAttendanceReportReturn {
             (p) => p.date === today,
         ).length;
 
-        const canStart = isManager && todayPeriodCount < 2 && activePeriod === null;
+        const canStart =
+            isManager && todayPeriodCount < 2 && activePeriod === null;
         const canStop = isManager && activePeriod !== null;
 
         // Count total sections across all floors

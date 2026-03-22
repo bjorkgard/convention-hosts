@@ -19,8 +19,8 @@ it('applies authenticated user locale', function () {
 it('applies convention locale from URL session when user locale is null', function () {
     $convention = Convention::factory()->create(['locale' => 'en']);
 
-    // Simulate a URL session by visiting the floor URL access route
-    $this->get(route('url-access.floor', $convention->floor_url_token));
+    // Simulate a URL session by visiting the section URL access route
+    $this->get(route('url-access.section', $convention->section_url_token));
 
     $this->get(route('conventions.show', $convention))
         ->assertInertia(fn ($page) => $page->where('locale', 'en'));

@@ -9,7 +9,7 @@ export function VersionBadge({ className = '' }: { className?: string }) {
 
     return (
         <span
-            className={`text-muted-foreground text-xs ${className}`}
+            className={`text-xs text-muted-foreground ${className}`}
             aria-label={t('common.version_badge_aria', { version: appVersion })}
         >
             {appVersion}

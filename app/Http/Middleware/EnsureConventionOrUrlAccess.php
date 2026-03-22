@@ -36,10 +36,19 @@ class EnsureConventionOrUrlAccess
             return $next($request);
         }
 
-        // Path 2: URL session with matching convention_id
+        // Path 2: URL session with matching convention_id and valid token
         $urlSession = session('url_session');
         if ($urlSession && ($urlSession['convention_id'] ?? null) === $convention->id) {
-            return $next($request);
+            // Verify the stored token still matches (tokens may have been regenerated)
+            $storedToken = $urlSession['token'] ?? null;
+            $currentToken = $convention->section_url_token;
+
+            if ($storedToken && $storedToken === $currentToken) {
+                return $next($request);
+            }
+
+            // Token was regenerated — clear the stale session
+            session()->forget('url_session');
         }
 
         // Neither path matched — deny access

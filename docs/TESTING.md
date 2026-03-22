@@ -668,11 +668,10 @@ Shorthand for creating a user with a role, useful for quick test setup.
 Sets up a URL session in the Laravel session for testing anonymous URL-based access.
 
 ```php
-ConventionTestHelper::setUrlSession($convention, 'floor');   // floor URL session
-ConventionTestHelper::setUrlSession($convention, 'section'); // section URL session
+ConventionTestHelper::setUrlSession($convention); // section URL session
 ```
 
-This reads the convention's `floor_url_token` or `section_url_token` and stores it in the session as `url_session`, matching the format used by `UrlAccessController`.
+This reads the convention's `section_url_token` and stores it in the session as `url_session`, matching the format used by `UrlAccessController`.
 
 ## Property-Based Tests
 

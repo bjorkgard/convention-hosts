@@ -162,21 +162,21 @@ Click **Delete** on a user to remove them from the convention. All their role an
 
 Your role determines what you can see and do:
 
-| Capability | Owner | Administrator | Floor URL | Section URL |
-|-----------|-------|---------------|-----------|-------------|
-| View convention | Yes | Yes | Yes | Yes |
-| Edit convention | Yes | Yes | No | No |
-| Delete convention | Yes | No | No | No |
-| Export data | Yes | No | No | No |
-| Manage floors | Yes | Yes | No | No |
-| View floors | Yes | Yes | Yes | No |
-| Manage sections | Yes | Yes | No | No |
-| View sections | Yes | Yes | Yes | Yes |
-| Update occupancy | Yes | Yes | Yes | Yes |
-| Manage users | Yes | Yes | No | No |
-| Start/stop attendance | Yes | Yes | No | No |
-| Report attendance | Yes | Yes | Yes | Yes |
-| Search sections | Yes | Yes | Yes | Yes |
+| Capability | Owner | Administrator | Section URL |
+|-----------|-------|---------------|-------------|
+| View convention | Yes | Yes | Yes |
+| Edit convention | Yes | Yes | No |
+| Delete convention | Yes | No | No |
+| Export data | Yes | No | No |
+| Manage floors | Yes | Yes | No |
+| View floors | Yes | Yes | Yes |
+| Manage sections | Yes | Yes | No |
+| View sections | Yes | Yes | Yes |
+| Update occupancy | Yes | Yes | Yes |
+| Manage users | Yes | Yes | No |
+| Start/stop attendance | Yes | Yes | No |
+| Report attendance | Yes | Yes | Yes |
+| Search sections | Yes | Yes | Yes |
 
 URL session users access the convention via a shareable link and see a simplified interface without user account options.
 
@@ -187,11 +187,21 @@ Instead of creating user accounts for every volunteer, convention organizers can
 ### Sharing Access URLs
 
 1. Open your convention page as an Owner or Administrator
-2. Find the "Floor Access URL" and "Section Access URL" displayed on the page
-3. Click the copy button next to the URL you want to share
+2. Find the "Section Access URL" displayed on the page
+3. Click the copy button next to the URL to share it
 4. Send the URL to your volunteers via messaging app, email, or printed QR code
 
-### Floor Access URL
+### Regenerating the Access URL
+
+If the URL is compromised or you want to revoke access for all current volunteers:
+
+1. Click the regenerate button (circular arrow icon) next to the URL
+2. Confirm the action in the dialog — this cannot be undone
+3. A new URL is generated immediately
+
+The old URL stops working. Anyone who previously had the link will lose access and need the new URL. Share the updated link with your volunteers.
+
+### Section Access URL
 
 Volunteers who open this link can:
 - View all floors and sections
@@ -199,15 +209,6 @@ Volunteers who open this link can:
 - Report attendance for any section
 
 They cannot create/edit/delete floors or sections, manage users, or start/stop attendance reports.
-
-### Section Access URL
-
-Volunteers who open this link can:
-- View all sections
-- Update occupancy for any section
-- Report attendance for any section
-
-They cannot view floors, manage users, or start/stop attendance reports.
 
 ### URL Session Behavior
 

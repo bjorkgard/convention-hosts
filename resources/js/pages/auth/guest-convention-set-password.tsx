@@ -23,17 +23,43 @@ type Props = {
     };
 };
 
-export default function GuestConventionSetPassword({ user, convention }: Props) {
+export default function GuestConventionSetPassword({
+    user,
+    convention,
+}: Props) {
     const { t } = useTranslation();
     const [password, setPassword] = useState('');
 
-    const passwordCriteria = useMemo(() => [
-        { key: 'minLength', label: t('auth.password_criteria.min_length'), test: (p: string) => p.length >= 8 },
-        { key: 'lowercase', label: t('auth.password_criteria.lowercase'), test: (p: string) => /[a-z]/.test(p) },
-        { key: 'uppercase', label: t('auth.password_criteria.uppercase'), test: (p: string) => /[A-Z]/.test(p) },
-        { key: 'number', label: t('auth.password_criteria.number'), test: (p: string) => /[0-9]/.test(p) },
-        { key: 'symbol', label: t('auth.password_criteria.symbol'), test: (p: string) => /[@$!%*#?&]/.test(p) },
-    ], [t]);
+    const passwordCriteria = useMemo(
+        () => [
+            {
+                key: 'minLength',
+                label: t('auth.password_criteria.min_length'),
+                test: (p: string) => p.length >= 8,
+            },
+            {
+                key: 'lowercase',
+                label: t('auth.password_criteria.lowercase'),
+                test: (p: string) => /[a-z]/.test(p),
+            },
+            {
+                key: 'uppercase',
+                label: t('auth.password_criteria.uppercase'),
+                test: (p: string) => /[A-Z]/.test(p),
+            },
+            {
+                key: 'number',
+                label: t('auth.password_criteria.number'),
+                test: (p: string) => /[0-9]/.test(p),
+            },
+            {
+                key: 'symbol',
+                label: t('auth.password_criteria.symbol'),
+                test: (p: string) => /[@$!%*#?&]/.test(p),
+            },
+        ],
+        [t],
+    );
 
     const criteriaResults = useMemo(
         () => passwordCriteria.map((c) => ({ ...c, met: c.test(password) })),
@@ -42,20 +68,29 @@ export default function GuestConventionSetPassword({ user, convention }: Props) 
 
     return (
         <AuthLayout
-            title={t('auth.guest_set_password.welcome_title', { name: user.first_name })}
-            description={t('auth.guest_set_password.description', { convention: convention.name })}
+            title={t('auth.guest_set_password.welcome_title', {
+                name: user.first_name,
+            })}
+            description={t('auth.guest_set_password.description', {
+                convention: convention.name,
+            })}
         >
             <Head title={t('auth.guest_set_password.title')} />
 
             <Form
-                {...store.form({ user: String(user.id), convention: String(convention.id) })}
+                {...store.form({
+                    user: String(user.id),
+                    convention: String(convention.id),
+                })}
                 resetOnSuccess={['password', 'password_confirmation']}
                 className="flex flex-col gap-6"
             >
                 {({ processing, errors }) => (
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">{t('auth.guest_set_password.email_label')}</Label>
+                            <Label htmlFor="email">
+                                {t('auth.guest_set_password.email_label')}
+                            </Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -66,7 +101,9 @@ export default function GuestConventionSetPassword({ user, convention }: Props) 
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">{t('auth.guest_set_password.password_label')}</Label>
+                            <Label htmlFor="password">
+                                {t('auth.guest_set_password.password_label')}
+                            </Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -75,7 +112,9 @@ export default function GuestConventionSetPassword({ user, convention }: Props) 
                                 autoFocus
                                 tabIndex={1}
                                 autoComplete="new-password"
-                                placeholder={t('auth.guest_set_password.password_placeholder')}
+                                placeholder={t(
+                                    'auth.guest_set_password.password_placeholder',
+                                )}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -84,7 +123,9 @@ export default function GuestConventionSetPassword({ user, convention }: Props) 
 
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">
-                                {t('auth.guest_set_password.confirm_password_label')}
+                                {t(
+                                    'auth.guest_set_password.confirm_password_label',
+                                )}
                             </Label>
                             <Input
                                 id="password_confirmation"
@@ -93,7 +134,9 @@ export default function GuestConventionSetPassword({ user, convention }: Props) 
                                 required
                                 tabIndex={2}
                                 autoComplete="new-password"
-                                placeholder={t('auth.guest_set_password.confirm_password_placeholder')}
+                                placeholder={t(
+                                    'auth.guest_set_password.confirm_password_placeholder',
+                                )}
                             />
                             <InputError
                                 message={errors.password_confirmation}
@@ -101,16 +144,25 @@ export default function GuestConventionSetPassword({ user, convention }: Props) 
                         </div>
 
                         {password.length > 0 && (
-                            <ul className="grid gap-1.5 text-sm" aria-label={t('auth.password_criteria.label')}>
+                            <ul
+                                className="grid gap-1.5 text-sm"
+                                aria-label={t('auth.password_criteria.label')}
+                            >
                                 {criteriaResults.map((c) => (
                                     <li
                                         key={c.key}
                                         className={`flex items-center gap-2 ${c.met ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}
                                     >
                                         {c.met ? (
-                                            <Check className="size-4 shrink-0" aria-hidden="true" />
+                                            <Check
+                                                className="size-4 shrink-0"
+                                                aria-hidden="true"
+                                            />
                                         ) : (
-                                            <X className="size-4 shrink-0" aria-hidden="true" />
+                                            <X
+                                                className="size-4 shrink-0"
+                                                aria-hidden="true"
+                                            />
                                         )}
                                         {c.label}
                                     </li>

@@ -1,6 +1,10 @@
 import type { ConsentContract } from '@/types';
 
-export const OPTIONAL_COOKIE_NAMES = ['appearance', 'theme', 'sidebar_state'] as const;
+export const OPTIONAL_COOKIE_NAMES = [
+    'appearance',
+    'theme',
+    'sidebar_state',
+] as const;
 export const OPTIONAL_LOCAL_STORAGE_KEYS = [
     'appearance',
     'theme',
@@ -13,8 +17,12 @@ export const SAFE_SIDEBAR_OPEN = true;
 export const INSTALL_PROMPT_DISMISSED_FALLBACK = false;
 
 export type OptionalCookieName = (typeof OPTIONAL_COOKIE_NAMES)[number];
-export type OptionalLocalStorageKey = (typeof OPTIONAL_LOCAL_STORAGE_KEYS)[number];
-export type ConsentPolicy = Pick<ConsentContract, 'allowOptionalStorage'> | null | undefined;
+export type OptionalLocalStorageKey =
+    (typeof OPTIONAL_LOCAL_STORAGE_KEYS)[number];
+export type ConsentPolicy =
+    | Pick<ConsentContract, 'allowOptionalStorage'>
+    | null
+    | undefined;
 
 type ReadOptionalStorageOptions<TValue extends string> = {
     allowed: boolean;

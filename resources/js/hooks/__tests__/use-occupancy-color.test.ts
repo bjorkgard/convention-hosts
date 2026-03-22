@@ -1,7 +1,11 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { getOccupancyColorClass, getOccupancyLevel, useOccupancyColor } from '../use-occupancy-color';
+import {
+    getOccupancyColorClass,
+    getOccupancyLevel,
+    useOccupancyColor,
+} from '../use-occupancy-color';
 
 describe('getOccupancyLevel', () => {
     it('returns green for 0%', () => {
@@ -51,7 +55,9 @@ describe('getOccupancyColorClass', () => {
     });
 
     it('maps dark-green level to correct Tailwind classes', () => {
-        expect(getOccupancyColorClass(30)).toBe('text-emerald-700 bg-emerald-50');
+        expect(getOccupancyColorClass(30)).toBe(
+            'text-emerald-700 bg-emerald-50',
+        );
     });
 
     it('maps yellow level to correct Tailwind classes', () => {

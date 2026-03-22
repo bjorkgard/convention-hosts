@@ -1,13 +1,22 @@
 import { renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { AttendancePeriod, AttendanceReport, Floor, Section } from '@/types/convention';
+import type {
+    AttendancePeriod,
+    AttendanceReport,
+    Floor,
+    Section,
+} from '@/types/convention';
 import type { Role } from '@/types/user';
 
 // Mock @inertiajs/react usePage
-const mockProps = vi.fn<() => { attendancePeriods?: AttendancePeriod[]; floors?: Floor[]; userRoles?: Role[] }>(
-    () => ({}),
-);
+const mockProps = vi.fn<
+    () => {
+        attendancePeriods?: AttendancePeriod[];
+        floors?: Floor[];
+        userRoles?: Role[];
+    }
+>(() => ({}));
 
 vi.mock('@inertiajs/react', () => ({
     usePage: () => ({ props: mockProps() }),
@@ -15,11 +24,17 @@ vi.mock('@inertiajs/react', () => ({
 
 import { useAttendanceReport } from '../use-attendance-report';
 
-function setPageProps(props: { attendancePeriods?: AttendancePeriod[]; floors?: Floor[]; userRoles?: Role[] }) {
+function setPageProps(props: {
+    attendancePeriods?: AttendancePeriod[];
+    floors?: Floor[];
+    userRoles?: Role[];
+}) {
     mockProps.mockReturnValue(props);
 }
 
-function makePeriod(overrides: Partial<AttendancePeriod> = {}): AttendancePeriod {
+function makePeriod(
+    overrides: Partial<AttendancePeriod> = {},
+): AttendancePeriod {
     return {
         id: 1,
         convention_id: 1,
@@ -32,7 +47,9 @@ function makePeriod(overrides: Partial<AttendancePeriod> = {}): AttendancePeriod
     };
 }
 
-function makeReport(overrides: Partial<AttendanceReport> = {}): AttendanceReport {
+function makeReport(
+    overrides: Partial<AttendanceReport> = {},
+): AttendanceReport {
     return {
         id: 1,
         attendance_period_id: 1,
@@ -45,7 +62,9 @@ function makeReport(overrides: Partial<AttendanceReport> = {}): AttendanceReport
     };
 }
 
-function makeFloor(overrides: Partial<Floor> & { sections?: Partial<Section>[] } = {}): Floor {
+function makeFloor(
+    overrides: Partial<Floor> & { sections?: Partial<Section>[] } = {},
+): Floor {
     return {
         id: 1,
         convention_id: 1,
@@ -70,7 +89,10 @@ describe('useAttendanceReport', () => {
         it('returns the first unlocked period as activePeriod', () => {
             const unlocked = makePeriod({ id: 2, locked: false });
             setPageProps({
-                attendancePeriods: [makePeriod({ id: 1, locked: true }), unlocked],
+                attendancePeriods: [
+                    makePeriod({ id: 1, locked: true }),
+                    unlocked,
+                ],
                 userRoles: ['Owner'],
             });
 
@@ -231,7 +253,9 @@ describe('useAttendanceReport', () => {
 
         it('returns 0 when no active period', () => {
             setPageProps({
-                attendancePeriods: [makePeriod({ locked: true, reports: [makeReport()] })],
+                attendancePeriods: [
+                    makePeriod({ locked: true, reports: [makeReport()] }),
+                ],
                 userRoles: ['Owner'],
             });
 

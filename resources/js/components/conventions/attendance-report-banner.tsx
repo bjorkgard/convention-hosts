@@ -15,7 +15,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { AttendancePeriod, Convention } from '@/types/convention';
 
 interface AttendanceReportBannerProps {
@@ -46,7 +50,12 @@ export default function AttendanceReportBanner({
     }
 
     function submitStop() {
-        router.post(stop.url({ convention: convention.id, attendancePeriod: activePeriod.id }));
+        router.post(
+            stop.url({
+                convention: convention.id,
+                attendancePeriod: activePeriod.id,
+            }),
+        );
         setShowConfirm(false);
     }
 
@@ -57,10 +66,15 @@ export default function AttendanceReportBanner({
                     <div className="flex flex-col gap-1">
                         <span className="flex items-center gap-1.5 text-sm font-medium text-blue-900 dark:text-blue-200">
                             <Users className="size-4" />
-                            {t('attendance.banner.sections_reported', { reported: reportedCount, total: totalCount })}
+                            {t('attendance.banner.sections_reported', {
+                                reported: reportedCount,
+                                total: totalCount,
+                            })}
                         </span>
                         <span className="text-sm text-blue-700 dark:text-blue-300">
-                            {t('attendance.banner.total_attendance', { count: totalAttendance })}
+                            {t('attendance.banner.total_attendance', {
+                                count: totalAttendance,
+                            })}
                         </span>
                     </div>
                     <Tooltip>
@@ -75,7 +89,9 @@ export default function AttendanceReportBanner({
                                 {t('attendance.banner.stop_button')}
                             </Button>
                         </TooltipTrigger>
-                        <TooltipContent>{t('attendance.banner.stop_tooltip')}</TooltipContent>
+                        <TooltipContent>
+                            {t('attendance.banner.stop_tooltip')}
+                        </TooltipContent>
                     </Tooltip>
                 </AlertDescription>
             </Alert>
@@ -88,14 +104,26 @@ export default function AttendanceReportBanner({
                             {t('attendance.incomplete_dialog.title')}
                         </DialogTitle>
                         <DialogDescription>
-                            {t('attendance.incomplete_dialog.description', { reported: reportedCount, total: totalCount })}
+                            {t('attendance.incomplete_dialog.description', {
+                                reported: reportedCount,
+                                total: totalCount,
+                            })}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="outline" className="cursor-pointer">{t('attendance.incomplete_dialog.cancel')}</Button>
+                            <Button
+                                variant="outline"
+                                className="cursor-pointer"
+                            >
+                                {t('attendance.incomplete_dialog.cancel')}
+                            </Button>
                         </DialogClose>
-                        <Button variant="destructive" className="cursor-pointer" onClick={submitStop}>
+                        <Button
+                            variant="destructive"
+                            className="cursor-pointer"
+                            onClick={submitStop}
+                        >
                             {t('attendance.incomplete_dialog.confirm')}
                         </Button>
                     </DialogFooter>

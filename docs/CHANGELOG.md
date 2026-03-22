@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add URL token regeneration with confirmation dialog on the convention page — Owner and Administrator can regenerate floor or section access URLs to revoke existing links
 - Add internationalization (i18n) system with English and Swedish locales
 - Add translation files for 15 domains: auth, convention, floor, section, user, search, attendance, settings, emails, validation, public, notifications, navigation, export, common
 - Add `locale` column to `users` table (nullable, default null) for user language preference
@@ -16,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `hearing_loop` boolean accessibility flag to sections across the full stack (database, model, validation, section modal, search filter, TypeScript type, and all export formats)
 - add changelog generator skill for automated user-friendly changelogs
 - Simplify role system from four tiers (Owner, ConventionUser, FloorUser, SectionUser) to two tiers (Owner, Administrator)
-- Add URL-based anonymous access for floor and section management via shareable links
-- Auto-generate `floor_url_token` and `section_url_token` on convention creation
+- Add URL-based anonymous access for section management via shareable links
+- Auto-generate `section_url_token` on convention creation
 - Add `EnsureConventionOrUrlAccess` middleware supporting both authenticated users and URL sessions
 - Add `UrlAccessController` for URL token entry points
 - implement backend locale infrastructure with API and middleware
@@ -30,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Validate URL session tokens against current convention tokens in `EnsureConventionOrUrlAccess` middleware; stale sessions from regenerated tokens are automatically cleared
 - Move consent route outside auth middleware so URL-session (anonymous) users can submit cookie consent; anonymous consent is stored in the Laravel session
 - Rename ConventionUser role to Administrator
 - Remove FloorUser and SectionUser roles, `floor_user` and `section_user` pivot tables

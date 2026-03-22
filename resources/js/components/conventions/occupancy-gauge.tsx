@@ -1,6 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { getOccupancyLevel } from '@/hooks/use-occupancy-color';
 
 const colorMap = {
@@ -24,7 +28,10 @@ interface OccupancyGaugeProps {
     size?: number;
 }
 
-export default function OccupancyGauge({ occupancy, size = 32 }: OccupancyGaugeProps) {
+export default function OccupancyGauge({
+    occupancy,
+    size = 32,
+}: OccupancyGaugeProps) {
     const { t } = useTranslation();
     const level = getOccupancyLevel(occupancy);
     const { stroke, track } = colorMap[level];
@@ -51,7 +58,13 @@ export default function OccupancyGauge({ occupancy, size = 32 }: OccupancyGaugeP
                     role="img"
                     className="shrink-0 cursor-default"
                 >
-                    <path d={arcPath} fill="none" stroke={track} strokeWidth={strokeWidth} strokeLinecap="round" />
+                    <path
+                        d={arcPath}
+                        fill="none"
+                        stroke={track}
+                        strokeWidth={strokeWidth}
+                        strokeLinecap="round"
+                    />
                     <path
                         d={arcPath}
                         fill="none"
@@ -61,14 +74,25 @@ export default function OccupancyGauge({ occupancy, size = 32 }: OccupancyGaugeP
                         strokeDasharray={`${halfCircumference}`}
                         strokeDashoffset={`${halfCircumference - filled}`}
                     />
-                    <text x={cx} y={cy} textAnchor="middle" fontSize={size * 0.25} fill={stroke} fontWeight="600">
+                    <text
+                        x={cx}
+                        y={cy}
+                        textAnchor="middle"
+                        fontSize={size * 0.25}
+                        fill={stroke}
+                        fontWeight="600"
+                    >
                         {occupancy}%
                     </text>
                 </svg>
             </TooltipTrigger>
             <TooltipContent>
                 <p className="font-medium">{label}</p>
-                <p className="text-xs text-muted-foreground">{t('section.occupancy.gauge_occupancy', { percent: occupancy })}</p>
+                <p className="text-xs text-muted-foreground">
+                    {t('section.occupancy.gauge_occupancy', {
+                        percent: occupancy,
+                    })}
+                </p>
             </TooltipContent>
         </Tooltip>
     );

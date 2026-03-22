@@ -30,7 +30,7 @@ export default function AppSidebarLayout({
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
                 <AuthenticatedConsentPrompt />
-                <div className="mt-auto px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-20 md:hidden">
+                <div className="mt-auto px-4 pt-20 pb-[calc(env(safe-area-inset-bottom)+1rem)] md:hidden">
                     <InstallPrompt />
                 </div>
             </AppContent>

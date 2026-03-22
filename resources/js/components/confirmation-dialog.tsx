@@ -34,8 +34,10 @@ export default function ConfirmationDialog({
     loading = false,
 }: ConfirmationDialogProps) {
     const { t } = useTranslation();
-    const resolvedConfirmLabel = confirmLabel ?? t('common.confirmation_dialog.default_confirm');
-    const resolvedCancelLabel = cancelLabel ?? t('common.confirmation_dialog.default_cancel');
+    const resolvedConfirmLabel =
+        confirmLabel ?? t('common.confirmation_dialog.default_confirm');
+    const resolvedCancelLabel =
+        cancelLabel ?? t('common.confirmation_dialog.default_cancel');
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>

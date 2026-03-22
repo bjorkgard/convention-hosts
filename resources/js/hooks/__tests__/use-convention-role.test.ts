@@ -6,7 +6,9 @@ import type { UrlSession } from '@/types';
 import type { Role } from '@/types/user';
 
 // Mock @inertiajs/react usePage
-const mockProps = vi.fn<() => { userRoles?: Role[]; urlSession?: UrlSession | null }>(() => ({}));
+const mockProps = vi.fn<
+    () => { userRoles?: Role[]; urlSession?: UrlSession | null }
+>(() => ({}));
 
 vi.mock('@inertiajs/react', () => ({
     usePage: () => ({ props: mockProps() }),
@@ -14,7 +16,10 @@ vi.mock('@inertiajs/react', () => ({
 
 import { useConventionRole } from '../use-convention-role';
 
-function setPageProps(props: { userRoles?: Role[]; urlSession?: UrlSession | null }) {
+function setPageProps(props: {
+    userRoles?: Role[];
+    urlSession?: UrlSession | null;
+}) {
     mockProps.mockReturnValue(props);
 }
 
@@ -44,22 +49,13 @@ describe('useConventionRole', () => {
     });
 
     describe('URL sessions', () => {
-        it('detects floor URL session', () => {
-            setPageProps({ urlSession: { convention_id: 'abc', type: 'floor' } });
-            const { result } = renderHook(() => useConventionRole());
-
-            expect(result.current.isUrlSession).toBe(true);
-            expect(result.current.isFloorUrlSession).toBe(true);
-            expect(result.current.isSectionUrlSession).toBe(false);
-            expect(result.current.isManager).toBe(false);
-        });
-
         it('detects section URL session', () => {
-            setPageProps({ urlSession: { convention_id: 'abc', type: 'section' } });
+            setPageProps({
+                urlSession: { convention_id: 'abc', type: 'section' },
+            });
             const { result } = renderHook(() => useConventionRole());
 
             expect(result.current.isUrlSession).toBe(true);
-            expect(result.current.isFloorUrlSession).toBe(false);
             expect(result.current.isSectionUrlSession).toBe(true);
             expect(result.current.isManager).toBe(false);
         });
@@ -74,7 +70,6 @@ describe('useConventionRole', () => {
             expect(result.current.isAdministrator).toBe(false);
             expect(result.current.isManager).toBe(false);
             expect(result.current.isUrlSession).toBe(false);
-            expect(result.current.isFloorUrlSession).toBe(false);
             expect(result.current.isSectionUrlSession).toBe(false);
         });
     });
@@ -95,25 +90,37 @@ describe('useConventionRole', () => {
 
     describe('Property 1: Role system invariant', () => {
         it('only recognizes Owner and Administrator — no other role string sets any flag', () => {
-            const arbitraryRoleString = fc.string({ minLength: 1, maxLength: 20 });
+            const arbitraryRoleString = fc.string({
+                minLength: 1,
+                maxLength: 20,
+            });
 
             fc.assert(
-                fc.property(fc.array(arbitraryRoleString, { minLength: 0, maxLength: 5 }), (roles) => {
-                    setPageProps({ userRoles: roles as Role[] });
-                    const { result } = renderHook(() => useConventionRole());
+                fc.property(
+                    fc.array(arbitraryRoleString, {
+                        minLength: 0,
+                        maxLength: 5,
+                    }),
+                    (roles) => {
+                        setPageProps({ userRoles: roles as Role[] });
+                        const { result } = renderHook(() =>
+                            useConventionRole(),
+                        );
 
-                    const hasOwner = roles.includes('Owner');
-                    const hasAdmin = roles.includes('Administrator');
+                        const hasOwner = roles.includes('Owner');
+                        const hasAdmin = roles.includes('Administrator');
 
-                    expect(result.current.isOwner).toBe(hasOwner);
-                    expect(result.current.isAdministrator).toBe(hasAdmin);
-                    expect(result.current.isManager).toBe(hasOwner || hasAdmin);
+                        expect(result.current.isOwner).toBe(hasOwner);
+                        expect(result.current.isAdministrator).toBe(hasAdmin);
+                        expect(result.current.isManager).toBe(
+                            hasOwner || hasAdmin,
+                        );
 
-                    // Without a URL session, these should always be false
-                    expect(result.current.isUrlSession).toBe(false);
-                    expect(result.current.isFloorUrlSession).toBe(false);
-                    expect(result.current.isSectionUrlSession).toBe(false);
-                }),
+                        // Without a URL session, these should always be false
+                        expect(result.current.isUrlSession).toBe(false);
+                        expect(result.current.isSectionUrlSession).toBe(false);
+                    },
+                ),
                 { numRuns: 100 },
             );
         });

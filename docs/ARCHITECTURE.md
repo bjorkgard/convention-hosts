@@ -324,7 +324,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 #### EnsureConventionOrUrlAccess
 
-Verifies that the request has access to a convention — either via an authenticated user with a role, or via a URL session token:
+Verifies that the request has access to a convention — either via an authenticated user with a role, or via a URL session with a valid token:
 
 ```php
 // app/Http/Middleware/EnsureConventionOrUrlAccess.php
@@ -338,22 +338,32 @@ class EnsureConventionOrUrlAccess
             return $next($request);
         }
 
-        // Check authenticated user with convention role
+        // Path 1: Authenticated user with a convention role
         $user = $request->user();
         if ($user && $user->conventions->contains($convention)) {
             return $next($request);
         }
 
-        // Check URL session
+        // Path 2: URL session with matching convention_id and valid token
         $urlSession = session('url_session');
-        if ($urlSession && $urlSession['convention_id'] === $convention->id) {
-            return $next($request);
+        if ($urlSession && ($urlSession['convention_id'] ?? null) === $convention->id) {
+            $storedToken = $urlSession['token'] ?? null;
+            $currentToken = $convention->section_url_token;
+
+            if ($storedToken && $storedToken === $currentToken) {
+                return $next($request);
+            }
+
+            // Token was regenerated — clear the stale session
+            session()->forget('url_session');
         }
 
         abort(403, 'No access to this convention');
     }
 }
 ```
+
+**Token validation:** When a convention owner regenerates the URL access token, any existing URL sessions using the old token are automatically invalidated. The middleware compares the session's stored token against the convention's current `section_url_token` and clears stale sessions, forcing the user to re-enter via the new URL.
 
 **Usage:**
 ```php
@@ -362,7 +372,7 @@ Route::middleware(EnsureConventionOrUrlAccess::class)->group(function () {
 });
 ```
 
-This middleware ensures that users can only access conventions they are associated with through either the role-based access control system or a valid URL session token.
+This middleware ensures that users can only access conventions they are associated with through either the role-based access control system or a valid, current URL session token.
 
 #### URL Session and Policy Interaction
 
@@ -553,14 +563,14 @@ This section documents the key design decisions made for the Convention Manageme
 **Implementation:**
 - `convention_user` pivot links users to conventions
 - `convention_user_roles` pivot stores per-convention roles with a unique constraint on (convention_id, user_id, role) — only `Owner` and `Administrator` roles exist
-- `floor_url_token` and `section_url_token` columns on the `conventions` table provide shareable anonymous access URLs
+- `section_url_token` column on the `conventions` table provides a shareable anonymous access URL
 - URL sessions are stored in the Laravel session (convention_id, type, token) — no pseudo-user records created
 - `EnsureConventionOrUrlAccess` middleware handles both authenticated users and URL sessions
 - `EnsureOwnerRole` middleware restricts owner-only actions
 - `ScopeByRole` middleware removed — no longer needed since Owner/Administrator see everything and URL sessions have fixed permission sets
 - Laravel Policies provide fine-grained action-level authorization on Convention, Floor, Section, and User models
 
-**Rationale:** The previous four-tier system required creating user accounts for every volunteer, which added friction for convention organizers. URL-based access lets organizers share a link with volunteers who can immediately start managing floors or sections without registration. The two authenticated roles (Owner, Administrator) cover all administrative needs, while URL tokens handle the common case of temporary volunteer access. Session-based URL tokens avoid creating pseudo-user records and keep the auth layer clean.
+**Rationale:** The previous four-tier system required creating user accounts for every volunteer, which added friction for convention organizers. URL-based access lets organizers share a link with volunteers who can immediately start managing sections without registration. The two authenticated roles (Owner, Administrator) cover all administrative needs, while the URL token handles the common case of temporary volunteer access. Session-based URL tokens avoid creating pseudo-user records and keep the auth layer clean.
 
 ### ADR-2: Occupancy Tracking Approach
 

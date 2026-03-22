@@ -25,9 +25,17 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     const sidebarNavItems: NavItem[] = [
         { title: t('settings.sidebar.profile'), href: edit(), icon: null },
-        { title: t('settings.sidebar.password'), href: editPassword(), icon: null },
+        {
+            title: t('settings.sidebar.password'),
+            href: editPassword(),
+            icon: null,
+        },
         { title: t('settings.sidebar.two_factor'), href: show(), icon: null },
-        { title: t('settings.sidebar.appearance'), href: editAppearance(), icon: null },
+        {
+            title: t('settings.sidebar.appearance'),
+            href: editAppearance(),
+            icon: null,
+        },
         { title: t('settings.sidebar.theme'), href: editTheme(), icon: null },
     ];
 
@@ -50,9 +58,14 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 size="sm"
                                 variant="ghost"
                                 asChild
-                                className={cn('w-full cursor-pointer justify-start', {
-                                    'bg-accent': isCurrentOrParentUrl(item.href),
-                                })}
+                                className={cn(
+                                    'w-full cursor-pointer justify-start',
+                                    {
+                                        'bg-accent': isCurrentOrParentUrl(
+                                            item.href,
+                                        ),
+                                    },
+                                )}
                             >
                                 <Link href={item.href}>
                                     {item.icon && (

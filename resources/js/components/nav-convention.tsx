@@ -25,7 +25,7 @@ interface ConventionPageProps {
 
 export function NavConvention() {
     const { convention } = usePage<ConventionPageProps>().props;
-    const { isManager, isUrlSession, isSectionUrlSession } = useConventionRole();
+    const { isManager, isUrlSession } = useConventionRole();
     const { isCurrentUrl } = useCurrentUrl();
     const { t } = useTranslation();
 
@@ -35,8 +35,8 @@ export function NavConvention() {
 
     const items: NavItem[] = [];
 
-    // Floors: visible to managers and floor URL sessions (not section URL sessions)
-    if (isManager || (isUrlSession && !isSectionUrlSession)) {
+    // Floors: visible to managers only (not URL sessions)
+    if (isManager) {
         items.push({
             title: t('navigation.administration'),
             href: floorsIndex.url(conventionId),
@@ -57,7 +57,6 @@ export function NavConvention() {
         href: searchIndex.url(conventionId),
         icon: Search,
     });
-
 
     // Users: visible to managers only (not URL sessions)
     if (isManager && !isUrlSession) {

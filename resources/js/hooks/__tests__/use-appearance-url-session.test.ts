@@ -5,7 +5,9 @@ import { describe, expect, it, vi } from 'vitest';
 import type { UrlSession } from '@/types';
 
 // Mock dependencies
-const mockProps = vi.fn<() => { urlSession?: UrlSession | null; consent?: unknown }>(() => ({}));
+const mockProps = vi.fn<
+    () => { urlSession?: UrlSession | null; consent?: unknown }
+>(() => ({}));
 
 vi.mock('@inertiajs/react', () => ({
     usePage: () => ({ props: mockProps() }),
@@ -68,7 +70,9 @@ describe('useAppearance — URL session override', () => {
         });
 
         it('updateAppearance is a no-op when URL session is active', () => {
-            setPageProps({ urlSession: { convention_id: 'test-id', type: 'floor' } });
+            setPageProps({
+                urlSession: { convention_id: 'test-id', type: 'floor' },
+            });
             const { result } = renderHook(() => useAppearance());
 
             // Calling updateAppearance should not change the resolved appearance

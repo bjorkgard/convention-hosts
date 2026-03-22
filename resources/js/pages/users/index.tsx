@@ -3,8 +3,15 @@ import { ArrowLeft, Plus, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { index as conventionsIndex, show } from '@/actions/App/Http/Controllers/ConventionController';
-import { index as usersIndex, store, update } from '@/actions/App/Http/Controllers/UserController';
+import {
+    index as conventionsIndex,
+    show,
+} from '@/actions/App/Http/Controllers/ConventionController';
+import {
+    index as usersIndex,
+    store,
+    update,
+} from '@/actions/App/Http/Controllers/UserController';
 import UserRow from '@/components/conventions/user-row';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -20,7 +27,11 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useConventionRole } from '@/hooks/use-convention-role';
 import AppLayout from '@/layouts/app-layout';
 import type { Convention, Floor } from '@/types/convention';
@@ -68,10 +79,16 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
         { title: t('user.index.heading'), href: usersIndex.url(convention.id) },
     ];
 
-    function toggleRole(form: ReturnType<typeof useForm<UserFormData>>, role: Role) {
+    function toggleRole(
+        form: ReturnType<typeof useForm<UserFormData>>,
+        role: Role,
+    ) {
         const current = form.data.roles;
         if (current.includes(role)) {
-            form.setData('roles', current.filter((r) => r !== role));
+            form.setData(
+                'roles',
+                current.filter((r) => r !== role),
+            );
         } else {
             form.setData('roles', [...current, role]);
         }
@@ -90,12 +107,15 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
     function handleEdit(e: React.FormEvent) {
         if (!editingUser) return;
         e.preventDefault();
-        editForm.put(update.url({ convention: convention.id, user: editingUser.id }), {
-            onSuccess: () => {
-                editForm.reset();
-                setEditingUser(null);
+        editForm.put(
+            update.url({ convention: convention.id, user: editingUser.id }),
+            {
+                onSuccess: () => {
+                    editForm.reset();
+                    setEditingUser(null);
+                },
             },
-        });
+        );
     }
 
     function openEditDialog(user: ConventionUser) {
@@ -111,19 +131,28 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={t('user.index.title', { convention: convention.name })} />
+            <Head
+                title={t('user.index.title', { convention: convention.name })}
+            />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 {/* Header */}
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" asChild className="shrink-0">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            asChild
+                            className="shrink-0"
+                        >
                             <Link href={show.url(convention.id)}>
                                 <ArrowLeft />
                             </Link>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-semibold tracking-tight">{t('user.index.heading')}</h1>
-                            <p className="text-muted-foreground text-sm">
+                            <h1 className="text-2xl font-semibold tracking-tight">
+                                {t('user.index.heading')}
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
                                 {t('user.index.description')}
                             </p>
                         </div>
@@ -137,11 +166,17 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
                                     onClick={() => setShowAddDialog(true)}
                                 >
                                     <Plus className="size-4" />
-                                    <span className="hidden sm:inline">{t('user.index.add_button')}</span>
-                                    <span className="sm:hidden">{t('user.index.add_short')}</span>
+                                    <span className="hidden sm:inline">
+                                        {t('user.index.add_button')}
+                                    </span>
+                                    <span className="sm:hidden">
+                                        {t('user.index.add_short')}
+                                    </span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>{t('user.index.add_tooltip')}</TooltipContent>
+                            <TooltipContent>
+                                {t('user.index.add_tooltip')}
+                            </TooltipContent>
                         </Tooltip>
                     )}
                 </div>
@@ -149,8 +184,10 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
                 {/* Users list */}
                 {users.length === 0 ? (
                     <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-border p-8 text-center">
-                        <Users className="text-muted-foreground mb-2 size-8" />
-                        <p className="text-muted-foreground">{t('user.index.empty')}</p>
+                        <Users className="mb-2 size-8 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                            {t('user.index.empty')}
+                        </p>
                         {isManager && (
                             <Button
                                 variant="link"
@@ -181,7 +218,9 @@ export default function UsersIndex({ convention, users }: UsersIndexProps) {
                 open={showAddDialog}
                 onOpenChange={setShowAddDialog}
                 title={t('user.add_dialog.title')}
-                description={t('user.add_dialog.description', { convention: convention.name })}
+                description={t('user.add_dialog.description', {
+                    convention: convention.name,
+                })}
                 form={addForm}
                 onSubmit={handleAdd}
                 submitLabel={t('user.add_dialog.submit')}
@@ -241,11 +280,15 @@ function UserFormDialog({
                     <div className="grid gap-4 py-4">
                         {/* First name */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-first-name">{t('user.form.first_name_label')}</Label>
+                            <Label htmlFor="user-first-name">
+                                {t('user.form.first_name_label')}
+                            </Label>
                             <Input
                                 id="user-first-name"
                                 value={form.data.first_name}
-                                onChange={(e) => form.setData('first_name', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('first_name', e.target.value)
+                                }
                                 required
                             />
                             <InputError message={form.errors.first_name} />
@@ -253,11 +296,15 @@ function UserFormDialog({
 
                         {/* Last name */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-last-name">{t('user.form.last_name_label')}</Label>
+                            <Label htmlFor="user-last-name">
+                                {t('user.form.last_name_label')}
+                            </Label>
                             <Input
                                 id="user-last-name"
                                 value={form.data.last_name}
-                                onChange={(e) => form.setData('last_name', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('last_name', e.target.value)
+                                }
                                 required
                             />
                             <InputError message={form.errors.last_name} />
@@ -265,12 +312,16 @@ function UserFormDialog({
 
                         {/* Email */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-email">{t('user.form.email_label')}</Label>
+                            <Label htmlFor="user-email">
+                                {t('user.form.email_label')}
+                            </Label>
                             <Input
                                 id="user-email"
                                 type="email"
                                 value={form.data.email}
-                                onChange={(e) => form.setData('email', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('email', e.target.value)
+                                }
                                 required
                             />
                             <InputError message={form.errors.email} />
@@ -278,12 +329,16 @@ function UserFormDialog({
 
                         {/* Mobile */}
                         <div className="grid gap-2">
-                            <Label htmlFor="user-mobile">{t('user.form.mobile_label')}</Label>
+                            <Label htmlFor="user-mobile">
+                                {t('user.form.mobile_label')}
+                            </Label>
                             <Input
                                 id="user-mobile"
                                 type="tel"
                                 value={form.data.mobile}
-                                onChange={(e) => form.setData('mobile', e.target.value)}
+                                onChange={(e) =>
+                                    form.setData('mobile', e.target.value)
+                                }
                                 required
                             />
                             <InputError message={form.errors.mobile} />
@@ -299,8 +354,12 @@ function UserFormDialog({
                                         className="flex cursor-pointer items-center gap-2 text-sm"
                                     >
                                         <Checkbox
-                                            checked={form.data.roles.includes(role)}
-                                            onCheckedChange={() => onToggleRole(role)}
+                                            checked={form.data.roles.includes(
+                                                role,
+                                            )}
+                                            onCheckedChange={() =>
+                                                onToggleRole(role)
+                                            }
                                         />
                                         {role}
                                     </label>
@@ -311,11 +370,19 @@ function UserFormDialog({
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button type="button" variant="outline" className="cursor-pointer">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="cursor-pointer"
+                            >
                                 {t('user.form.cancel')}
                             </Button>
                         </DialogClose>
-                        <Button type="submit" disabled={form.processing} className="cursor-pointer">
+                        <Button
+                            type="submit"
+                            disabled={form.processing}
+                            className="cursor-pointer"
+                        >
                             {form.processing ? submittingLabel : submitLabel}
                         </Button>
                     </DialogFooter>

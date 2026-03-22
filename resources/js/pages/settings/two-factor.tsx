@@ -55,7 +55,9 @@ export default function TwoFactor({
                     />
                     {twoFactorEnabled ? (
                         <div className="flex flex-col items-start justify-start space-y-4">
-                            <Badge variant="default">{t('settings.two_factor.enabled_badge')}</Badge>
+                            <Badge variant="default">
+                                {t('settings.two_factor.enabled_badge')}
+                            </Badge>
                             <p className="text-muted-foreground">
                                 {t('settings.two_factor.enabled_description')}
                             </p>
@@ -74,7 +76,10 @@ export default function TwoFactor({
                                             type="submit"
                                             disabled={processing}
                                         >
-                                            <ShieldBan /> {t('settings.two_factor.disable_button')}
+                                            <ShieldBan />{' '}
+                                            {t(
+                                                'settings.two_factor.disable_button',
+                                            )}
                                         </Button>
                                     )}
                                 </Form>
@@ -82,7 +87,9 @@ export default function TwoFactor({
                         </div>
                     ) : (
                         <div className="flex flex-col items-start justify-start space-y-4">
-                            <Badge variant="destructive">{t('settings.two_factor.disabled_badge')}</Badge>
+                            <Badge variant="destructive">
+                                {t('settings.two_factor.disabled_badge')}
+                            </Badge>
                             <p className="text-muted-foreground">
                                 {t('settings.two_factor.disabled_description')}
                             </p>
@@ -93,7 +100,9 @@ export default function TwoFactor({
                                         onClick={() => setShowSetupModal(true)}
                                     >
                                         <ShieldCheck />
-                                        {t('settings.two_factor.continue_setup')}
+                                        {t(
+                                            'settings.two_factor.continue_setup',
+                                        )}
                                     </Button>
                                 ) : (
                                     <Form
@@ -108,7 +117,9 @@ export default function TwoFactor({
                                                 disabled={processing}
                                             >
                                                 <ShieldCheck />
-                                                {t('settings.two_factor.enable_button')}
+                                                {t(
+                                                    'settings.two_factor.enable_button',
+                                                )}
                                             </Button>
                                         )}
                                     </Form>

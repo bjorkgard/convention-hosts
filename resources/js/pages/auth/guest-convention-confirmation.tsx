@@ -22,7 +22,9 @@ export default function GuestConventionConfirmation({
 
             <div className="space-y-4 text-center">
                 <p className="text-sm text-muted-foreground">
-                    {t('auth.guest_confirmation.convention_created', { name: conventionName })}
+                    {t('auth.guest_confirmation.convention_created', {
+                        name: conventionName,
+                    })}
                 </p>
                 <p className="text-sm text-muted-foreground">
                     {t('auth.guest_confirmation.verification_sent', { email })}

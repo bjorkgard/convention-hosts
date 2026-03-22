@@ -102,7 +102,7 @@ class ConventionController extends Controller
             'userRoles' => $userRoles,
         ];
 
-        // Expose access URLs to Owner/Administrator only
+        // Expose access URL to Owner/Administrator only
         $isManager = $user && $user->hasAnyRole($convention, ['Owner', 'Administrator']);
         if ($isManager) {
             $props['section_url'] = $convention->sectionAccessUrl();
@@ -119,6 +119,18 @@ class ConventionController extends Controller
         $convention->update($request->validated());
 
         return redirect()->route('conventions.show', $convention);
+    }
+
+    /**
+     * Regenerate the section URL access token for the convention.
+     */
+    public function regenerateUrlToken(Request $request, Convention $convention): \Illuminate\Http\RedirectResponse
+    {
+        $this->authorize('update', $convention);
+
+        $convention->regenerateUrlToken();
+
+        return redirect()->back()->with('success', __('convention.show.url_regenerated'));
     }
 
     /**

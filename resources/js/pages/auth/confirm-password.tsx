@@ -22,12 +22,16 @@ export default function ConfirmPassword() {
                 {({ processing, errors }) => (
                     <div className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="password">{t('auth.confirm_password.password_label')}</Label>
+                            <Label htmlFor="password">
+                                {t('auth.confirm_password.password_label')}
+                            </Label>
                             <Input
                                 id="password"
                                 type="password"
                                 name="password"
-                                placeholder={t('auth.confirm_password.password_placeholder')}
+                                placeholder={t(
+                                    'auth.confirm_password.password_placeholder',
+                                )}
                                 autoComplete="current-password"
                                 autoFocus
                             />

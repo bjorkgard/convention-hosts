@@ -13,7 +13,9 @@ export function useLocaleSync() {
         // That preference should take priority over the server-provided convention locale,
         // otherwise every Inertia navigation resets their choice.
         if (urlSession?.convention_id) {
-            const stored = localStorage.getItem(`locale_${urlSession.convention_id}`);
+            const stored = localStorage.getItem(
+                `locale_${urlSession.convention_id}`,
+            );
             if (stored) {
                 if (i18n.language !== stored) {
                     i18n.changeLanguage(stored);

@@ -11,35 +11,69 @@ vi.mock('@inertiajs/react', () => ({
 
 // Mock Wayfinder actions
 vi.mock('@/actions/App/Http/Controllers/UserController', () => ({
-    destroy: { url: ({ convention, user }: { convention: string; user: string }) => `/conventions/${convention}/users/${user}` },
-    resendInvitation: { url: ({ convention, user }: { convention: string; user: string }) => `/conventions/${convention}/users/${user}/resend` },
+    destroy: {
+        url: ({ convention, user }: { convention: string; user: string }) =>
+            `/conventions/${convention}/users/${user}`,
+    },
+    resendInvitation: {
+        url: ({ convention, user }: { convention: string; user: string }) =>
+            `/conventions/${convention}/users/${user}/resend`,
+    },
 }));
 
 // Mock ConfirmationDialog
 vi.mock('@/components/confirmation-dialog', () => ({
-    default: ({ open, title, description }: { open: boolean; title: string; description: string }) =>
-        open ? <div data-testid="confirmation-dialog">{title}: {description}</div> : null,
+    default: ({
+        open,
+        title,
+        description,
+    }: {
+        open: boolean;
+        title: string;
+        description: string;
+    }) =>
+        open ? (
+            <div data-testid="confirmation-dialog">
+                {title}: {description}
+            </div>
+        ) : null,
 }));
 
 // Mock RoleBadge
 vi.mock('@/components/conventions/role-badge', () => ({
-    default: ({ role }: { role: string }) => <span data-testid={`role-badge-${role}`}>{role}</span>,
+    default: ({ role }: { role: string }) => (
+        <span data-testid={`role-badge-${role}`}>{role}</span>
+    ),
 }));
 
 // Mock Button
 vi.mock('@/components/ui/button', () => ({
-    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: string; size?: string }) => (
-        <button {...props}>{children}</button>
-    ),
+    Button: ({
+        children,
+        ...props
+    }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+        variant?: string;
+        size?: string;
+    }) => <button {...props}>{children}</button>,
 }));
 
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
-    AlertTriangle: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="alert-triangle-icon" {...props} />,
-    CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="check-circle-icon" {...props} />,
-    Mail: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="mail-icon" {...props} />,
-    Pencil: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="pencil-icon" {...props} />,
-    Trash2: (props: React.SVGProps<SVGSVGElement>) => <svg data-testid="trash-icon" {...props} />,
+    AlertTriangle: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="alert-triangle-icon" {...props} />
+    ),
+    CheckCircle2: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="check-circle-icon" {...props} />
+    ),
+    Mail: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="mail-icon" {...props} />
+    ),
+    Pencil: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="pencil-icon" {...props} />
+    ),
+    Trash2: (props: React.SVGProps<SVGSVGElement>) => (
+        <svg data-testid="trash-icon" {...props} />
+    ),
 }));
 
 import type { Convention } from '@/types/convention';
@@ -84,7 +118,11 @@ function makeConvention(overrides: Partial<Convention> = {}): Convention {
 
 describe('UserRow', () => {
     it('renders user name and email', () => {
-        const user = makeUser({ first_name: 'Jane', last_name: 'Smith', email: 'jane@example.com' });
+        const user = makeUser({
+            first_name: 'Jane',
+            last_name: 'Smith',
+            email: 'jane@example.com',
+        });
         render(<UserRow user={user} convention={makeConvention()} />);
 
         expect(screen.getByText('Jane Smith')).toBeInTheDocument();
@@ -95,16 +133,24 @@ describe('UserRow', () => {
         const user = makeUser({ email_confirmed: true });
         render(<UserRow user={user} convention={makeConvention()} />);
 
-        expect(screen.getByLabelText('user.row.email_confirmed')).toBeInTheDocument();
-        expect(screen.queryByLabelText('user.row.email_not_confirmed')).not.toBeInTheDocument();
+        expect(
+            screen.getByLabelText('user.row.email_confirmed'),
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByLabelText('user.row.email_not_confirmed'),
+        ).not.toBeInTheDocument();
     });
 
     it('shows warning icon when email_confirmed is false', () => {
         const user = makeUser({ email_confirmed: false });
         render(<UserRow user={user} convention={makeConvention()} />);
 
-        expect(screen.getByLabelText('user.row.email_not_confirmed')).toBeInTheDocument();
-        expect(screen.queryByLabelText('user.row.email_confirmed')).not.toBeInTheDocument();
+        expect(
+            screen.getByLabelText('user.row.email_not_confirmed'),
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByLabelText('user.row.email_confirmed'),
+        ).not.toBeInTheDocument();
     });
 
     it('renders role badges for each role', () => {
@@ -112,7 +158,9 @@ describe('UserRow', () => {
         render(<UserRow user={user} convention={makeConvention()} />);
 
         expect(screen.getByTestId('role-badge-Owner')).toBeInTheDocument();
-        expect(screen.getByTestId('role-badge-Administrator')).toBeInTheDocument();
+        expect(
+            screen.getByTestId('role-badge-Administrator'),
+        ).toBeInTheDocument();
     });
 
     it('does not render role badges when roles array is empty', () => {
@@ -124,14 +172,28 @@ describe('UserRow', () => {
 
     it('shows resend invitation button when canManage=true and email_confirmed=false', () => {
         const user = makeUser({ email_confirmed: false });
-        render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
+        render(
+            <UserRow
+                user={user}
+                convention={makeConvention()}
+                canManage={true}
+            />,
+        );
 
-        expect(screen.getByLabelText('user.row.resend_label')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('user.row.resend_label'),
+        ).toBeInTheDocument();
     });
 
     it('disables resend invitation button when email_confirmed=true even with canManage=true', () => {
         const user = makeUser({ email_confirmed: true });
-        render(<UserRow user={user} convention={makeConvention()} canManage={true} />);
+        render(
+            <UserRow
+                user={user}
+                convention={makeConvention()}
+                canManage={true}
+            />,
+        );
 
         const resendButton = screen.getByLabelText('user.row.resend_label');
         expect(resendButton).toBeDisabled();
@@ -139,19 +201,42 @@ describe('UserRow', () => {
 
     it('hides all action buttons when canManage=false', () => {
         const user = makeUser({ email_confirmed: false });
-        render(<UserRow user={user} convention={makeConvention()} canManage={false} />);
+        render(
+            <UserRow
+                user={user}
+                convention={makeConvention()}
+                canManage={false}
+            />,
+        );
 
-        expect(screen.queryByLabelText('user.row.resend_label')).not.toBeInTheDocument();
-        expect(screen.queryByLabelText(/^user\.row\.edit_label/)).not.toBeInTheDocument();
-        expect(screen.queryByLabelText(/^user\.row\.delete_label/)).not.toBeInTheDocument();
+        expect(
+            screen.queryByLabelText('user.row.resend_label'),
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByLabelText(/^user\.row\.edit_label/),
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByLabelText(/^user\.row\.delete_label/),
+        ).not.toBeInTheDocument();
     });
 
     it('shows edit and delete buttons when canManage=true', () => {
         const user = makeUser({ first_name: 'John', last_name: 'Doe' });
         const onEdit = vi.fn();
-        render(<UserRow user={user} convention={makeConvention()} canManage={true} onEdit={onEdit} />);
+        render(
+            <UserRow
+                user={user}
+                convention={makeConvention()}
+                canManage={true}
+                onEdit={onEdit}
+            />,
+        );
 
-        expect(screen.getByLabelText('user.row.edit_label')).toBeInTheDocument();
-        expect(screen.getByLabelText('user.row.delete_label')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('user.row.edit_label'),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('user.row.delete_label'),
+        ).toBeInTheDocument();
     });
 });

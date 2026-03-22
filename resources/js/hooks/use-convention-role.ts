@@ -14,12 +14,12 @@ interface UseConventionRoleReturn {
     readonly isAdministrator: boolean;
     readonly isManager: boolean;
     readonly isUrlSession: boolean;
-    readonly isFloorUrlSession: boolean;
     readonly isSectionUrlSession: boolean;
 }
 
 export function useConventionRole(): UseConventionRoleReturn {
-    const { userRoles = [], urlSession } = usePage<ConventionRolePageProps>().props;
+    const { userRoles = [], urlSession } =
+        usePage<ConventionRolePageProps>().props;
 
     return useMemo(() => {
         const roles = new Set<string>(userRoles);
@@ -28,7 +28,6 @@ export function useConventionRole(): UseConventionRoleReturn {
         const isAdministrator = roles.has('Administrator');
         const isManager = isOwner || isAdministrator;
         const isUrlSession = !!urlSession;
-        const isFloorUrlSession = urlSession?.type === 'floor';
         const isSectionUrlSession = urlSession?.type === 'section';
 
         return {
@@ -36,7 +35,6 @@ export function useConventionRole(): UseConventionRoleReturn {
             isAdministrator,
             isManager,
             isUrlSession,
-            isFloorUrlSession,
             isSectionUrlSession,
         } as const;
     }, [userRoles, urlSession]);

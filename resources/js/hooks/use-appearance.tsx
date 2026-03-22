@@ -118,7 +118,8 @@ export function useAppearance(): UseAppearanceReturn {
     );
 
     const resolvedAppearance: ResolvedAppearance = useMemo(
-        () => (isUrlSession ? 'light' : isDarkMode(appearance) ? 'dark' : 'light'),
+        () =>
+            isUrlSession ? 'light' : isDarkMode(appearance) ? 'dark' : 'light',
         [appearance, isUrlSession],
     );
 

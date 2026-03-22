@@ -49,8 +49,7 @@ php artisan app:cleanup-unconfirmed-guest-conventions
 Two-tier authenticated role system supplemented by URL-based anonymous access, implemented via pivot tables (not a package like Spatie):
 - **Owner** — full control including export and delete
 - **Administrator** — manage convention, floors, sections, users; lock attendance periods
-- **Floor URL session** — view floors/sections, update occupancy, report attendance (anonymous)
-- **Section URL session** — view sections, update occupancy, report attendance (anonymous)
+- **Section URL session** — view floors/sections, update occupancy, report attendance (anonymous)
 
 Two middleware layers enforce access:
 1. `EnsureConventionOrUrlAccess` — verifies user has a role or valid URL session for the convention
@@ -69,7 +68,7 @@ Convention
 ├── users (User) — via convention_user pivot; roles in convention_user_roles pivot
 │                  User fields: first_name, last_name, email, mobile, email_confirmed
 │                  Roles: Owner, Administrator
-├── url tokens — floor_url_token, section_url_token (64-char random, auto-generated)
+├── url tokens — section_url_token (64-char random, auto-generated)
 └── attendancePeriods (AttendancePeriod) — max 2 per day (morning/afternoon)
     └── reports (AttendanceReport) — one per section per period
 ```
@@ -138,7 +137,7 @@ Use `tests/Helpers/ConventionTestHelper.php` for shared convention/user/role set
 
 ### Routes
 
-Defined in `routes/web.php` and `routes/settings.php`. Convention-scoped routes use `EnsureConventionOrUrlAccess` middleware. Public routes: home, guest convention creation, email verification, invitation activation, URL access (`url-access/floor/{token}`, `url-access/section/{token}`), `api/version/latest`.
+Defined in `routes/web.php` and `routes/settings.php`. Convention-scoped routes use `EnsureConventionOrUrlAccess` middleware. Public routes: home, guest convention creation, email verification, invitation activation, URL access (`url-access/section/{token}`), `api/version/latest`.
 
 ### PWA
 
